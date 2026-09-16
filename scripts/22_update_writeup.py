@@ -12,6 +12,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 import pandas as pd
+from scripts.lib.audit import append_new_lines
 
 ROOT = Path(__file__).resolve().parents[1]
 PROC = ROOT / "data" / "processed"
@@ -324,7 +325,7 @@ if __name__ == "__main__":
     (ROOT / "RESULTS.md").write_text("\n".join(L) + "\n")
     print(f"Wrote {ROOT / 'RESULTS.md'} ({len(L)} lines)")
 
-    entry = [f"\n### {today} — Tier 2 and Task 1 complete\n"]
+    entry = []
     if sf is not None:
         for _, r in sf.iterrows():
             entry.append(f"- Sign-flip re-derivation null, {r.error_metric}: observed "
@@ -371,6 +372,8 @@ if __name__ == "__main__":
                  "never does) and protects against range restriction mechanically shrinking "
                  "an observed correlation regardless of whether the true relationship holds. "
                  "Not circular; stated explicitly given it can look that way at a glance.")
-    with open(ROOT / "config" / "audit_log.md", "a") as f:
-        f.write("\n".join(entry) + "\n")
-    print(f"Appended audit entry to {ROOT / 'config' / 'audit_log.md'}")
+    n_new = append_new_lines(ROOT / "config" / "audit_log.md",
+                             "Robustness follow-ups", entry)
+    print(f"Audit log: {n_new} new line(s) written "
+          f"({len(entry) - n_new} already present, skipped).")
+    
