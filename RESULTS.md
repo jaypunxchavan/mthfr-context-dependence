@@ -87,39 +87,39 @@ Boundaries obtained directly from the atlas co-authors (personal communication, 
 
 **Region 4 (475-656) does not overlap the pooled estimate in either error metric**, and crosses zero entirely in the rank-based one (p=0.32). The folate-independent-GI result is not uniformly distributed across the protein -- it is weaker, and possibly absent, in the region spanning most of the regulatory domain. This is a real caveat on the one result that survived Task 1, not a formality.
 
-## Accuracy-degradation finding — full gauntlet
+## Accuracy-degradation finding — final corrected framing (supersedes script 37's framing)
 
-Does ESM-2 get worse at scoring the CORRECT A222V background as real genetic interaction strengthens? Measured continuously rather than in three buckets. Same four checks applied to every other claim.
+**Adds the exogenous-anchor test and the range-restriction correction. This is the deepest test of the circularity concern raised across three rounds of external review, and it resolves the question.**
 
-| Stage | Error metric | Value | 95% CI | Verdict |
-|---|---|---|---|---|
-| baseline (published e.b) | rank-based | +0.1535 | [+0.1264, +0.1799] | survives |
-| baseline (own e_b) | rank-based | +0.1687 | [+0.1417, +0.1945] | survives |
-| baseline (published e.b) | calibrated | +0.0894 | [+0.0585, +0.1197] | survives |
-| baseline (own e_b) | calibrated | +0.1483 | [+0.1166, +0.1783] | survives |
-| multivariable | rank-based | +0.1593 | [+0.1313, +0.1872] | survives |
-| multivariable | calibrated | +0.2354 | [+0.2056, +0.2652] | survives |
-| sign-flip null | rank-based | excess +0.0317 (81% artifact) | — | survives |
-| sign-flip null | calibrated | excess +0.0704 (53% artifact) | — | survives |
+### Range restriction — ruled out
 
-**Three things distinguish this from every other claim tested:**
+Stratifying by |e.b| restricts the target's variance within each stratum, which could mechanically produce a Spearman-correlation decline independent of anything about circularity. Formal Thorndike-style correction (an approximation when applied to Spearman rather than Pearson correlations, stated explicitly) found SD ratios close to 1.0 across strata (1.02, 1.13, 0.97), and correction made the apparent degradation slightly *larger*, not smaller, for every predictor tested. Range restriction is not the explanation.
 
-1. **Multivariable controls made the effect LARGER, not smaller** (+0.15 to +0.16 rank-based; +0.09 to +0.24 calibrated). Every other result shrank under controls. Here the confounders were masking the effect rather than manufacturing it.
-2. **Both error metrics agree in sign** (both positive). The rank-vs-calibrated sign disagreement that plagued the Phase 3 central-error results does not appear here.
-3. **Substantially more real signal survives the null.** The calibrated metric is 51% artifact versus 77-82% for the earlier e_b result, and the excess over null (+0.072) is roughly triple.
+| Predictor | Raw drop | Corrected drop |
+|---|---|---|
+| ESM-2 | -0.3570 | -0.3697 |
+| PROVEAN | -0.2457 | -0.2559 |
+| SIFT | -0.2718 | -0.2819 |
+| PolyPhen-2 HumDiv | -0.2854 | -0.2945 |
+| PolyPhen-2 HumVar | -0.3108 | -0.3213 |
 
-**Region caveat:** 4 of 8 region estimates do not overlap the pooled value. Most seriously, region 2 (148-294) **reverses sign** under the calibrated metric (-0.117 against a pooled +0.089). The effect is real but not uniformly distributed, and one region contradicts it outright.
+### The exogenous-anchor test — the decisive result
 
-| Error metric | Region | rho | 95% CI | Overlaps pooled? |
-|---|---|---|---|---|
-| rank-based | region_1 | +0.1099 | [+0.0548, +0.1628] | yes |
-| rank-based | region_2 | +0.0746 | [+0.0204, +0.1255] | **NO** |
-| rank-based | region_3 | +0.2007 | [+0.1494, +0.2483] | yes |
-| rank-based | region_4 | +0.0713 | [+0.0255, +0.1170] | **NO** |
-| calibrated | region_1 | +0.0867 | [+0.0203, +0.1509] | yes |
-| calibrated | region_2 | -0.1172 | [-0.1650, -0.0672] | **NO** |
-| calibrated | region_3 | +0.1893 | [+0.1206, +0.2562] | **NO** |
-| calibrated | region_4 | +0.1154 | [+0.0765, +0.1526] | yes |
+Every confound control before this point (placebos, matched-strength synthetic, richer anchor, cross-predictor matched baseline) included `w.fitness` as an anchor ingredient — itself derived from this assay's wild-type arm. Rebuilding the anchor from Grantham, BLOSUM62, RSA, and domain **with `w.fitness` removed entirely**, and rerunning the matched-strength gap for ESM-2 and four conventional predictors:
+
+| Predictor | Gap WITH w.fitness | Gap WITHOUT w.fitness |
+|---|---|---|
+| ESM-2 | +0.0764 [+0.0189,+0.1329] | -0.0560 [-0.1119,-0.0029] |
+| PROVEAN | +0.0394 [-0.0220,+0.1011] | -0.0491 [-0.1146,+0.0129] |
+| SIFT | +0.0544 [-0.0022,+0.1135] | -0.0397 [-0.1004,+0.0227] |
+| PolyPhen-2 HumDiv | +0.0327 [-0.0259,+0.0905] | -0.0583 [-0.1204,+0.0042] |
+| PolyPhen-2 HumVar | +0.0531 [-0.0045,+0.1111] | -0.0520 [-0.1138,+0.0089] |
+
+**No predictor's excess survives without `w.fitness` in the anchor.** Every one of five CIs crosses zero, several with negative means. The 'genuine excess beyond confounds' result reported in scripts 30/31/36 was entirely dependent on including a WT-arm-derived quantity in the confound anchor — which is exactly the deepest form of circularity raised across three review rounds.
+
+### Corrected conclusion, final
+
+The accuracy-degradation pattern is real as a description of the data: predictors lose correlation with true fitness as measured genetic interaction strengthens. But every attempt to establish that ESM-2 (or any sequence-based predictor) retains information beyond this assay's own wild-type-arm measurements has failed once tested rigorously. **The most defensible standing conclusion for this project is the negative methodological one**: `e.r` is almost entirely a mathematical artifact of how the interaction statistic is constructed (confirmed, script 20/21's sign-flip null), `e.b` is real but heavily artifact-laden (77-82% per the sign-flip null), and the accuracy-degradation pattern built on top of these measures does not support a claim about ESM-2 or protein language models specifically — it reduces to a property of how well any WT-arm-informed signal predicts an A222V-arm-derived target, which is close to tautological once seen clearly. The project's real, defensible contribution is the re-derivation and confound-control framework itself, and what it revealed about the limits of interaction-residual stratification as an analysis method for this kind of atlas.
 
 ## Robustness follow-ups (distribution-based, not point estimates)
 
@@ -145,3 +145,16 @@ The p-value ceiling is the empirically demonstrated claim; the z-score is scale 
 - **Residual mid-range disagreement** between own and published e_b is unexplained. It is not the omitted bias correction (agreement is best at the 0/1 edges, not worst) and not the w.post branch threshold (zero variants differ).
 - **The A222V reference line** enters every variant's expectation, so its error is common-mode. It shifts the e_b distribution's location but not rank order; all tests here are rank-based.
 - **Metric dependence is unresolved.** Rank-based and calibrated central error disagree in sign, and the disagreement survives both the fitness control and the full multivariable model.
+
+## Confirmation run — leakage found and fixed
+
+**A data-leakage bug was found in the confirmation run's sign-flip null stage (B3c) by an independent audit of this repository, verified directly against the code, and fixed.** The bias-correction smoother inside the interaction-model reimplementation was fit on the full raw dataset (explore+confirm combined) before subsetting to confirm-half rows -- confirm-half information leaking into what the code claimed was an explore-only fit. The other two stages (baseline correlation, multivariable controls) were checked directly and confirmed clean.
+
+**After the fix** (bias-correction smoother restricted to explore-half rows only; each variant's own per-row WT-arm fit, which cannot leak across the split, computed as before), rerun at N_PERM=3000:
+
+| Error metric | p-value (post-fix) |
+|---|---|
+| rank-based | 0.0006 |
+| calibrated | <0.0003 |
+
+**The result survives essentially unchanged.** The leak was real and worth fixing on principle, but it was not manufacturing the confirmation run's conclusion.

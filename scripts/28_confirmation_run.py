@@ -118,15 +118,43 @@ if __name__ == "__main__":
     print("=" * 72)
     rng = np.random.default_rng(SEED)
     raw = pd.read_csv(RAW / "results" / "folate_response_model5.csv")
+    # LEAKAGE FIX (found by an independent audit, verified directly against
+    # the code): fit_single_arm/fit_interaction/interpolate_correction were
+    # previously fit on the FULL raw table before subsetting.
+    #
+    # What actually needs restricting, and what doesn't:
+    #   - Each variant's own WT-arm fit (b_v, r_v) uses only that variant's
+    #     own 4 measurements -- inherently per-row, cannot leak across the
+    #     explore/confirm boundary regardless of which half it's computed
+    #     alongside. Safe to compute for everyone at once, same as script 17
+    #     always has.
+    #   - The A222V reference line is one fixed constant (from a single
+    #     variant's own WT-arm fit) applied identically to every variant's
+    #     expectation. Using it regardless of which half position 222 falls
+    #     in is a disclosed simplification, not a leakage risk in the sense
+    #     that matters (it doesn't adapt to confirm data; it's a structural
+    #     constant of the assay, computed the same way regardless of split).
+    #   - The bias-correction smoother (cb, cr) DOES pool across many
+    #     variants' w.fitness and raw e_b/e_r values -- this is the part
+    #     that must be restricted to explore-half variants only, then
+    #     applied to everyone.
     W = raw[WT_SCORE_COLS].to_numpy(float); Wse = raw[WT_SE_COLS].to_numpy(float)
     M = raw[MT_SCORE_COLS].to_numpy(float); Mse = raw[MT_SE_COLS].to_numpy(float)
-    w = fit_single_arm(W, Wse); w_mean = np.nanmean(W, axis=1)
+    w = fit_single_arm(W, Wse)  # per-variant, safe on full data
+    w_mean = np.nanmean(W, axis=1)
     i222 = int(np.where(raw["hgvs"].to_numpy() == "p.Ala222Val")[0][0])
-    e1 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"], w_mean,
-                         w["fitness"][i222], w["remediation"][i222])
-    keep = (w["logl"] > LOGL_CUTOFF) & (e1["logl"] > LOGL_CUTOFF)
-    cb = interpolate_correction(w["fitness"][keep], e1["e_b"][keep])
-    cr = interpolate_correction(w["fitness"][keep], e1["e_r"][keep])
+    e1_raw = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"], w_mean,
+                             w["fitness"][i222], w["remediation"][i222])  # raw, uncorrected
+
+    explore_positions = set(explore["position"].unique())
+    raw_pos = raw["hgvs"].str.extract(r"p\.[A-Za-z]{3}(\d+)")[0].astype(float).to_numpy()
+    explore_mask = np.isin(raw_pos, list(explore_positions))
+    keep_explore = explore_mask & (w["logl"] > LOGL_CUTOFF) & (e1_raw["logl"] > LOGL_CUTOFF)
+    print(f"  [leakage fix] bias-correction smoother fit on {keep_explore.sum()} "
+          f"explore-half rows only (was: all {((w['logl']>LOGL_CUTOFF)&(e1_raw['logl']>LOGL_CUTOFF)).sum()} rows)")
+    cb = interpolate_correction(w["fitness"][keep_explore], e1_raw["e_b"][keep_explore])
+    cr = interpolate_correction(w["fitness"][keep_explore], e1_raw["e_r"][keep_explore])
+
     e2 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"], w_mean,
                          w["fitness"][i222], w["remediation"][i222], correction=(cb, cr))
     own = pd.DataFrame({"hgvs_pro": raw["hgvs"], "type": raw["type"], "own_e_b": e2["e_b"]})
