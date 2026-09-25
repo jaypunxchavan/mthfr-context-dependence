@@ -25,8 +25,15 @@ INPUTS (fixed paths -- the file-location choice, stated per AGENTS 2)
       https://marks.hms.harvard.edu/proteingym/ProteinGym_v1.3/
       zero_shot_substitutions_scores.zip (entry
       MTHR_HUMAN_Weile_2021.csv, csize 9650420, usize 29370765),
-      md5 7f9ddcc0589f5f93821e8c0a3e5bb539.  12464 rows, 95 model
+      md5 6222922d3c4b69d043dc50b802814c7c.  12464 rows, 95 model
       score columns, zero NaNs (verified in AB1).
+      [PROVENANCE CORRECTION, disclosed per AGENTS 5/6, 2026-09-25:
+      the value previously written on this line, 7f9ddcc0589f5f93821e8c0a3e5bb539,
+      is NOT this scores file's md5 -- it is the md5 of AB1's MSA artifact
+      MTHR_HUMAN_2023-08-07_b02.a2m (a pre-run documentation slip).  Both
+      copies of the scores file (data/external and AB1's session-tmp
+      extraction) are byte-identical to each other at 6222922d...;
+      verified by md5 + cmp 2026-09-25 before the AB2a fix run.]
   data/processed/task32_delta_esm_primary.csv   (anchor row, read-only)
 
 PRE-REGISTERED RULES (fixed in this docstring BEFORE any run; AGENTS 6)
@@ -44,9 +51,27 @@ R2  Join key = f"{wt_aa}{position}{mut_aa}" vs ProteinGym's `mutant`
     Inner join.  FAIL gate: joined n < 95% of base n -> exit(1)
     (a priori: ProteinGym covers ALL 12464 single substitutions, a
     superset of the atlas missense set, so expected coverage ~100%;
-    95% is fixed here before the run).  Identity gate: the A222V row
-    must carry ESM2_650M = -5.200280666351318 (the value AB1 measured
-    directly from the same file) to atol 1e-12, else exit(1).
+    95% is fixed here before the run).  Identity gate: the anchor row
+    H354R must carry ESM2_650M = -4.309727668762207 to atol 1e-12,
+    else exit(1).
+    [POST-HOC ANCHOR ROW SWAP -- explicit user authorization 2026-09-25,
+    disclosed per AGENTS 6.  The originally pre-registered anchor was
+    A222V with AB1's measured -5.200280666351318; that row can NEVER
+    appear in the joined frame because position 222 has ZERO rows in
+    task32_analysis_table.csv (structural absence -- this very gate
+    found it at the AB2 smoke, DEEPDIVE_LOG [AB2]: the gate worked, the
+    ROW was mis-chosen at pre-registration, a construction error, not a
+    weakened test).  The test's mechanism is untouched: identity to
+    atol 1e-12 against an independently measured constant; only the row
+    changed.  Row rule, stated before measuring anything: argmax
+    |own_e_b| over R1's 10,757-row set -> H354R (own_e_b
+    -2.132941112516231, region 3).  The constant -4.309727668762207 was
+    measured 2026-09-25 with a standalone csv.DictReader over AB1's
+    independent session-tmp extraction (T/opencode/proteingym/
+    MTHR_HUMAN_Weile_2021_scores.csv -- a different file copy and a
+    different read path than this script's pandas merge), cross-checked
+    equal in data/external's copy (files byte-identical), re-parsed a
+    third time, and exactly one PG row matches H354R.]
 R3  Statistic = Spearman rho with position-cluster bootstrap,
     seed=0, n_boot=$N_BOOT, via scripts/lib/stats.py
     (position_cluster_bootstrap) -- literally script 32's estimator
@@ -81,6 +106,17 @@ R4  Shared-draw engine with an IDENTITY GATE.  lib re-seeds
         normalized Gram matrix), expected at ~1e-13.  A p_boot
         boundary flip would trip this gate loudly and be diagnosed,
         never by widening the threshold.
+    [POST-HOC IMPLEMENTATION NOTE, 2026-09-25: this shared-draw engine
+    had never executed before this date ([AB2] flag 2 -- the original
+    AB2 smoke exited at the R2 gate first).  Its first execution, in
+    the user-authorized AB2a-fix smoke, crashed with IndexError because
+    pandas .to_numpy() returns (n, K) while this docstring and every
+    engine loop specify (K, n).  The code was corrected to .T to match
+    THIS FROZEN text; no threshold, seed, set, or rule changed, and
+    G-anchor/G-lib remain exactly as pre-registered.  G-anchor is the
+    independent confirmation that the orientation fix is right: after
+    the fix the engine path must reproduce -0.08811806424891734 to
+    1e-12.]
 R5  Output = data/processed/task_AB2_proteingym_model_comparison.csv,
     one row per model (95 ProteinGym columns + 1 reference row
     REF_delta_ESM_our_run computed from our own delta_esm column),
@@ -132,7 +168,11 @@ OUT_PATH = ROOT / ("data/processed/task_AB2_proteingym_model_comparison"
                    + ("_smoke.csv" if SMOKE else ".csv"))
 
 ANCHOR_RHO = -0.08811806424891734     # task32_delta_esm_primary.csv, signed own
-A222V_ESM2_650M = -5.200280666351318  # measured in AB1 from the same PG file
+# R2 identity anchor -- post-hoc row swap, user-authorized 2026-09-25 (full
+# rationale in docstring R2): row rule argmax|own_e_b| over the R1 set, value
+# measured from AB1's independent scratch extraction, cross-checked vs data/external.
+ANCHOR_ROW = "H354R"
+ANCHOR_ESM2_650M = -4.309727668762207
 TARGETS = [("own_e_b", "own"), ("GI_folinate_independent", "pub")]
 META_COLS = {"mutant", "mutated_sequence", "DMS_score", "DMS_score_bin"}
 GATE_PAIRS = [("delta_esm", "own_e_b"),
@@ -192,13 +232,18 @@ def main():
     if cov < 0.95:
         print(f"FAIL R2: coverage {cov:.4f} < 0.95 pre-registered gate")
         sys.exit(1)
-    a222v = d.loc[d["key"] == "A222V", "ESM2_650M"]
-    ok_id = (len(a222v) == 1
-             and np.isclose(float(a222v.iloc[0]), A222V_ESM2_650M,
+    print("POST-HOC DISCLOSURE (AGENTS 6): R2 identity-gate anchor row swapped "
+          "A222V -> H354R under explicit user authorization 2026-09-25 "
+          "(A222V is structurally absent: zero rows at position 222 in the "
+          "analysis table; gate mechanism unchanged -- identity atol 1e-12 vs "
+          "an independently measured constant; full text in docstring R2)")
+    anch = d.loc[d["key"] == ANCHOR_ROW, "ESM2_650M"]
+    ok_id = (len(anch) == 1
+             and np.isclose(float(anch.iloc[0]), ANCHOR_ESM2_650M,
                             rtol=0, atol=1e-12))
-    print(f"R2 identity gate A222V ESM2_650M = "
-          f"{float(a222v.iloc[0]) if len(a222v) else 'MISSING'} "
-          f"(expected {A222V_ESM2_650M}) -> {'PASS' if ok_id else 'FAIL'}")
+    print(f"R2 identity gate {ANCHOR_ROW} ESM2_650M = "
+          f"{float(anch.iloc[0]) if len(anch) else 'MISSING'} "
+          f"(expected {ANCHOR_ESM2_650M}) -> {'PASS' if ok_id else 'FAIL'}")
     if not ok_id:
         sys.exit(1)
     d = d.sort_index().reset_index(drop=True)   # ascending original order (lib searchsorted needs it)
@@ -211,7 +256,7 @@ def main():
 
     # ---- R4 engine ---------------------------------------------------------
     cols = [t for t, _ in TARGETS] + all_models          # (own, pub) + 96 models
-    A = d[cols].to_numpy(dtype=float)                    # (K, n)
+    A = d[cols].to_numpy(dtype=float).T                  # (K, n) per docstring R4
     K = len(cols)
     clusters = d["position"].unique()
     idx_by = {c: d.index[d["position"] == c].to_numpy() for c in clusters}
@@ -230,6 +275,15 @@ def main():
 
     print(f"engine: {K} columns x {N_BOOT} boot draws, "
           f"{n_pairs} pairs (shared-draw, R4)")
+    print("POST-HOC IMPLEMENTATION FIX (2026-09-25, disclosed per AGENTS 6): "
+          "A = d[cols].to_numpy().T -- docstring R4 specifies (K, n) but pandas "
+          "returns (n, K); the pre-fix code crashed with IndexError at the first "
+          "bootstrap draw (this engine had NEVER executed before -- [AB2] flag 2, "
+          "the original smoke died at the R2 gate first). Code changed to match "
+          "the FROZEN docstring; no threshold, seed, set, or rule changed. The "
+          "pre-fix 'obs' pass had the same wrong orientation; with the fix, "
+          "G-anchor's 1e-12 identity check vs -0.08811806424891734 is the "
+          "independent confirmation of correctness.")
     boot = np.empty((N_BOOT, n_pairs))
     rng = np.random.default_rng(SEED)
     nC = len(clusters)

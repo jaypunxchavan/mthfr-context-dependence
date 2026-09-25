@@ -47,6 +47,11 @@ post-hoc, in the script's own output (see §6).
 - `scripts/lib/` — all reusable logic. Import from here; do not reimplement.
 - `notebooks/` — exploration only. Nothing the final result depends on.
 - `docs/tasks/` — planning and review documents (see §9).
+- `data/external/` — reference datasets from outside the MTHFR atlas
+  itself, used as comparators (e.g. the GB1 fitness landscape). Gitignored
+  like the rest of `data/`; each file's provenance (source record/URL and
+  md5) is logged in the task doc or log entry that first fetched it — for
+  GB1, script 49's docstring.
 
 ## 3. Statistical conventions — apply without being asked
 
