@@ -1,4 +1,48 @@
 """
+DEPRECATED (2026-09-25, reliability-and-decompositions task C3a) -- DO NOT
+CITE THIS SCRIPT'S NULL/P OUTPUTS AS POSITION-LEVEL. TWO nulls in this
+file are deprecated, specifically: (1) the sign-flip null at line 135
+(cell granularity), and (2) the ROW-LEVEL TARGET SHUFFLE at line 85 --
+`fake = rng.permutation(df["target"].to_numpy())` re-labels single rows,
+which destroys position-block structure entirely and is the audit's
+"second violation" (A1a: "second violation scripts/26:85 row-level
+target shuffle"). Kept intact as a documented, informative dead end; the
+log entries explaining WHY it failed have value, so nothing below is
+deleted or changed. This header deprecates the two named nulls only: the
+script's point estimates and position-clustered pieces were audited as
+convention-conforming (A1a, "All headline CIs position-clustered as
+claimed"), so no other output of this file is marked by it.
+
+WHY IT IS DEAD (sources: docs/tasks/review-triage/OVERNIGHT_LOG.md A1a/
+A1b, docs/tasks/comparators-and-consolidation/GROUPS_C_TO_H_DIGEST.md L13,
+docs/tasks/detection-floor-and-mechanism/DEEPDIVE_LOG.md [AF3] L3102 --
+all quoted verbatim):
+
+* A1a audit: "resid = (13134, 4) -> flips at (variant x condition) cell
+  granularity in scripts/21:138, 24:140, 26:135, 28:172, 33:100;
+  second violation scripts/26:85 row-level target shuffle." AGENTS
+  section 3 forbids both forms: up to 19 substitutions share a residue
+  and are not independent; resampling must be by position.
+* The granularity difference is measurable (OVERNIGHT L91): the
+  position-block null sd is 0.0156 = 1.66x the cell-level 0.0094
+  (654 independent units instead of 10,757 x 4).
+* AF3 verbatim: "the cell-level nulls in scripts 21, 24, 26, 28 (and
+  script 26's row-level target shuffle) were NEVER re-run at position
+  granularity -- only script 33's was (by A1b). ... five old
+  non-headline null outputs remain cell-level and must not be cited as
+  position-level." AF3 also, verbatim: "no current claim rests on the
+  unrepaired ones."
+
+REPLACEMENT: any null or p on these quantities must be position-level --
+scripts/lib/position_null.py's position_shuffle_test (position-level
+association null), or a position-block sign-flip exactly as A1b ran for
+script 33's headline (OVERNIGHT L60: observed -0.0881, position null
+mean -0.0001, sd 0.0156, p < 0.0001, ~0.1% structural artifact), or
+scripts.lib.stats.position_cluster_bootstrap for CIs (the convention
+every script from ~60 onward follows).
+
+-- original docstring below, unchanged --
+
 Group A: proper distribution-based versions of two tests, plus recovery
 of finding #4's null standard deviation.
 

@@ -1,4 +1,47 @@
 """
+DEPRECATED (2026-09-25, reliability-and-decompositions task C3a) -- DO NOT
+CITE THIS SCRIPT'S SIGN-FLIP NULL OUTPUTS (p-values, null distributions,
+and any "% structural artifact" percentage derived from them) AS
+POSITION-LEVEL. Kept intact as a documented, informative dead end; the
+log entries explaining WHY it failed have value, so nothing below is
+deleted or changed. This header deprecates the named null only: the
+script's position-clustered pieces were audited as convention-conforming
+(A1a, "All headline CIs position-clustered as claimed"), so no other
+output of this file is marked by it.
+
+WHY IT IS DEAD (sources: docs/tasks/review-triage/OVERNIGHT_LOG.md A1a/
+A1b, docs/tasks/comparators-and-consolidation/GROUPS_C_TO_H_DIGEST.md L13,
+docs/tasks/detection-floor-and-mechanism/DEEPDIVE_LOG.md [AF3] L3102 --
+all quoted verbatim):
+
+* A1a audit: "resid = (13134, 4) -> flips at (variant x condition) cell
+  granularity in scripts/21:138, 24:140, 26:135, 28:172, 33:100" --
+  THIS script's line 138 is `signs = rng.choice([-1.0, 1.0],
+  size=Rs.shape)`: one flip per (variant x concentration) CELL, not one
+  per position. AGENTS section 3 forbids that: up to 19 substitutions
+  share a residue and are not independent; resampling must be by
+  position.
+* The granularity difference is measurable (OVERNIGHT L91): the
+  position-block null sd is 0.0156 = 1.66x the cell-level 0.0094
+  (654 independent units instead of 10,757 x 4).
+* AF3 verbatim: "the cell-level nulls in scripts 21, 24, 26, 28 (and
+  script 26's row-level target shuffle) were NEVER re-run at position
+  granularity -- only script 33's was (by A1b). So 'consistently
+  throughout' is literally FALSE for five exploratory-era nulls on
+  disk; the honest status is PARTIAL: ... five old non-headline null
+  outputs remain cell-level and must not be cited as position-level."
+  AF3 also, verbatim: "no current claim rests on the unrepaired ones."
+
+REPLACEMENT: any null or p on these quantities must be position-level --
+scripts/lib/position_null.py's position_shuffle_test, or a
+position-block sign-flip exactly as A1b ran for script 33's headline
+(OVERNIGHT L60: observed -0.0881, position null mean -0.0001, sd 0.0156,
+p < 0.0001, ~0.1% structural artifact), or
+scripts.lib.stats.position_cluster_bootstrap for CIs (the convention
+every script from ~60 onward follows).
+
+-- original docstring below, unchanged --
+
 Task 1: Re-derivation null for e_b (folinate-INDEPENDENT genetic interaction).
 
 WHY A NEW MECHANISM WAS NEEDED

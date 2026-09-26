@@ -8,3 +8,4 @@ data/processed/*.parquet
 results/*
 !results/.gitkeep
 .DS_Store
+data/external/

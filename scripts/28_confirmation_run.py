@@ -1,4 +1,49 @@
 """
+DEPRECATED (2026-09-25, reliability-and-decompositions task C3a) -- DO NOT
+CITE THIS SCRIPT'S SIGN-FLIP NULL P-VALUES AS POSITION-LEVEL (the null
+drawn at line 172). Kept intact as a documented, informative dead end;
+the log entries explaining WHY it failed have value, so nothing below is
+deleted or changed. SCOPING, stated explicitly so nothing is
+over-deprecated: ONLY the cell-level null is marked. This file is the
+FROZEN confirmation run (AGENTS section 10: executed exactly once, by
+design) -- its split-based point estimates and position-clustered CIs
+are NOT deprecated (A1a: "All headline CIs position-clustered as
+claimed"), and NOTHING here calls for re-running the frozen pipeline;
+re-running it would require the user decision AGENTS section 10
+reserves. Do not read this header as an instruction to re-execute.
+
+WHY IT IS DEAD (sources: docs/tasks/review-triage/OVERNIGHT_LOG.md A1a/
+A1b, docs/tasks/comparators-and-consolidation/GROUPS_C_TO_H_DIGEST.md L13,
+docs/tasks/detection-floor-and-mechanism/DEEPDIVE_LOG.md [AF3] L3102 --
+all quoted verbatim):
+
+* A1a audit: "resid = (13134, 4) -> flips at (variant x condition) cell
+  granularity in scripts/21:138, 24:140, 26:135, 28:172, 33:100" --
+  THIS script's line 172 is `eb_p, _, _ = wls_line(Rs *
+  rng.choice([-1., 1.], size=Rs.shape), Ss, CONCS, Vs)`: one flip per
+  (variant x concentration) CELL, not one per position. AGENTS section
+  3 forbids that: up to 19 substitutions share a residue and are not
+  independent; resampling must be by position.
+* The granularity difference is measurable (OVERNIGHT L91): the
+  position-block null sd is 0.0156 = 1.66x the cell-level 0.0094
+  (654 independent units instead of 10,757 x 4).
+* AF3 verbatim: "the cell-level nulls in scripts 21, 24, 26, 28 (and
+  script 26's row-level target shuffle) were NEVER re-run at position
+  granularity -- only script 33's was (by A1b). ... five old
+  non-headline null outputs remain cell-level and must not be cited as
+  position-level." AF3 also, verbatim: "no current claim rests on the
+  unrepaired ones."
+
+REPLACEMENT: any null or p on these quantities must be position-level --
+scripts/lib/position_null.py's position_shuffle_test, or a
+position-block sign-flip exactly as A1b ran for script 33's headline
+(OVERNIGHT L60: observed -0.0881, position null mean -0.0001, sd 0.0156,
+p < 0.0001, ~0.1% structural artifact), or
+scripts.lib.stats.position_cluster_bootstrap for CIs (the convention
+every script from ~60 onward follows).
+
+-- original docstring below, unchanged --
+
 Group B2-B5: the frozen confirmation run.
 
 Uses the split saved by script 27 (confirmation_split_assignment.csv) so
