@@ -1,0 +1,260 @@
+
+==========================================================================
+P1 -- inventory, provenance, reproduction gates (script 120)  N_BOOT=10000 SEED=0 (no bootstrap: deterministic)
+==========================================================================
+
+--------------------------------------------------------------------------
+P1(a) ROSTER of the 57 AE backgrounds
+--------------------------------------------------------------------------
+  site placebos (A222_X, X not in {A,V}): n=18
+  target A222V (__A222V__): n=1
+  AE2 (AV_<pos>): n=38
+  FASTA cross-check: fasta[p-1] == table wt_aa for 655/655 positions (12445 rows, positions 2..656, FASTA length 656)
+  bg_id          pos  wt FASTA  class
+  A222_C         222   A     A  AE1
+  A222_D         222   A     A  AE1
+  A222_E         222   A     A  AE1
+  A222_F         222   A     A  AE1
+  A222_G         222   A     A  AE1
+  A222_H         222   A     A  AE1
+  A222_I         222   A     A  AE1
+  A222_K         222   A     A  AE1
+  A222_L         222   A     A  AE1
+  A222_M         222   A     A  AE1
+  A222_N         222   A     A  AE1
+  A222_P         222   A     A  AE1
+  A222_Q         222   A     A  AE1
+  A222_R         222   A     A  AE1
+  A222_S         222   A     A  AE1
+  A222_T         222   A     A  AE1
+  A222_W         222   A     A  AE1
+  A222_Y         222   A     A  AE1
+  __A222V__      222   A     A  TARGET
+  AV_113         113   A     A  AE2
+  AV_116         116   A     A  AE2
+  AV_145         145   A     A  AE2
+  AV_155         155   A     A  AE2
+  AV_175         175   A     A  AE2
+  AV_19           19   A     A  AE2
+  AV_195         195   A     A  AE2
+  AV_204         204   A     A  AE2
+  AV_209         209   A     A  AE2
+  AV_220         220   A     A  AE2
+  AV_233         233   A     A  AE2
+  AV_242         242   A     A  AE2
+  AV_292         292   A     A  AE2
+  AV_293         293   A     A  AE2
+  AV_302         302   A     A  AE2
+  AV_311         311   A     A  AE2
+  AV_328         328   A     A  AE2
+  AV_350         350   A     A  AE2
+  AV_353         353   A     A  AE2
+  AV_368         368   A     A  AE2
+  AV_396         396   A     A  AE2
+  AV_461         461   A     A  AE2
+  AV_462         462   A     A  AE2
+  AV_5             5   A     A  AE2
+  AV_511         511   A     A  AE2
+  AV_522         522   A     A  AE2
+  AV_524         524   A     A  AE2
+  AV_551         551   A     A  AE2
+  AV_558         558   A     A  AE2
+  AV_587         587   A     A  AE2
+  AV_589         589   A     A  AE2
+  AV_650         650   A     A  AE2
+  AV_655         655   A     A  AE2
+  AV_70           70   A     A  AE2
+  AV_73           73   A     A  AE2
+  AV_84           84   A     A  AE2
+  AV_85           85   A     A  AE2
+  AV_98           98   A     A  AE2
+  P1(a) PASS: 38/38 AE2 positions have WT residue Ala (esm2_wt_scores.csv; FASTA mapping confirmed
+
+--------------------------------------------------------------------------
+P1(b) SELECTION PROVENANCE (verbatim quotes, read at runtime)
+--------------------------------------------------------------------------
+  --- AE selection: AE1/AE2 definitions + subset rule + scoring: scripts/82_ae_position_vs_identity.py lines 24-47 (verbatim) ---
+    24:   AE1 (task L318-323): ALL 19 substitutions at position 222 as
+    25:      backgrounds (A>X, X != A; the WT table has exactly these 19 rows).
+    26:      Question (verbatim): does the outsized context-shift track being
+    27:      AT position 222 generally, or is it specific to Val?
+    28:   AE2 (task L324-329): A>V at every OTHER Ala position (WT table rows
+    29:      wt_aa==A, position!=222, mut_aa==V = 38 backgrounds; measured
+    30:      before writing: 39 Ala positions total, 38 excluding 222). Same
+    31:      construction; compared against AE1's sweep.
+    32: 
+    33: MACHINERY (reuse, not reimplement; AGENTS 7):
+    34:   * subset rule: scripts/63's draw_subset/check_subset IMPORTED
+    35:     (importlib; module guards __main__): pool = WT-table positions
+    36:     MINUS ({222} U the 38 other-Ala positions) = 616 positions, draw
+    37:     AE_N_SUB=120 with AE_SEED=0 — one subset, identical for all 57
+    38:     backgrounds (M1's precedent: a background's own position is not a
+    39:     target; excluding all 39 keeps hgvs naming unambiguous and makes
+    40:     every cell directly comparable).
+    41:   * scoring: scripts/lib/esm_scoring.get_position_logprobs +
+    42:     scripts/lib/sequence.load_sequence, model = ESM-2 t33 650M
+    43:     (esm2_t33_650M_UR50D) — the SAME model and code path that
+    44:     produced the atlas delta_ESM (scripts 10/11/12/63 lineage). Zero
+    45:     third-party edits; fair-esm's previously disclosed portability
+    46:     patch is already in place (unchanged by this script). One forward
+    47:     pass per (background, position), as in M1.
+  --- script 82 gates (FASTA/shape provenance): scripts/82_ae_position_vs_identity.py lines 68-75 (verbatim) ---
+    68:   G1 WT-table shape 12,445 rows / 655 positions (script 10's table).
+    69:   G2 AE1 = exactly 19 rows at position 222, all wt A, 19 distinct
+    70:      mut_aa; AE2 = exactly 38 rows (39 Ala positions - 222), all
+    71:      distinct positions, none is 222; FASTA (data/raw/P42898.fasta)
+    72:      letter matches the table wt_aa at all 39 background positions and
+    73:      FASTA[221] == 'A', sequence length 656.
+    74:   G3 subset: disjoint from {222} U all background positions, |subset|
+    75:      == n_sub after any reduction (63's check_subset).
+  --- script 82 bg_id construction: scripts/82_ae_position_vs_identity.py lines 226-228 (verbatim) ---
+   226:               f"{len(ae2)} rows, {ae2['position'].nunique()} positions")
+   227:     ae2["cell"] = "AE2_A2V_elsewhere"
+   228:     ae2["bg_id"] = ["AV_" + str(int(p)) for p in ae2["position"]]
+  --- W-series selection rule (W1): scripts/69_w_decile_background_rescore.py lines 23-50 (verbatim) ---
+    23: W1 selection (deterministic, no randomness anywhere):
+    24:   * Distribution for deciles = the `esm2_score` column of
+    25:     data/processed/esm2_wt_scores.csv, ALL 12,445 rows (literal reading
+    26:     of "deciles of esm2_wt_scores.csv's score distribution"; the 19
+    27:     position-222 rows are part of the distribution but not of the
+    28:     candidate pool).  Edges = np.quantile(scores, [0.1..0.9]) (numpy
+    29:     default linear interpolation).  Bin of a row = searchsorted(edges,
+    30:     score, 'right'), so bin 1 = [min, p10) ... bin 10 = [p90, max]:
+    31:     the ten bins jointly cover the FULL severity range.
+    32:   * Candidates = rows with position != 222 AND position NOT in the
+    33:     ORIGINAL M1 subset (the 120 positions actually scored in
+    34:     task63_m1_bg_raw.csv).  DESIGN-A ASSUMPTION, disclosed: W2 says to
+    35:     rescore "the same ~100-150-position subset used in the original M1
+    36:     (for comparability)"; keeping that subset BYTE-IDENTICAL while
+    37:     honoring script 63's rule that a background's own position is never
+    38:     a scoring target means excluding subset positions from the candidate
+    39:     pool rather than swapping subset positions.  This is the most
+    40:     conservative literal reading; it is logged as an assumption.
+    41:   * Within each bin: rows sorted by (esm2_score, position, mut_aa)
+    42:     ascending (mergesort = deterministic tie-break, same key as M1a),
+    43:     deduplicated to ONE row per position (first occurrence = that
+    44:     position's most damaging substitution inside the bin), then positions
+    45:     already chosen for an earlier bin are dropped.  Take THREE picks from
+    46:     the remaining list L: slot A = L[0] (bin's most damaging), slot B =
+    47:     L[len(L)//2] (middle), slot C = L[-1] (least damaging).  10 bins x 3
+    48:     slots = 30 backgrounds (task: "~20-30").  Gates: every bin yields
+    49:     >= 3 unused positions; all 30 positions distinct, none is 222, none
+    50:     in the subset.
+  No score/fitness keyword in the quoted rule for the AE grid/AE2 rule (script 82) (mechanical scan of 35 lines over ['esm2_score', 'fitness', 'severity', 'damaging', 'decile', 'own_e']).
+  !! FLAG (P1b): selection rule for the W-series rule (script 69) contains score/fitness keywords: {'esm2_score': [24, 41], 'decile': [24, 26], 'severity': [31], 'damaging': [44, 46, 47]}
+     Pre-registered reading: the rule is score-based iff its own text says so (above). The W-series rule is chosen by deciles of the MODEL's own severity column (esm2_score, ESM-2's WT-background log-prob severity), NOT by measured fitness (own_e_b) and NOT by rho_b. It bears on how the group may be used as a null: severity-stratified by design.
+
+--------------------------------------------------------------------------
+P1(c) REPRODUCTION GATES
+--------------------------------------------------------------------------
+  [G1] task109_placebo_rhos.csv rows=175 (expect 175), frame==AE rows=57 (expect 57)
+  G1 PASS
+  [G2] recompute from raw: rows 129960 -> own_e_b non-null 110124 -> after G6 drops (0) 110124; backgrounds=57
+    A222_C       rho_recomp=-0.098620411608855 rho_csv=-0.098620411608855 |diff|=9.714e-17
+    A222_D       rho_recomp=-0.081138734837306 rho_csv=-0.081138734837306 |diff|=5.551e-17
+    A222_E       rho_recomp=-0.070808814919468 rho_csv=-0.070808814919468 |diff|=1.388e-17
+    A222_F       rho_recomp=-0.036052443048586 rho_csv=-0.036052443048586 |diff|=1.388e-17
+    A222_G       rho_recomp=-0.013732276456374 rho_csv=-0.013732276456374 |diff|=3.296e-17
+    A222_H       rho_recomp=-0.009998551247639 rho_csv=-0.009998551247639 |diff|=9.714e-17
+    A222_I       rho_recomp=-0.074744223635075 rho_csv=-0.074744223635075 |diff|=8.327e-17
+    A222_K       rho_recomp=-0.033997854832130 rho_csv=-0.033997854832130 |diff|=7.633e-17
+    A222_L       rho_recomp=-0.060453464533260 rho_csv=-0.060453464533260 |diff|=9.714e-17
+    A222_M       rho_recomp=-0.056981635639786 rho_csv=-0.056981635639786 |diff|=9.714e-17
+    A222_N       rho_recomp=-0.060415888293525 rho_csv=-0.060415888293525 |diff|=4.163e-17
+    A222_P       rho_recomp=-0.079329771208260 rho_csv=-0.079329771208260 |diff|=2.776e-17
+    A222_Q       rho_recomp=-0.055907332751251 rho_csv=-0.055907332751251 |diff|=5.551e-17
+    A222_R       rho_recomp=-0.041544813321367 rho_csv=-0.041544813321367 |diff|=4.163e-17
+    A222_S       rho_recomp=-0.067244951986306 rho_csv=-0.067244951986306 |diff|=5.551e-17
+    A222_T       rho_recomp=-0.103143737892312 rho_csv=-0.103143737892312 |diff|=2.776e-17
+    A222_W       rho_recomp=-0.027606618438918 rho_csv=-0.027606618438918 |diff|=6.939e-18
+    A222_Y       rho_recomp=-0.022036411610115 rho_csv=-0.022036411610115 |diff|=4.163e-17
+    AV_113       rho_recomp=-0.063906747476056 rho_csv=-0.063906747476056 |diff|=8.327e-17
+    AV_116       rho_recomp=-0.094598010056333 rho_csv=-0.094598010056333 |diff|=0.000e+00
+    AV_145       rho_recomp=-0.085021751578403 rho_csv=-0.085021751578402 |diff|=5.551e-17
+    AV_155       rho_recomp=-0.053030728202007 rho_csv=-0.053030728202007 |diff|=0.000e+00
+    AV_175       rho_recomp=+0.012427113031746 rho_csv=+0.012427113031746 |diff|=9.194e-17
+    AV_19        rho_recomp=-0.004646081603025 rho_csv=-0.004646081603025 |diff|=6.072e-17
+    AV_195       rho_recomp=-0.041439531957784 rho_csv=-0.041439531957784 |diff|=2.082e-17
+    AV_204       rho_recomp=-0.022838442971169 rho_csv=-0.022838442971169 |diff|=5.204e-17
+    AV_209       rho_recomp=-0.002886123619253 rho_csv=-0.002886123619253 |diff|=1.258e-17
+    AV_220       rho_recomp=-0.089606866535499 rho_csv=-0.089606866535499 |diff|=0.000e+00
+    AV_233       rho_recomp=-0.046017450827432 rho_csv=-0.046017450827432 |diff|=0.000e+00
+    AV_242       rho_recomp=-0.042101285790348 rho_csv=-0.042101285790348 |diff|=6.245e-17
+    AV_292       rho_recomp=-0.003113451424706 rho_csv=-0.003113451424706 |diff|=1.908e-17
+    AV_293       rho_recomp=-0.052776040454402 rho_csv=-0.052776040454402 |diff|=9.021e-17
+    AV_302       rho_recomp=-0.049088002788042 rho_csv=-0.049088002788042 |diff|=7.633e-17
+    AV_311       rho_recomp=-0.026822805684278 rho_csv=-0.026822805684278 |diff|=1.735e-17
+    AV_328       rho_recomp=-0.033620853566222 rho_csv=-0.033620853566222 |diff|=3.469e-17
+    AV_350       rho_recomp=-0.045964565533580 rho_csv=-0.045964565533580 |diff|=8.327e-17
+    AV_353       rho_recomp=-0.010858794463996 rho_csv=-0.010858794463996 |diff|=2.429e-17
+    AV_368       rho_recomp=-0.012216033629086 rho_csv=-0.012216033629086 |diff|=2.776e-17
+    AV_396       rho_recomp=+0.001787450214188 rho_csv=+0.001787450214188 |diff|=5.204e-17
+    AV_461       rho_recomp=+0.031391820342123 rho_csv=+0.031391820342123 |diff|=8.327e-17
+    AV_462       rho_recomp=-0.022555457611230 rho_csv=-0.022555457611230 |diff|=6.592e-17
+    AV_5         rho_recomp=-0.034587359913424 rho_csv=-0.034587359913424 |diff|=6.939e-18
+    AV_511       rho_recomp=+0.055669068956270 rho_csv=+0.055669068956270 |diff|=1.388e-17
+    AV_522       rho_recomp=+0.012989248186723 rho_csv=+0.012989248186723 |diff|=9.368e-17
+    AV_524       rho_recomp=+0.071355742526012 rho_csv=+0.071355742526012 |diff|=4.163e-17
+    AV_551       rho_recomp=+0.014146977100060 rho_csv=+0.014146977100060 |diff|=1.735e-18
+    AV_558       rho_recomp=+0.058743653687821 rho_csv=+0.058743653687821 |diff|=2.776e-17
+    AV_587       rho_recomp=+0.116091440301409 rho_csv=+0.116091440301409 |diff|=1.388e-17
+    AV_589       rho_recomp=+0.082901834469541 rho_csv=+0.082901834469541 |diff|=1.388e-17
+    AV_650       rho_recomp=+0.086801413311308 rho_csv=+0.086801413311308 |diff|=0.000e+00
+    AV_655       rho_recomp=+0.055548398665244 rho_csv=+0.055548398665244 |diff|=8.327e-17
+    AV_70        rho_recomp=-0.036344575577743 rho_csv=-0.036344575577743 |diff|=5.551e-17
+    AV_73        rho_recomp=-0.039599948606703 rho_csv=-0.039599948606703 |diff|=9.714e-17
+    AV_84        rho_recomp=-0.027039666755992 rho_csv=-0.027039666755992 |diff|=4.510e-17
+    AV_85        rho_recomp=-0.023827915405501 rho_csv=-0.023827915405501 |diff|=7.286e-17
+    AV_98        rho_recomp=-0.020592244478708 rho_csv=-0.020592244478707 |diff|=7.633e-17
+    __A222V__    rho_recomp=-0.104321772934714 rho_csv=-0.104321772934714 |diff|=9.714e-17
+  [G2] max|diff| over 57 AE backgrounds = 9.714e-17 (gate < 1e-9)
+  G2 PASS
+  [G3] A222V AE rho = -0.104321772935 vs doc -0.104322 (diff 2.271e-07)
+  [G3] AE1 mean = -0.055208774237 (n=18, doc n=18) vs doc -0.055209 (diff 2.258e-07)
+  [G3] AE2 mean = -0.010138067782 (n=38, doc n=38) vs doc -0.010138 (diff 6.778e-08)
+  G3 PASS
+  [reported, NOT gated -- task G3 lists only the three values above]:
+    W  A222V rho = -0.072547470 vs doc -0.072547 (diff 4.696e-07)
+    COMMON A222V rho = -0.104044159 vs doc -0.104044 (diff 1.586e-07)
+    AE 56-placebo mean = -0.024625081 (n=56) vs doc -0.024625 (diff 8.057e-08)
+  [G4] anchor rho = -0.08811806424891734 | doc -0.088118 (diff 6.425e-08) | full precision record -0.08811806424891734 (diff 0.000e+00)
+  [G4] rows=10757 (doc table: 10,757), positions=654 (doc table: 654)
+  G4 PASS
+
+--------------------------------------------------------------------------
+P1(d) GRANTHAM GATE (literal grep, then value checks)
+--------------------------------------------------------------------------
+scripts/lib/features.py:5:# Grantham (1974) per-amino-acid composition, polarity, molecular volume.
+scripts/lib/features.py:9:_GRANTHAM = {
+scripts/lib/features.py:21:def grantham(a, b):
+scripts/lib/features.py:22:    if a not in _GRANTHAM or b not in _GRANTHAM:
+scripts/lib/features.py:24:    (c1, p1, v1), (c2, p2, v2) = _GRANTHAM[a], _GRANTHAM[b]
+scripts/lib/features.py:49:    out["grantham"] = [grantham(a, b) for a, b in zip(out[wt_col], out[mut_col])]
+Binary file scripts/lib/__pycache__/features.cpython-314.pyc matches
+Binary file scripts/lib/__pycache__/confirmation_split.cpython-314.pyc matches
+scripts/lib/confirmation_split.py:75:    for col in ["grantham", "blosum62", "rsa", "abs_gi"]:
+  implementation: scripts/lib/features.py::grantham (loaded OK); tolerance |value - published| <= 1.0 (pre-registered; see docstring)
+    A-V: computed 64.4303 vs published 64 |diff|=0.4303 -> PASS
+    I-V: computed 29.6091 vs published 29 |diff|=0.6091 -> PASS
+    L-V: computed 31.7848 vs published 32 |diff|=0.2152 -> PASS
+    L-I: computed 4.8551 vs published 5 |diff|=0.1449 -> PASS
+    F-Y: computed 21.6097 vs published 22 |diff|=0.3903 -> PASS
+    C-W: computed 214.3624 vs published 215 |diff|=0.6376 -> PASS
+    symmetry: max|g(a,b)-g(b,a)| over 20x20 = 0.000e+00 (gate < 1e-12) -> PASS
+    zero diagonal: max|g(a,a)| over 20 = 0.000e+00 (gate == 0.0) -> PASS
+  GRANTHAM GATE PASS: P3's primary metric (Grantham) is usable.
+
+--------------------------------------------------------------------------
+P1 SUMMARY
+--------------------------------------------------------------------------
+  G1 PASS  G2 PASS (max|diff| 9.714e-17)  G3 PASS  G4 PASS  GRANTHAM GATE PASS
+  AE roster: 18 site placebos + A222V + 38 AE2 = 57
+  fitness-relatedness: AE rule keyword hits=none; W rule keyword hits={'esm2_score': [24, 41], 'decile': [24, 26], 'severity': [31], 'damaging': [44, 46, 47]} -> FLAG: W selection is score-based (see above)
+
+LIMITATIONS (AGENTS 6):
+  * read-only reproduction of recorded values from Phase 1's own
+    outputs and raw caches: validates the code path, is not
+    independent replication of the science.
+  * cached files only; no model scoring; no torch/esm import.
+  * P2/P3/P4 remain exploratory regardless of these gates.
+Elapsed 0.7s

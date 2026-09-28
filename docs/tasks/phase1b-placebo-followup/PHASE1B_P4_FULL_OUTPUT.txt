@@ -1,0 +1,115 @@
+
+==========================================================================
+Phase 1b P2+P3+P4 -- cached-data probe (script 121)  N_BOOT=10000 N_PERM=10000 SEED=0
+==========================================================================
+[G-121.1] input shapes
+  task109 CSV rows = 175 (expect 175); AE frame rows = 57 (expect 57)
+  S (A222_X, X not in {A,V}) = 18 (expect 18); V (AV_*) = 38 (expect 38); disjoint=True; union = 56 (expect 56)
+  G6 rows dropped (target pos == bg pos) = 0
+  rows per background: min=1932 max=1932 (Phase 1 recorded 1932); identical (position, hgvs_pro) sets across all 57 backgrounds: True
+  G-121.1 PASS
+[G-121.2] point rhos vs task109_placebo_rhos.csv
+  max|diff| over 57 backgrounds = 9.714e-17 (gate < 1e-9)
+  G-121.2 PASS
+[G-121.3] bootstrap identity: every cluster exactly once -> max|diff| vs point rhos = 0.000e+00 (gate < 1e-12)
+  G-121.3 PASS
+  position-cluster draws: 10000 x 57 rho recomputed on resampled rows (stream SEED+0); draws with any NaN = 0
+
+--------------------------------------------------------------------------
+P2 -- SAME-SITE (S, n=18) vs SAME-SUBSTITUTION (V, n=38) CONTRAST  [EXPLORATORY]
+--------------------------------------------------------------------------
+  mean rho_b(S) = -0.055208774 (n=18)
+  mean rho_b(V) = -0.010138068 (n=38)
+  D = mean(S) - mean(V) = -0.045070706
+  bootstrap (position-cluster, 10000 draws, SEED+0): D CI 95% = [-0.107025598, +0.017286053] (valid draws 10000/10000, NaN dropped 0)
+  bootstrap sd(D) = 0.032070135
+  label permutation (10000 shuffles of S/V labels over the 56, two-sided, SEED+1): p = (1 + 13) / (1 + 10000) = 0.001400
+  label check: each shuffle keeps n(S)=18, n(V)=38 (mechanical: lab.sum()==18 by construction)
+  A222V rho (AE frame) = -0.104321773; signed rank within S u {A222V} (n=19) = 1; within V u {A222V} (n=39) = 1 (rank 1 = most negative; reported, NOT tested)
+  P2 RULE (pre-registered): CI excludes 0 -> NOT DISTINGUISHABLE
+  P2 IS EXPLORATORY either way.
+  INTERPRETATION GUARD (verbatim from the task doc): "A222V shares the site with S and the substitution with V. D < 0 means shared site tracks A222V's e.b more than a shared substitution does. That is compatible with a real site-specific effect; it is NOT evidence of a generic artifact and NOT evidence of A222V-specificity."
+
+--------------------------------------------------------------------------
+P3 -- SIMILARITY-TO-VALINE GRADIENT WITHIN S  [EXPLORATORY]
+--------------------------------------------------------------------------
+  [G-121.4] grantham import OK; 18 finite d_b (range [21.5, 191.2]) -> PASS
+  d_b = Grantham(X, V) for X in the 18 A222X (PRIMARY metric, fixed in the pre-registration)
+  T = Spearman(rho_b, d_b) over the 18 = -0.182662539 (prediction if the anchor tracks A222V-like structure: more V-like -> more negative rho_b -> T > 0)
+  bootstrap T (same SEED+0 draws as P2): 95% CI = [-0.605779154, +0.364293086] (valid 10000/10000, NaN dropped 0)
+  bootstrap SE(T) = 0.256865386 -> minimum detectable |T| approx 2.8 x SE = 0.719223081  (n=18 is small; stated as the task requires)
+  label permutation (10000 shuffles of d_b across the 18, two-sided, SEED+2): p = (1 + 4627) / (1 + 10000) = 0.462754
+  leave-one-out range of T: [-0.284313725, -0.056372549] (n=18 fits; T > 0 in 0/18)
+    drop C: T = -0.056372549
+    drop D: T = -0.056372549
+    drop E: T = -0.125000000
+    drop F: T = -0.171568627
+    drop G: T = -0.237745098
+    drop H: T = -0.198529412
+    drop I: T = -0.284313725
+    drop K: T = -0.213235294
+    drop L: T = -0.227941176
+    drop M: T = -0.186274510
+    drop N: T = -0.154411765
+    drop P: T = -0.230392157
+    drop Q: T = -0.193627451
+    drop R: T = -0.193627451
+    drop S: T = -0.125000000
+    drop T: T = -0.281862745
+    drop W: T = -0.200980392
+    drop Y: T = -0.144607843
+  18-row table sorted by d_b (X, d_b, rho_b, this-run bootstrap CI, Phase 1 recorded CI):
+    X=M  d_b=  21.5  rho_b=-0.056981636  CI_this=[-0.127311,+0.014029]  CI_phase1=[-0.127430,+0.013553]
+    X=I  d_b=  29.6  rho_b=-0.074744224  CI_this=[-0.136474,-0.010560]  CI_phase1=[-0.137712,-0.010153]
+    X=L  d_b=  31.8  rho_b=-0.060453465  CI_this=[-0.126583,+0.006378]  CI_phase1=[-0.126869,+0.005987]
+    X=F  d_b=  49.9  rho_b=-0.036052443  CI_this=[-0.097241,+0.024523]  CI_phase1=[-0.096778,+0.025109]
+    X=Y  d_b=  54.7  rho_b=-0.022036412  CI_this=[-0.083549,+0.038912]  CI_phase1=[-0.083042,+0.039776]
+    X=P  d_b=  67.8  rho_b=-0.079329771  CI_this=[-0.136132,-0.020527]  CI_phase1=[-0.135937,-0.019752]
+    X=T  d_b=  69.5  rho_b=-0.103143738  CI_this=[-0.163864,-0.039305]  CI_phase1=[-0.162975,-0.040722]
+    X=H  d_b=  83.9  rho_b=-0.009998551  CI_this=[-0.076304,+0.055246]  CI_phase1=[-0.077287,+0.055495]
+    X=W  d_b=  88.0  rho_b=-0.027606618  CI_this=[-0.088975,+0.035339]  CI_phase1=[-0.090793,+0.035436]
+    X=R  d_b=  95.8  rho_b=-0.041544813  CI_this=[-0.108839,+0.025513]  CI_phase1=[-0.108276,+0.026103]
+    X=Q  d_b=  96.3  rho_b=-0.055907333  CI_this=[-0.126285,+0.014749]  CI_phase1=[-0.127079,+0.013236]
+    X=K  d_b=  97.0  rho_b=-0.033997855  CI_this=[-0.103003,+0.034719]  CI_phase1=[-0.104057,+0.035356]
+    X=G  d_b= 108.8  rho_b=-0.013732276  CI_this=[-0.082969,+0.054333]  CI_phase1=[-0.083482,+0.054777]
+    X=E  d_b= 121.3  rho_b=-0.070808815  CI_this=[-0.137325,-0.003943]  CI_phase1=[-0.137592,-0.003748]
+    X=S  d_b= 123.0  rho_b=-0.067244952  CI_this=[-0.127276,-0.004335]  CI_phase1=[-0.128057,-0.005908]
+    X=N  d_b= 132.9  rho_b=-0.060415888  CI_this=[-0.127477,+0.006108]  CI_phase1=[-0.128494,+0.007575]
+    X=D  d_b= 152.0  rho_b=-0.081138735  CI_this=[-0.145796,-0.015624]  CI_phase1=[-0.148578,-0.015530]
+    X=C  d_b= 191.2  rho_b=-0.098620412  CI_this=[-0.161751,-0.034699]  CI_phase1=[-0.163621,-0.034968]
+  P3 RULE (pre-registered): CI lower bound > 0 (False) AND T > 0 in all 18 LOO (False); CI upper bound < 0 (False) -> NOT RESOLVED
+  REQUIRED WORDING for NOT RESOLVED: "n=18 cannot resolve this," never "the gradient is flat".
+  SECONDARY (descriptive only; no decision rests on these; all reported, never selected among):
+    BLOSUM62(V, X): SIMILARITY metric (gradient predicts T < 0); T = -0.388909932, bootstrap CI [-0.727767689, +0.125729786]
+    |dKD| (Kyte-Doolittle): DISTANCE metric (gradient predicts T > 0); T = +0.182575070, bootstrap CI [-0.308121364, +0.557087369]
+
+--------------------------------------------------------------------------
+P4 -- NON-SITE PLACEBOS ONLY  [POST-HOC, DESCRIPTIVE]
+--------------------------------------------------------------------------
+  [V (AE2, AE frame)] n=38 mean=-0.010138068 background-bootstrap 95% CI=[-0.025250004,+0.006068308] (N_BOOT=10000, stream SEED+4) median=-0.022696950 range=[-0.094598010,+0.116091440]
+    A222V rho (frame-matched) = -0.104321773; signed rank in group u {A222V} = 1/39 (rank 1 = most negative); #{b : rho_b <= rho_A222V} = 0; p_spec = (1 + 0) / (1 + 38) = 0.025641026
+  [W (W frame)] n=30 mean=-0.016421191 background-bootstrap 95% CI=[-0.032881444,-0.000116764] (N_BOOT=10000, stream SEED+4) median=-0.020178655 range=[-0.130455833,+0.086283923]
+    A222V rho (frame-matched) = -0.072547470; signed rank in group u {A222V} = 3/31 (rank 1 = most negative); #{b : rho_b <= rho_A222V} = 2; p_spec = (1 + 2) / (1 + 30) = 0.096774194
+  F1 recorded (task109_distribution_summary.csv) side by side:
+    [W] F1: n=30 mean=-0.016421191 median=-0.020178655 range=[-0.130455833,+0.086283923] rank_signed=3 mean CI=[-0.032867760,+0.000010545]
+    [W] deterministic quantities identical to F1 (n/mean/median/range/rank): True (must be True; a False would be a bug -- reported plainly)
+    [W] CI comparison: this run [-0.032881444,-0.000116764] vs F1 [-0.032867760,+0.000010545] -- fresh bootstrap stream, small differences expected
+    [AE-frame F1 record = ALL 56 placebos, a DIFFERENT set than V's 38, context only]: n=56 mean=-0.024625081 mean CI=[-0.036997660,-0.011453351]
+  POST-HOC, DESCRIPTIVE; does not replace F1d; may not be cited as support for background-specificity.
+  No decision rule for P4 (none pre-registered; none applied).
+
+--------------------------------------------------------------------------
+SCRIPT 121 SUMMARY
+--------------------------------------------------------------------------
+  P2: D = -0.045070706, CI [-0.107025598, +0.017286053], perm p = 0.001400 -> NOT DISTINGUISHABLE (EXPLORATORY)
+  P3: T = -0.182662539, CI [-0.605779154, +0.364293086], perm p = 0.462754, LOO range [-0.284313725, -0.056372549] -> NOT RESOLVED (EXPLORATORY)
+  P4: V n=38 mean=-0.010138068; W n=30 mean=-0.016421191 (POST-HOC, DESCRIPTIVE)
+
+LIMITATIONS (AGENTS 6):
+  * all of P2/P3/P4 is post-hoc-motivated and EXPLORATORY; it
+    cannot upgrade or replace F1d and is not confirmatory.
+  * shared y (own_e_b) across backgrounds: group-mean background
+    bootstraps describe this set of backgrounds (not iid);
+    P2/P3 position-cluster draws recompute rhos from raw scores.
+  * cached scores only; no model scoring; no torch/esm import.
+Elapsed 149.9s
