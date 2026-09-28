@@ -1,0 +1,68 @@
+
+==========================================================================
+G1 -- precision-stratified anchor (scripts/115)  N_BOOT=10000 seed=0
+==========================================================================
+  G1a PASS: recomputed e_b == recorded own_e_b, max|diff| = 2.220e-16 over 10757 rows
+  G2 PASS: base (10757, 654); se_eb_delta finite on all 10757 rows; task32 own_e_b == recorded (max|diff| 0.000e+00)
+  G3 PASS: MEASUREMENT component == recorded se_e_b, max|diff| = 1.363e-13 over 10757 common rows (identity)
+  G4 PASS: 5 quintiles; sizes {1: 2152, 2: 2151, 3: 2151, 4: 2151, 5: 2152} (Q1 = most precise)
+
+--------------------------------------------------------------------------
+G1a -- SE decomposition (variance shares)
+--------------------------------------------------------------------------
+  MEASUREMENT (m.se)         mean share of Var = 0.7169
+  WT ARM (+correction)       mean share of Var = 0.1825
+  A222V LINE                 mean share of Var = 0.1006
+  se_eb_delta: min 0.021925  median 0.073223  max 5.010653
+  se_eb_meas  : median 0.062230 (the recorded se_e_b); delta-method median/recorded median = 1.177x
+  Spearman(se_delta, se_noA) = 0.995534
+  rows with w.post <= 0.5 (sm = w_mean branch): 11193 of 13134
+  sensitivity: 866 of 10757 variants change quintile if the A222V line is dropped from the SE
+
+--------------------------------------------------------------------------
+G1b -- ANCHOR WITHIN EACH PRECISION QUINTILE
+--------------------------------------------------------------------------
+  q                   n   pos   mean SE  median SE       rho                 95% CI   p_boot
+  Q1 (most->least)   2152   531   0.04254    0.04352 -0.116675 [-0.176951,-0.052745]   0.0000
+  Q2 (most->least)   2151   590   0.05798    0.05795 -0.114358 [-0.164565,-0.064601]   0.0000
+  Q3 (most->least)   2151   619   0.07440    0.07386 -0.085831 [-0.135318,-0.035601]   0.0006
+  Q4 (most->least)   2151   599   0.10023    0.09922 -0.091492 [-0.137113,-0.045945]   0.0000
+  Q5 (most->least)   2152   538   0.24259    0.17064 -0.054972 [-0.098582,-0.010520]   0.0162
+  (sensitivity, noA partition -- same table, reported not selected):
+    Q1: rho -0.087411 [-0.149713,-0.022278]
+    Q2: rho -0.129181 [-0.180833,-0.077944]
+    Q3: rho -0.083023 [-0.131183,-0.032721]
+    Q4: rho -0.098909 [-0.143319,-0.055362]
+    Q5: rho -0.054948 [-0.098283,-0.011447]
+
+--------------------------------------------------------------------------
+G1c -- VERDICT (pre-registered rule)
+--------------------------------------------------------------------------
+  step Q1->Q2 (precision worsening): |rho| 0.116675 -> 0.114358 (-0.002316)  OK (expected direction)
+  step Q2->Q3 (precision worsening): |rho| 0.114358 -> 0.085831 (-0.028527)  OK (expected direction)
+  step Q3->Q4 (precision worsening): |rho| 0.085831 -> 0.091492 (+0.005660)  REVERSED
+  step Q4->Q5 (precision worsening): |rho| 0.091492 -> 0.054972 (-0.036520)  OK (expected direction)
+  k (steps in expected direction): PRIMARY = 3/4; noA sensitivity = 2/4
+  VERDICT (neither pre-stated branch; k=3/4): the step pattern above is reported as-is -- the anchor does not rise monotonically with precision, and it does not fall monotonically either; see the individual steps and adjacent CI overlap for the factual pattern. No branch wording is forced.
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. First-order delta method: approximate by construction;
+     higher-order terms dropped.
+  2. Known-se Gaussian assumption inherited from the atlas's
+     fitter; optimistic reported se propagate optimistically.
+  3. Non-use_line rows: Cov(w_mean, b_w) truncated to 0
+     (11193 rows, direction unknown).
+  4. A222V-line variance is common-mode in expectation
+     (script 17's note); included in primary, dropped only
+     in the disclosed noA sensitivity.
+  5. SE itself is estimated -> quintile boundaries are fuzzy,
+     which attenuates monotone patterns (bias against the
+     positive branch).
+  6. Cross-sectional correlation within quintiles on one
+     dataset: monotonicity would be evidence, not proof.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task115_g1_variant_se.csv
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task115_g1_quintiles.csv
+SCRIPT 115 DONE (33.7s)

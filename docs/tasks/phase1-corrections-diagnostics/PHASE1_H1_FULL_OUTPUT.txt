@@ -1,0 +1,62 @@
+
+==========================================================================
+H1 -- region batch-effect diagnostic (scripts/116)  N_BOOT=10000 seed=0
+==========================================================================
+  Axis 1 READ DEPTH: 21 CSVs under data/raw/mthfrModel header-scanned -> NOT AVAILABLE (no depth/n_read/read_count/coverage/rd column in any released file). Reportable as unavailable; no proxy substituted.
+  G2 PASS: base (10757, 654) -- same frame as Group G
+  G1 PASS: bounds == REGION_BOUNDS, disjoint; 0 unmapped; positions per region {1: 146, 2: 146, 3: 180, 4: 182} (sum 654)
+  G3 PASS: published w.fitness joins base with 0 missing
+  G4 PASS: synonymous axis 570 rows (570 positions, 1:1), per region {1: 128, 2: 131, 3: 154, 4: 157}
+
+--------------------------------------------------------------------------
+H1a -- PER-REGION DISTRIBUTIONS (mean [95% position-cluster CI])
+--------------------------------------------------------------------------
+
+  per-variant SE (se_e_b):
+    R1: n= 2577 pos= 146 mean=+0.065949 median=+0.054380 mean=0.065949 [0.062292, 0.069865]
+    R2: n= 2421 pos= 146 mean=+0.074674 median=+0.057647 mean=0.074674 [0.069916, 0.079824]
+    R3: n= 2713 pos= 180 mean=+0.104532 median=+0.072536 mean=0.104532 [0.098316, 0.111086]
+    R4: n= 3046 pos= 182 mean=+0.101122 median=+0.070320 mean=0.101122 [0.093649, 0.109515]
+    R4 - R(1-3): +0.018859 [+0.010578, +0.027944] -> CI excludes 0
+    Kruskal-Wallis across 4 regions (position-level means): H=126.700, p=2.781e-27
+
+  WT-arm fitness (w.fitness):
+    R1: n= 2577 pos= 146 mean=+0.610493 median=+0.579885 mean=0.610493 [0.571895, 0.649253]
+    R2: n= 2421 pos= 146 mean=+0.546925 median=+0.558988 mean=0.546925 [0.496698, 0.598070]
+    R3: n= 2713 pos= 180 mean=+0.812376 median=+0.927706 mean=0.812376 [0.762299, 0.859195]
+    R4: n= 3046 pos= 182 mean=+0.930543 median=+0.991658 mean=0.930543 [0.897995, 0.962791]
+    R4 - R(1-3): +0.268979 [+0.225268, +0.311626] -> CI excludes 0
+    Kruskal-Wallis across 4 regions (position-level means): H=154.165, p=3.328e-33
+
+  synonymous own_e.b VARIANCE:
+    R1: n=  128 pos= 128 mean=+0.035996 median=+0.013876 var=0.035923 [0.024477, 0.049611]
+    R2: n=  131 pos= 131 mean=+0.004164 median=+0.004614 var=0.007053 [0.004629, 0.009865]
+    R3: n=  154 pos= 154 mean=+0.045112 median=+0.045996 var=0.029728 [0.022359, 0.037584]
+    R4: n=  157 pos= 157 mean=+0.001703 median=-0.002800 var=0.011335 [0.008319, 0.014463]
+    R4 - R(1-3): -0.013312 [-0.019663, -0.007583] -> CI excludes 0
+
+--------------------------------------------------------------------------
+H1b -- VERDICT (pre-registered rule: R4-vs-rest CI excludes 0)
+--------------------------------------------------------------------------
+  per-variant SE (se_e_b)          R4-R(1-3) +0.018859 [+0.010578, +0.027944] -> DIFFERS
+  WT-arm fitness (w.fitness)       R4-R(1-3) +0.268979 [+0.225268, +0.311626] -> DIFFERS
+  synonymous own_e.b VARIANCE      R4-R(1-3) -0.013312 [-0.019663, -0.007583] -> DIFFERS
+  VERDICT: region 4 differs systematically on: per-variant SE (se_e_b), WT-arm fitness (w.fitness), synonymous own_e.b VARIANCE (CI excludes 0). Per the pre-registered rule this is flagged as the LEADING CANDIDATE explanation for region 4's anomalous findings (the depth reversal, the -237/+010 anchor pattern -- anomalies quoted from the task doc, not re-derived here): a mutagenesis library or batch effect, not necessarily biology. RECOMMENDATION: region fixed effects become the DEFAULT treatment in any future analysis, rather than a sensitivity check.
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. Read depth unavailable (3 axes tested, not 4): a
+     library/batch effect on depth alone is untested.
+  2. Region = position range: axes compare disjoint position
+     sets; position-composition differences (buried/exposed
+     mix etc.) are part of what is measured, not separable.
+  3. Synonymous variance: ~128-157 positions/region -> CI
+     widths are what they are; do not over-read.
+  4. w.fitness is the atlas's published WT-arm fit (not
+     re-derived); se_e_b is scripts/35's known-se WLS value.
+  5. Three axes, no multiplicity correction -- diagnostic,
+     not confirmatory.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task116_h1_region_metrics.csv
+SCRIPT 116 DONE (0.4s)

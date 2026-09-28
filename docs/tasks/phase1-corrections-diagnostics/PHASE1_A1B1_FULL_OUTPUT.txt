@@ -1,0 +1,79 @@
+
+==========================================================================
+A1 + B1 -- within-family disattenuation & instance-inclusive CI (scripts/111, deterministic single run)
+==========================================================================
+  G0 PASS: all four inputs present
+  G1 PASS: five anchors mean=-0.015588096011510361 (rounds -0.015588), sd(ddof=1)=0.02105177667118294 (rounds 0.0211)
+  G2 PASS: headline row reproduced exactly (-0.0881180642489173, CI [-0.1173334458953319, -0.0595113844951173])
+  G3 PASS: rel_delta read-back == 0.0843648114008588 (script 110's same-day re-derivation)
+  G4 PASS: 0.6363 provenance substring present in OVERNIGHT_LOG
+  G5 PASS: record's chain reproduces -- delta-only -0.303378135655966 vs -0.3033781 (|d|=3.57e-08); full -0.3803153902215881 vs -0.3803154 (|d|=9.78e-09, record's own tol 1e-5; with rel_own=0.6363 the value is -0.3803236361278801)
+
+--------------------------------------------------------------------------
+A1a -- SELF-CONSISTENT WITHIN-FAMILY DISATTENUATION
+--------------------------------------------------------------------------
+  input: five-checkpoint mean anchor = -0.015588096011510361
+         rel_delta (ESM-1v family)  = 0.0843648114008588 (task's '(0.0844)'; 6-dp record 0.084365)
+         rel_own_eb (primary 0.6363, task-literal)
+  delta-only      = -0.015588096011510361 / sqrt(rel_delta) = -0.05366762816122934
+  fully corrected = -0.015588096011510361 / sqrt(rel_delta*0.6363) = -0.06727929631614628
+    sensitivity: literal 4-dp rel_delta=0.0844 -> delta-only -0.05365643926587671, full -0.06726526959218489
+    sensitivity: rel_own=0.6363275925044801 -> full -0.06727783761434572
+
+--------------------------------------------------------------------------
+A1b -- 95% CI ON THE FIVE-CHECKPOINT MEAN, PROPAGATED
+--------------------------------------------------------------------------
+  sd=0.02105177667118294, se = sd/sqrt(5) = 0.009414640736781858
+  PRIMARY t(4) interval: [-0.04172732920234415, 0.010551137179323426] (t=2.7764451051977987)
+  sensitivity z-interval: [-0.0340407918556028, 0.0028645998325820786]
+  propagated through delta-only (÷ 0.29045621253617354): [-0.1436613417147943, 0.03632608539233563]
+  propagated through fully-corrected (÷ 0.2316923164335979): [-0.18009802761112728, 0.045539434978834704]
+  (endpoints divided by the same positive divisors -- the map is linear in r_obs; reliability uncertainty is NOT propagated, disclosed)
+
+--------------------------------------------------------------------------
+A1c -- SIDE BY SIDE
+--------------------------------------------------------------------------
+  ESM-2 RAW, uncorrected:            -0.08811806424891734 CI [-0.1173334458953319, -0.0595113844951173]
+  ESM-1v within-family delta-only:   -0.05366762816122934 CI [-0.1436613417147943, 0.03632608539233563]  (t(4)-propagated)
+  ESM-1v within-family fully corr.:  -0.06727929631614628 CI [-0.18009802761112728, 0.045539434978834704]  (t(4)-propagated)
+  WITHDRAWN cross-model chain (labeled counterfactual, prior record): delta-only -0.303378135655966 / full -0.3803153902215881 -- ESM-2 numerator over ESM-1v-family reliabilities; retained as illustration only
+  POINT-LEVEL: |ESM-2 raw| 0.088118 vs |ESM-1v fully-corrected| 0.067279 -> ESM-2's raw value EXCEEDS the within-family ceiling
+  INTERVAL-LEVEL (both directions, so neither is oversold):
+    - ESM-2 raw -0.08811806424891734 inside ESM-1v fully-corrected CI? True
+    - ESM-1v fully-corrected point inside ESM-2 raw CI? True
+    - ESM-1v fully-corrected point inside ESM-2's CI and ESM-2's raw inside the within-family CI -> at n=5 precision the two are NOT statistically distinguishable; the 'exceeds' statement is a point-estimate comparison.
+
+--------------------------------------------------------------------------
+B1a -- TWO-COMPONENT VARIANCE DECOMPOSITION
+--------------------------------------------------------------------------
+  Var_instance (sample var of 5 anchors, ddof=1) = 0.0004431773010133623  (sd 0.02105177667118294)
+  Var_cluster: no explicit SE was ever printed on record; derived from the recorded position-cluster bootstrap CI [-0.1173334458953319, -0.0595113844951173] as SE = width/(2*1.96) = 0.014750525867401684  -> Var_cluster = 0.0002175780133648862 (derivation disclosed as the method)
+  ASSUMPTION (per task): the two components are INDEPENDENT; combined by sum of variances.
+  SE_instance-inclusive = sqrt(0.0004431773010133623 + 0.0002175780133648862) = 0.02570516124007489
+
+--------------------------------------------------------------------------
+B1b -- INSTANCE-INCLUSIVE INTERVAL
+--------------------------------------------------------------------------
+  around the ESM-1v five-checkpoint mean -0.015588096011510361:
+    PRIMARY  +/- 1.96*SE -> [-0.06597021204205715, 0.03479402001903642]
+    sensitivity +/- t(4)*SE -> [-0.08695706511483647, 0.05578087309181576]
+  ILLUSTRATIVE (task-mandated caveat: ESM-2 has only ONE checkpoint -- not a real interval), same SE centered on ESM-2's single-checkpoint value -0.08811806424891734:
+    [-0.13850018027946412, -0.037735948218370556]
+
+--------------------------------------------------------------------------
+B1c -- DOES IT EXCLUDE ZERO?
+--------------------------------------------------------------------------
+  instance-inclusive interval around the ESM-1v mean = [-0.06597021204205715, 0.03479402001903642]
+  excludes zero: False -> the interval INCLUDES zero; once checkpoint-to-checkpoint (instance) variance joins the position-cluster SE, the ESM-1v within-family mean anchor is not distinguishable from zero at 95%.
+  (the z-based interval [-0.06597021204205715, 0.03479402001903642] and the t(4)-based [-0.08695706511483647, 0.05578087309181576] both include zero)
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. t-interval over n=5 anchors assumes approximate normality of the five draws; n=5 cannot verify it.
+  2. Var_cluster's SE is inverted from a percentile CI (4th-decimal approximation; disclosed as the method).
+  3. Independence of the two variance components is ASSUMED, per the task's instruction to assume and state it.
+  4. Disattenuation carries script 91's proxy assumption (ESM-1v cross-seed delta agreement as the delta's reliability) -- within-family here, so the cross-model objection does not apply to A1, only to the withdrawn chain.
+  5. G5's reproduction of -0.303/-0.380 is a unit test of formula consistency, not independent evidence.
+
+SCRIPT 111 DONE (deterministic, single run)

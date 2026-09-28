@@ -1,0 +1,65 @@
+
+==========================================================================
+J1 -- seed stability of the +0.02121 A222V residual (scripts/114)  N_BOOT=10000 seed=0
+==========================================================================
+  G1 PASS: 31 rows (30 decile + A222V); fresh OLS reproduces the disk residual np.float64(0.02120512028095621) (tol 1e-9); record quote: +0.02121 CI [+0.00465, +0.03934], rho -0.518548, n_boot=2000, n_sub=120
+  G2 PASS: W2 grid = 120 positions x 19 = 2,280 rows (30 bg_ids all 2,280)
+  G3 PASS: grid identity -- ESM-2 mean|delta_AV| on this grid = 0.07425389239711841 == disk A222V row (tol 1e-9; source merged_wt_a222v_scores.csv, script 69's documented arm file)
+
+--------------------------------------------------------------------------
+J1a -- COVERAGE (checked first, per task)
+--------------------------------------------------------------------------
+  G4 PASS: all five members join the grid with 0 missing; delta == av-wt to 1e-12; columns = two-background schema
+  G5 PASS: ESM-1v decile-background coverage = 0/30 for every member (no background cache outside processed is scored with ESM-1v; verified from file inventory + schema)
+
+  Coverage table:
+    member   backgrounds              decile  grid rows  missing   mean|d_AV|
+    member 1 WT + A222V (2)             0/30       2280        0   0.08803881
+    member 2 WT + A222V (2)             0/30       2280        0   0.08535569
+    member 3 WT + A222V (2)             0/30       2280        0   0.08626066
+    member 4 WT + A222V (2)             0/30       2280        0   0.08291365
+    member 5 WT + A222V (2)             0/30       2280        0   0.08797611
+
+--------------------------------------------------------------------------
+J1a -- WHAT IS COMPUTABLE: the A222V arm alone (observed side of M1d, NOT the residual)
+--------------------------------------------------------------------------
+  ESM-2 (record, quoted from task69_w3_backgrounds.csv): mean|d_AV| = 0.07425389; residual +0.02121 [+0.00465, +0.03934] (CI quoted, not re-run)
+  member 1: mean|d_AV| = 0.08803881  CI [0.06535528, 0.11883718]  (position-cluster, 10000 draws, seed 0)
+  member 2: mean|d_AV| = 0.08535569  CI [0.07036529, 0.10358105]  (position-cluster, 10000 draws, seed 0)
+  member 3: mean|d_AV| = 0.08626066  CI [0.07015992, 0.10705102]  (position-cluster, 10000 draws, seed 0)
+  member 4: mean|d_AV| = 0.08291365  CI [0.06061811, 0.10972415]  (position-cluster, 10000 draws, seed 0)
+  member 5: mean|d_AV| = 0.08797611  CI [0.07025326, 0.10827521]  (position-cluster, 10000 draws, seed 0)
+  across the five members: mean 0.08610898, sd 0.00212197, min 0.08291365, max 0.08803881 (descriptive; no per-seed residual exists to compare)
+
+--------------------------------------------------------------------------
+J1b -- VERDICT
+--------------------------------------------------------------------------
+  Seed-stability of +0.02121 [+0.00465, +0.03934] across the
+  five ESM-1v checkpoints is NOT ASSESSABLE from cached data:
+  every checkpoint has 0/30 of the severity-spread
+  backgrounds the residual statistic's regression requires
+  (only WT and A222V are scored for ESM-1v), so the OLS side
+  -- and with it the residual -- is undefined for all five.
+  What IS computable (the A222V arm alone) is printed above
+  and does not substitute for the residual.
+  Explicitly NOT claimed: stable, unstable, or
+  exploratory-only -- none of those was measured here.
+  The result keeps its existing single-checkpoint status
+  ('verified across backgrounds and positions on one
+  checkpoint; unverified across seeds' -- true-final-closeout
+  record). Testing it on ESM-1v requires scoring 30 bgs x
+  120 pos x 5 checkpoints = 18,600 forward passes -- NEW
+  model scoring, barred this session.
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. Per-member CIs cover the A222V arm only (position-
+     cluster); no inferential cross-seed test is possible.
+  2. S(b|WT) is ESM-2's severity scale by design; a
+     member-side severity would be a different experiment.
+  3. G1's OLS reproduction is a unit test of the reading,
+     not independent evidence for the record's residual.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task114_j1_coverage_and_arm.csv
+SCRIPT 114 DONE (0.4s)

@@ -1,0 +1,84 @@
+
+==========================================================================
+L1/L2/L3 -- cheap verification checks (scripts/119)  N_BOOT=10000 seed=0
+==========================================================================
+  L4 (GRB2 provenance) is read-only: logged directly in PHASE1_LOG.md, no script.
+
+--------------------------------------------------------------------------
+[L1] position-222 exclusion from the analysis tables
+--------------------------------------------------------------------------
+  frames: base (10757, 654) OK; task77 analysis (9595, 586) OK
+  rows at position 222: base = 0, task77 all = 0, task77 analysis = 0
+  L1 PASS: zero position-222 rows in every analysis table; no correction flag triggered.
+    upstream mechanics (DATA, no rule attached):
+      arm files 12,445 rows / 655 positions each (both include 222); common mutants at 222 = 18
+      av - wt at 222 = EXACT constant 5.200276032090187 (std 9.6e-16) = logP(A) - logP(V) of the masked position: esm_scoring returns log-odds vs the sequence's own residue (`wt_aa = sequence[idx0]`, `log_probs[aa].item() - wt_score`), wt arm ref = A, A222V arm ref = V, on identical masked inputs (sequences differ only at 222: `wt_seq[:221] + 'V' + wt_seq[222:]`)
+      implied P(A|mask@222)/P(V|mask@222) = exp(5.200276) = 181.3
+      script 11 `hgvs_pro ... if pos != 222 else None` -> merged (hgvs join) = 654 positions -> 222 never reaches task32/task77/any table
+
+--------------------------------------------------------------------------
+[L2] ThermoMPNN-D sign-convention audit
+--------------------------------------------------------------------------
+  GATE frame: task77 ddg == task_V2 ddg exactly on all 10,141 hgvs (max|diff| = 0.0) -- one frame, two columns
+  GATE identity vs AD1's printed line: merged 10141 | rsa present 10141 | OVERALL frac>0 0.8891 mean 1.0316 median 0.8571 min -1.7602 max 4.5008
+  identification grid (pre-registered order): n_buried(rsa<0.10) / n_exposed(rsa>0.50)
+    H1xC1  n_buried= 117  n_exposed= 640
+    H1xC2  n_buried= 144  n_exposed= 777
+    H2xC1  n_buried= 123  n_exposed= 661  <= IDENTIFIES (sizes + stats match AD1)
+    H2xC2  n_buried= 151  n_exposed= 803
+    H3xC1  n_buried= 123  n_exposed= 769
+    H3xC2  n_buried= 152  n_exposed= 940
+    H4xC1  n_buried= 129  n_exposed= 790
+    H4xC2  n_buried= 159  n_exposed= 966
+    H5xC1  n_buried= 121  n_exposed= 725
+    H5xC2  n_buried= 149  n_exposed= 879
+    H6xC1  n_buried= 127  n_exposed= 746
+    H6xC2  n_buried= 156  n_exposed= 905
+    H7xC1  n_buried= 133  n_exposed= 875
+    H7xC2  n_buried= 164  n_exposed=1068
+  L2a IDENTIFIED: hydro=H2 {ACFILMVWY} charged=C1 {DEKR} (first match in grid order)
+    buried(rsa<0.10) hydro->charged n=123: median=2.629 mean=2.684 min=0.675 max=4.501 frac>0=1.000  == AD1's printed line
+    EXPOSED(rsa>0.50) same class n=661: median=1.833 frac>0=0.949 == AD1 (n=661, 1.833, 0.949)
+  GATE top-8: all 8 control rows present with AD1's ddg (tol 1e-6) and rsa 0.0
+  [L2a RESULT] ThermoMPNN-D single-mutant head on the IDENTICAL 123 rows:
+    n=123 frac>0=1.000 median=2.373 mean=2.343 min=0.461 max=3.721 | positive=123 negative=0 zero=0
+    raw ThermoMPNN (AD1):      n=123 frac>0=1.000 median=2.629 mean=2.684 min=0.675 max=4.501
+    convention rule (pre-registered): frac>0 1.000 -> SAME
+    top-8 controls with the D-head value added:
+      p.Ala113Arg    raw ddg +2.226977   ddg_single_D +2.056947
+      p.Phe516Glu    raw ddg +3.497138   ddg_single_D +2.253207
+      p.Phe516Asp    raw ddg +4.066879   ddg_single_D +3.424787
+      p.Phe516Arg    raw ddg +3.229506   ddg_single_D +1.982118
+      p.Leu621Glu    raw ddg +2.588402   ddg_single_D +3.240503
+      p.Leu621Asp    raw ddg +3.039570   ddg_single_D +3.493230
+      p.Leu621Arg    raw ddg +2.680789   ddg_single_D +2.728020
+      p.Leu618Lys    raw ddg +2.908469   ddg_single_D +2.482657
+  [L2b] A222V values are RETRIEVED, not re-derived (position 222 has 0 rows in task_V2/task77 -- gated in L1):
+    raw ThermoMPNN  ddG(A222V) = -0.0439   source: DEEPDIVE_LOG [AD2] G1 -- script 68's V3 output, raw SSM re-read (position 182 + chain-A offset 40 = resi 222)
+    ThermoMPNN-D    ddG_single(222V) = +0.8071  source: DEEPDIVE_LOG [AD4] G5 (DEEPDIVE L2324)
+  [L2b VERDICT (pre-registered rule)]: REAL DISAGREEMENT between the two model generations: both heads use positive = destabilizing (the D head passes the identical 123-sub audit with frac>0 = 1.000 vs the raw head's 1.000), so -0.0439 (~neutral) vs +0.8071 (destabilizing) is a genuine disagreement in predicted effect, not a sign-convention artifact.
+
+--------------------------------------------------------------------------
+[L3] interaction_D dynamic range
+--------------------------------------------------------------------------
+  GATE identity: rho(interaction_D, own_e_b) full = 0.015350499380143039 rounds to +0.0154 == AD4's logged primary (DEEPDIVE L2328)
+    this run: CI [-0.016584632010637815, 0.04646129646113297] p_boot=0.3406 (n 9595, clusters 586)
+    AD4 logged: [-0.0166, +0.0465] p_boot 0.3406 n=9595 clusters=586 -- printed for comparison, not gated (CI endpoints depend on N_BOOT)
+  full set (9,595): SD 0.379038  IQR 0.488110 (q25 -1.538895, q75 -1.050784)
+  proximal subset (ca_dist_222 <= 8.0): n = 209 rows across 13 positions (distal complement n = 9386)
+  proximal stats: SD 0.305439  IQR 0.452345 (q25 -1.592566, q75 -1.140221)
+  ratios full/prox: SD 1.240962  IQR 1.079066
+  LABEL (pre-registered rule r_SD <= 0.5 -> COLLAPSES; <1 -> REDUCED; >=1 -> NOT REDUCED): NOT REDUCED
+  floor-effect probe (pre-registered, task-motivated): proximal rho = -0.05389382915772559 CI [-0.23675343839749177, 0.1459156413830015] p_boot=0.639 (n 209, clusters 13)
+  L3b: NOT a floor-effect candidate by this measure -- the full set's spread is not smaller than the proximal subset's (SD ratio 1.241, IQR ratio 1.079); the null at +0.0154 stands as a genuine null on this test.
+
+==========================================================================
+LIMITATIONS (printed per AGENTS 6)
+==========================================================================
+  1. L1's 'identical masked inputs' claim is asserted from source (script 11's sequence construction + esm_scoring's masking), not by re-scoring -- no model runs this session.
+  2. The 123-row audit reproduction is a UNIT TEST of plumbing against AD1's published numbers, not independent evidence (AGENTS 6). AD1 never recorded its amino-acid sets; they are identified here by exact reproduction, disclosed as such.
+  3. A222V's two values are RETRIEVED from DEEPDIVE_LOG (position 222 has 0 rows in both tables, gated in L1) -- not re-derived.
+  4. L3's proximal subset is a subset of the full set (not independent); the 0.5 collapse threshold is a pre-run convention, not a derived quantity.
+  5. L2b's verdict depends wholly on the audit outcome; the thresholds (0.95 / 0.05) leave a MIXED middle that is reported, not forced.
+
+Done in 13.6s.

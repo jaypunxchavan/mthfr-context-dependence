@@ -1,0 +1,40 @@
+
+==========================================================================
+E1 -- matched-frame ESM-1v agreement vs the 150M/650M comparison (scripts/113)  N_BOOT=10000 seed=0
+==========================================================================
+  G1 PASS: base (10757, 654), 5 members joined with 0 missing; task58 CSV (1900 rows, 100 positions)
+  G4 subset frame: 1671 rows / 100 of the 100 sampled positions present in the analysis base; positions with zero rows: none
+  G2 PASS: full-frame raw 0.882637 and delta 0.084365 reproduce the record (T5a) at 6 dp
+  G3 PASS: 150M/650M recomputed -- PRIMARY +0.0978 CI=[-0.0423,+0.2276] p=0.1650, raw wt +0.4157, raw av +0.4098, sign 53.11% (all match record)
+
+--------------------------------------------------------------------------
+E1b -- ALL THREE READINGS SIDE BY SIDE
+--------------------------------------------------------------------------
+  frame                         n rows  pos                   RAW median-of-10                   DELTA median-of-10
+  ESM-1v full frame              10757  654 +0.882637 [+0.869559,+0.891790]   +0.084365 [+0.052159,+0.122589]
+  ESM-1v matched subset           1671  100 +0.902367 [+0.874368,+0.922624]   +0.135293 [+0.028438,+0.203821]
+  ESM-1v full (record T5a)       10757  654    +0.882637 [+0.869559,+0.891790]      +0.084365 [+0.052159,+0.122589]
+  150M/650M (same 100 pos)        1900  100 wt +0.4157 / av +0.4098 (per background)   +0.0978 [-0.0423,+0.2276]  sign 53.11%
+
+--------------------------------------------------------------------------
+E1c -- WHICH READING THE RESULT SUPPORTS
+--------------------------------------------------------------------------
+  raw  : full +0.882637 -> subset +0.902367 (change +0.019730; threshold -0.05) -> HOLDS NEAR its full-frame value
+  delta: full +0.084365 -> subset +0.135293 (change +0.050928; threshold -0.05) -> HOLDS NEAR its full-frame value
+  on the SAME 100 positions: ESM-1v raw +0.902367 vs 150M/650M raw +0.4157/+0.4098; ESM-1v delta +0.135293 vs 150M/650M delta +0.0978
+  VERDICT (pre-registered mapping): ESM-1v's agreement HOLDS near its full-frame value on the matched subset -> the scale non-replication claim is STRENGTHENED (the 150M/650M collapse is not a property of this frame).
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. The matched subset is ONE seed-0 draw of 100 positions:
+     frame-specific, not a distribution over subsets.
+  2. 150M exists only on these 100 positions (no full-frame
+     150M number; new model scoring is barred this session).
+  3. Statistics are pooled; position clustering enters only
+     the CIs (the record's own convention; T4a's
+     within-position decomposition is quoted, not redone).
+  4. G2/G3 reproductions are unit tests, not evidence.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task113_matched_frame_agreement.csv
+SCRIPT 113 DONE (310.1s)

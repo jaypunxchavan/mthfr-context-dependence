@@ -1,0 +1,41 @@
+
+==========================================================================
+I1 -- per-condition anchors (scripts/117)  N_BOOT=10000 seed=0
+==========================================================================
+  G1 PASS: base (10757, 654) -- same frame as Groups G/H
+  G2 PASS: intercept of resid == recorded own_e_b, max|diff| = 2.220e-16 (identity: these residuals ARE own_e.b's ingredients)
+  G3 PASS: finite resid_c rows per condition [10586, 10590, 10619, 10588] (>= 9000 each)
+
+--------------------------------------------------------------------------
+I1a -- ANCHOR PER FOLINATE CONDITION (rho [95% cluster CI])
+--------------------------------------------------------------------------
+  REF pooled anchor rho(delta_ESM, own_e.b) = -0.088118 [-0.117333, -0.059511] p=0.0000 (n=10757)
+  c= 12: n=10586  rho -0.048706 [-0.077991, -0.020819] p=0.0004   mean fitness (m_score) +0.2943   mean resid -0.0513   mean expected +0.3456
+  c= 25: n=10590  rho -0.119304 [-0.149751, -0.089162] p=0.0000   mean fitness (m_score) +0.4186   mean resid +0.0561   mean expected +0.3625
+  c=100: n=10619  rho -0.111074 [-0.140347, -0.082362] p=0.0000   mean fitness (m_score) +0.5029   mean resid +0.0474   mean expected +0.4555
+  c=200: n=10588  rho -0.078068 [-0.105402, -0.051184] p=0.0000   mean fitness (m_score) +0.5972   mean resid +0.0150   mean expected +0.5822
+
+--------------------------------------------------------------------------
+I1b -- DIAGNOSTICS (pre-stated)
+--------------------------------------------------------------------------
+  D1 signs: [-1, -1, -1, -1] -> all four share one sign; matches pooled anchor sign
+  D2 |rho| min 0.048706 max 0.119304 ratio 2.449 range 0.070598; pooled 0.088118; all within 0.05 abs of pooled: True
+  D3 Kendall tau-b(mean fitness, rho) over 4 conditions = +0.0000 (|tau|=1 would be perfect ordering correspondence; n=4 -> DESCRIPTIVE ONLY, no p claimed (scipy p=1 shown for completeness only))
+  mean fitness by condition: [0.2943, 0.4186, 0.5029, 0.5972]
+  rho by condition:         [-0.048706, -0.119304, -0.111074, -0.078068]
+
+  STATEMENT (by pre-registered rule):
+  - sign and magnitude consistent across conditions (all four same sign; rho ordering does NOT match mean-fitness ordering exactly -> no exact fitness tracking).
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. Four correlated views of the same variants, not four
+     independent replications.
+  2. Fitness-tracking diagnostic is n=4 -> descriptive.
+  3. All four residuals share expected() (same A222V line,
+     same correction): consistency is necessary, not
+     sufficient for genuineness.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task117_i1_per_condition.csv
+SCRIPT 117 DONE (69.6s)

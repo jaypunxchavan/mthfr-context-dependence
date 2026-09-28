@@ -1,0 +1,69 @@
+
+==========================================================================
+D1 -- rho_E via the correlated-error formula (scripts/110)  N_BOOT=10000 seed=0
+==========================================================================
+  G0 PASS: task32_analysis_table.csv + all 5 member CSVs present
+  G2 PASS: all 5 members: delta == av_logodds - wt_logodds on all 12446 rows (max|diff| < 1e-9) -- D = Y - X sign convention pinned against the files
+  G1 PASS: base 10757 rows / 654 positions; all 5 members joined 1:1, 0 unmatched, wt_aa match (10757 rows)
+
+--------------------------------------------------------------------------
+D1a -- THE FIVE INPUTS, re-derived and gated
+--------------------------------------------------------------------------
+  r_XX (corrcoef-of-ranks route) = 0.8826369680851056
+  r_XX (_spearman route, as script 105) = 0.8826369680851056  (median of 10 pairwise; min=0.859689 max=0.890106)
+  r_YY = 0.8821503142468713  (_spearman route 0.8821503142468713; min=0.859840 max=0.890123)
+  r_XY = 0.9993872509298699  (_spearman route 0.9993872509298699; median of the 5 within-checkpoint values)
+  Var(X) = 9642753.999990705   Var(Y) = 9642753.999981407   (mean rank variances, ddof=0)
+  Var(D) measured directly = 12145.400176629173  (mean over checkpoints of var(rank(Y)-rank(X)))
+  observed reliability(D) = 0.08436481140085886  (6 dp target 0.084365; CI [+0.052159, +0.122589] QUOTED from T5a/T4a, not recomputed)
+  G3 PASS: all five inputs reproduce the recorded values (rtol 1e-09); G4 PASS: observed reliability reproduces; G5 PASS: Var(D)_measured reproduces
+    (reproduction is a unit test of implementation consistency -- NOT independent evidence, AGENTS sec 6)
+
+--------------------------------------------------------------------------
+D1a -- rho_E SOLVED (exact task formula)
+--------------------------------------------------------------------------
+  inputs: r_XX=0.8826369680851056 r_YY=0.8821503142468713 r_XY=0.9993872509298699
+          VarX=9642753.999990705 VarY=9642753.999981407
+  Num_Lord            = -2256281.1970469505
+  Var(D) measured     = 12145.400176629173  (PRIMARY)
+  Var(D) identity     = 11817.177093967795  (SENSITIVITY; aggregate residual vs measured = 2.702e-02)
+  denominator 2*sqrt((1-rXX)(1-rYY)VarXVarY) = 2268093.519567623
+  rho_E (PRIMARY, Var(D) measured)     = 0.9952437242854786
+  rho_E (SENSITIVITY, Var(D) identity) = 0.9952315155832238
+  observed reliability held for the solve = 0.08436481140085886
+
+--------------------------------------------------------------------------
+D1b -- IDENTITY GATE
+--------------------------------------------------------------------------
+  forward(rho_E measured-VarD) = 0.08436481140087523  rel err = 1.941e-13
+  forward(rho_E identity-VarD) = 0.08436481140084899  rel err = 1.170e-13
+  G6 PASS: both reproduce 0.08436481140085886 to rel < 1e-12
+  *** D1b GATE CAVEAT (stated exactly as the task intends): this reproduction is an ALGEBRAIC IDENTITY -- the forward formula is the exact rearrangement used to solve for rho_E -- so agreement to 1e-12 verifies only that the arithmetic is internally consistent with itself. It is NOT independent validation of the correlated-error model or of any claim built on it. ***
+
+--------------------------------------------------------------------------
+D1c -- POSITION-CLUSTER BOOTSTRAP (654 positions, N_BOOT=10000, seed 0)
+--------------------------------------------------------------------------
+  non-finite draws (either variant): 0
+  [PRIMARY (obs held at recorded point)] n_draws=10000 finite=10000 nan=0 inf=0
+    percentiles of finite draws: p2.5=0.9930312441 p25=0.9946997438 p50=0.995431783 p75=0.9960864252 p97.5=0.9969898469
+    min=0.9904755193 max=0.9976579875 | fraction in [0,1]=1.0000 | fraction >1=0.0000
+  [SECONDARY (obs re-derived fresh per draw)] n_draws=10000 finite=10000 nan=0 inf=0
+    percentiles of finite draws: p2.5=0.9931770843 p25=0.9947403986 p50=0.9954414343 p75=0.9960732537 p97.5=0.9969625152
+    min=0.9910037933 max=0.9975881131 | fraction in [0,1]=1.0000 | fraction >1=0.0000
+
+--------------------------------------------------------------------------
+D1d -- QUOTE-READY SENTENCE
+--------------------------------------------------------------------------
+  "Across the five ESM-1v checkpoints, the WT and A222V backgrounds share 99.5% [95% bootstrap 99.3-99.7%] of each checkpoint's idiosyncratic (non-reproducible) deviation, leaving only 0.5% [0.3-0.7%] arm-specific -- a checkpoint essentially errs in lockstep across the two backgrounds."
+  (Caveat carried with the sentence: 'shared fraction' is the equal-loading common-factor reading of rho_E = Var(common error)/Var(total error); rho_E absorbs every violation of the model's assumptions, not only true shared noise.)
+  LABEL ILLUSTRATION, retained not headline: the naive independent-error (rho_E = 0) forward formula returns pred_R = -190.9323334249339, bootstrap [p2.5=-301.758, p97.5=-130.314], 10000/10000 draws negative (script 105 / REVIEW_RESPONSE_LOG [D1]-[D2]) -- shown to explain WHY the independent-error formula fails; the correlated-error rho_E above is the primary number for this section going forward.
+
+LIMITATIONS (AGENTS 6):
+  1. Reproduction of inputs = unit test, not replication.
+  2. D1b gate is an algebraic identity by construction.
+  3. rho_E absorbs every model-assumption violation, not only true shared noise.
+  4. Rank scale throughout (the task's five inputs are rank-scale); raw-scale variant not re-solved.
+  5. PRIMARY holds observed reliability fixed (task's literal wording); SECONDARY re-derives it fresh -- both reported, neither selected after seeing results.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task110_rhoe_correlated_error.csv
+SCRIPT 110 DONE (203.4s) rho_E=0.9952437242854786 primary CI [0.993031, 0.99699]

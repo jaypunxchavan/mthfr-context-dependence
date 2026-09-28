@@ -1,0 +1,237 @@
+==============================================================================
+Script 109 -- F1 placebo-background test (N_BOOT=10000, SEED=0)
+==============================================================================
+
+[F1a] CACHE COVERAGE (measured from the files):
+  task82_ae_raw.csv   : 129960 rows, 57 backgrounds, 120 positions
+  task69_w2_bg_raw.csv: 68400 rows, 30 backgrounds, 120 positions
+  backgrounds total   : 87 (task doc said '~roughly 87')
+  position overlap AE n W = 41 (task doc assumed a common ~120 -- NOT the case)
+  G1 PASS
+
+[G2] AE-cache A222_V arm vs atlas delta_esm: max|diff| = 9.888e-17 on 2280 rows
+[G3] atlas delta_esm vs esm2_score_a222v_bg - esm2_score: max|diff| = 2.220e-16
+  G2, G3 PASS
+
+[frames]
+  [AE] usable rows total = 110124, backgrounds = 57, G6 dropped = 0
+  [W] usable rows total = 61101, backgrounds = 31, G6 dropped = 0
+  [COMMON] usable rows total = 58464, backgrounds = 87, G6 dropped = 0
+  [AE] usable variants per background: min=1932 max=1932 | positions: min=120 max=120
+  [W] usable variants per background: min=1971 max=1971 | positions: min=120 max=120
+  [COMMON] usable variants per background: min=672 max=672 | positions: min=41 max=41
+  G4 PASS
+
+[run] frame AE: 57 backgrounds, 10000 bootstrap draws each ...
+    A222_C       rho=-0.098620 CI[-0.163621,-0.034968] n=1932 k=120 nan=0 mean|d|=0.0582
+    A222_D       rho=-0.081139 CI[-0.148578,-0.015530] n=1932 k=120 nan=0 mean|d|=0.0944
+    A222_E       rho=-0.070809 CI[-0.137592,-0.003748] n=1932 k=120 nan=0 mean|d|=0.0954
+    A222_F       rho=-0.036052 CI[-0.096778,+0.025109] n=1932 k=120 nan=0 mean|d|=0.0992
+    A222_G       rho=-0.013732 CI[-0.083482,+0.054777] n=1932 k=120 nan=0 mean|d|=0.0768
+    A222_H       rho=-0.009999 CI[-0.077287,+0.055495] n=1932 k=120 nan=0 mean|d|=0.0680
+    A222_I       rho=-0.074744 CI[-0.137712,-0.010153] n=1932 k=120 nan=0 mean|d|=0.0824
+    A222_K       rho=-0.033998 CI[-0.104057,+0.035356] n=1932 k=120 nan=0 mean|d|=0.0879
+    A222_L       rho=-0.060453 CI[-0.126869,+0.005987] n=1932 k=120 nan=0 mean|d|=0.1010
+    A222_M       rho=-0.056982 CI[-0.127430,+0.013553] n=1932 k=120 nan=0 mean|d|=0.0642
+    A222_N       rho=-0.060416 CI[-0.128494,+0.007575] n=1932 k=120 nan=0 mean|d|=0.0784
+    A222_P       rho=-0.079330 CI[-0.135937,-0.019752] n=1932 k=120 nan=0 mean|d|=0.0922
+    A222_Q       rho=-0.055907 CI[-0.127079,+0.013236] n=1932 k=120 nan=0 mean|d|=0.0756
+    A222_R       rho=-0.041545 CI[-0.108276,+0.026103] n=1932 k=120 nan=0 mean|d|=0.0902
+    A222_S       rho=-0.067245 CI[-0.128057,-0.005908] n=1932 k=120 nan=0 mean|d|=0.0546
+    A222_T       rho=-0.103144 CI[-0.162975,-0.040722] n=1932 k=120 nan=0 mean|d|=0.0696
+    A222_W       rho=-0.027607 CI[-0.090793,+0.035436] n=1932 k=120 nan=0 mean|d|=0.0873
+    A222_Y       rho=-0.022036 CI[-0.083042,+0.039776] n=1932 k=120 nan=0 mean|d|=0.0950
+    AV_113       rho=-0.063907 CI[-0.127644,+0.000918] n=1932 k=120 nan=0 mean|d|=0.0452
+    AV_116       rho=-0.094598 CI[-0.155633,-0.030716] n=1932 k=120 nan=0 mean|d|=0.0382
+    AV_145       rho=-0.085022 CI[-0.146479,-0.021500] n=1932 k=120 nan=0 mean|d|=0.0539
+    AV_155       rho=-0.053031 CI[-0.116956,+0.012628] n=1932 k=120 nan=0 mean|d|=0.0775
+    AV_175       rho=+0.012427 CI[-0.054385,+0.080370] n=1932 k=120 nan=0 mean|d|=0.0539
+    AV_19        rho=-0.004646 CI[-0.065386,+0.054854] n=1932 k=120 nan=0 mean|d|=0.0146
+    AV_195       rho=-0.041440 CI[-0.104386,+0.022004] n=1932 k=120 nan=0 mean|d|=0.0960
+    AV_204       rho=-0.022838 CI[-0.091198,+0.041675] n=1932 k=120 nan=0 mean|d|=0.0358
+    AV_209       rho=-0.002886 CI[-0.069097,+0.067370] n=1932 k=120 nan=0 mean|d|=0.0437
+    AV_220       rho=-0.089607 CI[-0.156243,-0.020609] n=1932 k=120 nan=0 mean|d|=0.0427
+    AV_233       rho=-0.046017 CI[-0.110047,+0.018004] n=1932 k=120 nan=0 mean|d|=0.0513
+    AV_242       rho=-0.042101 CI[-0.107708,+0.025471] n=1932 k=120 nan=0 mean|d|=0.0615
+    AV_292       rho=-0.003113 CI[-0.065249,+0.058849] n=1932 k=120 nan=0 mean|d|=0.0338
+    AV_293       rho=-0.052776 CI[-0.122911,+0.021954] n=1932 k=120 nan=0 mean|d|=0.0539
+    AV_302       rho=-0.049088 CI[-0.114750,+0.017617] n=1932 k=120 nan=0 mean|d|=0.0522
+    AV_311       rho=-0.026823 CI[-0.097789,+0.044320] n=1932 k=120 nan=0 mean|d|=0.0595
+    AV_328       rho=-0.033621 CI[-0.095287,+0.030934] n=1932 k=120 nan=0 mean|d|=0.0629
+    AV_350       rho=-0.045965 CI[-0.110199,+0.018592] n=1932 k=120 nan=0 mean|d|=0.0336
+    AV_353       rho=-0.010859 CI[-0.078844,+0.056081] n=1932 k=120 nan=0 mean|d|=0.0289
+    AV_368       rho=-0.012216 CI[-0.084167,+0.059466] n=1932 k=120 nan=0 mean|d|=0.0484
+    AV_396       rho=+0.001787 CI[-0.070073,+0.075794] n=1932 k=120 nan=0 mean|d|=0.0332
+    AV_461       rho=+0.031392 CI[-0.029246,+0.092271] n=1932 k=120 nan=0 mean|d|=0.0232
+    AV_462       rho=-0.022555 CI[-0.082959,+0.037634] n=1932 k=120 nan=0 mean|d|=0.0231
+    AV_5         rho=-0.034587 CI[-0.096352,+0.026695] n=1932 k=120 nan=0 mean|d|=0.0203
+    AV_511       rho=+0.055669 CI[-0.005133,+0.117178] n=1932 k=120 nan=0 mean|d|=0.0598
+    AV_522       rho=+0.012989 CI[-0.048996,+0.077644] n=1932 k=120 nan=0 mean|d|=0.0348
+    AV_524       rho=+0.071356 CI[+0.007461,+0.134654] n=1932 k=120 nan=0 mean|d|=0.0341
+    AV_551       rho=+0.014147 CI[-0.051886,+0.083384] n=1932 k=120 nan=0 mean|d|=0.0189
+    AV_558       rho=+0.058744 CI[-0.008269,+0.126014] n=1932 k=120 nan=0 mean|d|=0.0303
+    AV_587       rho=+0.116091 CI[+0.052563,+0.180808] n=1932 k=120 nan=0 mean|d|=0.0376
+    AV_589       rho=+0.082902 CI[+0.017643,+0.147520] n=1932 k=120 nan=0 mean|d|=0.0585
+    AV_650       rho=+0.086801 CI[+0.019314,+0.149082] n=1932 k=120 nan=0 mean|d|=0.0233
+    AV_655       rho=+0.055548 CI[-0.005643,+0.115324] n=1932 k=120 nan=0 mean|d|=0.0258
+    AV_70        rho=-0.036345 CI[-0.106518,+0.034271] n=1932 k=120 nan=0 mean|d|=0.0484
+    AV_73        rho=-0.039600 CI[-0.103235,+0.022023] n=1932 k=120 nan=0 mean|d|=0.0257
+    AV_84        rho=-0.027040 CI[-0.096157,+0.041399] n=1932 k=120 nan=0 mean|d|=0.0324
+    AV_85        rho=-0.023828 CI[-0.089862,+0.041978] n=1932 k=120 nan=0 mean|d|=0.0311
+    AV_98        rho=-0.020592 CI[-0.088671,+0.047952] n=1932 k=120 nan=0 mean|d|=0.0621
+    A222V        rho=-0.104322 CI[-0.166932,-0.041325] n=1932 k=120 nan=0 mean|d|=0.0679
+  [AE] placebos n=56 mean=-0.024625 sd=0.048792 median=-0.033809 range[-0.103144,+0.116091]
+  [AE] mean CI (background bootstrap) = [-0.036998,-0.011453] contains 0: False
+  [AE] A222V rho=-0.104322 CI[-0.166932,-0.041325] | rank signed=1/57 rank|rho|=2/57 percentile|rho|=98.2
+  [AE] placebos with own CI excluding 0: 14/56 | median|rho_b|=0.041823 max|rho_b|=0.116091
+  [AE] >> F1d pre-registered branch = 3 (inconclusive)
+
+[run] frame W: 31 backgrounds, 10000 bootstrap draws each ...
+    D10A_T340G   rho=+0.013409 CI[-0.050608,+0.078983] n=1971 k=120 nan=0 mean|d|=0.0383
+    D10B_L534Y   rho=+0.047832 CI[-0.014323,+0.108951] n=1971 k=120 nan=0 mean|d|=0.0290
+    D10C_I488V   rho=-0.031976 CI[-0.092355,+0.027958] n=1971 k=120 nan=0 mean|d|=0.0137
+    D1A_V179W    rho=-0.060643 CI[-0.120458,-0.000278] n=1971 k=120 nan=0 mean|d|=0.0420
+    D1B_E331P    rho=-0.056274 CI[-0.125695,+0.014423] n=1971 k=120 nan=0 mean|d|=0.0788
+    D1C_G86W     rho=-0.038399 CI[-0.104468,+0.029257] n=1971 k=120 nan=0 mean|d|=0.0534
+    D2A_Y403D    rho=+0.086284 CI[+0.010446,+0.160164] n=1971 k=120 nan=0 mean|d|=0.0829
+    D2B_E326Y    rho=+0.044008 CI[-0.029778,+0.118522] n=1971 k=120 nan=0 mean|d|=0.0890
+    D2C_K334P    rho=-0.104638 CI[-0.172509,-0.035391] n=1971 k=120 nan=0 mean|d|=0.0677
+    D3A_L323A    rho=-0.039861 CI[-0.104880,+0.027138] n=1971 k=120 nan=0 mean|d|=0.1453
+    D3B_L618H    rho=-0.048009 CI[-0.121991,+0.026953] n=1971 k=120 nan=0 mean|d|=0.0369
+    D3C_F60S     rho=+0.035019 CI[-0.038508,+0.107783] n=1971 k=120 nan=0 mean|d|=0.0652
+    D4A_N324G    rho=-0.130456 CI[-0.193508,-0.064011] n=1971 k=120 nan=0 mean|d|=0.1035
+    D4B_L45P     rho=-0.028751 CI[-0.095427,+0.038294] n=1971 k=120 nan=0 mean|d|=0.1269
+    D4C_N537W    rho=-0.011607 CI[-0.076824,+0.053253] n=1971 k=120 nan=0 mean|d|=0.0378
+    D5A_L76F     rho=-0.045496 CI[-0.122295,+0.031482] n=1971 k=120 nan=0 mean|d|=0.0420
+    D5B_T34W     rho=+0.005976 CI[-0.064097,+0.076070] n=1971 k=120 nan=0 mean|d|=0.1575
+    D5C_A195P    rho=-0.043866 CI[-0.113246,+0.026071] n=1971 k=120 nan=0 mean|d|=0.0557
+    D6A_M128C    rho=-0.011396 CI[-0.086568,+0.067511] n=1971 k=120 nan=0 mean|d|=0.0392
+    D6B_V253S    rho=-0.008904 CI[-0.080945,+0.065464] n=1971 k=120 nan=0 mean|d|=0.0664
+    D6C_S30M     rho=+0.034010 CI[-0.029243,+0.094568] n=1971 k=120 nan=0 mean|d|=0.1284
+    D7A_V176F    rho=-0.004970 CI[-0.078484,+0.069331] n=1971 k=120 nan=0 mean|d|=0.0266
+    D7B_W95C     rho=+0.041950 CI[-0.029066,+0.111613] n=1971 k=120 nan=0 mean|d|=0.0443
+    D7C_E275W    rho=-0.045786 CI[-0.108164,+0.018647] n=1971 k=120 nan=0 mean|d|=0.0516
+    D8A_A292G    rho=-0.050928 CI[-0.120504,+0.021625] n=1971 k=120 nan=0 mean|d|=0.0316
+    D8B_V543W    rho=-0.028972 CI[-0.098060,+0.040372] n=1971 k=120 nan=0 mean|d|=0.0337
+    D8C_I138V    rho=+0.021330 CI[-0.047695,+0.093204] n=1971 k=120 nan=0 mean|d|=0.0150
+    D9A_T451V    rho=-0.051807 CI[-0.116833,+0.017029] n=1971 k=120 nan=0 mean|d|=0.0464
+    D9B_G36Y     rho=+0.016386 CI[-0.052663,+0.085240] n=1971 k=120 nan=0 mean|d|=0.0825
+    D9C_E136D    rho=+0.003901 CI[-0.061286,+0.069155] n=1971 k=120 nan=0 mean|d|=0.0243
+    A222V        rho=-0.072547 CI[-0.157403,+0.012555] n=1971 k=120 nan=0 mean|d|=0.0745
+  [W] placebos n=30 mean=-0.016421 sd=0.046714 median=-0.020179 range[-0.130456,+0.086284]
+  [W] mean CI (background bootstrap) = [-0.032868,+0.000011] contains 0: True
+  [W] A222V rho=-0.072547 CI[-0.157403,+0.012555] | rank signed=3/31 rank|rho|=4/31 percentile|rho|=90.0
+  [W] placebos with own CI excluding 0: 4/30 | median|rho_b|=0.039130 max|rho_b|=0.130456
+  [W] >> F1d pre-registered branch = 2 (matches magnitude)
+
+[run] frame COMMON: 87 backgrounds, 10000 bootstrap draws each ...
+    A222_C       rho=-0.070949 CI[-0.169038,+0.022323] n=672 k=41 nan=0 mean|d|=0.0608
+    A222_D       rho=-0.180060 CI[-0.283006,-0.072913] n=672 k=41 nan=0 mean|d|=0.0952
+    A222_E       rho=-0.178325 CI[-0.275857,-0.076772] n=672 k=41 nan=0 mean|d|=0.0958
+    A222_F       rho=-0.047857 CI[-0.137928,+0.038510] n=672 k=41 nan=0 mean|d|=0.0889
+    A222_G       rho=-0.102770 CI[-0.219693,+0.007550] n=672 k=41 nan=0 mean|d|=0.0767
+    A222_H       rho=-0.073125 CI[-0.168062,+0.016581] n=672 k=41 nan=0 mean|d|=0.0660
+    A222_I       rho=-0.114115 CI[-0.223021,-0.008956] n=672 k=41 nan=0 mean|d|=0.0847
+    A222_K       rho=-0.131150 CI[-0.230334,-0.034623] n=672 k=41 nan=0 mean|d|=0.0913
+    A222_L       rho=-0.131099 CI[-0.230951,-0.030078] n=672 k=41 nan=0 mean|d|=0.0990
+    A222_M       rho=-0.140509 CI[-0.247861,-0.030947] n=672 k=41 nan=0 mean|d|=0.0626
+    A222_N       rho=-0.139037 CI[-0.234464,-0.041121] n=672 k=41 nan=0 mean|d|=0.0792
+    A222_P       rho=-0.158034 CI[-0.237188,-0.079272] n=672 k=41 nan=0 mean|d|=0.1126
+    A222_Q       rho=-0.155811 CI[-0.255047,-0.056399] n=672 k=41 nan=0 mean|d|=0.0773
+    A222_R       rho=-0.141186 CI[-0.233024,-0.050924] n=672 k=41 nan=0 mean|d|=0.0923
+    A222_S       rho=-0.118965 CI[-0.210268,-0.024916] n=672 k=41 nan=0 mean|d|=0.0527
+    A222_T       rho=-0.128352 CI[-0.226713,-0.026855] n=672 k=41 nan=0 mean|d|=0.0720
+    A222_W       rho=-0.078737 CI[-0.168179,+0.009016] n=672 k=41 nan=0 mean|d|=0.0793
+    A222_Y       rho=-0.045355 CI[-0.136929,+0.041665] n=672 k=41 nan=0 mean|d|=0.0816
+    AV_113       rho=+0.016060 CI[-0.078142,+0.120239] n=672 k=41 nan=0 mean|d|=0.0461
+    AV_116       rho=+0.006789 CI[-0.101587,+0.114453] n=672 k=41 nan=0 mean|d|=0.0427
+    AV_145       rho=-0.077752 CI[-0.172282,+0.023615] n=672 k=41 nan=0 mean|d|=0.0547
+    AV_155       rho=+0.006196 CI[-0.093936,+0.107546] n=672 k=41 nan=0 mean|d|=0.0722
+    AV_175       rho=+0.065083 CI[-0.037873,+0.169640] n=672 k=41 nan=0 mean|d|=0.0526
+    AV_19        rho=+0.044351 CI[-0.061177,+0.145205] n=672 k=41 nan=0 mean|d|=0.0154
+    AV_195       rho=+0.024375 CI[-0.106484,+0.147405] n=672 k=41 nan=0 mean|d|=0.0766
+    AV_204       rho=-0.011166 CI[-0.146992,+0.117337] n=672 k=41 nan=0 mean|d|=0.0504
+    AV_209       rho=+0.103348 CI[-0.009143,+0.223003] n=672 k=41 nan=0 mean|d|=0.0519
+    AV_220       rho=-0.069686 CI[-0.175194,+0.037612] n=672 k=41 nan=0 mean|d|=0.0469
+    AV_233       rho=+0.040772 CI[-0.071377,+0.152169] n=672 k=41 nan=0 mean|d|=0.0394
+    AV_242       rho=+0.097529 CI[-0.025928,+0.223771] n=672 k=41 nan=0 mean|d|=0.0420
+    AV_292       rho=+0.161770 CI[+0.078456,+0.238440] n=672 k=41 nan=0 mean|d|=0.0316
+    AV_293       rho=+0.051577 CI[-0.057617,+0.162392] n=672 k=41 nan=0 mean|d|=0.0509
+    AV_302       rho=+0.102254 CI[+0.006483,+0.191284] n=672 k=41 nan=0 mean|d|=0.0408
+    AV_311       rho=+0.075795 CI[-0.043378,+0.191119] n=672 k=41 nan=0 mean|d|=0.0601
+    AV_328       rho=+0.020355 CI[-0.065267,+0.108949] n=672 k=41 nan=0 mean|d|=0.0586
+    AV_350       rho=+0.006235 CI[-0.100988,+0.113713] n=672 k=41 nan=0 mean|d|=0.0335
+    AV_353       rho=+0.044317 CI[-0.056538,+0.140504] n=672 k=41 nan=0 mean|d|=0.0298
+    AV_368       rho=+0.035450 CI[-0.065448,+0.144996] n=672 k=41 nan=0 mean|d|=0.0498
+    AV_396       rho=+0.073565 CI[-0.033859,+0.184496] n=672 k=41 nan=0 mean|d|=0.0407
+    AV_461       rho=+0.096407 CI[+0.013365,+0.179709] n=672 k=41 nan=0 mean|d|=0.0240
+    AV_462       rho=-0.000240 CI[-0.091877,+0.091411] n=672 k=41 nan=0 mean|d|=0.0232
+    AV_5         rho=-0.007222 CI[-0.101676,+0.087825] n=672 k=41 nan=0 mean|d|=0.0201
+    AV_511       rho=+0.092866 CI[-0.001007,+0.192955] n=672 k=41 nan=0 mean|d|=0.0728
+    AV_522       rho=+0.028669 CI[-0.058975,+0.114307] n=672 k=41 nan=0 mean|d|=0.0294
+    AV_524       rho=+0.118508 CI[+0.028400,+0.204785] n=672 k=41 nan=0 mean|d|=0.0352
+    AV_551       rho=+0.051175 CI[-0.043576,+0.144866] n=672 k=41 nan=0 mean|d|=0.0154
+    AV_558       rho=+0.129417 CI[+0.024949,+0.232944] n=672 k=41 nan=0 mean|d|=0.0263
+    AV_587       rho=+0.104836 CI[+0.012796,+0.204571] n=672 k=41 nan=0 mean|d|=0.0362
+    AV_589       rho=+0.099009 CI[+0.000164,+0.203921] n=672 k=41 nan=0 mean|d|=0.0551
+    AV_650       rho=+0.125866 CI[+0.022208,+0.219345] n=672 k=41 nan=0 mean|d|=0.0165
+    AV_655       rho=+0.110460 CI[+0.015995,+0.208608] n=672 k=41 nan=0 mean|d|=0.0219
+    AV_70        rho=-0.004650 CI[-0.099670,+0.097719] n=672 k=41 nan=0 mean|d|=0.0503
+    AV_73        rho=+0.062907 CI[-0.019637,+0.149780] n=672 k=41 nan=0 mean|d|=0.0210
+    AV_84        rho=+0.085015 CI[-0.016787,+0.190007] n=672 k=41 nan=0 mean|d|=0.0328
+    AV_85        rho=+0.023372 CI[-0.074117,+0.124449] n=672 k=41 nan=0 mean|d|=0.0312
+    AV_98        rho=-0.032038 CI[-0.152896,+0.092515] n=672 k=41 nan=0 mean|d|=0.0857
+    D10A_T340G   rho=-0.077861 CI[-0.167454,+0.017703] n=672 k=41 nan=0 mean|d|=0.0283
+    D10B_L534Y   rho=+0.039987 CI[-0.067042,+0.149263] n=672 k=41 nan=0 mean|d|=0.0267
+    D10C_I488V   rho=-0.100095 CI[-0.185059,-0.008299] n=672 k=41 nan=0 mean|d|=0.0115
+    D1A_V179W    rho=-0.079042 CI[-0.168844,+0.010997] n=672 k=41 nan=0 mean|d|=0.0608
+    D1B_E331P    rho=+0.035492 CI[-0.075776,+0.143222] n=672 k=41 nan=0 mean|d|=0.0555
+    D1C_G86W     rho=+0.003170 CI[-0.086277,+0.100495] n=672 k=41 nan=0 mean|d|=0.0612
+    D2A_Y403D    rho=+0.090536 CI[-0.000919,+0.184401] n=672 k=41 nan=0 mean|d|=0.1188
+    D2B_E326Y    rho=+0.066561 CI[-0.052437,+0.195301] n=672 k=41 nan=0 mean|d|=0.0721
+    D2C_K334P    rho=-0.022688 CI[-0.120700,+0.072516] n=672 k=41 nan=0 mean|d|=0.0564
+    D3A_L323A    rho=-0.047933 CI[-0.144727,+0.056228] n=672 k=41 nan=0 mean|d|=0.1588
+    D3B_L618H    rho=-0.106419 CI[-0.217553,+0.008647] n=672 k=41 nan=0 mean|d|=0.0329
+    D3C_F60S     rho=+0.079402 CI[-0.023292,+0.174457] n=672 k=41 nan=0 mean|d|=0.0600
+    D4A_N324G    rho=-0.100623 CI[-0.203633,+0.012755] n=672 k=41 nan=0 mean|d|=0.1011
+    D4B_L45P     rho=-0.059062 CI[-0.165196,+0.057339] n=672 k=41 nan=0 mean|d|=0.1745
+    D4C_N537W    rho=-0.057657 CI[-0.150819,+0.040949] n=672 k=41 nan=0 mean|d|=0.0311
+    D5A_L76F     rho=+0.021529 CI[-0.080391,+0.124880] n=672 k=41 nan=0 mean|d|=0.0444
+    D5B_T34W     rho=+0.003076 CI[-0.123891,+0.131091] n=672 k=41 nan=0 mean|d|=0.1724
+    D5C_A195P    rho=-0.003934 CI[-0.100457,+0.090011] n=672 k=41 nan=0 mean|d|=0.0548
+    D6A_M128C    rho=-0.048558 CI[-0.156808,+0.073654] n=672 k=41 nan=0 mean|d|=0.0354
+    D6B_V253S    rho=+0.021046 CI[-0.085838,+0.131082] n=672 k=41 nan=0 mean|d|=0.0472
+    D6C_S30M     rho=+0.044158 CI[-0.060685,+0.144627] n=672 k=41 nan=0 mean|d|=0.1343
+    D7A_V176F    rho=+0.028521 CI[-0.075581,+0.125282] n=672 k=41 nan=0 mean|d|=0.0305
+    D7B_W95C     rho=+0.083379 CI[-0.001002,+0.163548] n=672 k=41 nan=0 mean|d|=0.0459
+    D7C_E275W    rho=-0.004528 CI[-0.103480,+0.093706] n=672 k=41 nan=0 mean|d|=0.0341
+    D8A_A292G    rho=-0.070326 CI[-0.171776,+0.034370] n=672 k=41 nan=0 mean|d|=0.0326
+    D8B_V543W    rho=-0.056205 CI[-0.163384,+0.049707] n=672 k=41 nan=0 mean|d|=0.0232
+    D8C_I138V    rho=-0.028632 CI[-0.138361,+0.085964] n=672 k=41 nan=0 mean|d|=0.0185
+    D9A_T451V    rho=-0.085958 CI[-0.195880,+0.025416] n=672 k=41 nan=0 mean|d|=0.0526
+    D9B_G36Y     rho=+0.075685 CI[-0.032947,+0.178077] n=672 k=41 nan=0 mean|d|=0.0832
+    D9C_E136D    rho=+0.102614 CI[+0.013544,+0.186265] n=672 k=41 nan=0 mean|d|=0.0247
+    A222V        rho=-0.104044 CI[-0.214619,+0.003920] n=672 k=41 nan=0 mean|d|=0.0652
+  [COMMON] placebos n=86 mean=-0.005677 sd=0.084575 median=+0.004683 range[-0.180060,+0.161770]
+  [COMMON] mean CI (background bootstrap) = [-0.023942,+0.011837] contains 0: True
+  [COMMON] A222V rho=-0.104044 CI[-0.214619,+0.003920] | rank signed=14/87 rank|rho|=20/87 percentile|rho|=77.9
+  [COMMON] placebos with own CI excluding 0: 23/86 | median|rho_b|=0.070637 max|rho_b|=0.180060
+  [COMMON] >> F1d pre-registered branch = 2 (matches magnitude)
+
+==============================================================================
+F1d VERDICT (pre-registered rule, per frame)
+==============================================================================
+  AE      -> branch 3 | placebos mean -0.024625 CI[-0.036998,-0.011453] | A222V -0.104322 CI[-0.166932,-0.041325] | rank|r| 2/57
+  W       -> branch 2 | placebos mean -0.016421 CI[-0.032868,+0.000011] | A222V -0.072547 CI[-0.157403,+0.012555] | rank|r| 4/31
+  COMMON  -> branch 2 | placebos mean -0.005677 CI[-0.023942,+0.011837] | A222V -0.104044 CI[-0.214619,+0.003920] | rank|r| 20/87
+  PRIMARY FRAMES DISAGREE: AE=branch 3, W=branch 2 -- reported as-is, not averaged
+  CONTEXT (different frame, not comparable spread): full-frame anchor rho = -0.08811806424891734
+
+LIMITATIONS (AGENTS 6):
+  * cached scores only; no new model runs.
+  * placebos are not severity-matched to A222V (W backgrounds are decile-stratified, AE are position/identity cells); a null here rules out 'any cached background' but not a severity-matched confound.
+  * own_e_b is the same measured y for all backgrounds -> placebo rhos are mutually correlated; sd and mean-CI describe this set of backgrounds, they are not iid sampling quantities.
+  * per-frame A222V reference rows are a subset of the full-frame anchor's rows; -0.088118 is context only.
+
+Wrote data/processed/task109_placebo_rhos.csv (175 rows), data/processed/task109_distribution_summary.csv (3 rows)
+Elapsed 409.4s

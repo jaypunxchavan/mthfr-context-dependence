@@ -1,0 +1,118 @@
+
+==========================================================================
+C1 -- severity-partial reconciliation (scripts/112)  N_BOOT=10000 seed=0
+==========================================================================
+
+--------------------------------------------------------------------------
+C1a-GATE FIRST: column-identity check (before recomputing)
+--------------------------------------------------------------------------
+  G4 PASS: script 43 source contains the asserted blocks:
+    for z in ["esm2_score", "base_functionality", "f_bar_wt"]
+    ["esm2_score", "base_functionality"]
+    ["esm2_score", "f_bar_wt"]
+  EVIDENCE (verbatim from scripts/43_flattening_partial.py):
+    for z in ["esm2_score", "base_functionality", "f_bar_wt"]:
+      print(f"    rho(delta, {z:26s}) = ..." f"   rho(own_e_b, {z:20s}) = ..." ...)
+    -> -0.324 and +0.0854 are printed on the SAME line of
+       the SAME loop iteration (z = esm2_score).
+  ANSWER (task C1a, stated explicitly): the two prior
+  figures -0.324 (rho(delta, esm2_score)) and +0.0854
+  (rho(own_e_b, esm2_score)) came from the SAME severity
+  column -- esm2_score -- and it is the SAME variable the
+  94-97%-retained spline result controls as its severity
+  covariate.  SAME column; branch 1 of C1b applies.
+  esm2_score is project-native: delta_esm =
+  esm2_score_a222v_bg - esm2_score (its direct partner);
+  no ProteinGym-sourced column is used (full phase5 column
+  list below).
+    phase5 columns: ['hgvs_pro', 'position', 'wt_aa', 'mut_aa', 'base_functionality', 'folinate_response', 'GI_folinate_independent', 'GI_folinate_dependent', 'folinate_response_lod', 'folinate_response_post', 'GI_indep_lod', 'GI_indep_post', 'GI_dep_lod', 'GI_dep_post', 'w12.score', 'w25.score', 'w100.score', 'w200.score', 'm12.score', 'm25.score', 'm100.score', 'm200.score', 'esm2_score', 'esm2_score_a222v_bg', 'f_bar', 'n_conditions', 'f_bar_wt', 'f_bar_a222v', 'condition_specific', 'pred_cal', 'central_error_cal', 'central_error_rank', '_ctx', 'model_A', 'model_B', 'model_C', 'delta_esm', 'target']
+  NOTE: MTHFR_REVIEW_DOCUMENT.md is NOT in the repo --
+  review 1.3's exact wording unverifiable; the task doc's
+  self-contained description governs (disclosed).
+
+  G1 PASS: script 43's base reproduces: 10757 variants / 654 positions
+  G2 PASS: rho(delta, own_e_b) = -0.08811806424891734 == headline
+  G3 PASS: rho_DS = -0.32376573717755663 (record -0.3238), rho_ES = 0.085391652432165 (record +0.0854) -- full precision, same esm2_score column
+
+--------------------------------------------------------------------------
+C1a -- LINEAR PARTIAL (task's exact formula)
+--------------------------------------------------------------------------
+  inputs (full precision, esm2_score):
+    rho_DE = -0.08811806424891734
+    rho_DS = -0.32376573717755663
+    rho_ES = 0.085391652432165
+  rho_DE.S = [rho_DE - rho_DS*rho_ES] / sqrt((1-rho_DS^2)(1-rho_ES^2))
+           = -0.06414804421216103
+  retention |partial|/|raw| = 0.728 (72.8%)
+  position-cluster bootstrap CI (rhos re-derived per draw, 10000 draws): [np.float64(-0.09406961905964527), np.float64(-0.03448633364819569)]
+
+--------------------------------------------------------------------------
+C1b -- RECOMPUTED SPLINE PARTIAL (script 43's own estimator via importlib)
+--------------------------------------------------------------------------
+  R1 spline | own_e_b                    | ctrl esm2_score+base_functionality -> partial=-0.0828 CI=[-0.1158,-0.0502] ratio=0.940 n=10757/654pos
+  R2 spline | own_e_b                    | ctrl esm2_score+f_bar_wt -> partial=-0.0853 CI=[-0.1185,-0.0525] ratio=0.968 n=10757/654pos
+  R3 spline | GI_folinate_independent    | ctrl esm2_score+base_functionality -> partial=-0.0786 CI=[-0.1114,-0.0459] ratio=1.111 n=10757/654pos
+  R4 spline | GI_folinate_independent    | ctrl esm2_score+f_bar_wt -> partial=-0.0803 CI=[-0.1128,-0.0480] ratio=1.136 n=10757/654pos
+  D1 spline | own_e_b                    | ctrl esm2_score -> partial=-0.0636 CI=[-0.0937,-0.0340] ratio=0.722 n=10757/654pos
+  G5 PASS: R1-R4 reproduce the record exactly at its printed precision (-0.0828/0.940, -0.0853/0.968, -0.0786/1.111, -0.0803/1.136)
+
+--------------------------------------------------------------------------
+C1b-DIAGNOSTICS -- LINEAR 2-COVARIATE CELLS (matrix-inversion extension; points only, no CI by pre-registration)
+--------------------------------------------------------------------------
+  L2 linear | own_e_b                    | ctrl esm2_score+base_functionality -> partial=-0.0829 ratio=0.941 (point only)
+  L3 linear | own_e_b                    | ctrl esm2_score+f_bar_wt -> partial=-0.0842 ratio=0.956 (point only)
+
+--------------------------------------------------------------------------
+C1 -- RESOLUTION (form x covariate-set decomposition, own_e_b)
+--------------------------------------------------------------------------
+  L1 linear  sev only        : -0.0641  ratio 0.728
+  D1 spline  sev only        : -0.0636  ratio 0.722
+  L2 linear  sev+w.fitness   : -0.0829  ratio 0.941
+  R1 spline  sev+w.fitness   : -0.0828  ratio 0.940
+  form effect at sev-only      (D1 - L1) = +0.0005
+  form effect at sev+wfitness  (R1 - L2) = +0.0001
+  covariate effect, spline     (R1 - D1) = -0.0192
+  covariate effect, linear     (L2 - L1) = -0.0187
+
+--------------------------------------------------------------------------
+C1c -- CORRECTED RETENTION, STATED PLAINLY
+--------------------------------------------------------------------------
+  The 94-97% figure is NOT an error: the existing spline partial (ranks, TWO covariates = severity + w.fitness, nuisance refit per draw) retains 94.0% (R1) and 96.8% (R2) of the raw own_e_b correlation -- confirmed by re-running script 43's own estimator (G5).
+  The plain LINEAR partial with severity only (the task's exact formula) retains 72.8% (L1).
+  Both numbers are correct FOR THEIR OWN CELL; the decomposition above states which factor (functional form vs covariate count) accounts for the gap -- see cells.
+  NOTE-CITATION INVENTORY (tier 1 = retention phrase):
+    docs/tasks/comparators-and-consolidation/GROUPS_C_TO_H_DIGEST.md:23
+    docs/tasks/comparators-and-consolidation/SESSION_LOG.md:567
+    docs/tasks/detection-floor-and-mechanism/DEEPDIVE_LOG.md:3105
+    docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:67
+    docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:72
+    docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:78
+    docs/tasks/review-triage/OVERNIGHT_LOG.md:192
+    docs/tasks/review-triage/OVERNIGHT_LOG.md:223
+  tier 2 = raw ratio numbers (weaker signal):
+    docs/tasks/closeout-u2-u3-u4-v5/CLOSEOUT_LOG.md:1404
+    docs/tasks/closeout-u2-u3-u4-v5/CLOSEOUT_LOG.md:1564
+    docs/tasks/comparators-and-consolidation/SESSION_LOG.md:558
+    docs/tasks/comparators-and-consolidation/SESSION_LOG.md:560
+    docs/tasks/review-triage/OVERNIGHT_LOG.md:180
+    docs/tasks/review-triage/OVERNIGHT_LOG.md:183
+    docs/tasks/review-triage/OVERNIGHT_LOG.md:1811
+  RESULTS.md cites any of these: False [] (RESULTS.md is OFF-LIMITS this session -- flag only)
+  PRIOR-SESSION LOGS citing (never editable this session): 5
+  NON-LOG citers needing update if any: ['docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:67', 'docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:72', 'docs/tasks/phase1-corrections-diagnostics/PHASE1_CORRECTIONS_AND_DIAGNOSTICS.md:78']
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. MTHFR_REVIEW_DOCUMENT.md not in repo: section 1.3's
+     wording unverifiable; task doc's description used.
+  2. 'cross-fit' in the task wording: script 43 refits its
+     spline nuisance per bootstrap draw; it is not k-fold
+     cross-fit.  The recomputation targets that estimator.
+  3. Spline controls smooth nonlinearity only (df=4, ranks).
+  4. All partials are rank-based; L2/L3 are diagnostic
+     points without CIs (pre-registered).
+  5. G5 reproduction validates the code, not the claim.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task112_severity_partial.csv and task112_severity_partial_cells.csv
+SCRIPT 112 DONE (308.3s)

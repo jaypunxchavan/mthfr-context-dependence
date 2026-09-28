@@ -1,0 +1,66 @@
+
+==========================================================================
+K1 -- PC1 / global-mode check (scripts/118)  N_BOOT=10000 seed=0
+==========================================================================
+  K1 PASS: pivot (654 pos x 20 AA cols) present=10757 (== base rows), structural WT-missing=654, total missing=2323 (= 1669 dropout + 654 structural); row present-counts == base per-position counts (identity), min present/row=1
+           per-position coverage (cells of 19): ==19: 173, 15-18: 358, 10-14: 101, 1-9: 22 (uneven base coverage = data, not misalignment -- see GATE K1 disclosure)
+           reference anchor rho = -0.08811806424891734 == canonical (identity, tol 1e-9)
+  K2 PASS: task32-basis SVD reconstruction max|diff| = 9.770e-15
+
+  [K1a] REAL A222V delta matrix, 654 pos x 20 cols, 10757 present / 2323 imputed:
+    PC1 = 0.6545810645   PC2 = 0.0999866853   PC3 = 0.0441299350   PC1-PC3 cumulative = 0.7986976849
+    singular values (first 5): [9.94348, 3.886223, 2.581804, 2.217893, 2.076776]
+    SENSITIVITY complete-position subset: 173 positions x 20 cols (3287 present, 173 structural) -> PC1 = 0.7164328258, PC1-3 = 0.8381895540 (recon err 2.36e-15)
+  K2 PASS: atlas-basis SVD reconstruction max|diff| = 4.441e-15
+    SENSITIVITY atlas grid on same 654 positions: 12426 present / 654 missing -> PC1 = 0.7324119784, PC1-3 = 0.8530301986
+    position 222: NOT among the 654 base positions (no row -> no loading; consistent with L1's expected zero-row exclusion)
+
+--------------------------------------------------------------------------
+K1b -- SAME SVD ON GROUP F PLACEBO-BACKGROUND MATRICES
+--------------------------------------------------------------------------
+  K3 PASS: AE 129,960/57bg/120pos, W 68,400/30bg/120pos, overlap 41 (== script 109's G1)
+
+  [AE] frame: 120 positions, real-in-frame PC1 = 0.7472452664 (PC1-3 0.8669094800), present 2280 / imputed 120; pos222 in frame: False
+    placebo matrices n=56: PC1 frac mean 0.721204 sd 0.101564 range [0.448884, 0.913842] | real-in-frame 0.747245 -> within the placebo range
+    |loading-rho| vs real-in-frame: mean 0.3342 max 0.9340 (PC1 spatial pattern agreement)
+
+  [W] frame: 120 positions, real-in-frame PC1 = 0.6895367886 (PC1-3 0.8541678353), present 2280 / imputed 120; pos222 in frame: False
+    placebo matrices n=30: PC1 frac mean 0.741121 sd 0.131415 range [0.470054, 0.958572] | real-in-frame 0.689537 -> within the placebo range
+    |loading-rho| vs real-in-frame: mean 0.1608 max 0.4052 (PC1 spatial pattern agreement)
+
+  [COMMON] frame: 41 positions, real-in-frame PC1 = 0.8591692500 (PC1-3 0.9343442781), present 779 / imputed 41; pos222 in frame: False
+    placebo matrices n=86: PC1 frac mean 0.774119 sd 0.122650 range [0.488823, 0.994568] | real-in-frame 0.859169 -> within the placebo range
+    |loading-rho| vs real-in-frame: mean 0.2648 max 0.9382 (PC1 spatial pattern agreement)
+
+--------------------------------------------------------------------------
+K1c -- PROJECT OUT PC1, RECOMPUTE THE ANCHOR
+--------------------------------------------------------------------------
+  PC1 fraction removed (task32 basis): 0.654581
+  anchor BEFORE = -0.088118064 [-0.117333446, -0.059511384] p=0.0000  (canonical -0.08811806424891734)
+  anchor AFTER  = -0.062302505 [-0.082579331, -0.042241387] p=0.0000  (PC1 projected out)
+  diagnostic: rho(PC1 component, own_e.b) = -0.071508 [-0.103572, -0.040471] p=0.0002
+  SENSITIVITY (atlas-grid basis): anchor AFTER = -0.051504585 [-0.071316247, -0.031557001] p=0.0000
+  VERDICT (pre-registered rule): SURVIVES: the after-CI excludes 0 AND |rho| is not larger than before -- the anchor is not carried by PC1 alone.
+    |before| = 0.088118064, |after| = 0.062302505, CI after [-0.082579331, -0.042241387]
+
+--------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6)
+--------------------------------------------------------------------------
+  1. Mean-imputed cells carry no structure (1669/12426 =
+     13.4% of possible cells on the primary matrix); the
+     complete-position and atlas-grid sensitivities bound it.
+  2. Fractions describe THIS matrix (positions x muts), not
+     a universal property of ESM-2; row count affects them
+     (real-in-frame comparator exists to remove that for
+     the placebo comparison).
+  3. PC1 was estimated on the same rows whose anchor is
+     recomputed (no position-level cross-fit) -- disclosed.
+  4. Placebo PC1 fractions from 120- or 41-row frames are
+     noisy; real-in-frame is the like-for-like comparator.
+  5. Per-position base coverage is uneven (min 1 of 19;
+     22 positions have <10 cells) -- PC1 loadings at
+     sparse positions are largely mean-imputation-driven;
+     coverage printed with the fractions.
+
+Wrote /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task118_k1_placebo_pc1.csv, /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/task118_k1_anchor_pc1out.csv
+SCRIPT 118 DONE (55.4s)
