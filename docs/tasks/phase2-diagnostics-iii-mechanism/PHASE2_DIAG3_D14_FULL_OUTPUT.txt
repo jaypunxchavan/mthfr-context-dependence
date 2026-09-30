@@ -1,0 +1,138 @@
+
+==============================================================================
+D14 -- MODEL-FREE GRADIENT BINS BY 3D DISTANCE, INCLUDING Arm S AT 0 A (script 142)
+==============================================================================
+SCOPE: descriptive.  Nothing frozen is redefined.  No outcome word is used as a label.
+NO FITTED FUNCTIONAL FORM APPEARS ANYWHERE IN THIS SCRIPT.  Bins are fixed in advance and are NOT tuned.
+RESAMPLING UNIT: BACKGROUND, and only for D14.1's difference-of-means CI (N_BOOT=10000, SEED=0, per-background rho_b held FIXED, the two disjoint groups resampled INDEPENDENTLY).  D14.0 and D14.2 do NO resampling.
+
+  background_3d_distance.csv sha256 = 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  MATCH (required 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de)
+  background_rho_table.csv sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  MATCH
+
+  RESOLUTION ACCOUNTING -- nothing imputed, ever:
+    96 backgrounds; 11 unresolved, EXCLUDED from every bin and listed by name:
+      ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    of those, in the null set N: ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']  (11 of 11)
+    resolved backgrounds = 85  (Arm S 18, resolved V 34, resolved G 33)
+    resolved null set = 67 of 78
+
+------------------------------------------------------------------------------
+D14.0 -- BIN TABLE (no fitted form; bins fixed in advance)
+------------------------------------------------------------------------------
+
+  === [full] ===  (A222V rho = -0.088118064, mean|delta| = 0.070330, d3_CA = 0.000 A -- the REFERENCE LINE)
+         bin (d3_CA)    n   S   V   G    mean rho      median         min         max  mean|delta|
+  {exactly 0}  (Arm S)   18  18   0   0   -0.065159   -0.064728   -0.093530   -0.045641     0.089085
+             (0, 12]    6   0   4   2   -0.064933   -0.070363   -0.084598   -0.032948     0.069361 *** n=6, UNSTABLE ***
+            (12, 20]    8   0   3   5   -0.057444   -0.056323   -0.096244   -0.018056     0.096069
+            (20, 30]   17   0  10   7   -0.027758   -0.034024   -0.077808   +0.045471     0.056589
+            (30, 45]   16   0   8   8   +0.000252   -0.003612   -0.062145   +0.051669     0.046972
+           (45, inf)   20   0   9  11   +0.024492   +0.022853   -0.031212   +0.063116     0.045204
+
+  same bins, NULL SET ONLY (the D11/D15 denominator, n = 67 resolved):
+         bin (d3_CA)    n    mean rho      median         min         max  mean|delta|
+  {exactly 0}  (Arm S)    0 (empty bin)
+             (0, 12]    6   -0.064933   -0.070363   -0.084598   -0.032948     0.069361
+            (12, 20]    8   -0.057444   -0.056323   -0.096244   -0.018056     0.096069
+            (20, 30]   17   -0.027758   -0.034024   -0.077808   +0.045471     0.056589
+            (30, 45]   16   +0.000252   -0.003612   -0.062145   +0.051669     0.046972
+           (45, inf)   20   +0.024492   +0.022853   -0.031212   +0.063116     0.045204
+
+  full membership of each bin, by name:
+    {exactly 0}  (Arm S) n= 18: A222_C(S,0.00), A222_D(S,0.00), A222_E(S,0.00), A222_F(S,0.00), A222_G(S,0.00), A222_H(S,0.00), A222_I(S,0.00), A222_K(S,0.00), A222_L(S,0.00), A222_M(S,0.00), A222_N(S,0.00), A222_P(S,0.00), A222_Q(S,0.00), A222_R(S,0.00), A222_S(S,0.00), A222_T(S,0.00), A222_W(S,0.00), A222_Y(S,0.00)
+               (0, 12] n=  6: AV_155(V,8.64), AV_175(V,10.54), AV_195(V,10.15), AV_220(V,6.48), G_I192T(G,5.06), G_L178T(G,10.31)
+              (12, 20] n=  8: AV_145(V,17.95), AV_209(V,18.86), AV_242(V,17.90), G_G317Q(G,17.65), G_K48P(G,15.88), G_L318F(G,18.65), G_P254F(G,16.28), G_Y197V(G,15.72)
+              (20, 30] n= 17: AV_113(V,20.33), AV_116(V,22.96), AV_204(V,20.63), AV_233(V,24.49), AV_302(V,28.06), AV_311(V,26.34), AV_353(V,22.46), AV_84(V,26.12), AV_85(V,29.08), AV_98(V,26.35), G_E54R(G,20.10), G_H354F(G,22.24), G_M111N(G,24.28), G_R357M(G,26.10), G_R358V(G,25.10), G_T115G(G,25.02), G_W59C(G,20.11)
+              (30, 45] n= 16: AV_292(V,39.91), AV_293(V,40.57), AV_328(V,31.13), AV_350(V,31.43), AV_368(V,40.19), AV_461(V,43.66), AV_70(V,33.77), AV_73(V,30.18), G_E279K(G,36.76), G_E383T(G,30.91), G_G562M(G,41.40), G_K401S(G,38.57), G_L408H(G,42.94), G_P346V(G,31.99), G_S494H(G,40.81), G_V574C(G,43.60)
+             (45, inf) n= 20: AV_462(V,45.25), AV_511(V,51.82), AV_522(V,63.09), AV_524(V,67.61), AV_551(V,54.22), AV_558(V,45.62), AV_587(V,47.99), AV_589(V,49.35), AV_650(V,76.19), G_A462S(G,45.25), G_A551K(G,54.22), G_D629C(G,59.13), G_H613R(G,56.94), G_K510H(G,50.18), G_L472H(G,58.78), G_L526R(G,64.61), G_S430P(G,62.73), G_T521D(G,65.26), G_T549H(G,56.86), G_W595H(G,52.34)
+    d3_CA over the 85 resolved backgrounds: min = 0.000, median = 25.098, max = 76.194 A
+
+  === [H] ===  (A222V rho = -0.090021683, mean|delta| = 0.069403, d3_CA = 0.000 A -- the REFERENCE LINE)
+         bin (d3_CA)    n   S   V   G    mean rho      median         min         max  mean|delta|
+  {exactly 0}  (Arm S)   18  18   0   0   -0.070181   -0.068991   -0.090964   -0.048930     0.089728
+             (0, 12]    6   0   4   2   -0.073769   -0.081581   -0.094480   -0.029689     0.073960 *** n=6, UNSTABLE ***
+            (12, 20]    8   0   3   5   -0.060151   -0.057399   -0.101954   -0.022231     0.094655
+            (20, 30]   17   0  10   7   -0.027577   -0.037195   -0.086932   +0.053832     0.060150
+            (30, 45]   16   0   8   8   +0.002603   -0.001005   -0.058014   +0.057378     0.048621
+           (45, inf)   20   0   9  11   +0.022246   +0.023065   -0.028485   +0.068247     0.046668
+
+  same bins, NULL SET ONLY (the D11/D15 denominator, n = 67 resolved):
+         bin (d3_CA)    n    mean rho      median         min         max  mean|delta|
+  {exactly 0}  (Arm S)    0 (empty bin)
+             (0, 12]    6   -0.073769   -0.081581   -0.094480   -0.029689     0.073960
+            (12, 20]    8   -0.060151   -0.057399   -0.101954   -0.022231     0.094655
+            (20, 30]   17   -0.027577   -0.037195   -0.086932   +0.053832     0.060150
+            (30, 45]   16   +0.002603   -0.001005   -0.058014   +0.057378     0.048621
+           (45, inf)   20   +0.022246   +0.023065   -0.028485   +0.068247     0.046668
+
+  full membership of each bin, by name:
+    {exactly 0}  (Arm S) n= 18: A222_C(S,0.00), A222_D(S,0.00), A222_E(S,0.00), A222_F(S,0.00), A222_G(S,0.00), A222_H(S,0.00), A222_I(S,0.00), A222_K(S,0.00), A222_L(S,0.00), A222_M(S,0.00), A222_N(S,0.00), A222_P(S,0.00), A222_Q(S,0.00), A222_R(S,0.00), A222_S(S,0.00), A222_T(S,0.00), A222_W(S,0.00), A222_Y(S,0.00)
+               (0, 12] n=  6: AV_155(V,8.64), AV_175(V,10.54), AV_195(V,10.15), AV_220(V,6.48), G_I192T(G,5.06), G_L178T(G,10.31)
+              (12, 20] n=  8: AV_145(V,17.95), AV_209(V,18.86), AV_242(V,17.90), G_G317Q(G,17.65), G_K48P(G,15.88), G_L318F(G,18.65), G_P254F(G,16.28), G_Y197V(G,15.72)
+              (20, 30] n= 17: AV_113(V,20.33), AV_116(V,22.96), AV_204(V,20.63), AV_233(V,24.49), AV_302(V,28.06), AV_311(V,26.34), AV_353(V,22.46), AV_84(V,26.12), AV_85(V,29.08), AV_98(V,26.35), G_E54R(G,20.10), G_H354F(G,22.24), G_M111N(G,24.28), G_R357M(G,26.10), G_R358V(G,25.10), G_T115G(G,25.02), G_W59C(G,20.11)
+              (30, 45] n= 16: AV_292(V,39.91), AV_293(V,40.57), AV_328(V,31.13), AV_350(V,31.43), AV_368(V,40.19), AV_461(V,43.66), AV_70(V,33.77), AV_73(V,30.18), G_E279K(G,36.76), G_E383T(G,30.91), G_G562M(G,41.40), G_K401S(G,38.57), G_L408H(G,42.94), G_P346V(G,31.99), G_S494H(G,40.81), G_V574C(G,43.60)
+             (45, inf) n= 20: AV_462(V,45.25), AV_511(V,51.82), AV_522(V,63.09), AV_524(V,67.61), AV_551(V,54.22), AV_558(V,45.62), AV_587(V,47.99), AV_589(V,49.35), AV_650(V,76.19), G_A462S(G,45.25), G_A551K(G,54.22), G_D629C(G,59.13), G_H613R(G,56.94), G_K510H(G,50.18), G_L472H(G,58.78), G_L526R(G,64.61), G_S430P(G,62.73), G_T521D(G,65.26), G_T549H(G,56.86), G_W595H(G,52.34)
+    d3_CA over the 85 resolved backgrounds: min = 0.000, median = 25.098, max = 76.194 A
+
+------------------------------------------------------------------------------
+D14.1 -- DISCONTINUITY CHECK AT THE 0 A BIN EDGE
+------------------------------------------------------------------------------
+  Difference of means:  mean(rho, Arm S)  -  mean(rho, resolved nulls in (0, 12])
+  INDEPENDENT-GROUPS BACKGROUND-LEVEL bootstrap 95% CI, N_BOOT=10000, SEED=0.
+  RESAMPLING UNIT: BACKGROUND.  The two groups are DISJOINT sets of backgrounds, so each is resampled with replacement independently and the difference recomputed.  Each background's rho_b is held FIXED within a draw; nothing is re-derived.
+  *** DESCRIPTIVE COMPARISON OF TWO SMALL SAMPLES.  The (0, 12] bin is n = 6 AND UNSTABLE.  NO p-VALUE IS COMPUTED. ***
+
+  the (0, 12] resolved-NULL bin, all 6 members:
+         bg_id  arm     d3_CA  dist_seq  mean|delta|    rho (full)       rho (H)
+       G_I192T    G     5.058        30     0.066874  -0.032947897  -0.029689252
+        AV_220    V     6.480         2     0.047893  -0.084598081  -0.094480281
+        AV_155    V     8.639        67     0.081750  -0.070395718  -0.088806375
+        AV_195    V    10.150        27     0.095630  -0.084161807  -0.093420822
+       G_L178T    G    10.313        44     0.063864  -0.070330933  -0.074355887
+        AV_175    V    10.537        47     0.060158  -0.047162207  -0.061862861
+    d3_CA span = 5.058 to 10.537 A
+
+    [full]  mean(rho, Arm S, n=18) = -0.065159   mean(rho, (0,12] nulls, n=6) = -0.064933
+    [full]  DIFFERENCE OF MEANS = -0.000227
+    [full]  background-level bootstrap 95% CI = [-0.017265, +0.015162] (10000 usable draws)   INCLUDES ZERO
+    [full]  *** The (0, 12] bin has n = 6 and is labelled UNSTABLE.  This is a description of two small samples, not a test of a discontinuity. ***
+
+    [H]  mean(rho, Arm S, n=18) = -0.070181   mean(rho, (0,12] nulls, n=6) = -0.073769
+    [H]  DIFFERENCE OF MEANS = +0.003588
+    [H]  background-level bootstrap 95% CI = [-0.016695, +0.020572] (10000 usable draws)   INCLUDES ZERO
+    [H]  *** The (0, 12] bin has n = 6 and is labelled UNSTABLE.  This is a description of two small samples, not a test of a discontinuity. ***
+
+------------------------------------------------------------------------------
+D14.2 -- POST-HOC TARGET CHECK
+------------------------------------------------------------------------------
+  *** POST-HOC: this comparison was computed AFTER seeing the data. It is reproduced here as a check on the task doc's arithmetic and is labelled POST-HOC wherever it appears. ***
+
+  the 10 sequence-nearest nulls (dist_222 ascending, ties by ascending bg_id): ['AV_220', 'AV_233', 'AV_209', 'AV_204', 'AV_242', 'G_Y197V', 'AV_195', 'G_I192T', 'G_P254F', 'G_L178T']
+
+    [full]  POST-HOC mean rho of the 10 sequence-nearest nulls = -0.055749
+    [full]  POST-HOC mean rho of Arm S (n = 18) = -0.065159
+    [full]  POST-HOC difference (Arm S - seq-10 nearest) = -0.009411
+
+    [H]  POST-HOC mean rho of the 10 sequence-nearest nulls = -0.059109
+    [H]  POST-HOC mean rho of Arm S (n = 18) = -0.070181
+    [H]  POST-HOC difference (Arm S - seq-10 nearest) = -0.011072
+
+  RECOMPUTED vs TARGET:
+    D14.2 mean rho, 10 sequence-nearest nulls (full)   recomputed = -0.055749   target = -0.055700   |diff| = 4.872e-05   AGREE
+    D14.2 mean rho, 10 sequence-nearest nulls (H)      recomputed = -0.059109   target = -0.059100   |diff| = 8.832e-06   AGREE
+    D14.2 mean rho, Arm S (full)                       recomputed = -0.065159   target = -0.065200   |diff| = 4.067e-05   AGREE
+    D14.2 mean rho, Arm S (H)                          recomputed = -0.070181   target = -0.070200   |diff| = 1.876e-05   AGREE
+
+------------------------------------------------------------------------------
+D14.3 -- FIGURE
+------------------------------------------------------------------------------
+  *** SKIPPED: matplotlib is not importable (ModuleNotFoundError: No module named 'matplotlib').
+  Per the task doc rule 9 it is NOT installed.  data/processed/phase2_diagnostics/rho_vs_d3.png was NOT written.
+  Every number the figure would have shown is in the D14.0 bin table above; no result depends on the figure.
+
+  RECOMPUTED vs TARGET: 4/4 AGREE, 0 DISAGREE
+
+D14 LIMITATIONS (printed, not only in the docstring):  THE BINS ARE FIXED IN ADVANCE AND NOT TUNED, BUT THEY ARE STILL BINS, so a result inside a bin depends on where its edges fall; every bin n is printed at every use.  The (0, 12] bin has n = 6 and is labelled UNSTABLE everywhere.  THE BINS ARE NOT MATCHED FOR mean|delta| -- mean|delta| is printed in every bin precisely so the reader can see that a distance-bin difference and a shift difference are confounded in this picture.  D14.1 IS A DESCRIPTIVE COMPARISON OF TWO SMALL SAMPLES AND NOT A TEST; no p-value is computed for it.  D14.2 IS POST-HOC AND IS LABELLED SO.  11 unresolved backgrounds are excluded from every bin, listed by name, and NEVER imputed.  rho_b for the 96 backgrounds share one y-vector and are mutually correlated; nothing here models that.  NOTHING FROZEN IS REDEFINED AND NO OUTCOME WORD LABELS ANY RESULT HERE.
+Elapsed 0.9s

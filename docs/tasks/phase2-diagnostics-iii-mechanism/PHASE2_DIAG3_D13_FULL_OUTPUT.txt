@@ -1,0 +1,223 @@
+
+==============================================================================
+D13 -- A222V AGAINST ITS SAME-SITE COMPARATORS (Arm S), DIRECTLY (script 141)
+==============================================================================
+SCOPE: descriptive.  Nothing frozen is redefined.  No outcome word is used as a label.
+*** RANK FRACTIONS ONLY (n = 19).  NO p-VALUES, NO NULL DISTRIBUTION, NO SIGNIFICANCE CLAIM. ***
+RESAMPLING UNIT: NONE.  No bootstrap, no permutation.  N_BOOT / N_PERM are not read by this script.
+
+  background_rho_table.csv sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  MATCH (required e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  background_3d_distance.csv sha256 = 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  MATCH
+
+  Arm S (all at position 222, substitution != A and != V): 18 = ['A222_C', 'A222_D', 'A222_E', 'A222_F', 'A222_G', 'A222_H', 'A222_I', 'A222_K', 'A222_L', 'A222_M', 'A222_N', 'A222_P', 'A222_Q', 'A222_R', 'A222_S', 'A222_T', 'A222_W', 'A222_Y']
+  All Arm S positions are 222: [222], all dist_222 = [0]
+  A222V is in neither Arm S nor N and is out of sample for every fit below.
+  Arm S d3_CA = [0.0] A (it is position 222)
+
+------------------------------------------------------------------------------
+D13.1 -- RAW rho: A222V WITHIN Arm S u {A222V}  (n = 19)
+------------------------------------------------------------------------------
+
+  [full]  A222V rho = -0.088118064
+    rank      bg_id  position  dist_222    d3_CA  mean|delta|            rho  <= A222V?
+       1     A222_C       222         0    0.000     0.068111   -0.093529969  YES
+       2     A222_T       222         0    0.000     0.078027   -0.085890371  no
+       3     A222_D       222         0    0.000     0.104093   -0.081657235  no
+       4     A222_N       222         0    0.000     0.088948   -0.076712110  no
+       5     A222_F       222         0    0.000     0.103369   -0.076109024  no
+       6     A222_E       222         0    0.000     0.104842   -0.072118749  no
+       7     A222_I       222         0    0.000     0.085258   -0.069322876  no
+       8     A222_S       222         0    0.000     0.066545   -0.068299813  no
+       9     A222_Y       222         0    0.000     0.096628   -0.064967616  no
+      10     A222_P       222         0    0.000     0.098881   -0.064488894  no
+      11     A222_Q       222         0    0.000     0.083930   -0.061575739  no
+      12     A222_W       222         0    0.000     0.092244   -0.057926447  no
+      13     A222_H       222         0    0.000     0.077272   -0.053981871  no
+      14     A222_L       222         0    0.000     0.105150   -0.053895221  no
+      15     A222_R       222         0    0.000     0.097354   -0.053242246  no
+      16     A222_G       222         0    0.000     0.087211   -0.047518529  no
+      17     A222_M       222         0    0.000     0.071537   -0.045990178  no
+      18     A222_K       222         0    0.000     0.094122   -0.045641128  no
+    A222V  rho = -0.088118064   mean|delta| = 0.070330   dist_222 = 0   d3_CA = 0.000
+    Arm S members at or below A222V: k = 1 of 18  -> A222_C
+    A222V signed rank within S u {A222V} = 2/19   rank fraction (1 + 1)/(1 + 18) = 0.1053
+    *** RANK FRACTION OVER n = 19.  NOT A TEST. ***
+
+  [H]  A222V rho = -0.090021683
+    rank      bg_id  position  dist_222    d3_CA  mean|delta|            rho  <= A222V?
+       1     A222_C       222         0    0.000     0.067910   -0.090964259  YES
+       2     A222_D       222         0    0.000     0.106383   -0.086809350  no
+       3     A222_F       222         0    0.000     0.102421   -0.086085057  no
+       4     A222_T       222         0    0.000     0.079641   -0.081679896  no
+       5     A222_N       222         0    0.000     0.090881   -0.080240992  no
+       6     A222_Y       222         0    0.000     0.094086   -0.078083625  no
+       7     A222_E       222         0    0.000     0.107653   -0.076475523  no
+       8     A222_I       222         0    0.000     0.083436   -0.073831566  no
+       9     A222_P       222         0    0.000     0.099503   -0.070547723  no
+      10     A222_W       222         0    0.000     0.092757   -0.067434748  no
+      11     A222_S       222         0    0.000     0.069010   -0.067111522  no
+      12     A222_H       222         0    0.000     0.076644   -0.066669904  no
+      13     A222_Q       222         0    0.000     0.086052   -0.065190461  no
+      14     A222_R       222         0    0.000     0.098150   -0.060413066  no
+      15     A222_L       222         0    0.000     0.104262   -0.056760414  no
+      16     A222_G       222         0    0.000     0.089291   -0.054062709  no
+      17     A222_K       222         0    0.000     0.095360   -0.051971717  no
+      18     A222_M       222         0    0.000     0.071665   -0.048929841  no
+    A222V  rho = -0.090021683   mean|delta| = 0.069403   dist_222 = 0   d3_CA = 0.000
+    Arm S members at or below A222V: k = 1 of 18  -> A222_C
+    A222V signed rank within S u {A222V} = 2/19   rank fraction (1 + 1)/(1 + 18) = 0.1053
+    *** RANK FRACTION OVER n = 19.  NOT A TEST. ***
+
+  RECOMPUTED vs TARGET (A222_C, from Diagnostics II's D0 C2 output):
+    D13.1 A222_C raw rho (full)                          recomputed = -0.093530   target = -0.093530   |diff| = 3.118e-08   AGREE
+    D13.1 A222V raw rho (full)                           recomputed = -0.088118   target = -0.088118   |diff| = 6.425e-08   AGREE
+    D13.1 A222_C raw rho (H)                             recomputed = -0.090964   target = -0.090964   |diff| = 2.593e-07   AGREE
+    D13.1 A222V raw rho (H)                              recomputed = -0.090022   target = -0.090022   |diff| = 3.170e-07   AGREE
+    No target is given for how many OTHER Arm S members are at or below; the counts above are the recomputation and stand on their own.
+
+------------------------------------------------------------------------------
+D13.2 -- SHIFT-ADJUSTED RESIDUAL, EXCHANGEABLE CONSTRUCTION (PRIMARY)
+------------------------------------------------------------------------------
+  PRIMARY: OLS rho ~ a + c*mean|delta| fitted on ALL 78 NULLS (the D9 fit).
+  A222V and all 18 Arm S members are OUT OF SAMPLE from that same fit, so A222V and Arm S are exchangeable with each other.
+  SENSITIVITY, REPORTED NOT SELECTED: D4's all-96 fit (Arm S IN sample; A222V out of sample).
+  *** RANK FRACTIONS OVER n = 19.  NOT TESTS. ***
+
+  === [full] ===
+                             variant         r_A       slope   intercept  n_fit  Arm S in sample?
+         PRIMARY  D9 fit on 78 nulls   -0.066425   -0.726287   +0.029386     78  no
+    rank      bg_id            rho  mean|delta|     residual  <= r_A?
+       1     A222_C   -0.093529969     0.068111    -0.073448  YES
+       2     A222_T   -0.085890371     0.078027    -0.058607  no
+       3     A222_S   -0.068299813     0.066545    -0.049356  no
+       4     A222_N   -0.076712110     0.088948    -0.041496  no
+       5     A222_I   -0.069322876     0.085258    -0.036787  no
+       6     A222_D   -0.081657235     0.104093    -0.035442  no
+       7     A222_F   -0.076109024     0.103369    -0.030420  no
+       8     A222_Q   -0.061575739     0.083930    -0.030005  no
+       9     A222_H   -0.053981871     0.077272    -0.027246  no
+      10     A222_E   -0.072118749     0.104842    -0.025360  no
+      11     A222_Y   -0.064967616     0.096628    -0.024174  no
+      12     A222_M   -0.045990178     0.071537    -0.023420  no
+      13     A222_P   -0.064488894     0.098881    -0.022059  no
+      14     A222_W   -0.057926447     0.092244    -0.020317  no
+      15     A222_G   -0.047518529     0.087211    -0.013564  no
+      16     A222_R   -0.053242246     0.097354    -0.011922  no
+      17     A222_L   -0.053895221     0.105150    -0.006913  no
+      18     A222_K   -0.045641128     0.094122    -0.006668  no
+    A222V  rho = -0.088118064  mean|delta| = 0.070330  predicted = -0.021693  r_A = -0.066425
+    Arm S at or below A222V: k = 1 of 18  -> A222_C
+    A222V rank fraction within S u {A222V} = (1 + 1)/(1 + 18) = 0.1053   *** RANK FRACTION, NOT A TEST ***
+          SENSITIVITY  D4 all-96 fit   -0.059133   -0.896326   +0.034053     96  YES -- disclosed
+    rank      bg_id            rho  mean|delta|     residual  <= r_A?
+       1     A222_C   -0.093529969     0.068111    -0.066534  YES
+       2     A222_T   -0.085890371     0.078027    -0.050006  no
+       3     A222_S   -0.068299813     0.066545    -0.042707  no
+       4     A222_N   -0.076712110     0.088948    -0.031039  no
+       5     A222_I   -0.069322876     0.085258    -0.026957  no
+       6     A222_D   -0.081657235     0.104093    -0.022409  no
+       7     A222_Q   -0.061575739     0.083930    -0.020400  no
+       8     A222_H   -0.053981871     0.077272    -0.018774  no
+       9     A222_F   -0.076109024     0.103369    -0.017510  no
+      10     A222_M   -0.045990178     0.071537    -0.015923  no
+      11     A222_Y   -0.064967616     0.096628    -0.012410  no
+      12     A222_E   -0.072118749     0.104842    -0.012200  no
+      13     A222_P   -0.064488894     0.098881    -0.009912  no
+      14     A222_W   -0.057926447     0.092244    -0.009299  no
+      15     A222_G   -0.047518529     0.087211    -0.003402  no
+      16     A222_R   -0.053242246     0.097354    -0.000035  no
+      17     A222_K   -0.045641128     0.094122    +0.004670  no
+      18     A222_L   -0.053895221     0.105150    +0.006300  no
+    A222V  rho = -0.088118064  mean|delta| = 0.070330  predicted = -0.028985  r_A = -0.059133
+    Arm S at or below A222V: k = 1 of 18  -> A222_C
+    A222V rank fraction within S u {A222V} = (1 + 1)/(1 + 18) = 0.1053   *** RANK FRACTION, NOT A TEST ***
+
+  === [H] ===
+                             variant         r_A       slope   intercept  n_fit  Arm S in sample?
+         PRIMARY  D9 fit on 78 nulls   -0.068692   -0.774750   +0.032440     78  no
+    rank      bg_id            rho  mean|delta|     residual  <= r_A?
+       1     A222_C   -0.090964259     0.067910    -0.070791  YES
+       2     A222_T   -0.081679896     0.079641    -0.052418  no
+       3     A222_S   -0.067111522     0.069010    -0.046086  no
+       4     A222_N   -0.080240992     0.090881    -0.042271  no
+       5     A222_I   -0.073831566     0.083436    -0.041630  no
+       6     A222_H   -0.066669904     0.076644    -0.039730  no
+       7     A222_F   -0.086085057     0.102421    -0.039175  no
+       8     A222_Y   -0.078083625     0.094086    -0.037631  no
+       9     A222_D   -0.086809350     0.106383    -0.036829  no
+      10     A222_Q   -0.065190461     0.086052    -0.030962  no
+      11     A222_W   -0.067434748     0.092757    -0.028011  no
+      12     A222_P   -0.070547723     0.099503    -0.025898  no
+      13     A222_M   -0.048929841     0.071665    -0.025847  no
+      14     A222_E   -0.076475523     0.107653    -0.025512  no
+      15     A222_G   -0.054062709     0.089291    -0.017324  no
+      16     A222_R   -0.060413066     0.098150    -0.016811  no
+      17     A222_K   -0.051971717     0.095360    -0.010532  no
+      18     A222_L   -0.056760414     0.104262    -0.008424  no
+    A222V  rho = -0.090021683  mean|delta| = 0.069403  predicted = -0.021330  r_A = -0.068692
+    Arm S at or below A222V: k = 1 of 18  -> A222_C
+    A222V rank fraction within S u {A222V} = (1 + 1)/(1 + 18) = 0.1053   *** RANK FRACTION, NOT A TEST ***
+          SENSITIVITY  D4 all-96 fit   -0.061058   -0.964705   +0.037990     96  YES -- disclosed
+    rank      bg_id            rho  mean|delta|     residual  <= r_A?
+       1     A222_C   -0.090964259     0.067910    -0.063441  YES
+       2     A222_T   -0.081679896     0.079641    -0.042840  no
+       3     A222_S   -0.067111522     0.069010    -0.038527  no
+       4     A222_I   -0.073831566     0.083436    -0.031331  no
+       5     A222_H   -0.066669904     0.076644    -0.030721  no
+       6     A222_N   -0.080240992     0.090881    -0.030557  no
+       7     A222_Y   -0.078083625     0.094086    -0.025308  no
+       8     A222_F   -0.086085057     0.102421    -0.025269  no
+       9     A222_D   -0.086809350     0.106383    -0.022171  no
+      10     A222_Q   -0.065190461     0.086052    -0.020166  no
+      11     A222_M   -0.048929841     0.071665    -0.017784  no
+      12     A222_W   -0.067434748     0.092757    -0.015942  no
+      13     A222_P   -0.070547723     0.099503    -0.012547  no
+      14     A222_E   -0.076475523     0.107653    -0.010612  no
+      15     A222_G   -0.054062709     0.089291    -0.005913  no
+      16     A222_R   -0.060413066     0.098150    -0.003717  no
+      17     A222_K   -0.051971717     0.095360    +0.002032  no
+      18     A222_L   -0.056760414     0.104262    +0.005831  no
+    A222V  rho = -0.090021683  mean|delta| = 0.069403  predicted = -0.028963  r_A = -0.061058
+    Arm S at or below A222V: k = 1 of 18  -> A222_C
+    A222V rank fraction within S u {A222V} = (1 + 1)/(1 + 18) = 0.1053   *** RANK FRACTION, NOT A TEST ***
+
+  RECOMPUTED vs TARGET (A222_C on the ALL-96 residual, from D0 C2):
+    D13.2 A222_C all-96 residual (full)                  recomputed = -0.066534   target = -0.066534   |diff| = 2.987e-07   AGREE
+    D13.2 A222V all-96 residual (full)                   recomputed = -0.059133   target = -0.059133   |diff| = 3.139e-07   AGREE
+    D13.2 A222_C all-96 residual (H)                     recomputed = -0.063441   target = -0.063441   |diff| = 2.067e-07   AGREE
+    D13.2 A222V all-96 residual (H)                      recomputed = -0.061058   target = -0.061058   |diff| = 3.935e-07   AGREE
+
+------------------------------------------------------------------------------
+D13 HEAD-TO-HEAD (rank fractions; n = 19; none is a test)
+------------------------------------------------------------------------------
+   view                                      statistic  k of 18  rank frac  Arm S at or below A222V
+   full                                        raw rho        1     0.1053  A222_C
+   full     shift-adj. residual (PRIMARY, 78-null fit)        1     0.1053  A222_C
+   full  shift-adj. residual (all-96 fit, SENSITIVITY)        1     0.1053  A222_C
+      H                                        raw rho        1     0.1053  A222_C
+      H     shift-adj. residual (PRIMARY, 78-null fit)        1     0.1053  A222_C
+      H  shift-adj. residual (all-96 fit, SENSITIVITY)        1     0.1053  A222_C
+
+  effect size, stated alongside the rank fraction (AGENTS 3):
+    [full] Arm S raw rho: mean = -0.065159, median = -0.064728, min = -0.093530, max = -0.045641, sd = 0.014048;  A222V = -0.088118
+    [full] Arm S primary residual: mean = -0.029845, median = -0.026303, min = -0.073448, max = -0.006668, sd = 0.017533;  A222V r_A = -0.066425
+    [H] Arm S raw rho: mean = -0.070181, median = -0.068991, min = -0.090964, max = -0.048930, sd = 0.012563;  A222V = -0.090022
+    [H] Arm S primary residual: mean = -0.033105, median = -0.033896, min = -0.070791, max = -0.008424, sd = 0.015453;  A222V r_A = -0.068692
+    *** RAW rho: A222V is the 2nd most negative of the 19 on the full frame and the 2nd most negative on H; it sits INSIDE the Arm S raw-rho range [-0.093530, -0.045641] (full), not outside it.  Exactly one Arm S member (A222_C) is more negative than A222V.  The rank fraction is the result; the range statement is context and is not a test. ***
+
+------------------------------------------------------------------------------
+D13.3 -- WHAT THIS CAN AND CANNOT SAY
+------------------------------------------------------------------------------
+  CAN: within position 222, replacing the alanine with valine changes rho_b relative to the other 18 substitutions at that same site, on this measure, at n = 19.  This is a substitution-specificity statement WITHIN the site.
+  CANNOT: separate 'the residue' from 'the region around 222'.  Every member of this comparison is at position 222 and at d3_CA = 0, so the comparison carries no information about proximity at all.
+  CANNOT: speak to a monotonic Grantham gradient over these 18.  The Grantham gradient over the same 18 was NOT RESOLVED (Phase 1b P3, Phase 2 A4), so no claim about substitution property is made here.
+  CANNOT: be a test.  n = 19, all 18 comparators share a site, and no null distribution exists for this comparison.  These are rank fractions.
+  CANNOT: replace the frozen p_spec.  The frozen comparison is A222V against the 78 nulls and is untouched by this task.
+  CAVEAT: mean|delta| and rho_b are both functions of the SAME delta_b, so D13.2 is a partial control of shift MAGNITUDE and not an independent one; it is blind to shift sign pattern and to heteroscedasticity.
+
+  RECOMPUTED vs TARGET: 8/8 AGREE, 0 DISAGREE
+
+D13 LIMITATIONS (printed, not only in the docstring):  n = 19 and 18 of the 19 share a site, so every number here is a rank fraction and NOT a test; no CI, no p-value, no permutation.  mean|delta| and rho_b are both functions of the same delta_b, so the shift adjustment is partial and blind to sign pattern.  The all-96 sensitivity puts Arm S IN sample and is labelled so; it is reported, not selected.  The Grantham gradient over these 18 was NOT RESOLVED (Phase 1b P3, Phase 2 A4) and nothing here claims monotonicity in substitution property.  Nothing frozen is redefined and no outcome word labels any result here.
+Elapsed 0.7s

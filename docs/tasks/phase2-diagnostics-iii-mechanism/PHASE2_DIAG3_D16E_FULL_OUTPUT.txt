@@ -1,0 +1,329 @@
+
+==============================================================================
+D16e -- ARM S UNDER THE JOINT MODELS, EXACT  (script 146)
+==============================================================================
+SCOPE: descriptive.  Nothing frozen is redefined.  No outcome word is used as a label.
+*** RANK FRACTIONS, n = 19.  NOT TESTS.  No p-value is computed anywhere in this task. ***
+NO 6-dp ROUNDING AND NO HAND-TYPED COEFFICIENTS: all four models are refitted here at full precision from script 125's own rows.
+RESAMPLING UNIT: NONE.  No bootstrap, no permutation.  N_BOOT / N_PERM are not read by this script.
+*** THE DOC'S TARGETS FOR THIS TASK ARE ITS OWN POST-HOC CALCULATIONS FROM PRINTED 6-dp VALUES AND ARE THEREFORE APPROXIMATE BY CONSTRUCTION.  Each is recomputed and printed beside its target; a mismatch is reported, never forced. ***
+  [PASS] E5 background_rho_table.csv sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] E5 background_3d_distance.csv sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  Arm S 18 (all position 222, dist_seq 0, d3_CA 0); nulls 78; resolved nulls 67
+
+------------------------------------------------------------------------------
+GATES -- the four models must reproduce the published Diagnostics II values exactly before Arm S is scored
+------------------------------------------------------------------------------
+  [PASS] E1 M1  shift-only r_A (full): got -0.066424633 vs -0.066425 |diff|=3.674e-07
+  [PASS] E1 M1  shift-only k (full): got 2 vs 2
+  [PASS] E1 M1  shift-only r_A (H): got -0.068691937 vs -0.068692 |diff|=6.262e-08
+  [PASS] E1 M1  shift-only k (H): got 2 vs 2
+  [PASS] E4 M2  + linear dist_seq r_A (full): got -0.033710698 vs -0.033711 |diff|=3.025e-07
+  [PASS] E4 M2  + linear dist_seq k (full): got 9 vs 9
+  [PASS] E4 M2  + linear dist_seq r_A (H): got -0.035947854 vs -0.035948 |diff|=1.459e-07
+  [PASS] E4 M2  + linear dist_seq k (H): got 10 vs 10
+  [PASS] E2 M3  + log1p(dist_seq) r_A (full): got +0.045226926 vs +0.045227 |diff|=7.356e-08
+  [PASS] E2 M3  + log1p(dist_seq) k (full): got 69 vs 69
+  [PASS] E2 M3  + log1p(dist_seq) r_A (H): got +0.047030107 vs +0.047030 |diff|=1.071e-07
+  [PASS] E2 M3  + log1p(dist_seq) k (H): got 70 vs 70
+  [PASS] E3 M4  + log1p(d3_CA) r_A (full): got +0.093681340 vs +0.093681 |diff|=3.397e-07
+  [PASS] E3 M4  + log1p(d3_CA) k (full): got 67 vs 67
+  [PASS] E3 M4  + log1p(d3_CA) r_A (H): got +0.098714560 vs +0.098715 |diff|=4.397e-07
+  [PASS] E3 M4  + log1p(d3_CA) k (H): got 67 vs 67
+
+  18/18 E-gates PASS.  Arm S may be scored.
+
+------------------------------------------------------------------------------
+ARM S AND A222V SCORED OUT OF SAMPLE AT DISTANCE 0, ALL FOUR MODELS
+------------------------------------------------------------------------------
+  Arm S and A222V are BOTH out of sample from the null-only fit, so they are exchangeable with each other.
+  *** D12's K3 CORRECTION APPLIES TO M2, M3 AND M4: all three evaluate a distance term at 0, a point no null occupies, so their predicted rho is an EXTRAPOLATION of a fitted surface.  M1 has no distance term and is not an extrapolation. ***
+
+  ================ M1  shift-only ================
+
+    [full]  OLS rho ~ mean|delta|*-0.726287  intercept +0.029386   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.068111  -0.093529969          -0.020082    -0.073448      YES
+        A222_T     0.078027  -0.085890371          -0.027284    -0.058607       no
+        A222_S     0.066545  -0.068299813          -0.018944    -0.049356       no
+        A222_N     0.088948  -0.076712110          -0.035216    -0.041496       no
+        A222_I     0.085258  -0.069322876          -0.032536    -0.036787       no
+        A222_D     0.104093  -0.081657235          -0.046215    -0.035442       no
+        A222_F     0.103369  -0.076109024          -0.045689    -0.030420       no
+        A222_Q     0.083930  -0.061575739          -0.031571    -0.030005       no
+        A222_H     0.077272  -0.053981871          -0.026736    -0.027246       no
+        A222_E     0.104842  -0.072118749          -0.046759    -0.025360       no
+        A222_Y     0.096628  -0.064967616          -0.040794    -0.024174       no
+        A222_M     0.071537  -0.045990178          -0.022570    -0.023420       no
+        A222_P     0.098881  -0.064488894          -0.042430    -0.022059       no
+        A222_W     0.092244  -0.057926447          -0.037610    -0.020317       no
+        A222_G     0.087211  -0.047518529          -0.033954    -0.013564       no
+        A222_R     0.097354  -0.053242246          -0.041321    -0.011922       no
+        A222_L     0.105150  -0.053895221          -0.046982    -0.006913       no
+        A222_K     0.094122  -0.045641128          -0.038974    -0.006668       no
+    A222V        0.070330  -0.088118064          -0.021693    -0.066425   (the residual every Arm S member is compared against)
+    ARM S mean residual = -0.029845   sd = 0.017533
+    mean PREDICTED rho at d=0 = -0.035315   vs   mean OBSERVED rho at d=0 = -0.065159   overshoot (predicted - observed) = +0.029845
+    most negative OBSERVED null rho on this view = G_P254F -0.096244   (A222V's predicted rho at d=0 vs that: -0.021693 -> not below every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+    [H]  OLS rho ~ mean|delta|*-0.774750  intercept +0.032440   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.067910  -0.090964259          -0.020173    -0.070791      YES
+        A222_T     0.079641  -0.081679896          -0.029261    -0.052418       no
+        A222_S     0.069010  -0.067111522          -0.021025    -0.046086       no
+        A222_N     0.090881  -0.080240992          -0.037970    -0.042271       no
+        A222_I     0.083436  -0.073831566          -0.032202    -0.041630       no
+        A222_H     0.076644  -0.066669904          -0.026940    -0.039730       no
+        A222_F     0.102421  -0.086085057          -0.046910    -0.039175       no
+        A222_Y     0.094086  -0.078083625          -0.040453    -0.037631       no
+        A222_D     0.106383  -0.086809350          -0.049980    -0.036829       no
+        A222_Q     0.086052  -0.065190461          -0.034228    -0.030962       no
+        A222_W     0.092757  -0.067434748          -0.039423    -0.028011       no
+        A222_P     0.099503  -0.070547723          -0.044649    -0.025898       no
+        A222_M     0.071665  -0.048929841          -0.023082    -0.025847       no
+        A222_E     0.107653  -0.076475523          -0.050964    -0.025512       no
+        A222_G     0.089291  -0.054062709          -0.036738    -0.017324       no
+        A222_R     0.098150  -0.060413066          -0.043602    -0.016811       no
+        A222_K     0.095360  -0.051971717          -0.041440    -0.010532       no
+        A222_L     0.104262  -0.056760414          -0.048337    -0.008424       no
+    A222V        0.069403  -0.090021683          -0.021330    -0.068692   (the residual every Arm S member is compared against)
+    ARM S mean residual = -0.033105   sd = 0.015453
+    mean PREDICTED rho at d=0 = -0.037077   vs   mean OBSERVED rho at d=0 = -0.070181   overshoot (predicted - observed) = +0.033105
+    most negative OBSERVED null rho on this view = G_P254F -0.101954   (A222V's predicted rho at d=0 vs that: -0.021330 -> not below every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+  ================ M2  + linear dist_seq ================
+
+    [full]  OLS rho ~ mean|delta|*-0.363298  dist*+0.000215  intercept -0.028857   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.068111  -0.093529969          -0.053601    -0.039929      YES
+        A222_T     0.078027  -0.085890371          -0.057204    -0.028687       no
+        A222_N     0.088948  -0.076712110          -0.061171    -0.015541       no
+        A222_S     0.066545  -0.068299813          -0.053032    -0.015268       no
+        A222_D     0.104093  -0.081657235          -0.066673    -0.014984       no
+        A222_F     0.103369  -0.076109024          -0.066410    -0.009699       no
+        A222_I     0.085258  -0.069322876          -0.059831    -0.009492       no
+        A222_E     0.104842  -0.072118749          -0.066945    -0.005173       no
+        A222_Q     0.083930  -0.061575739          -0.059348    -0.002227       no
+        A222_Y     0.096628  -0.064967616          -0.063961    -0.001006       no
+        A222_P     0.098881  -0.064488894          -0.064780    +0.000291       no
+        A222_H     0.077272  -0.053981871          -0.056930    +0.002948       no
+        A222_W     0.092244  -0.057926447          -0.062369    +0.004442       no
+        A222_M     0.071537  -0.045990178          -0.054846    +0.008856       no
+        A222_R     0.097354  -0.053242246          -0.064225    +0.010983       no
+        A222_G     0.087211  -0.047518529          -0.060540    +0.013022       no
+        A222_L     0.105150  -0.053895221          -0.067057    +0.013162       no
+        A222_K     0.094122  -0.045641128          -0.063051    +0.017410       no
+    A222V        0.070330  -0.088118064          -0.054407    -0.033711   (the residual every Arm S member is compared against)
+    ARM S mean residual = -0.003938   sd = 0.015200
+    mean PREDICTED rho at d=0 = -0.061221   vs   mean OBSERVED rho at d=0 = -0.065159   overshoot (predicted - observed) = +0.003938
+    most negative OBSERVED null rho on this view = G_P254F -0.096244   (A222V's predicted rho at d=0 vs that: -0.054407 -> not below every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+    [H]  OLS rho ~ mean|delta|*-0.418766  dist*+0.000210  intercept -0.025010   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.067910  -0.090964259          -0.053449    -0.037516      YES
+        A222_T     0.079641  -0.081679896          -0.058361    -0.023319       no
+        A222_F     0.102421  -0.086085057          -0.067901    -0.018184       no
+        A222_D     0.106383  -0.086809350          -0.069560    -0.017249       no
+        A222_N     0.090881  -0.080240992          -0.063068    -0.017173       no
+        A222_I     0.083436  -0.073831566          -0.059950    -0.013881       no
+        A222_Y     0.094086  -0.078083625          -0.064410    -0.013673       no
+        A222_S     0.069010  -0.067111522          -0.053909    -0.013202       no
+        A222_H     0.076644  -0.066669904          -0.057106    -0.009564       no
+        A222_E     0.107653  -0.076475523          -0.070092    -0.006384       no
+        A222_Q     0.086052  -0.065190461          -0.061046    -0.004145       no
+        A222_P     0.099503  -0.070547723          -0.066679    -0.003869       no
+        A222_W     0.092757  -0.067434748          -0.063854    -0.003581       no
+        A222_R     0.098150  -0.060413066          -0.066112    +0.005699       no
+        A222_M     0.071665  -0.048929841          -0.055021    +0.006091       no
+        A222_G     0.089291  -0.054062709          -0.062402    +0.008340       no
+        A222_L     0.104262  -0.056760414          -0.068672    +0.011911       no
+        A222_K     0.095360  -0.051971717          -0.064944    +0.012972       no
+    A222V        0.069403  -0.090021683          -0.054074    -0.035948   (the residual every Arm S member is compared against)
+    ARM S mean residual = -0.007596   sd = 0.013320
+    mean PREDICTED rho at d=0 = -0.062585   vs   mean OBSERVED rho at d=0 = -0.070181   overshoot (predicted - observed) = +0.007596
+    most negative OBSERVED null rho on this view = G_P254F -0.101954   (A222V's predicted rho at d=0 vs that: -0.054074 -> not below every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+  ================ M3  + log1p(dist_seq) ================
+
+    [full]  OLS rho ~ mean|delta|*-0.418381  log1p(dist_seq)*+0.023870  intercept -0.103920   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.068111  -0.093529969          -0.132417    +0.038887      YES
+        A222_T     0.078027  -0.085890371          -0.136565    +0.050675       no
+        A222_S     0.066545  -0.068299813          -0.131761    +0.063461       no
+        A222_N     0.088948  -0.076712110          -0.141135    +0.064422       no
+        A222_D     0.104093  -0.081657235          -0.147471    +0.065813       no
+        A222_I     0.085258  -0.069322876          -0.139591    +0.070268       no
+        A222_F     0.103369  -0.076109024          -0.147168    +0.071059       no
+        A222_E     0.104842  -0.072118749          -0.147784    +0.075665       no
+        A222_Q     0.083930  -0.061575739          -0.139035    +0.077459       no
+        A222_Y     0.096628  -0.064967616          -0.144348    +0.079380       no
+        A222_P     0.098881  -0.064488894          -0.145290    +0.080801       no
+        A222_H     0.077272  -0.053981871          -0.136250    +0.082268       no
+        A222_W     0.092244  -0.057926447          -0.142514    +0.084587       no
+        A222_M     0.071537  -0.045990178          -0.133850    +0.087860       no
+        A222_R     0.097354  -0.053242246          -0.144651    +0.091409       no
+        A222_G     0.087211  -0.047518529          -0.140408    +0.092889       no
+        A222_L     0.105150  -0.053895221          -0.147913    +0.094018       no
+        A222_K     0.094122  -0.045641128          -0.143299    +0.097658       no
+    A222V        0.070330  -0.088118064          -0.133345    +0.045227   (the residual every Arm S member is compared against)
+    ARM S mean residual = +0.076032   sd = 0.015488
+    mean PREDICTED rho at d=0 = -0.141192   vs   mean OBSERVED rho at d=0 = -0.065159   overshoot (predicted - observed) = -0.076032
+    most negative OBSERVED null rho on this view = G_P254F -0.096244   (A222V's predicted rho at d=0 vs that: -0.133345 -> BELOW every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+    [H]  OLS rho ~ mean|delta|*-0.464836  log1p(dist_seq)*+0.024540  intercept -0.104791   (fit on n = 78)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.067910  -0.090964259          -0.136358    +0.045394      YES
+        A222_T     0.079641  -0.081679896          -0.141811    +0.060131       no
+        A222_F     0.102421  -0.086085057          -0.152400    +0.066315       no
+        A222_N     0.090881  -0.080240992          -0.147036    +0.066795       no
+        A222_D     0.106383  -0.086809350          -0.154242    +0.067432       no
+        A222_I     0.083436  -0.073831566          -0.143575    +0.069743       no
+        A222_S     0.069010  -0.067111522          -0.136869    +0.069758       no
+        A222_Y     0.094086  -0.078083625          -0.148525    +0.070442       no
+        A222_H     0.076644  -0.066669904          -0.140418    +0.073748       no
+        A222_E     0.107653  -0.076475523          -0.154832    +0.078356       no
+        A222_Q     0.086052  -0.065190461          -0.144791    +0.079600       no
+        A222_W     0.092757  -0.067434748          -0.147908    +0.080473       no
+        A222_P     0.099503  -0.070547723          -0.151043    +0.080495       no
+        A222_M     0.071665  -0.048929841          -0.138103    +0.089174       no
+        A222_R     0.098150  -0.060413066          -0.150415    +0.090002       no
+        A222_G     0.089291  -0.054062709          -0.146297    +0.092234       no
+        A222_L     0.104262  -0.056760414          -0.153255    +0.096495       no
+        A222_K     0.095360  -0.051971717          -0.149118    +0.097146       no
+    A222V        0.069403  -0.090021683          -0.137052    +0.047030   (the residual every Arm S member is compared against)
+    ARM S mean residual = +0.076318   sd = 0.013530
+    mean PREDICTED rho at d=0 = -0.146500   vs   mean OBSERVED rho at d=0 = -0.070181   overshoot (predicted - observed) = -0.076318
+    most negative OBSERVED null rho on this view = G_P254F -0.101954   (A222V's predicted rho at d=0 vs that: -0.137052 -> BELOW every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+  ================ M4  + log1p(d3_CA) ================
+
+    [full]  OLS rho ~ mean|delta|*-0.324445  log1p(d3_CA)*+0.048009  intercept -0.158981   (fit on n = 67)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.068111  -0.093529969          -0.181079    +0.087549      YES
+        A222_T     0.078027  -0.085890371          -0.184297    +0.098406       no
+        A222_D     0.104093  -0.081657235          -0.192754    +0.111096       no
+        A222_N     0.088948  -0.076712110          -0.187840    +0.111128       no
+        A222_S     0.066545  -0.068299813          -0.180571    +0.112271       no
+        A222_F     0.103369  -0.076109024          -0.192519    +0.116410       no
+        A222_I     0.085258  -0.069322876          -0.186643    +0.117320       no
+        A222_E     0.104842  -0.072118749          -0.192997    +0.120878       no
+        A222_Q     0.083930  -0.061575739          -0.186212    +0.124636       no
+        A222_Y     0.096628  -0.064967616          -0.190332    +0.125364       no
+        A222_P     0.098881  -0.064488894          -0.191063    +0.126574       no
+        A222_H     0.077272  -0.053981871          -0.184052    +0.130070       no
+        A222_W     0.092244  -0.057926447          -0.188909    +0.130983       no
+        A222_M     0.071537  -0.045990178          -0.182191    +0.136201       no
+        A222_R     0.097354  -0.053242246          -0.190567    +0.137325       no
+        A222_L     0.105150  -0.053895221          -0.193096    +0.139201       no
+        A222_G     0.087211  -0.047518529          -0.187276    +0.139758       no
+        A222_K     0.094122  -0.045641128          -0.189519    +0.143878       no
+    A222V        0.070330  -0.088118064          -0.181799    +0.093681   (the residual every Arm S member is compared against)
+    ARM S mean residual = +0.122725   sd = 0.015013
+    mean PREDICTED rho at d=0 = -0.187884   vs   mean OBSERVED rho at d=0 = -0.065159   overshoot (predicted - observed) = -0.122725
+    most negative OBSERVED null rho on this view = G_P254F -0.096244   (A222V's predicted rho at d=0 vs that: -0.181799 -> BELOW every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+    [H]  OLS rho ~ mean|delta|*-0.338456  log1p(d3_CA)*+0.049915  intercept -0.165246   (fit on n = 67)
+         bg_id  mean|delta|     rho (obs)   predicted at d=0     residual  <= r_A?
+        A222_C     0.067910  -0.090964259          -0.188231    +0.097267      YES
+        A222_T     0.079641  -0.081679896          -0.192201    +0.110521       no
+        A222_F     0.102421  -0.086085057          -0.199911    +0.113826       no
+        A222_D     0.106383  -0.086809350          -0.201252    +0.114443       no
+        A222_N     0.090881  -0.080240992          -0.196006    +0.115765       no
+        A222_Y     0.094086  -0.078083625          -0.197090    +0.119007       no
+        A222_I     0.083436  -0.073831566          -0.193486    +0.119654       no
+        A222_S     0.069010  -0.067111522          -0.188603    +0.121492       no
+        A222_H     0.076644  -0.066669904          -0.191187    +0.124517       no
+        A222_E     0.107653  -0.076475523          -0.201682    +0.125207       no
+        A222_P     0.099503  -0.070547723          -0.198924    +0.128376       no
+        A222_Q     0.086052  -0.065190461          -0.194371    +0.129181       no
+        A222_W     0.092757  -0.067434748          -0.196641    +0.129206       no
+        A222_R     0.098150  -0.060413066          -0.198466    +0.138053       no
+        A222_M     0.071665  -0.048929841          -0.189502    +0.140572       no
+        A222_G     0.089291  -0.054062709          -0.195468    +0.141405       no
+        A222_L     0.104262  -0.056760414          -0.200534    +0.143774       no
+        A222_K     0.095360  -0.051971717          -0.197522    +0.145550       no
+    A222V        0.069403  -0.090021683          -0.188736    +0.098715   (the residual every Arm S member is compared against)
+    ARM S mean residual = +0.125434   sd = 0.013010
+    mean PREDICTED rho at d=0 = -0.195615   vs   mean OBSERVED rho at d=0 = -0.070181   overshoot (predicted - observed) = -0.125434
+    most negative OBSERVED null rho on this view = G_P254F -0.101954   (A222V's predicted rho at d=0 vs that: -0.188736 -> BELOW every observed null)
+    A222V rank within Arm S u {A222V} on the residual = 2/19   rank fraction = 0.1053   *** RANK FRACTION OVER n = 19, NOT A TEST ***
+
+------------------------------------------------------------------------------
+RECOMPUTED vs TARGET (the doc's targets are POST-HOC and from printed 6-dp values)
+------------------------------------------------------------------------------
+  Arm S mean residual (full frame):
+    Arm S mean residual, M1  shift-only (full)             recomputed =    -0.029845   target =    -0.029800   |diff| = 4.465e-05   AGREE
+    Arm S mean residual, M2  + linear dist_seq (full)      recomputed =    -0.003938   target =    -0.003900   |diff| = 3.844e-05   AGREE
+    Arm S mean residual, M3  + log1p(dist_seq) (full)      recomputed =    +0.076032   target =    +0.076000   |diff| = 3.224e-05   AGREE
+    Arm S mean residual, M4  + log1p(d3_CA) (full)         recomputed =    +0.122725   target =    +0.122700   |diff| = 2.492e-05   AGREE
+  A222V rank within Arm S u {A222V}:
+    A222V rank, M1  shift-only (full)                      recomputed =            2   target =            2   AGREE
+    A222V rank, M1  shift-only (H)                         recomputed =            2   target =            2   AGREE
+    A222V rank, M2  + linear dist_seq (full)               recomputed =            2   target =            2   AGREE
+    A222V rank, M2  + linear dist_seq (H)                  recomputed =            2   target =            2   AGREE
+    A222V rank, M3  + log1p(dist_seq) (full)               recomputed =            2   target =            2   AGREE
+    A222V rank, M3  + log1p(dist_seq) (H)                  recomputed =            2   target =            2   AGREE
+    A222V rank, M4  + log1p(d3_CA) (full)                  recomputed =            2   target =            2   AGREE
+    A222V rank, M4  + log1p(d3_CA) (H)                     recomputed =            2   target =            2   AGREE
+  log1p(dist_seq) prediction vs observation at d = 0 (full):
+    M3 mean predicted rho at d=0 (full)                    recomputed =    -0.141192   target =    -0.141200   |diff| = 8.423e-06   AGREE
+    M3 mean observed Arm S rho at d=0 (full)               recomputed =    -0.065159   target =    -0.065200   |diff| = 4.067e-05   AGREE
+    M3 overshoot, predicted - observed (full)              recomputed =    -0.076032   target =    -0.076000   |diff| = 3.224e-05   AGREE
+    -> 15/15 AGREE, 0 DISAGREE
+
+------------------------------------------------------------------------------
+A222V's RAW-RHO RANK AMONG ALL RESOLVED BACKGROUNDS WITHIN 20 A OF 222
+------------------------------------------------------------------------------
+  The set = Arm S (18, all at d3_CA = 0) + the resolved NULLS in (0, 20].  *** RANK FRACTIONS, NOT TESTS. ***
+
+  [full]  n backgrounds in the set = 32 (Arm S 18 + resolved nulls in (0, 20] = 14)
+  [full]  at or below A222V: k = 2  ->  A222_C, G_P254F
+  [full]  A222V signed rank = 3/32   rank fraction (1 + 2)/(1 + 32) = 0.0909   *** RANK FRACTION, NOT A TEST ***
+    the 14 resolved nulls in (0, 20] by d3_CA: G_I192T(5.06), AV_220(6.48), AV_155(8.64), AV_195(10.15), G_L178T(10.31), AV_175(10.54), G_Y197V(15.72), G_K48P(15.88), G_P254F(16.28), G_G317Q(17.65), AV_242(17.90), AV_145(17.95), G_L318F(18.65), AV_209(18.86)
+
+  [H]  n backgrounds in the set = 32 (Arm S 18 + resolved nulls in (0, 20] = 14)
+  [H]  at or below A222V: k = 4  ->  A222_C, AV_195, AV_220, G_P254F
+  [H]  A222V signed rank = 5/32   rank fraction (1 + 4)/(1 + 32) = 0.1515   *** RANK FRACTION, NOT A TEST ***
+    the 14 resolved nulls in (0, 20] by d3_CA: G_I192T(5.06), AV_220(6.48), AV_155(8.64), AV_195(10.15), G_L178T(10.31), AV_175(10.54), G_Y197V(15.72), G_K48P(15.88), G_P254F(16.28), G_G317Q(17.65), AV_242(17.90), AV_145(17.95), G_L318F(18.65), AV_209(18.86)
+
+  RECOMPUTED vs TARGET (POST-HOC, from printed 6-dp values):
+    n backgrounds within 20 A (full)                       recomputed =           32   target =           32   AGREE
+    n at or below A222V within 20 A (full)                 recomputed =            2   target =            2   AGREE
+    rank fraction within 20 A (full)                       recomputed =       0.0909   target =       0.0909   |diff| = 0.000e+00   AGREE
+    n backgrounds within 20 A (H)                          recomputed =           32   target =           32   AGREE
+    n at or below A222V within 20 A (H)                    recomputed =            4   target =            4   AGREE
+    rank fraction within 20 A (H)                          recomputed =       0.1515   target =       0.1515   |diff| = 0.000e+00   AGREE
+
+------------------------------------------------------------------------------
+D16e GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] E5 background_rho_table.csv sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] E5 background_3d_distance.csv sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] E1 M1  shift-only r_A (full): got -0.066424633 vs -0.066425 |diff|=3.674e-07
+  [PASS] E1 M1  shift-only k (full): got 2 vs 2
+  [PASS] E1 M1  shift-only r_A (H): got -0.068691937 vs -0.068692 |diff|=6.262e-08
+  [PASS] E1 M1  shift-only k (H): got 2 vs 2
+  [PASS] E4 M2  + linear dist_seq r_A (full): got -0.033710698 vs -0.033711 |diff|=3.025e-07
+  [PASS] E4 M2  + linear dist_seq k (full): got 9 vs 9
+  [PASS] E4 M2  + linear dist_seq r_A (H): got -0.035947854 vs -0.035948 |diff|=1.459e-07
+  [PASS] E4 M2  + linear dist_seq k (H): got 10 vs 10
+  [PASS] E2 M3  + log1p(dist_seq) r_A (full): got +0.045226926 vs +0.045227 |diff|=7.356e-08
+  [PASS] E2 M3  + log1p(dist_seq) k (full): got 69 vs 69
+  [PASS] E2 M3  + log1p(dist_seq) r_A (H): got +0.047030107 vs +0.047030 |diff|=1.071e-07
+  [PASS] E2 M3  + log1p(dist_seq) k (H): got 70 vs 70
+  [PASS] E3 M4  + log1p(d3_CA) r_A (full): got +0.093681340 vs +0.093681 |diff|=3.397e-07
+  [PASS] E3 M4  + log1p(d3_CA) k (full): got 67 vs 67
+  [PASS] E3 M4  + log1p(d3_CA) r_A (H): got +0.098714560 vs +0.098715 |diff|=4.397e-07
+  [PASS] E3 M4  + log1p(d3_CA) k (H): got 67 vs 67
+
+  E-gates: PASS (18/18).
+
+D16e LIMITATIONS (printed, not only in the docstring):  Arm S AND A222V ARE SCORED OUT OF SAMPLE FROM A NULL-ONLY FIT, so they are exchangeable WITH EACH OTHER; that is the property the comparison relies on and it holds in all four models.  M2, M3 AND M4 EVALUATE A DISTANCE TERM AT 0, A POINT NO NULL OCCUPIES, SO THEIR PREDICTED RHO IS AN EXTRAPOLATION OF A FITTED SURFACE -- D12's K3 CORRECTION APPLIES VERBATIM AND A HAT VALUE INSIDE THE NULL RANGE DOES NOT MAKE A POINT INTERPOLATED.  M1 HAS NO DISTANCE TERM AND IS NOT AN EXTRAPOLATION.  mean|delta| AND rho_b ARE BOTH FUNCTIONS OF THE SAME delta_b: A PARTIAL CONTROL, NOT AN INDEPENDENT ONE.  EVERY RANK FRACTION HERE IS OVER n = 19 (Arm S) or n = 33 (within 20 A) AND IS A RANK FRACTION, NOT A TEST; NO p-VALUE AND NO CI IS COMPUTED.  ARM S SHARES THE SITE AND DIFFERS IN SUBSTITUTION, SO THIS BEARS ON SUBSTITUTION-SPECIFICITY WITHIN THE SITE AND CANNOT SEPARATE 'THE RESIDUE' FROM 'THE REGION'.  THE TASK DOC'S TARGETS FOR THIS TASK ARE ITS OWN POST-HOC CALCULATIONS FROM PRINTED 6-dp VALUES; MATCHES AT 5e-5 ARE REPORTED AS MATCHES AND NOTHING WAS TUNED.  NOTHING FROZEN IS REDEFINED.
+Elapsed 0.7s

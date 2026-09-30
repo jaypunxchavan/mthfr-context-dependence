@@ -1,0 +1,385 @@
+
+==============================================================================
+D12 -- APPEND-ONLY CORRECTIONS TO THE DIAGNOSTICS II LOG (script 140)
+==============================================================================
+SCOPE: corrections only.  No new science, nothing selected, nothing frozen redefined.
+NO torch / esm / thermompnn / Biopython import in this file.  scripts 138 and 139 are READ AS TEXT for the verbatim code quotes.
+RESAMPLING UNIT: BACKGROUND for K1's two partial-correlation bootstrap CIs (N_BOOT=10000, SEED=0, per-background values held FIXED).  K2/K3/K4 do NO resampling -- deterministic fits and exact rank counts.
+WORDING: GENERIC / BEATS / INDETERMINATE are not used as labels here.  Adjusted p_spec is compared to the frozen NUMERIC thresholds 0.05 (full) and 0.10 (H) and called only 'at or below' or 'above'.
+
+------------------------------------------------------------------------------
+GATE D12-G1 (HARD) -- reproduce every row before correcting anything
+------------------------------------------------------------------------------
+  [PASS] D12-G1.1 D1 table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 vs e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (match)
+  [PASS] D12-G1.2 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de vs 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (match)
+    A222V rho (full, re-derived)                               recomputed =     -0.088118064   target =     -0.088118064   |diff| = 2.489e-10   AGREE
+    A222V rho (H, re-derived)                                  recomputed =     -0.090021683   target =     -0.090021683   |diff| = 3.340e-11   AGREE
+    p_spec (full)                                              recomputed =      0.025316456   target =      0.025316456   |diff| = 0.000e+00   AGREE
+    p_spec (full) beaters                                      recomputed =                  ['G_P254F']   target =                  ['G_P254F']   AGREE
+    p_spec (H)                                                 recomputed =      0.050632911   target =      0.050632911   |diff| = 0.000e+00   AGREE
+    p_spec (H) beaters                                         recomputed = ['AV_195', 'AV_220', 'G_P254F']   target = ['AV_195', 'AV_220', 'G_P254F']   AGREE
+    D9 primary r_A (full)                                      recomputed =     -0.066424633   target =     -0.066425000   |diff| = 3.674e-07   AGREE
+    D9 primary k (full)                                        recomputed =                2   target =                2   AGREE
+    D9 primary beaters (full)                                  recomputed =          ['AV_220', 'AV_85']   target =          ['AV_220', 'AV_85']   AGREE
+    D9 primary r_A (H)                                         recomputed =     -0.068691937   target =     -0.068692000   |diff| = 6.262e-08   AGREE
+    D9 primary k (H)                                           recomputed =                2   target =                2   AGREE
+    D9 primary beaters (H)                                     recomputed =          ['AV_220', 'AV_85']   target =          ['AV_220', 'AV_85']   AGREE
+    D10a joint primary r_A (full)                              recomputed =      0.045226926   target =      0.045227000   |diff| = 7.356e-08   AGREE
+    D10a joint primary k (full)                                recomputed =               69   target =               69   AGREE
+    D10a joint primary r_A (H)                                 recomputed =      0.047030107   target =      0.047030000   |diff| = 1.071e-07   AGREE
+    D10a joint primary k (H)                                   recomputed =               70   target =               70   AGREE
+    D11.2 Spearman(rho, d3_CA) n=67 (full)                     recomputed =      0.731577372   target =      0.731577372   |diff| = 1.899e-10   AGREE
+    D11.2 Spearman(rho, dist_seq) n=67 (full)                  recomputed =      0.713293691   target =      0.713293691   |diff| = 4.604e-11   AGREE
+    D11.2 Spearman(rho, d3_CA) n=67 (H)                        recomputed =      0.713319366   target =      0.713319366   |diff| = 3.985e-10   AGREE
+    D11.2 Spearman(rho, dist_seq) n=67 (H)                     recomputed =      0.695234865   target =      0.695235000   |diff| = 1.349e-07   AGREE
+    D11.4 3D-log r_A (full)                                    recomputed =      0.093681340   target =      0.093681000   |diff| = 3.397e-07   AGREE
+    D11.4 3D-log k (full)                                      recomputed =               67   target =               67   AGREE
+    D11.4 3D-log r_A (H)                                       recomputed =      0.098714560   target =      0.098715000   |diff| = 4.397e-07   AGREE
+    D11.4 3D-log k (H)                                         recomputed =               67   target =               67   AGREE
+
+  2/2 sha256 checks PASS, 0 FAIL
+  24/24 numeric gate rows AGREE with the task doc's targets, 0 DISAGREE
+  GATE PASS: every row of the D12-G1 table reproduces.  Corrections may now be written.
+
+------------------------------------------------------------------------------
+K1 -- D10c's TWO PARTIAL CORRELATIONS ARE LABEL-SWAPPED
+------------------------------------------------------------------------------
+  OLD TEXT, located with grep -n in the Diagnostics II log (line numbers are the REAL ones, from the file):
+    line 550: >>>     PARTIAL  Spearman(rho, dist | mean|delta|) = -0.146323470
+    line 558: >>>     PARTIAL  Spearman(rho, dist | mean|delta|) = -0.161717649
+    line 552: >>>     PARTIAL  Spearman(rho, mean|delta| | dist) = +0.629666674
+    line 560: >>>     PARTIAL  Spearman(rho, mean|delta| | dist) = +0.603747329
+
+  THE BUG, IN scripts/138_phase2_diag2_joint.py, verbatim (file and real line numbers):
+    scripts/138_phase2_diag2_joint.py:374
+       374:     def partial(x, y, z):
+    scripts/138_phase2_diag2_joint.py:375
+       375:         rxy = float(spearmanr(x, y).statistic)
+    scripts/138_phase2_diag2_joint.py:376
+       376:         rxz = float(spearmanr(x, z).statistic)
+    scripts/138_phase2_diag2_joint.py:377
+       377:         ryz = float(spearmanr(y, z).statistic)
+    scripts/138_phase2_diag2_joint.py:378
+       378:         den = np.sqrt((1 - rxz ** 2) * (1 - ryz ** 2))
+    scripts/138_phase2_diag2_joint.py:379
+       379:         return (rxy - rxz * ryz) / den, rxy, rxz, ryz
+    ... and the two call sites, verbatim:
+    scripts/138_phase2_diag2_joint.py:388
+       388:         obs, rxy, rxm, rmd = partial(x, m, d)      # rho ~ dist | mean|delta|
+    scripts/138_phase2_diag2_joint.py:389
+       389:         obs2, rxy2, rxd, ryd = partial(x, d, m)    # rho ~ mean|delta| | dist
+    ... and the two print sites, verbatim:
+    scripts/138_phase2_diag2_joint.py:404
+       404:         print(f"    PARTIAL  Spearman(rho, dist | mean|delta|) = {obs:+.9f}")
+    scripts/138_phase2_diag2_joint.py:408
+       408:         print(f"    PARTIAL  Spearman(rho, mean|delta| | dist) = {obs2:+.9f}")
+    READING: `partial(x, y, z)` returns the partial of x and y GIVEN z.
+    `partial(x, m, d)` (x=rho, m=mean|delta|, d=dist) is the partial of rho and mean|delta| GIVEN dist  ->  rho ~ shift | dist.
+    It is stored in `obs` and printed on line 404 under the label 'PARTIAL Spearman(rho, dist | mean|delta|)'.
+    `partial(x, d, m)` is the partial of rho and dist GIVEN mean|delta|  ->  rho ~ dist | shift.
+    It is stored in `obs2` and printed on line 408 under the label 'PARTIAL Spearman(rho, mean|delta| | dist)'.
+    -> THE TWO PRINT LABELS ARE TRANSPOSED.  The VALUES are right; the LABELS are wrong.
+    The PAIRWISE line (138:401-403) is CORRECTLY labelled -- it prints spearmanr(x, m), spearmanr(x, d), spearmanr(m, d), which are rho~shift, rho~dist and shift~dist.  Only the two PARTIAL labels are affected.
+
+  RECOMPUTED BOTH PARTIALS TWO INDEPENDENT WAYS (n = 78 nulls, both views):
+    (a) standard three-pairwise-Spearman formula
+    (b) rank-transform + OLS residualisation on [1, rank(z)], Pearson of residuals
+
+    [full]  n = 78
+      pairwise Spearman(rho, mean|delta|)  = -0.407276268
+      pairwise Spearman(rho, dist)         = +0.696831550
+      pairwise Spearman(mean|delta|, dist)  = -0.449969334
+      rho ~ DIST  | mean|delta|   (a) formula   = +0.629666674
+                              (b) rank-resid  = +0.629666674   |a-b| = 2.220e-16
+                              bootstrap 95% CI (a) = [+0.472642, +0.742385] (10000 draws)  EXCLUDES ZERO
+                              bootstrap 95% CI (b) = [+0.470099, +0.743475] (10000 draws)  EXCLUDES ZERO
+      rho ~ SHIFT | dist          (a) formula   = -0.146323470
+                              (b) rank-resid  = -0.146323470   |a-b| = 5.551e-17
+                              bootstrap 95% CI (a) = [-0.404796, +0.107532] (10000 draws)  INCLUDES ZERO
+                              bootstrap 95% CI (b) = [-0.407015, +0.105750] (10000 draws)  INCLUDES ZERO
+
+    [H]  n = 78
+      pairwise Spearman(rho, mean|delta|)  = -0.404595405
+      pairwise Spearman(rho, dist)         = +0.673992906
+      pairwise Spearman(mean|delta|, dist)  = -0.441230960
+      rho ~ DIST  | mean|delta|   (a) formula   = +0.603747329
+                              (b) rank-resid  = +0.603747329   |a-b| = 1.110e-16
+                              bootstrap 95% CI (a) = [+0.452424, +0.720011] (10000 draws)  EXCLUDES ZERO
+                              bootstrap 95% CI (b) = [+0.450141, +0.718771] (10000 draws)  EXCLUDES ZERO
+      rho ~ SHIFT | dist          (a) formula   = -0.161717649
+                              (b) rank-resid  = -0.161717649   |a-b| = 2.776e-17
+                              bootstrap 95% CI (a) = [-0.416825, +0.083508] (10000 draws)  INCLUDES ZERO
+                              bootstrap 95% CI (b) = [-0.413920, +0.080954] (10000 draws)  INCLUDES ZERO
+
+  RECOMPUTED vs TARGET (point estimates are the gate):
+    K1 rho ~ dist | shift, formula (full)                      recomputed =        +0.629667   target =        +0.629667   |diff| = 3.261e-07   AGREE
+    K1 rho ~ shift | dist, formula (full)                      recomputed =        -0.146323   target =        -0.146323   |diff| = 4.703e-07   AGREE
+    K1 rho ~ dist | shift, rank-resid (full)                   recomputed =        +0.629667   target =        +0.629667   |diff| = 3.261e-07   AGREE
+    K1 rho ~ shift | dist, rank-resid (full)                   recomputed =        -0.146323   target =        -0.146323   |diff| = 4.703e-07   AGREE
+    K1 rho ~ dist | shift, formula (H)                         recomputed =        +0.603747   target =        +0.603747   |diff| = 3.294e-07   AGREE
+    K1 rho ~ shift | dist, formula (H)                         recomputed =        -0.161718   target =        -0.161718   |diff| = 3.514e-07   AGREE
+    K1 rho ~ dist | shift, rank-resid (H)                      recomputed =        +0.603747   target =        +0.603747   |diff| = 3.294e-07   AGREE
+    K1 rho ~ shift | dist, rank-resid (H)                      recomputed =        -0.161718   target =        -0.161718   |diff| = 3.514e-07   AGREE
+    (CI agreement is expected only within Monte-Carlo error (~0.01) and is NOT a gate; the CIs are printed beside the targets:)
+      [full] rho ~ dist | shift   CI (a) = [+0.472642, +0.742385]   target [+0.472642, +0.742385]
+      [full] rho ~ shift | dist  CI (a) = [-0.404796, +0.107532]   target [-0.401778, +0.106788]
+      [H] rho ~ dist | shift   CI (a) = [+0.452424, +0.720011]   target [+0.451631, +0.719109]
+      [H] rho ~ shift | dist  CI (a) = [-0.416825, +0.083508]   target [-0.416825, +0.083508]
+
+  D11.4's PARTIALS WITH d3_CA -- were THEY labelled correctly?
+    scripts/139_phase2_diag2_3d.py:719
+       719:         p1, _ = partial(x, g, m)      # rho vs d3_CA, given mean|delta|
+    scripts/139_phase2_diag2_3d.py:720
+       720:         p2, _ = partial(x, m, g)      # rho vs mean|delta|, given d3_CA
+    scripts/139_phase2_diag2_3d.py:735
+       735:         print(f"      PARTIAL Spearman(rho, d3_CA | mean|delta|) = {p1:+.9f}")
+    scripts/139_phase2_diag2_3d.py:739
+       739:         print(f"      PARTIAL Spearman(rho, mean|delta| | d3_CA) = {p2:+.9f}")
+    READING: script 139 stores partial(x, g, m) in p1 and prints it as 'rho, d3_CA | mean|delta|', and partial(x, m, g) in p2 and prints it as 'rho, mean|delta| | d3_CA'.  Both MATCH.  D11.4's labels are CORRECT.
+    Recomputed, n = 67 resolved nulls, both methods:
+      [full] rho ~ d3_CA | mean|delta| : (a) +0.651428  (b) +0.651428
+      [full] rho ~ mean|delta| | d3_CA : (a) -0.108073  (b) -0.108073
+    K1 D11.4 rho ~ d3_CA | shift (full)                        recomputed =        +0.651428   target =        +0.651428   |diff| = 3.230e-07   AGREE
+    K1 D11.4 rho ~ shift | d3_CA (full)                        recomputed =        -0.108073   target =        -0.108073   |diff| = 3.574e-07   AGREE
+      [H] rho ~ d3_CA | mean|delta| : (a) +0.627446  (b) +0.627446
+      [H] rho ~ mean|delta| | d3_CA : (a) -0.123827  (b) -0.123827
+    K1 D11.4 rho ~ d3_CA | shift (H)                           recomputed =        +0.627446   target =        +0.627446   |diff| = 2.104e-07   AGREE
+    K1 D11.4 rho ~ shift | d3_CA (H)                           recomputed =        -0.123827   target =        -0.123827   |diff| = 2.726e-07   AGREE
+
+------------------------------------------------------------------------------
+K2 -- D10b's COUNTS CONTRADICT D9's PRINTED RESIDUALS
+------------------------------------------------------------------------------
+  OLD TEXT (real line numbers, from grep -n):
+    line 529: >>> D10b -- NEIGHBOURHOOD RESTRICTED RANKS on D9's PRIMARY residuals
+    line 224: >>>   k=10 nearest (full): # at or below =  1 of 10  -> rank fraction 2/11 = 0.1818
+    line 532: >>>   k=10 nearest (full):  # at or below =  8 of 10  ->  rank fraction (1 + 8)/(1 + 10) = 0.8182   at or below: AV_195, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+    line 225: >>>   k=10 nearest (   H): # at or below =  3 of 10  -> rank fraction 4/11 = 0.3636
+    line 533: >>>   k=10 nearest (   H):  # at or below =  9 of 10  ->  rank fraction (1 + 9)/(1 + 10) = 0.9091   at or below: AV_195, AV_209, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+    line 226: >>>   k=20 nearest (full): # at or below =  1 of 20  -> rank fraction 2/21 = 0.0952
+    line 534: >>>   k=20 nearest (full):  # at or below = 18 of 20  ->  rank fraction (1 + 18)/(1 + 20) = 0.9048   at or below: AV_145, AV_155, AV_175, AV_195, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+    line 227: >>>   k=20 nearest (   H): # at or below =  3 of 20  -> rank fraction 4/21 = 0.1905
+    line 535: >>>   k=20 nearest (   H):  # at or below = 19 of 20  ->  rank fraction (1 + 19)/(1 + 20) = 0.9524   at or below: AV_145, AV_155, AV_175, AV_195, AV_209, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+    line 583: >>> **D10b — the neighbourhood rank fractions are worse than D0's raw-ρ version.** A222V sits at rank fraction 0.818 (full) and 0.909 (H) among the 10 nearest, against 0.182 / 0.364 on raw ρ. Rank fractions, not tests.
+
+  (i) WHICH RESIDUAL VECTOR DID SCRIPT 138's D10b ACTUALLY USE? Verbatim source:
+    scripts/138_phase2_diag2_joint.py:270
+       270:     VARIANTS = [
+    scripts/138_phase2_diag2_joint.py:271
+       271:         ("PRIMARY  log1p(dist)", ["mean|delta|", "log1p(dist)"],
+    scripts/138_phase2_diag2_joint.py:272
+       272:          lambda b, view: [mad[view][b], np.log1p(DIST[b])],
+    scripts/138_phase2_diag2_joint.py:273
+       273:          lambda view: [mad_a[view], np.log1p(DIST_A)]),
+    scripts/138_phase2_diag2_joint.py:274
+       274:         ("SENS (i)  linear dist", ["mean|delta|", "dist"],
+    scripts/138_phase2_diag2_joint.py:275
+       275:          lambda b, view: [mad[view][b], float(DIST[b])],
+    scripts/138_phase2_diag2_joint.py:276
+       276:          lambda view: [mad_a[view], float(DIST_A)]),
+    scripts/138_phase2_diag2_joint.py:277
+       277:         ("SENS (ii) CLAMPED: A222V at dist = 2", ["mean|delta|", "log1p(dist)"],
+    scripts/138_phase2_diag2_joint.py:278
+       278:          lambda b, view: [mad[view][b], np.log1p(DIST[b])],
+    scripts/138_phase2_diag2_joint.py:279
+       279:          lambda view: [mad_a[view], np.log1p(2)]),
+    scripts/138_phase2_diag2_joint.py:280
+       280:         ("SENS (iii) shift-only (= D9 primary)", ["mean|delta|"],
+    scripts/138_phase2_diag2_joint.py:281
+       281:          lambda b, view: [mad[view][b]],
+    scripts/138_phase2_diag2_joint.py:282
+       282:          lambda view: [mad_a[view]]),
+    scripts/138_phase2_diag2_joint.py:283
+       283:     ]
+    ...
+    scripts/138_phase2_diag2_joint.py:286
+       286:     resid_primary = {}
+    scripts/138_phase2_diag2_joint.py:287
+       287:     for name, cnames, covb, covA in VARIANTS:
+    scripts/138_phase2_diag2_joint.py:320
+       320:             d10a_rows.append(dict(name=name, view=view, k=k, p=p_adj, rel=rel,
+    scripts/138_phase2_diag2_joint.py:321
+       321:                                   thr=thr, r_A=r_A, rank=rank, beta=beta))
+    scripts/138_phase2_diag2_joint.py:322
+       322:             if name.startswith("PRIMARY"):
+    scripts/138_phase2_diag2_joint.py:323
+       323:                 resid_primary[view] = (dict(r), r_A)
+    ...
+    scripts/138_phase2_diag2_joint.py:333
+       333:     banner("D10b -- NEIGHBOURHOOD RESTRICTED RANKS on D9's PRIMARY residuals",
+    scripts/138_phase2_diag2_joint.py:337
+       337:     near_by_dist = sorted(N_ids, key=lambda b: (DIST[b], b))
+    scripts/138_phase2_diag2_joint.py:338
+       338:     d10b_rows = []
+    scripts/138_phase2_diag2_joint.py:339
+       339:     for kk in NEIGH_K:
+    scripts/138_phase2_diag2_joint.py:340
+       340:         sub = near_by_dist[:kk]
+    scripts/138_phase2_diag2_joint.py:341
+       341:         for view in ("full", "H"):
+    scripts/138_phase2_diag2_joint.py:342
+       342:             r, r_A = resid_primary[view]
+    scripts/138_phase2_diag2_joint.py:343
+       343:             k = int(sum(1 for b in sub if r[b] <= r_A))
+    scripts/138_phase2_diag2_joint.py:344
+       344:             frac = (1 + k) / (1 + kk)
+    READING: `resid_primary[view]` is assigned ONLY inside the D10a loop, under the guard `if name.startswith("PRIMARY")`.  VARIANTS[0] is named "PRIMARY  log1p(dist)" -- the JOINT log1p(dist_seq) model, NOT D9's shift-only model.  D10b then reads `r, r_A = resid_primary[view]` at line 342.
+    -> D10b RAN ON THE D10a PRIMARY JOINT log1p(dist_seq) RESIDUALS, while its banner (line 333) and its prose call them "D9's PRIMARY residuals".  The LABEL IS WRONG; the counts are arithmetically correct for the vector actually used.
+
+  (ii) REPRODUCE THE OLD COUNTS AND NAME THE VECTOR THAT PRODUCES THEM:
+    ON D10a PRIMARY log1p(dist) residuals, full, k=10: # at or below = 8 of 10  ->  rank fraction (1 + 8)/(1 + 10) = 0.8182
+      at or below: AV_195, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+    ON D10a PRIMARY log1p(dist) residuals, full, k=20: # at or below = 18 of 20  ->  rank fraction (1 + 18)/(1 + 20) = 0.9048
+      at or below: AV_145, AV_155, AV_175, AV_195, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+    ON D10a PRIMARY log1p(dist) residuals, H, k=10: # at or below = 9 of 10  ->  rank fraction (1 + 9)/(1 + 10) = 0.9091
+      at or below: AV_195, AV_209, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+    ON D10a PRIMARY log1p(dist) residuals, H, k=20: # at or below = 19 of 20  ->  rank fraction (1 + 19)/(1 + 20) = 0.9524
+      at or below: AV_145, AV_155, AV_175, AV_195, AV_209, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+
+  RECOMPUTED vs TARGET (the old log's own numbers):
+    K2(ii) old count, D10a-joint residuals, k=10 (full)        recomputed =                8   target =                8   AGREE
+    K2(ii) old names, k=10 (full)                              recomputed = ['AV_195', 'AV_220', 'AV_233', 'AV_242', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   target = ['AV_195', 'AV_220', 'AV_233', 'AV_242', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   AGREE
+    K2(ii) old count, D10a-joint residuals, k=20 (full)        recomputed =               18   target =               18   AGREE
+    K2(ii) old names, k=20 (full)                              recomputed = ['AV_145', 'AV_155', 'AV_175', 'AV_195', 'AV_220', 'AV_233', 'AV_242', 'AV_292', 'AV_293', 'AV_302', 'AV_311', 'G_E168S', 'G_E279K', 'G_G317Q', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   target = ['AV_145', 'AV_155', 'AV_175', 'AV_195', 'AV_220', 'AV_233', 'AV_242', 'AV_292', 'AV_293', 'AV_302', 'AV_311', 'G_E168S', 'G_E279K', 'G_G317Q', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   AGREE
+    K2(ii) old count, D10a-joint residuals, k=10 (H)           recomputed =                9   target =                9   AGREE
+    K2(ii) old names, k=10 (H)                                 recomputed = ['AV_195', 'AV_209', 'AV_220', 'AV_233', 'AV_242', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   target = ['AV_195', 'AV_209', 'AV_220', 'AV_233', 'AV_242', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   AGREE
+    K2(ii) old count, D10a-joint residuals, k=20 (H)           recomputed =               19   target =               19   AGREE
+    K2(ii) old names, k=20 (H)                                 recomputed = ['AV_145', 'AV_155', 'AV_175', 'AV_195', 'AV_209', 'AV_220', 'AV_233', 'AV_242', 'AV_292', 'AV_293', 'AV_302', 'AV_311', 'G_E168S', 'G_E279K', 'G_G317Q', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   target = ['AV_145', 'AV_155', 'AV_175', 'AV_195', 'AV_209', 'AV_220', 'AV_233', 'AV_242', 'AV_292', 'AV_293', 'AV_302', 'AV_311', 'G_E168S', 'G_E279K', 'G_G317Q', 'G_I192T', 'G_L178T', 'G_P254F', 'G_Y197V']   AGREE
+    -> The old counts (8, 9, 18, 19) are reproduced EXACTLY, and by the D10a PRIMARY JOINT log1p(dist_seq) residuals.  D9's PRIMARY (shift-only) residuals cannot produce them: D9's own printed ten-most-negative lists have G_P254F, AV_195, AV_242 and G_L178T explicitly marked 'no' (not at or below).
+
+  (iii) RECOMPUTE D10b ON D9's PRIMARY RESIDUALS, as pre-registered.  *** RANK FRACTIONS, NOT TESTS. ***
+    *** THIS IS A POST-HOC-CORRECTED ASSIGNMENT: the pre-registered vector is D9's primary, and the count printed in the Diagnostics II log came from a different vector. ***
+    ON D9's PRIMARY residuals, full, k=10: # at or below = 1 of 10  ->  rank fraction (1 + 1)/(1 + 10) = 0.1818   at or below: AV_220
+    ON D9's PRIMARY residuals, full, k=20: # at or below = 1 of 20  ->  rank fraction (1 + 1)/(1 + 20) = 0.0952   at or below: AV_220
+    ON D9's PRIMARY residuals, H, k=10: # at or below = 1 of 10  ->  rank fraction (1 + 1)/(1 + 10) = 0.1818   at or below: AV_220
+    ON D9's PRIMARY residuals, H, k=20: # at or below = 1 of 20  ->  rank fraction (1 + 1)/(1 + 20) = 0.0952   at or below: AV_220
+
+  RECOMPUTED vs TARGET:
+    K2(iii) k=10 at-or-below count (full)                      recomputed =                1   target =                1   AGREE
+    K2(iii) k=10 names (full)                                  recomputed =                   ['AV_220']   target =                   ['AV_220']   AGREE
+    K2(iii) k=20 at-or-below count (full)                      recomputed =                1   target =                1   AGREE
+    K2(iii) k=20 names (full)                                  recomputed =                   ['AV_220']   target =                   ['AV_220']   AGREE
+    K2(iii) k=10 at-or-below count (H)                         recomputed =                1   target =                1   AGREE
+    K2(iii) k=10 names (H)                                     recomputed =                   ['AV_220']   target =                   ['AV_220']   AGREE
+    K2(iii) k=20 at-or-below count (H)                         recomputed =                1   target =                1   AGREE
+    K2(iii) k=20 names (H)                                     recomputed =                   ['AV_220']   target =                   ['AV_220']   AGREE
+    (raw-rho version, for the withdrawn comparison, recomputed here on the same neighbourhoods)
+      raw rho, full, k=10: # at or below = 1 of 10 -> rank fraction 0.1818
+      raw rho, full, k=20: # at or below = 1 of 20 -> rank fraction 0.0952
+      raw rho, H, k=10: # at or below = 3 of 10 -> rank fraction 0.3636
+      raw rho, H, k=20: # at or below = 3 of 20 -> rank fraction 0.1905
+
+------------------------------------------------------------------------------
+K3 -- 'NOT AN EXTRAPOLATION ARTIFACT' IS OVERSTATED
+------------------------------------------------------------------------------
+    line 856: >>> `r_A` flips from **−0.066** to **+0.045** and A222V's rank moves from 3/79 to 70/79. The clamped variant does not rescue it, and A222V's leverage (hat 0.383) is *inside* the null range (max 0.442), so this is not an extrapolation artifact.
+
+  MOST NEGATIVE OBSERVED NULL rho (a real measurement, not a prediction):
+    [full] G_P254F = -0.096244
+    [H] G_P254F = -0.101954
+
+  TARGET for the most negative observed null: full -0.096244, H -0.101954, both G_P254F.
+    K3 most negative observed null rho (full)                  recomputed =        -0.096244   target =        -0.096244   |diff| = 1.370e-07   AGREE
+    K3 most negative observed null (full)                      recomputed =                  ['G_P254F']   target =                  ['G_P254F']   AGREE
+    K3 most negative observed null rho (H)                     recomputed =        -0.101954   target =        -0.101954   |diff| = 4.412e-07   AGREE
+    K3 most negative observed null (H)                         recomputed =                  ['G_P254F']   target =                  ['G_P254F']   AGREE
+
+                               variant  view            fit n   predicted rho at A222V         r_A  most neg OBSERVED null
+             shift-only (LOO fit on N)  full           N (78)                -0.021693   -0.066425               -0.096244
+                     + linear dist_seq  full           N (78)                -0.054407   -0.033711               -0.096244
+           + log1p(dist_seq), dist = 0  full           N (78)                -0.133345   +0.045227               -0.096244
+   + log1p(dist_seq), clamped dist = 2  full           N (78)                -0.107121   +0.019003               -0.096244
+                + log1p(d3_CA), d3 = 0  full  resolved N (67)                -0.181799   +0.093681               -0.096244
+             shift-only (LOO fit on N)     H           N (78)                -0.021330   -0.068692               -0.101954
+                     + linear dist_seq     H           N (78)                -0.054074   -0.035948               -0.101954
+           + log1p(dist_seq), dist = 0     H           N (78)                -0.137052   +0.047030               -0.101954
+   + log1p(dist_seq), clamped dist = 2     H           N (78)                -0.110092   +0.020070               -0.101954
+                + log1p(d3_CA), d3 = 0     H  resolved N (67)                -0.188736   +0.098715               -0.101954
+
+  RECOMPUTED vs TARGET (full frame).  The task doc states these K3 targets to 4 DECIMAL PLACES.  The 2e-6 tolerance belongs to the D12-G1 table and is NOT reused here and NOT loosened; both comparisons are printed for every target.
+    K3 predicted rho, shift-only (LOO fit on N)
+      recomputed (6 dp)          = -0.021693
+      target as printed          = -0.0217  (the task doc gives this target to 4 dp)
+      |recomputed - target|      = 6.568e-06   vs the D12-G1 2e-6 tolerance -> *** DISAGREE at 2e-6 ***
+      round(recomputed, 4) = -0.0217  -> MATCHES the target to every digit the target prints
+    K3 predicted rho, + linear dist_seq
+      recomputed (6 dp)          = -0.054407
+      target as printed          = -0.0544  (the task doc gives this target to 4 dp)
+      |recomputed - target|      = 7.367e-06   vs the D12-G1 2e-6 tolerance -> *** DISAGREE at 2e-6 ***
+      round(recomputed, 4) = -0.0544  -> MATCHES the target to every digit the target prints
+    K3 predicted rho, + log1p(dist_seq), dist = 0
+      recomputed (6 dp)          = -0.133345
+      target as printed          = -0.1333  (the task doc gives this target to 4 dp)
+      |recomputed - target|      = 4.499e-05   vs the D12-G1 2e-6 tolerance -> *** DISAGREE at 2e-6 ***
+      round(recomputed, 4) = -0.1333  -> MATCHES the target to every digit the target prints
+    K3 predicted rho, + log1p(dist_seq), clamped dist = 2
+      recomputed (6 dp)          = -0.107121
+      target as printed          = -0.1071  (the task doc gives this target to 4 dp)
+      |recomputed - target|      = 2.087e-05   vs the D12-G1 2e-6 tolerance -> *** DISAGREE at 2e-6 ***
+      round(recomputed, 4) = -0.1071  -> MATCHES the target to every digit the target prints
+    K3 predicted rho, + log1p(d3_CA), d3 = 0
+      recomputed (6 dp)          = -0.181799
+      target as printed          = -0.1818  (the task doc gives this target to 4 dp)
+      |recomputed - target|      = 5.960e-07   vs the D12-G1 2e-6 tolerance -> AGREE
+      round(recomputed, 4) = -0.1818  -> MATCHES the target to every digit the target prints
+    K3 targets matching to every digit the target prints (4 dp): 5/5
+    K3 targets agreeing at the 2e-6 tolerance: 1/5
+    *** REPORTED, NOT FORCED: the task doc's K3 targets are rounded to 4 dp; the recomputed values agree with them digit for digit, and the raw differences (all below 5e-5) are an artefact of that rounding, not a value mismatch.  Both numbers are printed above and neither tolerance was adjusted. ***
+    *** The substantive K3 conclusion does not depend on the fourth decimal place: every log-form prediction lies below every OBSERVED null rho, and only the linear form leaves A222V more extreme than predicted. ***
+    H-frame predictions are printed above; the task doc gives no H target for K3, so no target comparison is made for H.
+
+------------------------------------------------------------------------------
+K4 -- FORM DEPENDENCE, RESTATED SO IT IS VISIBLE
+------------------------------------------------------------------------------
+    line 572: >>> **D10a — adding distance destroys the adjusted advantage.** The shift-only adjustment (D9's primary) gives `p_spec_adj = 0.037975`, at or below both frozen thresholds. Adding a distance term in **any** of the three forms tested puts it far **above** both thresholds:
+    line 847: >>> **D10a joint adjustment — adding a distance term destroys the adjusted advantage:**
+    [full]    linear dist: k =  9 of 78, p_spec_adj = 0.126582 -> ABOVE 0.05;  A222V signed rank = 10/79;  r_A = -0.033711
+    [full]    log1p(dist): k = 69 of 78, p_spec_adj = 0.886076 -> ABOVE 0.05;  A222V signed rank = 70/79;  r_A = +0.045227
+    [H]    linear dist: k = 10 of 78, p_spec_adj = 0.139241 -> ABOVE 0.1;  A222V signed rank = 11/79;  r_A = -0.035948
+    [H]    log1p(dist): k = 70 of 78, p_spec_adj = 0.898734 -> ABOVE 0.1;  A222V signed rank = 71/79;  r_A = +0.047030
+
+  RECOMPUTED vs TARGET:
+    K4 linear dist rank (full)                                 recomputed =               10   target =               10   AGREE
+    K4 linear dist p_spec_adj (full)                           recomputed =      0.126582278   target =      0.126582000   |diff| = 2.785e-07   AGREE
+    K4 linear dist rank (H)                                    recomputed =               11   target =               11   AGREE
+    K4 linear dist p_spec_adj (H)                              recomputed =      0.139240506   target =      0.139241000   |diff| = 4.937e-07   AGREE
+    K4 log1p(dist) rank (full)                                 recomputed =               70   target =               70   AGREE
+    K4 log1p(dist) p_spec_adj (full)                           recomputed =      0.886075949   target =      0.886076000   |diff| = 5.063e-08   AGREE
+    K4 log1p(dist) rank (H)                                    recomputed =               71   target =               71   AGREE
+    K4 log1p(dist) p_spec_adj (H)                              recomputed =      0.898734177   target =      0.898734000   |diff| = 1.772e-07   AGREE
+    ratio of the two full-frame p_spec_adj values = 7.000x
+
+------------------------------------------------------------------------------
+K5 / K6 -- THE SUMMARY SENTENCE AND THE D10 VERDICT PARAGRAPH
+------------------------------------------------------------------------------
+  grep -n 'partialled the' -> [927]
+    line 927: >>> - **Against "position-222-specific."** ρ_b tracks distance from 222 with a large, region-robust gradient (Spearman +0.697 within N on sequence distance, +0.732 on 3D distance — the latter is *not* explained by sequence proximity). All three backgrounds that fall at or below A222V's residual lie at 3D ranks 2, 4 and 9. Once distance is in the model, A222V's residual turns **positive** (`p_spec_adj` 0.886 with sequence distance, 1.000 with 3D distance) and every background in the resolved null set lies beyond it. Holding mean|δ| fixed, the distance association survives (−0.146 → CI includes zero only after shift is partialled the *other* way; the partial with shift held fixed is +0.651) while the shift association does not (−0.108, CI includes zero).
+
+  grep -n 'point opposite ways' -> [597]
+    line 597: >>> 3. **D10c's answer and D10a's answer point opposite ways, and both are reported.** D10c says the distance axis, not the shift axis, carries the association once the other is held fixed. D10a says that *adding* a distance term destroys A222V's adjusted standing. These are consistent — the distance gradient is strong and A222V sits at its extreme end (dist = 0) — but the framing differs and neither is suppressed.
+
+  grep -n 'D10c — distance, not shift, carries the association' -> [585]
+    line 585: >>> **D10c — distance, not shift, carries the association.** Holding mean|δ| fixed, `Spearman(ρ, dist | mean|δ|) = −0.146` (full) and `−0.162` (H), **both CIs include zero**. Holding distance fixed, `Spearman(ρ, mean|δ| | dist) = +0.630` (full) and `+0.604` (H), **both CIs exclude zero**. This is the reverse of D4's reading.
+
+  grep -n 'D10c reverses the sign of the shift partial' -> [596]
+    line 596: >>> 2. **D10c reverses the sign of the shift partial relative to the raw pairwise.** Pairwise `Spearman(ρ, mean|δ|)` within N is **−0.407**, but the partial controlling for distance is **+0.630**. That sign flip is not a bug: `Spearman(mean|δ|, dist)` is **−0.450**, i.e. distant backgrounds are the *low-shift* ones, so conditioning on distance induces a negative relationship between the two covariates that flips the residualised association. Anyone reading the partial alone would be misled about direction. The raw pairwise values are printed beside every partial for exactly this reason.
+
+  grep -n 'Background-level bootstrap CI only, 10,000 draws, SEED=0. **No permutation p is computed, by design**' -> [872]
+    line 872: >>> Background-level bootstrap CI only, 10,000 draws, SEED=0. **No permutation p is computed, by design**: a partial correlation is a function of three correlations, and shuffling one variable leaves the conditioning variable unpermuted, so a naive shuffle is not a valid null. Note the sign flip — pairwise `Spearman(ρ, mean|δ|)` is **−0.407** but the partial controlling for distance is **+0.630**, because `Spearman(mean|δ|, dist) = −0.450`.
+
+
+------------------------------------------------------------------------------
+WRITING docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_II_CORRECTIONS.md
+------------------------------------------------------------------------------
+  wrote docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_II_CORRECTIONS.md  (266 lines)
+  sha256 = 8089890ab84b0da931e3b2ef43a39c8be36babc7d9dd1281a36306c2d37fd176
+
+------------------------------------------------------------------------------
+D12 GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] D12-G1.1 D1 table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 vs e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (match)
+  [PASS] D12-G1.2 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de vs 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (match)
+
+  D12-G1: PASS (2/2 sha256 rows; 64/64 numeric rows AGREE, 0 DISAGREE)
+
+D12 LIMITATIONS (printed, not only in the docstring): the earlier log is READ and never written; corrections live only in this file and in this session's log.  Reproducing earlier machinery and matching published values validates THIS script; it is a unit test, not independent evidence.  The partial-correlation CIs are background-level and do not model the shared y-vector.  No permutation p is computed for any partial, by design.  PARTIAL CONSTRUCTIONAL OVERLAP: mean|delta| and rho_b are both functions of the same delta_b.  NOTHING FROZEN IS REDEFINED AND NO DECISION RULE IS CHANGED.
+Elapsed 18.8s

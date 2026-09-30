@@ -1,0 +1,132 @@
+
+==============================================================================
+D17 -- APPEND-ONLY CORRECTIONS TO THIS SESSION'S OWN D12-D14 STATEMENTS  (script 147)
+==============================================================================
+SCOPE: corrections only.  No new science.  Earlier entries in this log are READ and NEVER EDITED.
+NO MODEL SCORING.  NO torch / esm / thermompnn / Biopython import anywhere in this file.
+RESAMPLING UNIT: NONE.  No bootstrap, no permutation.  N_BOOT / N_PERM are not read by this script.  D14's per-bin mean|delta| is RECOMPUTED from script 125's own rows and GATED against D14's saved output, so the recomputation is a check and not a copy.
+  [PASS] G1 background_rho_table.csv sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] G1 background_3d_distance.csv sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] G2 A222V rho (full): -0.088118064
+  [PASS] G2 A222V rho (H): -0.090021683
+  [PASS] G3 D12 linear-dist r_A (full): -0.033710698
+  [PASS] G3 D12 linear-dist rank (full): rank 10/79
+  [PASS] G3 D12 linear-dist r_A (H): -0.035947854
+  [PASS] G3 D12 linear-dist rank (H): rank 11/79
+  [PASS] G4 D13 same-site count on raw rho (full): k = 1 of 18
+  [PASS] G4 D13 same-site count on raw rho (H): k = 1 of 18
+  [PASS] G5 recomputed mean|delta| vs D14 saved output (full, {exactly 0}  (Arm S)): recomputed 0.089085 vs saved 0.089085
+  [PASS] G5 recomputed mean|delta| vs D14 saved output (H, {exactly 0}  (Arm S)): recomputed 0.089728 vs saved 0.089728
+
+  12/12 D17 gates PASS.  Corrections may be written.
+
+------------------------------------------------------------------------------
+K7 -- D12 FLAG 5 CITES G_P254F'S rho AS A222V's OBSERVED rho
+------------------------------------------------------------------------------
+  OLD TEXT, located with grep -n in THIS log (real line numbers):
+    line 350: >>> 5. **A222V is only barely more extreme than predicted under linear distance** (-0.054407 predicted vs -0.096244 observed), so the K3 conclusion - that only the linear form leaves A222V more extreme than predicted - rests on a fairly small margin. Stated, not smoothed over.
+
+  THE ERROR: -0.096244 is NOT A222V's observed rho.  It is G_P254F's rho, the most negative observed NULL rho.  A222V's own observed rho is:
+    A222V rho_full = -0.088118064   A222V rho_H = -0.090021683
+    G_P254F rho_full = -0.096243863   G_P254F rho_H = -0.101954441
+
+  RECOMPUTED linear-dist model, full frame:
+    OLS coefficients: intercept -0.028857  mean|delta| -0.363298  dist +0.000215
+    A222V mean|delta| = 0.070330, dist = 0
+    A222V PREDICTED rho at its own covariates = -0.054407
+    A222V r_A = -0.033711   k = 9 of 78   signed rank = 10/79
+    A222V OBSERVED rho = -0.088118   (this is the number flag 5 needed, not -0.096244)
+    -> A222V is 0.033711 MORE NEGATIVE than the linear-dist model predicts, and 0.008126 LESS negative than G_P254F, the most negative observed null.
+
+  AND the same-site comparison from D16e (M2 = linear dist, the same model):
+    Arm S out of sample at d = 0 under M2: mean residual = -0.003938, sd = 0.015200; at or below r_A: k = 1 of 18 -> A222V rank 2/19
+    *** RANK FRACTION, n = 19, NOT A TEST. ***
+
+------------------------------------------------------------------------------
+K8 -- D14 FLAG 2'S INFERENCE DOES NOT FOLLOW
+------------------------------------------------------------------------------
+  OLD TEXT, located with grep -n in THIS log (real line numbers):
+    line 683: >>> 2. **That cuts against the more extreme reading of "spatial-overlap with no long-range content"** and is why I am not going to let D15 be read that way unless its own numbers say so. The bin means are what they are: a smooth gradient, no 0 A cliff.
+
+  WHAT D14 ACTUALLY VARIES, AND WHAT IT DOES NOT:
+    D14 bins BACKGROUNDS by `d3_CA` -- the location of the perturbed
+    BACKGROUND relative to residue 222 -- and summarises rho_b in each bin.
+    It answers: 'does rho_b depend on where the background sits?'
+    D14 does NOT vary, restrict, filter or otherwise touch the set of TARGET
+    VARIANTS whose delta_b is correlated against own_e_b. Every D14 bin is
+    computed on all usable rows.
+
+  WHAT D15 ACTUALLY VARIES:
+    D15 restricts the TARGET VARIANTS by their own 3D distance to 222
+    (d3_222(p) > R) and recomputes the same gradient. It answers: 'does rho_b
+    still depend on background location once the scored target variants are
+    forced to be distal?'
+
+  THESE ARE TWO DIFFERENT AXES. D14's absence of a step at the 0 A bin edge is
+  a statement about the BACKGROUND-location axis only. It is silent about the
+  TARGET-VARIANT-distance axis, so it cannot cut against anything D15 found.
+
+  AND IT DID NOT, IN FACT: D15 found the gradient collapsing to +0.401 (full)
+  and +0.241 (H) at R = 30 A, OUTSIDE the matched-deletion range, i.e. that
+  the target-variant-distance axis DOES carry the effect. D14's null result on
+  the background-location axis and D15's positive result on the
+  target-variant-distance axis are compatible, and both are now on the record.
+  Reading D14 as a rebuttal of the long-range reading was a category error:
+  it imported a conclusion about one axis into a claim about the other.
+
+------------------------------------------------------------------------------
+K9 -- D14 FLAG 3's 'THE NEAR-222 BINS ARE THE LOW-SHIFT BINS'
+------------------------------------------------------------------------------
+  OLD TEXT, located with grep -n in THIS log (real line numbers):
+    line 670: >>> - **mean|delta| is NOT monotone in the bins and moves in the opposite direction at the near end**: Arm S 0.0891, (0,12] 0.0694, (12,20] 0.0961, (20,30] 0.0566, (30,45] 0.0470, (45,inf) 0.0452. The near-222 bins are the LOW-shift bins and the far bins are also low, with a peak at (12,20]. The bins are not matched for shift; this is printed in every bin for exactly that reason.
+
+  RECOMPUTED per-bin mean|delta| on D14's OWN bin definitions, from script 125's rows (full frame):
+   rank (highest first)        bin (d3_CA) mean|delta| (full)  mean|delta| (H)
+                      1           (12, 20]           0.096069         0.094655
+                      2 {exactly 0}  (Arm S)           0.089085         0.089728
+                      3            (0, 12]           0.069361         0.073960
+                      4           (20, 30]           0.056589         0.060150
+                      5           (30, 45]           0.046972         0.048621
+                      6          (45, inf)           0.045204         0.046668
+
+  The Arm S bin's mean|delta| is 0.089085, which is the 2nd HIGHEST of the six bins.
+  Bins with LOWER mean|delta| than the Arm S bin: ['(0, 12]', '(20, 30]', '(30, 45]', '(45, inf)'] (n = 4 of 6).
+  The (0,12] bin (0.069361) IS the lowest bin, so the phrase is true of the 3D-nearest null bin and FALSE of the distance-0 Arm S bin it was used to describe.
+  The (12,20] bin (0.096069) is the HIGHEST of all six, so the 'peak at (12,20]' part of the old sentence was right.
+
+------------------------------------------------------------------------------
+K10 -- D13 FLAG 4's SCALE ERROR
+------------------------------------------------------------------------------
+  OLD TEXT, located with grep -n in THIS log (real line numbers):
+    line 534: >>> 4. **A222V is INSIDE the Arm S raw-rho range, not outside it.** Only one of 18 same-site comparators is more extreme. That is a much weaker same-site statement than the frozen 1-of-78 result against the null set, and it is reported as the rank fraction it is.
+
+  RECOMPUTED denominators:
+    same-site  : A222V rank 2/19 = 2/19  (1 of 18 Arm S at or below)
+    frozen    : A222V rank 2/79 = 2/79  (1 of 78 nulls at or below)
+
+  BOTH ARE ORDINAL POSITION 2.  The old sentence's '1-of-78' is also wrong as written: the frozen p_spec denominator is 79 (1 + |N|), and the count is 1 of 78.  The two comparisons differ in n and in WHAT IS BEING COMPARED AGAINST (18 same-site substitutions at residue 222 versus 78 backgrounds at other positions), not in the strength of the ordinal claim.
+
+------------------------------------------------------------------------------
+WRITING PHASE2_DIAGNOSTICS_II_CORRECTIONS_III.md
+------------------------------------------------------------------------------
+  wrote docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_II_CORRECTIONS_III.md  (83 lines)
+  sha256 = c32d0edb2b5f4b416eedccd52ff639da66b5ef346e8749dfeaa0ded125931f2d
+
+------------------------------------------------------------------------------
+D17 GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] G1 background_rho_table.csv sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] G1 background_3d_distance.csv sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] G2 A222V rho (full): -0.088118064
+  [PASS] G2 A222V rho (H): -0.090021683
+  [PASS] G3 D12 linear-dist r_A (full): -0.033710698
+  [PASS] G3 D12 linear-dist rank (full): rank 10/79
+  [PASS] G3 D12 linear-dist r_A (H): -0.035947854
+  [PASS] G3 D12 linear-dist rank (H): rank 11/79
+  [PASS] G4 D13 same-site count on raw rho (full): k = 1 of 18
+  [PASS] G4 D13 same-site count on raw rho (H): k = 1 of 18
+  [PASS] G5 recomputed mean|delta| vs D14 saved output (full, {exactly 0}  (Arm S)): recomputed 0.089085 vs saved 0.089085
+  [PASS] G5 recomputed mean|delta| vs D14 saved output (H, {exactly 0}  (Arm S)): recomputed 0.089728 vs saved 0.089728
+
+D17 LIMITATIONS (printed, not only in the docstring):  K7 AND K10 CONCERN HOW A NUMBER IS DESCRIBED, NOT THE NUMBER; EVERY VALUE QUOTED IN THE OLD SENTENCES REPRODUCES EXACTLY.  K8 IS A CATEGORY ERROR ABOUT WHICH AXIS A RESULT VARIES ON AND IS CORRECTED BY POINTING AT WHAT D15 MEASURED.  K9 IS A FACTUAL ERROR ABOUT THE BINS, CAUGHT BY RECOMPUTING THEM AND GATING THAT RECOMPUTATION AGAINST D14'S OWN SAVED OUTPUT TO 2e-6.  THE EARLIER ENTRIES IN THIS LOG WERE READ AND NEVER EDITED.  NOTHING FROZEN IS REDEFINED AND NO OUTCOME WORD LABELS ANY RESULT HERE.
+Elapsed 0.8s

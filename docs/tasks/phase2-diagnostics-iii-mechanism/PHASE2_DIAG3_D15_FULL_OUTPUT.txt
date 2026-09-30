@@ -1,0 +1,688 @@
+
+==============================================================================
+D15 -- FAR-VARIANT RESTRICTION: DOES THE ANCHOR SURVIVE WITHOUT VARIANTS NEAR 222?  (script 144)
+==============================================================================
+SCOPE: descriptive.  Nothing frozen is redefined.  No outcome word is used as a label.
+NO MODEL SCORING.  NO torch / esm / thermompnn / Biopython import anywhere in this file.
+  N_DRAW=200 N_BOOT=10000 SEED=0
+RESAMPLING UNITS (not interchangeable):
+  * A222V's rho on a row subset  -> POSITION CLUSTER (whole retained target positions), identity gate 1e-12.
+  * anything ACROSS backgrounds   -> BACKGROUND, per-background rho_b held FIXED.
+  * the matched-deletion control  -> NO resampling inside a draw; it is a recomputation on a deleted row set.
+  * p_spec and every row count    -> NO resampling.
+
+------------------------------------------------------------------------------
+GATE D15-G1 (HARD) -- loader, far fractions, unrestricted baselines, baseline targets
+------------------------------------------------------------------------------
+  [PASS] D15-G1 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] D15-G1 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] D15-G1a loader vs stored ca_dist_222: max|diff| = 7.105e-15 A over 9595 rows (gate < 1e-09); unresolved positions in this frame = 0
+  [PASS] D15-G1b monomer far (>10 A): 9232/9595 = 96.2168% (script 107/126: 9232 = 96.22%)
+  [PASS] D15-G1b dimer-aware far (>10 A): 9128/9595 = 95.1329% (script 107/126: 9128 = 95.13%)
+  [full] frame positions in view = 654, A222V rows = 10757, per-background rows min = 10738, median = 10741, max = 10757
+  [H] frame positions in view = 455, A222V rows = 7526, per-background rows min = 7507, median = 7512, max = 7526
+  [PASS] D15-G1c all 96 rho_full and rho_H vs background_rho_table.csv: 192 comparisons (re-derived AND script-125 value, against the D1 table); max|diff| = 4.990e-10 (gate < 1e-09)
+  [PASS] D15-G1c A222V rho (full and H): max|diff| = 0.000e+00 (gate < 1e-09); values -0.088118064 / -0.090021683
+  [PASS] D15-G1d unrestricted gradient on resolved N (n=67) (full): got +0.731577372 vs +0.731577372 |diff|=1.899e-10
+  [PASS] D15-G1d A222V rho unrestricted (full): got -0.088118064 vs -0.088118064 |diff|=2.489e-10
+  [PASS] D15-G1d unrestricted gradient on resolved N (n=67) (H): got +0.713319366 vs +0.713319366 |diff|=3.985e-10
+  [PASS] D15-G1d A222V rho unrestricted (H): got -0.090021683 vs -0.090021683 |diff|=3.340e-11
+
+  11/11 D15-G1 checks PASS, 0 FAIL
+  GATE PASS: D15-G1 satisfied.  The far-filter analysis may run.
+
+------------------------------------------------------------------------------
+GEOMETRY BOOKKEEPING -- what each R removes, and what is dropped for being unresolved
+------------------------------------------------------------------------------
+  frame positions = 654;  position 222 itself IS NOT a frame target position
+  chain A resolves 40..651 with internal gaps 161-171 and 392-396, so positions 2-39, 161-171, 392-396 and 652-656 have NO chain-A coordinates
+
+  [full] positions in view = 654;  resolved = 595;  UNRESOLVED = 59 (2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 392, 393, 394, 395, 396, 652, 653, 654, 655, 656)
+  [full] *** ROWS AT UNRESOLVED POSITIONS DROPPED FROM EVERY 3D VARIANT INCLUDING R = 0, NEVER IMPUTED: A222V 1017 of 10757 rows; per background min = 998, max = 1017
+  [full] d3_222(p) over the 595 RESOLVED view positions, percentiles:
+           p0=3.805  p1=6.452  p5=10.528  p10=14.500  p25=21.518  p50=34.969  p75=51.913  p90=60.327  p100=81.011   (A)
+  [full] frame positions within each R of 222 (resolved only), i.e. what the S1 filter removes:
+           R =    0 A: k_R =   0 positions removed, 595 retained  (min d3_222 among retained = 3.805 A)
+           R =   10 A: k_R =  23 positions removed, 572 retained  (min d3_222 among retained = 10.029 A)
+           R =   20 A: k_R = 121 positions removed, 474 retained  (min d3_222 among retained = 20.098 A)
+           R =   30 A: k_R = 247 positions removed, 348 retained  (min d3_222 among retained = 30.091 A)
+
+  [H] positions in view = 455;  resolved = 418;  UNRESOLVED = 37 (2, 8, 9, 12, 13, 15, 16, 17, 19, 22, 25, 26, 27, 28, 29, 30, 31, 33, 34, 37, 38, 161, 162, 163, 164, 165, 166, 169, 170, 171, 393, 394, 395, 652, 653, 654, 656)
+  [H] *** ROWS AT UNRESOLVED POSITIONS DROPPED FROM EVERY 3D VARIANT INCLUDING R = 0, NEVER IMPUTED: A222V 640 of 7526 rows; per background min = 621, max = 640
+  [H] d3_222(p) over the 418 RESOLVED view positions, percentiles:
+           p0=5.058  p1=6.721  p5=11.350  p10=14.645  p25=21.587  p50=35.289  p75=52.271  p90=60.731  p100=81.011   (A)
+  [H] frame positions within each R of 222 (resolved only), i.e. what the S1 filter removes:
+           R =    0 A: k_R =   0 positions removed, 418 retained  (min d3_222 among retained = 5.058 A)
+           R =   10 A: k_R =  13 positions removed, 405 retained  (min d3_222 among retained = 10.029 A)
+           R =   20 A: k_R =  86 positions removed, 332 retained  (min d3_222 among retained = 20.098 A)
+           R =   30 A: k_R = 172 positions removed, 246 retained  (min d3_222 among retained = 30.091 A)
+
+  *** THE PERMUTATION/BOOTSTRAP NOTE (AGENTS 3): every bootstrap in this script is at the unit stated above; no row-level resampling is performed anywhere, because up to 19 substitutions share one residue position. ***
+
+------------------------------------------------------------------------------
+THE DELETION FUNCTION (used by every variant and by the matched-deletion control)
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+THE VARIANTS -- all four radii, both sequence sensitivities, S1 and S2, both views
+------------------------------------------------------------------------------
+
+  --- UNRESTRICTED (no 3D filter; D11.2's setting)  [full] ---
+    rows retained: A222V = 10757;  across the 96 backgrounds min = 10738, median = 10741, max = 10757;  positions retained = 654
+    A222V rho on the retained rows = -0.088118064
+      POSITION-CLUSTER bootstrap 95% CI = [-0.120939, +0.035496] (10000 usable draws, clusters = 654 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.731577372  BACKGROUND-level bootstrap 95% CI = [+0.603224, +0.816857] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.793552747  BACKGROUND-level bootstrap 95% CI = [+0.714692, +0.845012] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 78, p_spec = 0.025316   at or below: G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 67, p_spec = 0.029412   at or below: G_P254F
+
+  --- R = 0 A, resolved rows only (3D like-for-like baseline)  [full] ---
+    rows retained: A222V = 9740;  across the 96 backgrounds min = 9721, median = 9725, max = 9740;  positions retained = 595
+    A222V rho on the retained rows = -0.076685523
+      POSITION-CLUSTER bootstrap 95% CI = [-0.110223, +0.049646] (10000 usable draws, clusters = 595 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.698473511  BACKGROUND-level bootstrap 95% CI = [+0.543509, +0.803416] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.780769661  BACKGROUND-level bootstrap 95% CI = [+0.696338, +0.836242] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 0 A  (keep d3_222(p) > 0)  [full] ---
+    rows retained: A222V = 9740;  across the 96 backgrounds min = 9721, median = 9725, max = 9740;  positions retained = 595
+    A222V rho on the retained rows = -0.076685523
+      POSITION-CLUSTER bootstrap 95% CI = [-0.110517, +0.052946] (10000 usable draws, clusters = 595 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.698473511  BACKGROUND-level bootstrap 95% CI = [+0.543521, +0.803731] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.780769661  BACKGROUND-level bootstrap 95% CI = [+0.697799, +0.837785] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 10 A  (keep d3_222(p) > 10)  [full] ---
+    rows retained: A222V = 9377;  across the 96 backgrounds min = 9358, median = 9362, max = 9377;  positions retained = 572
+    A222V rho on the retained rows = -0.079237139
+      POSITION-CLUSTER bootstrap 95% CI = [-0.108943, +0.053475] (10000 usable draws, clusters = 572 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.689454255  BACKGROUND-level bootstrap 95% CI = [+0.530630, +0.794968] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.772866140  BACKGROUND-level bootstrap 95% CI = [+0.685364, +0.831892] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 20 A  (keep d3_222(p) > 20)  [full] ---
+    rows retained: A222V = 7742;  across the 96 backgrounds min = 7723, median = 7731, max = 7742;  positions retained = 474
+    A222V rho on the retained rows = -0.065947891
+      POSITION-CLUSTER bootstrap 95% CI = [-0.106446, +0.077385] (10000 usable draws, clusters = 474 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.662097177  BACKGROUND-level bootstrap 95% CI = [+0.518283, +0.763801] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.785737588  BACKGROUND-level bootstrap 95% CI = [+0.700403, +0.841703] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 30 A  (keep d3_222(p) > 30)  [full] ---
+    rows retained: A222V = 5701;  across the 96 backgrounds min = 5682, median = 5701, max = 5701;  positions retained = 348
+    A222V rho on the retained rows = -0.027360127
+      POSITION-CLUSTER bootstrap 95% CI = [-0.126369, +0.088052] (10000 usable draws, clusters = 348 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.400678440  BACKGROUND-level bootstrap 95% CI = [+0.189417, +0.569595] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.676943908  BACKGROUND-level bootstrap 95% CI = [+0.530740, +0.772118] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 4 of 78, p_spec = 0.063291   at or below: AV_145, AV_220, G_L318F, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 4 of 67, p_spec = 0.073529   at or below: AV_145, AV_220, G_L318F, G_P254F
+
+  --- S1  SEQ Rs = 25  (keep |p - 222| > 25)  [full] ---
+    rows retained: A222V = 8896;  across the 96 backgrounds min = 8877, median = 8882, max = 8896;  positions retained = 545
+    A222V rho on the retained rows = -0.081584044
+      POSITION-CLUSTER bootstrap 95% CI = [-0.115971, +0.055396] (10000 usable draws, clusters = 545 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.695360671  BACKGROUND-level bootstrap 95% CI = [+0.544574, +0.797086] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.792963664  BACKGROUND-level bootstrap 95% CI = [+0.713663, +0.843858] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 78, p_spec = 0.025316   at or below: AV_220
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 67, p_spec = 0.029412   at or below: AV_220
+
+  --- S1  SEQ Rs = 50  (keep |p - 222| > 50)  [full] ---
+    rows retained: A222V = 8097;  across the 96 backgrounds min = 8078, median = 8085, max = 8097;  positions retained = 495
+    A222V rho on the retained rows = -0.072880941
+      POSITION-CLUSTER bootstrap 95% CI = [-0.107525, +0.069562] (10000 usable draws, clusters = 495 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.680933852  BACKGROUND-level bootstrap 95% CI = [+0.522444, +0.786901] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.788879360  BACKGROUND-level bootstrap 95% CI = [+0.701457, +0.843122] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 78, p_spec = 0.025316   at or below: AV_220
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 67, p_spec = 0.029412   at or below: AV_220
+
+  --- UNRESTRICTED (no 3D filter; D11.2's setting)  [H] ---
+    rows retained: A222V = 7526;  across the 96 backgrounds min = 7507, median = 7512, max = 7526;  positions retained = 455
+    A222V rho on the retained rows = -0.090021683
+      POSITION-CLUSTER bootstrap 95% CI = [-0.138475, +0.043747] (10000 usable draws, clusters = 455 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.713319366  BACKGROUND-level bootstrap 95% CI = [+0.575848, +0.810272] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.791540049  BACKGROUND-level bootstrap 95% CI = [+0.713415, +0.845143] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 3 of 78, p_spec = 0.050633   at or below: AV_195, AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 3 of 67, p_spec = 0.058824   at or below: AV_195, AV_220, G_P254F
+
+  --- R = 0 A, resolved rows only (3D like-for-like baseline)  [H] ---
+    rows retained: A222V = 6886;  across the 96 backgrounds min = 6867, median = 6874, max = 6886;  positions retained = 418
+    A222V rho on the retained rows = -0.080432398
+      POSITION-CLUSTER bootstrap 95% CI = [-0.138883, +0.051323] (10000 usable draws, clusters = 418 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.688316871  BACKGROUND-level bootstrap 95% CI = [+0.528444, +0.794839] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.777402074  BACKGROUND-level bootstrap 95% CI = [+0.697739, +0.830906] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 0 A  (keep d3_222(p) > 0)  [H] ---
+    rows retained: A222V = 6886;  across the 96 backgrounds min = 6867, median = 6874, max = 6886;  positions retained = 418
+    A222V rho on the retained rows = -0.080432398
+      POSITION-CLUSTER bootstrap 95% CI = [-0.136966, +0.050697] (10000 usable draws, clusters = 418 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.688316871  BACKGROUND-level bootstrap 95% CI = [+0.530040, +0.793972] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.777402074  BACKGROUND-level bootstrap 95% CI = [+0.697921, +0.832615] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 10 A  (keep d3_222(p) > 10)  [H] ---
+    rows retained: A222V = 6666;  across the 96 backgrounds min = 6647, median = 6656, max = 6666;  positions retained = 405
+    A222V rho on the retained rows = -0.082101889
+      POSITION-CLUSTER bootstrap 95% CI = [-0.133307, +0.060709] (10000 usable draws, clusters = 405 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.686580864  BACKGROUND-level bootstrap 95% CI = [+0.526713, +0.797779] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.770372359  BACKGROUND-level bootstrap 95% CI = [+0.686602, +0.826285] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_220, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_220, G_P254F
+
+  --- S1  3D  R = 20 A  (keep d3_222(p) > 20)  [H] ---
+    rows retained: A222V = 5444;  across the 96 backgrounds min = 5425, median = 5444, max = 5444;  positions retained = 332
+    A222V rho on the retained rows = -0.063596629
+      POSITION-CLUSTER bootstrap 95% CI = [-0.131090, +0.087967] (10000 usable draws, clusters = 332 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.640347202  BACKGROUND-level bootstrap 95% CI = [+0.484996, +0.749546] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.779355863  BACKGROUND-level bootstrap 95% CI = [+0.686384, +0.838862] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 3 of 78, p_spec = 0.050633   at or below: AV_220, G_L318F, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 3 of 67, p_spec = 0.058824   at or below: AV_220, G_L318F, G_P254F
+
+  --- S1  3D  R = 30 A  (keep d3_222(p) > 30)  [H] ---
+    rows retained: A222V = 4041;  across the 96 backgrounds min = 4022, median = 4041, max = 4041;  positions retained = 246
+    A222V rho on the retained rows = -0.024367374
+      POSITION-CLUSTER bootstrap 95% CI = [-0.145818, +0.109530] (10000 usable draws, clusters = 246 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.241344907  BACKGROUND-level bootstrap 95% CI = [-0.006500, +0.461143] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.589995363  BACKGROUND-level bootstrap 95% CI = [+0.406751, +0.723432] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 7 of 78, p_spec = 0.101266   at or below: AV_145, AV_220, AV_328, AV_650, G_G317Q, G_L318F, G_P254F
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 7 of 67, p_spec = 0.117647   at or below: AV_145, AV_220, AV_328, AV_650, G_G317Q, G_L318F, G_P254F
+
+  --- S1  SEQ Rs = 25  (keep |p - 222| > 25)  [H] ---
+    rows retained: A222V = 6464;  across the 96 backgrounds min = 6445, median = 6461, max = 6464;  positions retained = 393
+    A222V rho on the retained rows = -0.087875866
+      POSITION-CLUSTER bootstrap 95% CI = [-0.144621, +0.054462] (10000 usable draws, clusters = 393 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.689214806  BACKGROUND-level bootstrap 95% CI = [+0.531313, +0.796074] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.793130571  BACKGROUND-level bootstrap 95% CI = [+0.711002, +0.844812] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 78, p_spec = 0.025316   at or below: AV_220
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 1 of 67, p_spec = 0.029412   at or below: AV_220
+
+  --- S1  SEQ Rs = 50  (keep |p - 222| > 50)  [H] ---
+    rows retained: A222V = 5766;  across the 96 backgrounds min = 5747, median = 5766, max = 5766;  positions retained = 350
+    A222V rho on the retained rows = -0.077360307
+      POSITION-CLUSTER bootstrap 95% CI = [-0.135943, +0.073553] (10000 usable draws, clusters = 350 retained target positions, 10000 draws, SEED=0)  INCLUDES ZERO
+      identity gate (every cluster once vs point): |diff| = 0.000e+00 (gate < 1e-12)  PASS
+      gradient Spearman(rho_b, d3_b) on resolved NULLS n = 67: +0.650044897  BACKGROUND-level bootstrap 95% CI = [+0.475784, +0.771330] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      gradient Spearman(rho_b, d3_b) on all RESOLVED backgrounds n = 85: +0.771442525  BACKGROUND-level bootstrap 95% CI = [+0.677287, +0.832721] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+      p_spec (n78 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 78, p_spec = 0.037975   at or below: AV_113, AV_220
+      p_spec (n67 nulls, frozen direction rho_b <= rho_A222V): k = 2 of 67, p_spec = 0.044118   at or below: AV_113, AV_220
+
+  *** S2 (far from BOTH) HAS A DIFFERENT ROW SET PER BACKGROUND, SO IT IS HANDLED WITH ITS OWN CODE PATH BELOW AND HAS NO MATCHED CONTROL. ***
+
+------------------------------------------------------------------------------
+S2 -- FAR FROM BOTH 222 AND THE BACKGROUND (SENSITIVITY; DESCRIPTIVE; NO MATCHED CONTROL)
+------------------------------------------------------------------------------
+
+  --- S2  3D  R = 0 A  [full]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 9724, max = 9740
+    A222V rho on its own S1 filter = -0.076685523   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 2, p_spec = 0.044118   at or below: AV_220, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 2, p_spec = 0.044118
+    gradient on 67 resolved usable nulls: +0.698473511   on 85 resolved usable backgrounds: +0.780769661   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 10 A  [full]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 9361, max = 9377
+    A222V rho on its own S1 filter = -0.079237139   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 2, p_spec = 0.044118   at or below: AV_220, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 2, p_spec = 0.044118
+    gradient on 67 resolved usable nulls: +0.689454255   on 85 resolved usable backgrounds: +0.772866140   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 20 A  [full]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 7727, max = 7742
+    A222V rho on its own S1 filter = -0.065947891   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 2, p_spec = 0.044118   at or below: AV_220, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 2, p_spec = 0.044118
+    gradient on 67 resolved usable nulls: +0.662097177   on 85 resolved usable backgrounds: +0.785737588   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 30 A  [full]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 5701, max = 5701
+    A222V rho on its own S1 filter = -0.027360127   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 4, p_spec = 0.073529   at or below: AV_145, AV_220, G_L318F, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 4, p_spec = 0.073529
+    gradient on 67 resolved usable nulls: +0.400678440   on 85 resolved usable backgrounds: +0.676943908   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 0 A  [H]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 6870, max = 6886
+    A222V rho on its own S1 filter = -0.080432398   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 2, p_spec = 0.044118   at or below: AV_220, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 2, p_spec = 0.044118
+    gradient on 67 resolved usable nulls: +0.688316871   on 85 resolved usable backgrounds: +0.777402074   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 10 A  [H]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 6651, max = 6666
+    A222V rho on its own S1 filter = -0.082101889   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 2, p_spec = 0.044118   at or below: AV_220, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 2, p_spec = 0.044118
+    gradient on 67 resolved usable nulls: +0.686580864   on 85 resolved usable backgrounds: +0.770372359   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 20 A  [H]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 5432, max = 5444
+    A222V rho on its own S1 filter = -0.063596629   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 3, p_spec = 0.058824   at or below: AV_220, G_L318F, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 3, p_spec = 0.058824
+    gradient on 67 resolved usable nulls: +0.640347202   on 85 resolved usable backgrounds: +0.779355863   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+  --- S2  3D  R = 30 A  [H]  (DESCRIPTIVE, no matched control) ---
+    backgrounds with NO d3_b (unresolved position) and so dropped: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    rows retained per background: min = 0, median = 4041, max = 4041
+    A222V rho on its own S1 filter = -0.024367374   (d3_b = d3_222 for A222V, so S2 = S1 for it)
+    p_spec (n = 67 usable nulls): k = 7, p_spec = 0.117647   at or below: AV_145, AV_220, AV_328, AV_650, G_G317Q, G_L318F, G_P254F
+    p_spec (n = 67 resolved usable nulls): k = 7, p_spec = 0.117647
+    gradient on 67 resolved usable nulls: +0.241344907   on 85 resolved usable backgrounds: +0.589995363   *** NO CI AND NO MATCHED CONTROL: S2 IS DESCRIPTIVE ***
+
+------------------------------------------------------------------------------
+GATE D15-G2 (HARD) -- the deletion function is exact
+------------------------------------------------------------------------------
+  [PASS] D15-G2a zero-deletion == R=0 baseline (full): max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 0): 0 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 10): 23 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 20): 121 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 30): 247 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2a zero-deletion == R=0 baseline (H): max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 0): 0 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 10): 13 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 20): 86 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 30): 172 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+
+------------------------------------------------------------------------------
+THE MATCHED-DELETION CONTROL (S1 only) -- NOT OPTIONAL
+------------------------------------------------------------------------------
+  For each R and view: k_R = the number of POSITIONS the S1 filter removes from that view's resolved universe.
+  N_DRAW = 200 random deletions, SEED = 0.  Each draw removes k_R positions chosen UNIFORMLY WITHOUT REPLACEMENT from the same universe -- WHOLE POSITIONS, all their variants -- and the SAME removed set is applied to EVERY background within a draw.
+  REPORTING RULE: an S1 statistic is flagged OUTSIDE the matched-deletion 95% range or INSIDE it.  A fall in the gradient that stays INSIDE the range is NOT attributable to the removed positions; one that falls OUTSIDE it is.
+  RESAMPLING UNIT: none inside a draw -- each draw is a deterministic recomputation on a deleted row set.  The spread over draws is the deletion effect, not a bootstrap CI.
+
+  === full, R = 0 A: k_R = 0 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.076685523
+      random-deletion mean          = -0.076685523   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [-0.076685523, -0.076685523]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.698473511
+      random-deletion mean          = +0.698473511   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.698473511, +0.698473511]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.780769661
+      random-deletion mean          = +0.780769661   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.780769661, +0.780769661]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +2.000000000   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+2.000000000, +2.000000000]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.037974684   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.037974684, +0.037974684]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.044117647
+      random-deletion mean          = +0.044117647   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.044117647, +0.044117647]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 9740; per background min 9721, median 9725, max 9740
+
+  === full, R = 10 A: k_R = 23 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.079237139
+      random-deletion mean          = -0.076620772   sd = 0.003526670
+      random-deletion 2.5 / 97.5 pct = [-0.083258800, -0.069624333]
+      fraction of draws at or below S1 = 0.2350;  at or above = 0.7650
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.689454255
+      random-deletion mean          = +0.693202335   sd = 0.006832549
+      random-deletion 2.5 / 97.5 pct = [+0.680406565, +0.706900130]
+      fraction of draws at or below S1 = 0.2800;  at or above = 0.7200
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.772866140
+      random-deletion mean          = +0.776139278   sd = 0.009786141
+      random-deletion 2.5 / 97.5 pct = [+0.756953064, +0.793700999]
+      fraction of draws at or below S1 = 0.3650;  at or above = 0.6350
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +1.825000000   sd = 0.453212985
+      random-deletion 2.5 / 97.5 pct = [+0.975000000, +2.000000000]
+      fraction of draws at or below S1 = 0.9950;  at or above = 0.8450
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.035759494   sd = 0.005736873
+      random-deletion 2.5 / 97.5 pct = [+0.025000000, +0.037974684]
+      fraction of draws at or below S1 = 0.9950;  at or above = 0.8450
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.044117647
+      random-deletion mean          = +0.041544118   sd = 0.006664897
+      random-deletion 2.5 / 97.5 pct = [+0.029044118, +0.044117647]
+      fraction of draws at or below S1 = 0.9950;  at or above = 0.8450
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 9377; per background min 9358, median 9362, max 9377
+
+  === full, R = 20 A: k_R = 121 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.065947891
+      random-deletion mean          = -0.076253257   sd = 0.007281463
+      random-deletion 2.5 / 97.5 pct = [-0.091007274, -0.062448598]
+      fraction of draws at or below S1 = 0.9200;  at or above = 0.0800
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.662097177
+      random-deletion mean          = +0.690973760   sd = 0.016380035
+      random-deletion 2.5 / 97.5 pct = [+0.663147261, +0.723050983]
+      fraction of draws at or below S1 = 0.0150;  at or above = 0.9850
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.785737588
+      random-deletion mean          = +0.771663480   sd = 0.028625986
+      random-deletion 2.5 / 97.5 pct = [+0.703806060, +0.821489238]
+      fraction of draws at or below S1 = 0.6550;  at or above = 0.3450
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +1.880000000   sd = 1.387525182
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +4.025000000]
+      fraction of draws at or below S1 = 0.7950;  at or above = 0.6200
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.036455696   sd = 0.017563610
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.063607595]
+      fraction of draws at or below S1 = 0.7950;  at or above = 0.6200
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.044117647
+      random-deletion mean          = +0.042352941   sd = 0.020404782
+      random-deletion 2.5 / 97.5 pct = [+0.014705882, +0.073897059]
+      fraction of draws at or below S1 = 0.7950;  at or above = 0.6200
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 7742; per background min 7723, median 7731, max 7742
+
+  === full, R = 30 A: k_R = 247 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.027360127
+      random-deletion mean          = -0.075062605   sd = 0.013446537
+      random-deletion 2.5 / 97.5 pct = [-0.098275992, -0.047691236]
+      fraction of draws at or below S1 = 1.0000;  at or above = 0.0000
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.400678440
+      random-deletion mean          = +0.678203432   sd = 0.028686151
+      random-deletion 2.5 / 97.5 pct = [+0.615026439, +0.731210217]
+      fraction of draws at or below S1 = 0.0000;  at or above = 1.0000
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.676943908
+      random-deletion mean          = +0.753745315   sd = 0.047166004
+      random-deletion 2.5 / 97.5 pct = [+0.650920216, +0.823070433]
+      fraction of draws at or below S1 = 0.0700;  at or above = 0.9300
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +4.000000000
+      random-deletion mean          = +2.760000000   sd = 2.895569306
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +10.025000000]
+      fraction of draws at or below S1 = 0.7700;  at or above = 0.3000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.063291139
+      random-deletion mean          = +0.047594937   sd = 0.036652776
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.139556962]
+      fraction of draws at or below S1 = 0.7700;  at or above = 0.3000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.073529412
+      random-deletion mean          = +0.055294118   sd = 0.042581902
+      random-deletion 2.5 / 97.5 pct = [+0.014705882, +0.162132353]
+      fraction of draws at or below S1 = 0.7700;  at or above = 0.3000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 5701; per background min 5682, median 5701, max 5701
+
+  === H, R = 0 A: k_R = 0 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.080432398
+      random-deletion mean          = -0.080432398   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [-0.080432398, -0.080432398]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.688316871
+      random-deletion mean          = +0.688316871   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.688316871, +0.688316871]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.777402074
+      random-deletion mean          = +0.777402074   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.777402074, +0.777402074]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +2.000000000   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+2.000000000, +2.000000000]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.037974684   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.037974684, +0.037974684]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.044117647
+      random-deletion mean          = +0.044117647   sd = 0.000000000
+      random-deletion 2.5 / 97.5 pct = [+0.044117647, +0.044117647]
+      fraction of draws at or below S1 = 1.0000;  at or above = 1.0000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 6886; per background min 6867, median 6874, max 6886
+
+  === H, R = 10 A: k_R = 13 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.082101889
+      random-deletion mean          = -0.080517203   sd = 0.003283885
+      random-deletion 2.5 / 97.5 pct = [-0.086499760, -0.073431733]
+      fraction of draws at or below S1 = 0.3200;  at or above = 0.6800
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.686580864
+      random-deletion mean          = +0.688953208   sd = 0.006911357
+      random-deletion 2.5 / 97.5 pct = [+0.675493864, +0.702835977]
+      fraction of draws at or below S1 = 0.3750;  at or above = 0.6250
+      -> S1 value is INSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.770372359
+      random-deletion mean          = +0.777857042   sd = 0.009004698
+      random-deletion 2.5 / 97.5 pct = [+0.757829079, +0.792784485]
+      fraction of draws at or below S1 = 0.2000;  at or above = 0.8000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +2.335000000   sd = 0.717880045
+      random-deletion 2.5 / 97.5 pct = [+1.975000000, +4.000000000]
+      fraction of draws at or below S1 = 0.7500;  at or above = 0.9750
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.042215190   sd = 0.009087089
+      random-deletion 2.5 / 97.5 pct = [+0.037658228, +0.063291139]
+      fraction of draws at or below S1 = 0.7500;  at or above = 0.9750
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.044117647
+      random-deletion mean          = +0.049044118   sd = 0.010557059
+      random-deletion 2.5 / 97.5 pct = [+0.043750000, +0.073529412]
+      fraction of draws at or below S1 = 0.7500;  at or above = 0.9750
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 6666; per background min 6647, median 6656, max 6666
+
+  === H, R = 20 A: k_R = 86 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.063596629
+      random-deletion mean          = -0.080928195   sd = 0.008721983
+      random-deletion 2.5 / 97.5 pct = [-0.096713499, -0.064444959]
+      fraction of draws at or below S1 = 0.9750;  at or above = 0.0250
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.640347202
+      random-deletion mean          = +0.680514118   sd = 0.020945431
+      random-deletion 2.5 / 97.5 pct = [+0.642046793, +0.720171605]
+      fraction of draws at or below S1 = 0.0250;  at or above = 0.9750
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.779355863
+      random-deletion mean          = +0.764106339   sd = 0.028032467
+      random-deletion 2.5 / 97.5 pct = [+0.696987678, +0.811859460]
+      fraction of draws at or below S1 = 0.7000;  at or above = 0.3000
+      -> S1 value is INSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +3.000000000
+      random-deletion mean          = +2.765000000   sd = 1.707145786
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +7.000000000]
+      fraction of draws at or below S1 = 0.6900;  at or above = 0.5150
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.050632911
+      random-deletion mean          = +0.047658228   sd = 0.021609440
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.101265823]
+      fraction of draws at or below S1 = 0.6900;  at or above = 0.5150
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.058823529
+      random-deletion mean          = +0.055367647   sd = 0.025105085
+      random-deletion 2.5 / 97.5 pct = [+0.014705882, +0.117647059]
+      fraction of draws at or below S1 = 0.6900;  at or above = 0.5150
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 5444; per background min 5425, median 5444, max 5444
+
+  === H, R = 30 A: k_R = 172 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.024367374
+      random-deletion mean          = -0.078787588   sd = 0.013127572
+      random-deletion 2.5 / 97.5 pct = [-0.104682320, -0.054086245]
+      fraction of draws at or below S1 = 1.0000;  at or above = 0.0000
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved nulls n=67
+      S1 value                      = +0.241344907
+      random-deletion mean          = +0.665606904   sd = 0.032593138
+      random-deletion 2.5 / 97.5 pct = [+0.602546643, +0.726412751]
+      fraction of draws at or below S1 = 0.0000;  at or above = 1.0000
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    gradient Spearman(rho_b,d3_b), resolved backgrounds n=85
+      S1 value                      = +0.589995363
+      random-deletion mean          = +0.750804960   sd = 0.046038292
+      random-deletion 2.5 / 97.5 pct = [+0.648139012, +0.819578647]
+      fraction of draws at or below S1 = 0.0000;  at or above = 1.0000
+      -> S1 value is OUTSIDE the matched-deletion 95% range
+    k at or below, 78 nulls
+      S1 value                      = +7.000000000
+      random-deletion mean          = +3.800000000   sd = 2.989092399
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +12.000000000]
+      fraction of draws at or below S1 = 0.8850;  at or above = 0.1650
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 78 nulls
+      S1 value                      = +0.101265823
+      random-deletion mean          = +0.060759494   sd = 0.037836613
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.164556962]
+      fraction of draws at or below S1 = 0.8850;  at or above = 0.1650
+      -> S1 value is INSIDE the matched-deletion 95% range
+    p_spec, 67 resolved nulls
+      S1 value                      = +0.117647059
+      random-deletion mean          = +0.070588235   sd = 0.043957241
+      random-deletion 2.5 / 97.5 pct = [+0.014705882, +0.191176471]
+      fraction of draws at or below S1 = 0.8850;  at or above = 0.1650
+      -> S1 value is INSIDE the matched-deletion 95% range
+    rows retained under S1: A222V 4041; per background min 4022, median 4041, max 4041
+
+  *** READING THE CONTROL: an S1 gradient that has FALLEN but is still INSIDE the matched-deletion range is NOT attributable to the removed near-222 positions -- deleting the same NUMBER of random positions does the same or more.  An S1 gradient OUTSIDE the range IS attributable to them. ***
+
+------------------------------------------------------------------------------
+D15 FAR-VARIANT RESTRICTION TABLE -- S1, both views, all four radii
+------------------------------------------------------------------------------
+   view   R (A)   k_R pos    A222V rho         pos-cluster 95% CI  excl 0          gradient n=67                 its 95% CI   p_spec n=78            at or below
+   full       0         0 -0.076685523 [-0.110517, +0.052946]   False   +0.698473511  [+0.543521, +0.803731]      0.037975        AV_220, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.698473511, +0.698473511]   -> S1 gradient is INSIDE it;  frac draws at or below S1 = 1.0000, at or above = 1.0000
+   full      10        23 -0.079237139 [-0.108943, +0.053475]   False   +0.689454255  [+0.530630, +0.794968]      0.037975        AV_220, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.680406565, +0.706900130]   -> S1 gradient is INSIDE it;  frac draws at or below S1 = 0.2800, at or above = 0.7200
+   full      20       121 -0.065947891 [-0.106446, +0.077385]   False   +0.662097177  [+0.518283, +0.763801]      0.037975        AV_220, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.663147261, +0.723050983]   -> S1 gradient is OUTSIDE it;  frac draws at or below S1 = 0.0150, at or above = 0.9850
+   full      30       247 -0.027360127 [-0.126369, +0.088052]   False   +0.400678440  [+0.189417, +0.569595]      0.063291 AV_145, AV_220, G_L318F, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.615026439, +0.731210217]   -> S1 gradient is OUTSIDE it;  frac draws at or below S1 = 0.0000, at or above = 1.0000
+      H       0         0 -0.080432398 [-0.136966, +0.050697]   False   +0.688316871  [+0.530040, +0.793972]      0.037975        AV_220, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.688316871, +0.688316871]   -> S1 gradient is INSIDE it;  frac draws at or below S1 = 1.0000, at or above = 1.0000
+      H      10        13 -0.082101889 [-0.133307, +0.060709]   False   +0.686580864  [+0.526713, +0.797779]      0.037975        AV_220, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.675493864, +0.702835977]   -> S1 gradient is INSIDE it;  frac draws at or below S1 = 0.3750, at or above = 0.6250
+      H      20        86 -0.063596629 [-0.131090, +0.087967]   False   +0.640347202  [+0.484996, +0.749546]      0.050633 AV_220, G_L318F, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.642046793, +0.720171605]   -> S1 gradient is OUTSIDE it;  frac draws at or below S1 = 0.0250, at or above = 0.9750
+      H      30       172 -0.024367374 [-0.145818, +0.109530]   False   +0.241344907  [-0.006500, +0.461143]      0.101266 AV_145, AV_220, AV_328, AV_650, G_G317Q, G_L318F, G_P254F
+        matched-deletion range for the gradient (n=200 draws): [+0.602546643, +0.726412751]   -> S1 gradient is OUTSIDE it;  frac draws at or below S1 = 0.0000, at or above = 1.0000
+
+  (gradients quoted here are on the RESOLVED NULLS, n = 67, the D11.2 denominator.  The n = 85 all-resolved-background gradient and the n = 67 p_spec are printed in the per-variant blocks above.)
+
+------------------------------------------------------------------------------
+D15 GATE TABLE (for the SUMMARY)
+------------------------------------------------------------------------------
+  [PASS] D15-G1 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] D15-G1 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] D15-G1a loader vs stored ca_dist_222: max|diff| = 7.105e-15 A over 9595 rows (gate < 1e-09); unresolved positions in this frame = 0
+  [PASS] D15-G1b monomer far (>10 A): 9232/9595 = 96.2168% (script 107/126: 9232 = 96.22%)
+  [PASS] D15-G1b dimer-aware far (>10 A): 9128/9595 = 95.1329% (script 107/126: 9128 = 95.13%)
+  [PASS] D15-G1c all 96 rho_full and rho_H vs background_rho_table.csv: 192 comparisons (re-derived AND script-125 value, against the D1 table); max|diff| = 4.990e-10 (gate < 1e-09)
+  [PASS] D15-G1c A222V rho (full and H): max|diff| = 0.000e+00 (gate < 1e-09); values -0.088118064 / -0.090021683
+  [PASS] D15-G1d unrestricted gradient on resolved N (n=67) (full): got +0.731577372 vs +0.731577372 |diff|=1.899e-10
+  [PASS] D15-G1d A222V rho unrestricted (full): got -0.088118064 vs -0.088118064 |diff|=2.489e-10
+  [PASS] D15-G1d unrestricted gradient on resolved N (n=67) (H): got +0.713319366 vs +0.713319366 |diff|=3.985e-10
+  [PASS] D15-G1d A222V rho unrestricted (H): got -0.090021683 vs -0.090021683 |diff|=3.340e-11
+  [PASS] D15-G2a zero-deletion == R=0 baseline (full): max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 0): 0 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 10): 23 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 20): 121 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (full, R = 30): 247 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2a zero-deletion == R=0 baseline (H): max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 0): 0 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 10): 13 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 20): 86 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+  [PASS] D15-G2b actual S1 removed set reproduces S1 (H, R = 30): 172 positions removed; max|diff| over all 97 rho and every reported statistic = 0.000e+00 (required EXACTLY 0)
+
+  D15-G1: PASS (21/21 checks incl. D15-G2).
+  max position-cluster identity |diff| across every variant and view = 0.000e+00 (gate < 1e-12)
+
+D15 LIMITATIONS (printed, not only in the docstring):  THE ONLY ATTRIBUTION THIS TASK LICENSES IS: a fall in the gradient that stays INSIDE the matched-deletion 95% range is NOT attributable to the removed near-222 positions; one that falls OUTSIDE it IS.  S2 HAS NO MATCHED CONTROL (per-background row sets differ) and is DESCRIPTIVE.  d3_CA is a CA-CA distance in ONE 2.50 A crystal structure of the dimer and a CA-CA distance is not a contact.  UNRESOLVED TARGET POSITIONS ARE DROPPED FROM EVERY 3D VARIANT INCLUDING R = 0 AND NEVER IMPUTED; the dropped ROW count is printed at the top of this output.  A222V's rho and each null's rho_b under restriction are computed on DIFFERENTLY THINNED row sets, so p_spec under restriction compares statistics that are not computed on identical rows.  Resampling units: POSITION CLUSTER for A222V's own rho on a row subset (identity gate 1e-12, printed above), BACKGROUND for anything across backgrounds, and NONE inside a matched-deletion draw.  NOTHING FROZEN IS REDEFINED.
+Elapsed 176.7s
