@@ -1,0 +1,132 @@
+
+==============================================================================
+D3 + D7 + D8 -- exact rank counts on the gated D1 table (script 133)
+==============================================================================
+RESAMPLING UNIT: NONE.  Exact counts over fixed sets; no bootstrap, no permutation, N_BOOT/N_PERM not read.
+
+------------------------------------------------------------------------------
+INPUT GATE + A222V THRESHOLD GATE
+------------------------------------------------------------------------------
+  data/processed/phase2_diagnostics/background_rho_table.csv
+  sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  script 131 printed sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  INPUT GATE PASS
+  A222V rho_full re-derived = -0.08811806424891734 vs D1 -0.08811806424891734 |diff| = 0.000e+00 (gate < 1e-12)
+  A222V rho_H    re-derived = -0.09002168303339808 vs D1 -0.09002168303339808 |diff| = 0.000e+00 (gate < 1e-12)
+  A222V THRESHOLD GATE PASS
+  A222V is deliberately not a row of the 96-background table (it is neither Arm S nor N); its rhos are the p_spec thresholds.
+  arms: S=18 V=38 G=40 -> N = 78
+
+------------------------------------------------------------------------------
+D3 -- A222V's rank WITHIN ARM V ALONE and WITHIN ARM G ALONE
+------------------------------------------------------------------------------
+D3.1 rank = 1 + #{arm members with rho_b < rho_A222V} (script 125's own definition, line 415).
+D3.2 arms are NEVER pooled; Arm S is excluded from both (it is the same-site arm, not part of the frozen comparison).
+D3.3 this is DECOMPOSITION: no p_spec is redefined here.
+
+  [full | Arm V] n = 38 (+A222V -> 39)
+    #{arm members with rho_b <= rho_A222V} = 0  (the frozen p_spec numerator form)
+    #{arm members with rho_b <  rho_A222V} = 0
+    A222V rank within Arm V u {A222V} = 1/39  (rank 1 = most negative)
+    arm rho range = [-0.084598081, +0.047573205], median = -0.023411207
+  [full | Arm G] n = 40 (+A222V -> 41)
+    #{arm members with rho_b <= rho_A222V} = 1  (the frozen p_spec numerator form)
+    #{arm members with rho_b <  rho_A222V} = 1
+    A222V rank within Arm G u {A222V} = 2/41  (rank 1 = most negative)
+    arm rho range = [-0.096243863, +0.063116028], median = +0.010076945
+  [H    | Arm V] n = 38 (+A222V -> 39)
+    #{arm members with rho_b <= rho_A222V} = 2  (the frozen p_spec numerator form)
+    #{arm members with rho_b <  rho_A222V} = 2
+    A222V rank within Arm V u {A222V} = 3/39  (rank 1 = most negative)
+    arm rho range = [-0.094480281, +0.040588603], median = -0.022628334
+  [H    | Arm G] n = 40 (+A222V -> 41)
+    #{arm members with rho_b <= rho_A222V} = 1  (the frozen p_spec numerator form)
+    #{arm members with rho_b <  rho_A222V} = 1
+    A222V rank within Arm G u {A222V} = 2/41  (rank 1 = most negative)
+    arm rho range = [-0.101954441, +0.068247435], median = +0.009295575
+
+  side-by-side:
+view arm  n  n_pooled  k_at_or_below  n_strictly_below  rank rank_frac   arm_min  arm_max  arm_median
+full   V 38        39              0                 0     1      1/39 -0.084598 0.047573   -0.023411
+full   G 40        41              1                 1     2      2/41 -0.096244 0.063116    0.010077
+   H   V 38        39              2                 2     3      3/39 -0.094480 0.040589   -0.022628
+   H   G 40        41              1                 1     2      2/41 -0.101954 0.068247    0.009296
+
+  D3.4 arm construction asymmetry (printed so the comparison is not read as if the arms were exchangeable):
+    Arm V: n=38 positions min=5 max=655 median=292.5; within 222+/-50: 7; within 222+/-25: 5
+    Arm G: n=40 positions min=3 max=629 median=355.5; within 222+/-50: 4; within 222+/-25: 1
+    (Arm V is exhaustive over A->V positions; Arm G is a seed-0 uniform draw.  Neither arm is a sample from a common population, so the arm-level counts below are DECOMPOSITION of the pooled count, not a comparison of two exchangeable groups, and no cross-arm significance is claimed.)
+
+------------------------------------------------------------------------------
+D7.1 -- SIGN-EXPLICIT ONE-SENTENCE RESTATEMENT
+------------------------------------------------------------------------------
+  Composed from the gated D1 values only (D7.1); no number in it is typed by hand:
+
+  >>> Substituting the alanine-to-valine change at position 222 for the wild-type residue produces a background-specific NEGATIVE association (Spearman rho = -0.088118 on the full frame, -0.090022 on the held-out H frame) between ESM-2's implied per-variant score shift and measured epistasis, and that association is more negative than 1 of the 78 placebo backgrounds on the full frame and 3 of the 78 on the held-out H frame (rank-based p_spec = 0.025316 and 0.050633 respectively).
+
+  (numbers interpolated: rho_full=-0.088118, rho_H=-0.090022, k_full=1, k_H=3, |N|=78, p_spec(full)=0.025316, p_spec(H)=0.050633)
+
+------------------------------------------------------------------------------
+D7.2 -- p_spec under |rho| INSTEAD OF SIGNED rho (SENSITIVITY)
+------------------------------------------------------------------------------
+D7.2 THE INEQUALITY FLIPS: the frozen signed test asks whether A222V is unusually NEGATIVE (`rho_b <= rho_A222V`); this sensitivity asks whether its MAGNITUDE is unusually large in EITHER direction (`|rho_b| >= |rho_A222V|`).  Using `<=` here would silently reproduce the frozen test.
+
+  [full]  |rho_A222V| = 0.088118064   rho_A222V = -0.088118064   |N| = 78
+    signed    #{rho_b <= rho_A222V}   = 1  -> p_spec      = (1 + 1)/(1 + 78) = 0.025316456
+    magnitude #{|rho_b| >= |rho_A222V|} = 1  -> p_spec_abs  = (1 + 1)/(1 + 78) = 0.025316456
+    backgrounds counted in p_spec_abs: ['G_P254F']
+    of those, 0 are POSITIVE ([]) -- these are the ones the frozen signed test correctly ignores, and the entire difference between the two p-values is them.
+  [H]  |rho_A222V| = 0.090021683   rho_A222V = -0.090021683   |N| = 78
+    signed    #{rho_b <= rho_A222V}   = 3  -> p_spec      = (1 + 3)/(1 + 78) = 0.050632911
+    magnitude #{|rho_b| >= |rho_A222V|} = 3  -> p_spec_abs  = (1 + 3)/(1 + 78) = 0.050632911
+    backgrounds counted in p_spec_abs: ['AV_195', 'AV_220', 'G_P254F']
+    of those, 0 are POSITIVE ([]) -- these are the ones the frozen signed test correctly ignores, and the entire difference between the two p-values is them.
+
+  side-by-side (signed vs magnitude):
+view  n_N  rho_a222v  signed_le  p_signed  abs_ge    p_abs  n_positive_among_hits
+full   78  -0.088118          1  0.025316       1 0.025316                      0
+   H   78  -0.090022          3  0.050633       3 0.050633                      0
+
+  D7.3: p_spec_abs is a DISCLOSED SENSITIVITY reported BESIDE the signed p_spec.  It does not replace the frozen one-sided test; it isolates how much of the verdict depends on the pre-declared DIRECTION versus on raw magnitude.  A large p_spec_abs would mean A222V's |rho| is unremarkable in size even if its sign is extreme -- and that would be a statement about ESM-2's typical |rho|, not about MTHFR.
+
+------------------------------------------------------------------------------
+D8 -- G_P254F LEAVE-ONE-OUT FRAGILITY
+------------------------------------------------------------------------------
+D8.3: removing one background changes the DENOMINATOR as well as the numerator.  |N| goes 78 -> 77 and the floor from 1/79 to 1/78 = 0.012820513.  Both are stated next to every value.
+
+  [full]  floor with |N|=78 -> 1/79 = 0.012658228; floor with |N|=77 -> 1/78 = 0.012820513
+    ORIGINAL   |N|=78  #{rho_b <= rho_A222V} = 1 -> p_spec = (1 + 1)/(1 + 78) = 0.025316456
+              still at or below: ['G_P254F']
+    LOO (G_P254F removed) |N|=77  #{rho_b <= rho_A222V} = 0 -> p_spec = (1 + 0)/(1 + 77) = 0.012820513
+              still at or below: []
+    change in p_spec = -0.012495943
+  [H]  floor with |N|=78 -> 1/79 = 0.012658228; floor with |N|=77 -> 1/78 = 0.012820513
+    ORIGINAL   |N|=78  #{rho_b <= rho_A222V} = 3 -> p_spec = (1 + 3)/(1 + 78) = 0.050632911
+              still at or below: ['AV_195', 'AV_220', 'G_P254F']
+    LOO (G_P254F removed) |N|=77  #{rho_b <= rho_A222V} = 2 -> p_spec = (1 + 2)/(1 + 77) = 0.038461538
+              still at or below: ['AV_195', 'AV_220']
+    change in p_spec = -0.012171373
+    D8.2 check: G_P254F was one of 3 H beaters.  After removal the binding set is ['AV_195', 'AV_220'] -- AV_220 and AV_195 remain, as expected.
+
+  side-by-side:
+view  n_orig  k_orig   p_orig  n_loo  k_loo    p_loo     delta
+full      78       1 0.025316     77      0 0.012821 -0.012496
+   H      78       3 0.050633     77      2 0.038462 -0.012171
+
+  READ THIS: on the full frame G_P254F is the ONLY background at or below A222V, so removing it drives p_spec straight to its floor.  That is what the plan anticipated.  On H it is one of three, so removing it leaves two and the value moves by much less.  The fragility is therefore ASYMMETRIC between the two views, and the honest statement is that the full-frame count rests on a single background while the H-frame count does not.
+
+------------------------------------------------------------------------------
+D3 + D7 + D8 SUMMARY
+------------------------------------------------------------------------------
+  D3 arm-decomposed ranks (decomposition, not a new test):
+    full Arm V: n=38 (+A222V = 39)  # at or below = 0  rank = 1/39
+    full Arm G: n=40 (+A222V = 41)  # at or below = 1  rank = 2/41
+    H    Arm V: n=38 (+A222V = 39)  # at or below = 2  rank = 3/39
+    H    Arm G: n=40 (+A222V = 41)  # at or below = 1  rank = 2/41
+
+  D7 sign-explicit sentence: printed verbatim above.
+  D7 |rho| sensitivity: p_spec_abs(full) = 0.025316456 vs signed 0.025316456; p_spec_abs(H) = 0.050632911 vs signed 0.050632911
+  D8 leave-one-out: p_spec(full) 0.025316456 -> 0.012820513 (|N| 78 -> 77); p_spec(H) 0.050632911 -> 0.038461538
+
+LIMITATIONS: see docstring.  Every value here is an exact rank count with NO sampling uncertainty; a small p_spec is small because few backgrounds landed at or below A222V, not because of a tail probability (script 125's own printed limitation: p_spec is bounded below by 1/(1+|N|) and is an empirical rank count, not a tail model).  Arm V and Arm G are not exchangeable (exhaustive A->V vs seed-0 uniform draw), so D3 decomposes and does not compare.  D7's magnitude test answers a different question from the frozen signed test.  D8 is a deletion chosen after seeing which background it was -- that is what makes it a fragility diagnostic, and it is why the leave-one-out values are diagnostics of the frozen result and not alternative estimates of it.  None of this redefines anything frozen.
+Elapsed 0.7s

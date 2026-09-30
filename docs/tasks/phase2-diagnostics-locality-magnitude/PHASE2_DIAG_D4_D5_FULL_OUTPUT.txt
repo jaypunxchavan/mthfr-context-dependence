@@ -1,0 +1,158 @@
+
+==============================================================================
+D4 + D5 -- SHIFT-MAGNITUDE CONFOUND (script 134)
+==============================================================================
+N_BOOT=10000 N_PERM=10000 SEED=0
+RESAMPLING UNIT: BACKGROUND (which of the 96 were drawn). NOT position-within-background (script 125's primary unit, not used here).
+NULL MODEL: association null -- mean_abs_delta_b labels shuffled across backgrounds; rho_b is NOT re-derived on any permuted dataset.
+
+------------------------------------------------------------------------------
+INPUT GATE: D1's gated table (sha256 re-checked)
+------------------------------------------------------------------------------
+  data/processed/phase2_diagnostics/background_rho_table.csv
+  sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  script 131 printed sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  INPUT GATE PASS
+
+------------------------------------------------------------------------------
+DELTA_B PROVENANCE (quoted from script 125, then RE-DERIVED independently)
+------------------------------------------------------------------------------
+  delta_b(v) = score_b(v) - esm2_score(v)
+    score_b(v)  <- data/processed/phase2/bg_<bg_id>.csv::score
+    esm2_score  <- data/processed/task32_analysis_table.csv::esm2_score
+    join        <- frame.merge(bg[[position, mut_aa, score]], on=[position, mut_aa], how='left')
+
+  INDEPENDENT RE-DERIVATION: recomputed score_b(v) - esm2_score(v) from the two raw files for all 96 backgrounds and compared to script 125's own `delta` column, row for row.
+    max|diff| over 96 backgrounds x ~10.7k rows = 0.000e+00 (worst None; gate < 1e-12)
+    DELTA GATE PASS -- the two sources agree exactly, so this is a genuine agreement and not a duplicated column (AGENTS 5).
+
+------------------------------------------------------------------------------
+D4.1 mean_abs_delta_b = mean(|delta_b(v)|) over each background's usable rows
+------------------------------------------------------------------------------
+  rows behind each mean_abs_delta_b: full min=10738 max=10757; H min=7507 max=7526
+  (min full-frame count is 19 for the backgrounds that lose the most rows, i.e. those at position 222; the count is computed, not asserted.  A222V is not in this table.)
+  [full] mean_abs_delta over the 96 backgrounds: min=0.012399 median=0.056099 max=0.208008 sd=0.028526
+         A222V's own = 0.070330
+  [H   ] mean_abs_delta over the 96 backgrounds: min=0.011486 median=0.059174 max=0.200143 sd=0.028473
+         A222V's own = 0.069403
+
+------------------------------------------------------------------------------
+D4.2-D4.5  Spearman(rho_b, mean_abs_delta_b) across all 96
+------------------------------------------------------------------------------
+
+  [full]  n = 96
+    Spearman(rho_b, mean_abs_delta_b) = -0.614188823
+    background-level bootstrap 95% CI = [-0.732848, -0.459688]  (EXCLUDES ZERO)
+    permutation p (TWO-SIDED on |r|, PRIMARY, D4.3) = 0.000100 = (1 + 0)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.000100
+    identity check (D4.4): forced identity permutation |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D4.5): mean=-0.000110 (MCSE 0.001027), median=+0.001072 (MCSE 0.001287), sd=0.102718 -> centres on zero
+
+  [H]  n = 96
+    Spearman(rho_b, mean_abs_delta_b) = -0.612696690
+    background-level bootstrap 95% CI = [-0.732738, -0.456420]  (EXCLUDES ZERO)
+    permutation p (TWO-SIDED on |r|, PRIMARY, D4.3) = 0.000100 = (1 + 0)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.000100
+    identity check (D4.4): forced identity permutation |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D4.5): mean=-0.000388 (MCSE 0.001024), median=-0.000109 (MCSE 0.001284), sd=0.102409 -> centres on zero
+
+  side-by-side:
+    full rho~mean|delta| = -0.614189  CI [-0.732848, -0.459688] EXCLUDES ZERO  p_two=0.000100
+    H    rho~mean|delta| = -0.612697  CI [-0.732738, -0.456420] EXCLUDES ZERO  p_two=0.000100
+
+------------------------------------------------------------------------------
+D4.6  WHERE THE NAMED BACKGROUNDS SIT ON mean_abs_delta_b
+------------------------------------------------------------------------------
+  percentile = fraction of the 96 backgrounds with a SMALLER mean_abs_delta_b (so 100 = largest of the 96).  A222V is scored against the same 96 for comparability, though it is not one of them.
+
+  [full]  A222V mean_abs_delta = 0.070330 -> percentile 68.8 of 96
+         bg_id  mean|delta|  pctile/96                       named?
+       G_P254F     0.208008       99.0 at-or-below A222V (D1); nearest-222 (D2, d=32)
+        AV_220     0.047893       33.3 at-or-below A222V (D1); nearest-222 (D2, d=2)
+        AV_195     0.095630       89.6 at-or-below A222V (D1); nearest-222 (D2, d=27)
+        AV_233     0.049868       38.5       nearest-222 (D2, d=11)
+        AV_209     0.049976       39.6       nearest-222 (D2, d=13)
+        AV_204     0.032608       12.5       nearest-222 (D2, d=18)
+        AV_242     0.055971       47.9       nearest-222 (D2, d=20)
+       G_Y197V     0.137584       97.9       nearest-222 (D2, d=25)
+       G_I192T     0.066874       65.6       nearest-222 (D2, d=30)
+       G_L178T     0.063864       60.4       nearest-222 (D2, d=44)
+    largest mean|delta|: [('G_P254F', 0.208), ('G_Y197V', 0.1376), ('A222_L', 0.1051), ('A222_E', 0.1048), ('A222_D', 0.1041)]
+    smallest mean|delta|: [('AV_19', 0.0124), ('AV_5', 0.018), ('AV_650', 0.0237), ('G_A462S', 0.0238), ('G_E383T', 0.0242)]
+
+  [H]  A222V mean_abs_delta = 0.069403 -> percentile 66.7 of 96
+         bg_id  mean|delta|  pctile/96                       named?
+       G_P254F     0.200143       99.0 at-or-below A222V (D1); nearest-222 (D2, d=32)
+        AV_220     0.050233       36.5 at-or-below A222V (D1); nearest-222 (D2, d=2)
+        AV_195     0.098154       91.7 at-or-below A222V (D1); nearest-222 (D2, d=27)
+        AV_233     0.046850       30.2       nearest-222 (D2, d=11)
+        AV_209     0.047261       31.2       nearest-222 (D2, d=13)
+        AV_204     0.031697       11.5       nearest-222 (D2, d=18)
+        AV_242     0.051866       39.6       nearest-222 (D2, d=20)
+       G_Y197V     0.138760       97.9       nearest-222 (D2, d=25)
+       G_I192T     0.072520       69.8       nearest-222 (D2, d=30)
+       G_L178T     0.071155       67.7       nearest-222 (D2, d=44)
+    largest mean|delta|: [('G_P254F', 0.2001), ('G_Y197V', 0.1388), ('A222_E', 0.1077), ('A222_D', 0.1064), ('A222_L', 0.1043)]
+    smallest mean|delta|: [('AV_19', 0.0115), ('AV_5', 0.0173), ('G_A462S', 0.0232), ('G_E383T', 0.0245), ('AV_650', 0.0246)]
+
+------------------------------------------------------------------------------
+POST-HOC ADDITION (disclosed): where does A222V sit RELATIVE TO the shift-magnitude line?
+------------------------------------------------------------------------------
+  If A222V's rho_b is what the rho-vs-mean|delta| relationship predicts for a background of its shift magnitude, the confound fully accounts for it.  If it is far off the line, the confound is real but does not account for A222V specifically.
+
+  [full]  OLS line: rho_hat = +0.034053 -0.896326 * mean|delta|
+    A222V mean|delta| = 0.070330  ->  predicted rho = -0.028985
+    A222V actual  rho  = -0.088118
+    RESIDUAL (actual - predicted) = -0.059133
+    A222V's residual sits at the 96.9th percentile of the 96 background residuals (0 = most negative)
+      for reference   G_P254F: mean|delta|=0.208008  rho=-0.096244  residual=+0.056146
+      for reference    AV_220: mean|delta|=0.047893  rho=-0.084598  residual=-0.075724
+      for reference    AV_195: mean|delta|=0.095630  rho=-0.084162  residual=-0.032500
+  [H]  OLS line: rho_hat = +0.037990 -0.964705 * mean|delta|
+    A222V mean|delta| = 0.069403  ->  predicted rho = -0.028963
+    A222V actual  rho  = -0.090022
+    RESIDUAL (actual - predicted) = -0.061058
+    A222V's residual sits at the 96.9th percentile of the 96 background residuals (0 = most negative)
+      for reference   G_P254F: mean|delta|=0.200143  rho=-0.101954  residual=+0.053135
+      for reference    AV_220: mean|delta|=0.050233  rho=-0.094480  residual=-0.084010
+      for reference    AV_195: mean|delta|=0.098154  rho=-0.093421  residual=-0.036722
+
+  THIS IS THE SINGLE MOST IMPORTANT LINE IN D4.  Read it before concluding anything from the correlation alone: a strong rho-vs-shift-magnitude correlation and A222V being an extreme outlier on that same relationship are compatible, and here they co-occur.
+
+------------------------------------------------------------------------------
+D5 -- DOES D_site SURVIVE CONTROLLING FOR SHIFT MAGNITUDE
+------------------------------------------------------------------------------
+D5.4 first: the plan permits skipping the residualization if D4's correlation is negligible.  That condition is evaluated only now, after D4 is in hand, as the plan requires.  It is NOT negligible -- the D4 CIs are printed above and the residualization is run regardless, so nothing here depends on this judgement.
+
+  [full]  OLS rho_b ~ mean_abs_delta_b: slope = -0.896325500 per unit mean|delta|, intercept = +0.034053200
+    D_site      = mean(rho, S, n=18) - mean(rho, N, n=78) = -0.055525559
+      background-level bootstrap 95% CI = [-0.067028, -0.044248]  (EXCLUDES ZERO)
+    D_site_resid= mean(resid, S) - mean(resid, N) = -0.023832242
+      background-level bootstrap 95% CI (OLS REFIT per draw, D5.3) = [-0.030493, -0.012698]  (EXCLUDES ZERO)
+      ratio D_site_resid / D_site = 0.429212  (ATTENUATED)
+
+  [H]  OLS rho_b ~ mean_abs_delta_b: slope = -0.964705251 per unit mean|delta|, intercept = +0.037990057
+    D_site      = mean(rho, S, n=18) - mean(rho, N, n=78) = -0.059645790
+      background-level bootstrap 95% CI = [-0.071298, -0.048081]  (EXCLUDES ZERO)
+    D_site_resid= mean(resid, S) - mean(resid, N) = -0.026597218
+      background-level bootstrap 95% CI (OLS REFIT per draw, D5.3) = [-0.033239, -0.016030]  (EXCLUDES ZERO)
+      ratio D_site_resid / D_site = 0.445919  (ATTENUATED)
+
+  side-by-side (D5.5):
+view     slope    D_site      D_lo      D_hi  D_excl   D_resid      R_lo      R_hi  R_excl     ratio
+full -0.896326 -0.055526 -0.067028 -0.044248    True -0.023832 -0.030493 -0.012698    True +0.429212
+   H -0.964705 -0.059646 -0.071298 -0.048081    True -0.026597 -0.033239 -0.016030    True +0.445919
+
+  D5.1 check: D_site on the full frame was frozen at -0.055525559; this run reproduces -0.055525559 (|diff| = 3.310e-10).
+  NOTE: script 125's own D_site CI came from the POSITION-cluster bootstrap.  The CI printed here uses the BACKGROUND bootstrap so that D_site and D_site_resid are directly comparable.  They are different uncertainties and their widths must not be compared to each other or to 125's.
+
+------------------------------------------------------------------------------
+D4 + D5 SUMMARY
+------------------------------------------------------------------------------
+  D4 [full] Spearman(rho_b, mean|delta_b|) = -0.614189  CI [-0.732848, -0.459688] EXCLUDES ZERO  p_two=0.000100
+  D4 [H   ] Spearman(rho_b, mean|delta_b|) = -0.612697  CI [-0.732738, -0.456420] EXCLUDES ZERO  p_two=0.000100
+  D5 [full] D_site = -0.055526 -> D_site_resid = -0.023832 (ratio +0.4292); resid CI [-0.030493, -0.012698] EXCLUDES ZERO
+  D5 [H   ] D_site = -0.059646 -> D_site_resid = -0.026597 (ratio +0.4459); resid CI [-0.033239, -0.016030] EXCLUDES ZERO
+
+LIMITATIONS: see docstring.  CONSTRUCTIONAL OVERLAP: mean_abs_delta_b and rho_b are both functions of the SAME delta_b, so this is not an independent control -- it removes the overall-magnitude component of delta_b and nothing else, and a surviving D_site_resid is not evidence that delta_b's influence is gone.  mean|delta| is scale-only and blind to direction, so a null here would not rule out a shift confound operating through heteroscedasticity.  The permutation is an association null, not a re-derivation null.  CIs are background-level; the 96 rho_b are mutually correlated and that is not modelled.  Neither task is a decision rule and no outcome word is computed.
+Elapsed 5.0s

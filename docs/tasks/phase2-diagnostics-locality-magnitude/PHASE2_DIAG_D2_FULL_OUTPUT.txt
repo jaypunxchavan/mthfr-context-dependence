@@ -1,0 +1,154 @@
+
+==============================================================================
+D2 -- LOCALITY: does rho_b track distance from position 222? (script 132)
+==============================================================================
+N_BOOT=10000 N_PERM=10000 SEED=0
+RESAMPLING UNIT: BACKGROUND (which of the 96 were drawn). NOT position-within-background (that is script 125's primary unit, not used here).
+NULL MODEL: association null -- dist_b labels shuffled across backgrounds; rho_b is NOT re-derived on any permuted dataset.
+
+------------------------------------------------------------------------------
+INPUT GATE: D1's gated table (sha256 re-checked)
+------------------------------------------------------------------------------
+  data/processed/phase2_diagnostics/background_rho_table.csv
+  sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  script 131 printed sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  INPUT GATE PASS
+  96 unique backgrounds; arms = {'G': 40, 'V': 38, 'S': 18}
+
+[R3] dist_222 provenance: taken from the roster's `position` column, cross-checked against the id-parsed integer and against the roster's wt_aa/mut_aa columns
+  roster/table/id disagreements among 96 backgrounds: 0 (expect 0)
+  R3 PASS: roster `position` == table `position` == id-parsed integer for all 96; Arm S/V/G id prefixes match the table's arm for all 96; Arm G id wt/mut letters match the roster's wt_aa/mut_aa for all 40.
+
+------------------------------------------------------------------------------
+R3 SANITY CHECK: the two H-frame beaters' distances
+------------------------------------------------------------------------------
+  AV_220: roster position = 220 -> dist_222 = |220 - 222| = 2 (plan says 2) -> PASS
+  AV_195: roster position = 195 -> dist_222 = |195 - 222| = 27 (plan says 27) -> PASS
+  (These are the two H-frame beaters that are also close to 222 by the reviews' account.  Shown next to the aggregate correlation below so the raw anecdote and the systematic test are read together, not one instead of the other.)
+
+  analysis sets: all96 n=96; N_only_78 n=78; Arm S (dist_222 = 0 for all 18) excluded from N_only_78
+
+------------------------------------------------------------------------------
+R1-R8 FOUR VIEWS (all reported; none selected)
+------------------------------------------------------------------------------
+    null centring (R6, REVISED post-run -- see script source): permutation null mean=-0.001046 (MCSE 0.001020, |z|=1.03), median=-0.000415 (MCSE 0.001278), sd=0.101974 -> centres on zero
+
+  [all96 | full] n = 96
+    Spearman(rho_b, dist_222) = +0.780559974   (locality predicts a POSITIVE value, R4)
+    background-level bootstrap 95% CI = [+0.704579, +0.832167]  (EXCLUDES ZERO)
+    bootstrap SE = 0.032583; 0/10000 draws NaN (dropped)
+    permutation p (TWO-SIDED on |r|, primary) = 0.000100  = (1 + 0) / (1 + 10000)
+    permutation p (ONE-SIDED, r >= r_obs, locality direction) = 0.000100
+    identity check (R7): forced identity permutation |diff| vs observed = 0.000e+00 (gate < 1e-12)
+    null centring (R6, REVISED post-run -- see script source): permutation null mean=+0.001241 (MCSE 0.001036, |z|=1.20), median=+0.000803 (MCSE 0.001299), sd=0.103622 -> centres on zero
+
+  [all96 | H] n = 96
+    Spearman(rho_b, dist_222) = +0.772047001   (locality predicts a POSITIVE value, R4)
+    background-level bootstrap 95% CI = [+0.690648, +0.825525]  (EXCLUDES ZERO)
+    bootstrap SE = 0.034295; 0/10000 draws NaN (dropped)
+    permutation p (TWO-SIDED on |r|, primary) = 0.000100  = (1 + 0) / (1 + 10000)
+    permutation p (ONE-SIDED, r >= r_obs, locality direction) = 0.000100
+    identity check (R7): forced identity permutation |diff| vs observed = 0.000e+00 (gate < 1e-12)
+    null centring (R6, REVISED post-run -- see script source): permutation null mean=+0.001393 (MCSE 0.001139, |z|=1.22), median=+0.001037 (MCSE 0.001428), sd=0.113934 -> centres on zero
+
+  [N_only_78 | full] n = 78
+    Spearman(rho_b, dist_222) = +0.696831550   (locality predicts a POSITIVE value, R4)
+    background-level bootstrap 95% CI = [+0.576176, +0.784062]  (EXCLUDES ZERO)
+    bootstrap SE = 0.052949; 0/10000 draws NaN (dropped)
+    permutation p (TWO-SIDED on |r|, primary) = 0.000100  = (1 + 0) / (1 + 10000)
+    permutation p (ONE-SIDED, r >= r_obs, locality direction) = 0.000100
+    identity check (R7): forced identity permutation |diff| vs observed = 0.000e+00 (gate < 1e-12)
+    null centring (R6, REVISED post-run -- see script source): permutation null mean=-0.001614 (MCSE 0.001138, |z|=1.42), median=-0.000986 (MCSE 0.001427), sd=0.113842 -> centres on zero
+
+  [N_only_78 | H] n = 78
+    Spearman(rho_b, dist_222) = +0.673992906   (locality predicts a POSITIVE value, R4)
+    background-level bootstrap 95% CI = [+0.547236, +0.766611]  (EXCLUDES ZERO)
+    bootstrap SE = 0.056008; 0/10000 draws NaN (dropped)
+    permutation p (TWO-SIDED on |r|, primary) = 0.000100  = (1 + 0) / (1 + 10000)
+    permutation p (ONE-SIDED, r >= r_obs, locality direction) = 0.000100
+    identity check (R7): forced identity permutation |diff| vs observed = 0.000e+00 (gate < 1e-12)
+
+  side-by-side table:
+      set view  n  rho_dist     ci_lo     ci_hi  excl0     p_two  p_one_hi  null_med
+    all96 full 96 +0.780560 +0.704579 +0.832167   True +0.000100 +0.000100 -0.000415
+    all96    H 96 +0.772047 +0.690648 +0.825525   True +0.000100 +0.000100 +0.000803
+N_only_78 full 78 +0.696832 +0.576176 +0.784062   True +0.000100 +0.000100 +0.001037
+N_only_78    H 78 +0.673993 +0.547236 +0.766611   True +0.000100 +0.000100 -0.000986
+
+------------------------------------------------------------------------------
+POST-HOC ADDENDUM (disclosed): is dist_222 separable from PIN-8 region?
+------------------------------------------------------------------------------
+  Spearman(dist_222, PIN-8 region) over all 96 = +0.523842
+  position 222 region (computed directly, not from the frame): R2  [222 is absent from the frame's 654 target positions -- the atlas never makes its own background residue a target variant]
+  region composition by distance tercile of the 96:
+col_0   1   2   3   4
+row_0                
+near    0  32   0   0
+mid    13   2  17   0
+far     7   0   5  20
+  [full] Spearman(rho_b, dist_222) raw          = +0.780560
+  [full] Spearman(region-demeaned rho_b, dist_222) = +0.690531   (demeaning = 125's own secondary estimator: subtract the within-region mean of delta_b and of own_e_b over the same rows)
+  [full] within-region correlations (the only view in which dist is not confounded with region; small n):
+        region R1 (n=20): Spearman(rho_b, dist_222) = +0.649624
+        region R2 (n=34): Spearman(rho_b, dist_222) = +0.243499
+        region R3 (n=22): Spearman(rho_b, dist_222) = +0.659136
+        region R4 (n=20): Spearman(rho_b, dist_222) = -0.074464
+  [H] Spearman(rho_b, dist_222) raw          = +0.772047
+  [H] Spearman(region-demeaned rho_b, dist_222) = +0.649599   (demeaning = 125's own secondary estimator: subtract the within-region mean of delta_b and of own_e_b over the same rows)
+  [H] within-region correlations (the only view in which dist is not confounded with region; small n):
+        region R1 (n=20): Spearman(rho_b, dist_222) = +0.639098
+        region R2 (n=34): Spearman(rho_b, dist_222) = +0.226780
+        region R3 (n=22): Spearman(rho_b, dist_222) = +0.643886
+        region R4 (n=20): Spearman(rho_b, dist_222) = -0.227905
+
+  READ THIS BEFORE THE CORRELATION ABOVE: a raw correlation of rho_b on distance from 222 partly measures which third of the protein the background sits in.  The region-demeaned and within-region rows above are the honest read on 'locality'.
+
+------------------------------------------------------------------------------
+R9 k-NEAREST-TO-222 REMOVAL FROM N -- REPORTED SIDE BY SIDE, NEITHER SELECTED
+------------------------------------------------------------------------------
+  N (n=78) ordered by (dist_222, bg_id):
+    AV_220(d=2), AV_233(d=11), AV_209(d=13), AV_204(d=18), AV_242(d=20), G_Y197V(d=25), AV_195(d=27), G_I192T(d=30), G_P254F(d=32), G_L178T(d=44), AV_175(d=47), G_E168S(d=54), G_E279K(d=57), AV_155(d=67), AV_292(d=70), AV_293(d=71), AV_145(d=77), AV_302(d=80), AV_311(d=89), G_G317Q(d=95), G_L318F(d=96), AV_116(d=106), AV_328(d=106), G_T115G(d=107), AV_113(d=109), G_M111N(d=111), AV_98(d=124), G_P346V(d=124), AV_350(d=128), AV_353(d=131), G_H354F(d=132), G_R357M(d=135), G_R358V(d=136), AV_85(d=137), AV_84(d=138), AV_368(d=146), AV_73(d=149), AV_70(d=152), G_E383T(d=161), G_W59C(d=163), G_E54R(d=168), G_P395F(d=173), AV_396(d=174), G_K48P(d=174), G_K401S(d=179), G_L408H(d=186), G_K27I(d=195), G_S23A(d=199), AV_19(d=203), G_E16V(d=206), G_S430P(d=208), G_N12P(d=210), AV_5(d=217), G_N3K(d=219), AV_461(d=239), AV_462(d=240), G_A462S(d=240), G_L472H(d=250), G_S494H(d=272), G_K510H(d=288), AV_511(d=289), G_T521D(d=299), AV_522(d=300), AV_524(d=302), G_L526R(d=304), G_T549H(d=327), AV_551(d=329), G_A551K(d=329), AV_558(d=336), G_G562M(d=340), G_V574C(d=352), AV_587(d=365), AV_589(d=367), G_W595H(d=373), G_H613R(d=391), G_D629C(d=407), AV_650(d=428), AV_655(d=433)
+  dist_222 multiplicity within N: {2: 1, 11: 1, 13: 1, 18: 1, 20: 1, 25: 1, 27: 1, 30: 1, 32: 1, 44: 1, 47: 1, 54: 1, 57: 1, 67: 1, 70: 1, 71: 1, 77: 1, 80: 1, 89: 1, 95: 1, 96: 1, 106: 2, 107: 1, 109: 1, 111: 1, 124: 2, 128: 1, 131: 1, 132: 1, 135: 1, 136: 1, 137: 1, 138: 1, 146: 1, 149: 1, 152: 1, 161: 1, 163: 1, 168: 1, 173: 1, 174: 2, 179: 1, 186: 1, 195: 1, 199: 1, 203: 1, 206: 1, 208: 1, 210: 1, 217: 1, 219: 1, 239: 1, 240: 2, 250: 1, 272: 1, 288: 1, 289: 1, 299: 1, 300: 1, 302: 1, 304: 1, 327: 1, 329: 2, 336: 1, 340: 1, 352: 1, 365: 1, 367: 1, 373: 1, 391: 1, 407: 1, 428: 1, 433: 1}
+  TIED dist_222 values present in N: [106, 124, 174, 240, 329] -> broken by ascending bg_id (pre-registered R9)
+
+  rho_b of the 10 N backgrounds nearest 222, next to A222V's own rho (A222V sits at dist_222 = 0 and is not a row of this table):
+         bg_id  arm    d     rho_full        rho_H    <=A222V full?   <=A222V H?
+        AV_220    V    2 -0.084598081 -0.094480281           False         True
+        AV_233    V   11 -0.028766221 -0.037194932           False        False
+        AV_209    V   13 -0.018056192 -0.022231037           False        False
+        AV_204    V   18 -0.002578066 +0.002257283           False        False
+        AV_242    V   20 -0.062924344 -0.067520962           False        False
+       G_Y197V    G   25 -0.076879798 -0.072497990           False        False
+        AV_195    V   27 -0.084161807 -0.093420822           False         True
+       G_I192T    G   30 -0.032947897 -0.029689252           False        False
+       G_P254F    G   32 -0.096243863 -0.101954441            True         True
+       G_L178T    G   44 -0.070330933 -0.074355887           False        False
+         A222V   --    0 -0.088118064 -0.090021683
+  (This table keeps two different facts apart.  The near-222 PLACEHOS are collectively more negative than the far ones -- that is the correlation reported above.  But A222V itself is more negative than essentially all of them, INCLUDING the nearest ones.  A gradient across the background set and an extreme position within the near group are not the same claim, and only the second one bears on p_spec.  Read together with the k-removal table below, which is the direct test of the second claim.)
+
+  ORIGINAL (no removal), |N| = 78, floor = 1/79 = 0.012658228:
+    p_spec(full) = (1 + 1)/(1 + 78) = 0.025316456
+    p_spec(H   ) = (1 + 3)/(1 + 78) = 0.050632911
+
+  k = 5 nearest-to-222 removed from N (|N| = 73, new floor = 1/74 = 0.013513514)
+    removed: AV_220(d=2, arm=V), AV_233(d=11, arm=V), AV_209(d=13, arm=V), AV_204(d=18, arm=V), AV_242(d=20, arm=V)
+    p_spec(full) = (1 + 1)/(1 + 73) = 0.027027027   [original |N|=78: 0.025316456]   still at or below: ['G_P254F']
+    p_spec(H   ) = (1 + 2)/(1 + 73) = 0.040540541   [original |N|=78: 0.050632911]   still at or below: ['AV_195', 'G_P254F']
+
+  k = 10 nearest-to-222 removed from N (|N| = 68, new floor = 1/69 = 0.014492754)
+    removed: AV_220(d=2, arm=V), AV_233(d=11, arm=V), AV_209(d=13, arm=V), AV_204(d=18, arm=V), AV_242(d=20, arm=V), G_Y197V(d=25, arm=G), AV_195(d=27, arm=V), G_I192T(d=30, arm=G), G_P254F(d=32, arm=G), G_L178T(d=44, arm=G)
+    p_spec(full) = (1 + 0)/(1 + 68) = 0.014492754   [original |N|=78: 0.025316456]   still at or below: []
+    p_spec(H   ) = (1 + 0)/(1 + 68) = 0.014492754   [original |N|=78: 0.050632911]   still at or below: []
+
+  BOTH k VALUES ARE REPORTED, NEITHER IS SELECTED, AND NEITHER REDEFINES ANYTHING FROZEN.  This exists so a reader can see how much the pooled p_spec depends on placebo backgrounds that sit near 222 specifically.
+
+------------------------------------------------------------------------------
+D2 SUMMARY
+------------------------------------------------------------------------------
+  all96       full n=96  rho~dist = +0.780560  CI [+0.704579, +0.832167] EXCLUDES ZERO  p_two=0.000100  p_one=0.000100
+  all96       H    n=96  rho~dist = +0.772047  CI [+0.690648, +0.825525] EXCLUDES ZERO  p_two=0.000100  p_one=0.000100
+  N_only_78   full n=78  rho~dist = +0.696832  CI [+0.576176, +0.784062] EXCLUDES ZERO  p_two=0.000100  p_one=0.000100
+  N_only_78   H    n=78  rho~dist = +0.673993  CI [+0.547236, +0.766611] EXCLUDES ZERO  p_two=0.000100  p_one=0.000100
+
+LIMITATIONS: see docstring.  dist_b is SEQUENTIAL residue distance, not structural distance -- a null here is not a null on a structural-locality claim.  The 96 rho_b share one y-vector and are mutually correlated; the background-level bootstrap does not model that shared structure, so these CIs are if anything optimistic about it.  This is an association null, not a re-derivation null: it says the rho-vs-distance association beats chance, not that rho_b exceeds measurement noise.  Any k-removal is a disclosed sensitivity, not a selection.
+Elapsed 7.8s

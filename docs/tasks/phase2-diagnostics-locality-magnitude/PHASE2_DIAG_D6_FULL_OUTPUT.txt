@@ -1,0 +1,139 @@
+
+==============================================================================
+D6 -- SEVERITY GRADIENT (script 135)
+==============================================================================
+N_BOOT=10000 N_PERM=10000 SEED=0
+RESAMPLING UNIT: BACKGROUND (which of the 96 were drawn). NOT position-within-background (script 125's primary unit, not used here).
+NULL MODEL: association null -- severity labels shuffled across backgrounds; rho_b is NOT re-derived on any permuted dataset.
+
+------------------------------------------------------------------------------
+INPUT GATE: D1's gated table (sha256 re-checked)
+------------------------------------------------------------------------------
+  data/processed/phase2_diagnostics/background_rho_table.csv
+  sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  script 131 printed sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  INPUT GATE PASS
+
+------------------------------------------------------------------------------
+LOCATING THE SEVERITY PROXY (not assuming a column name)
+------------------------------------------------------------------------------
+  FILE   : data/processed/task32_analysis_table.csv
+  COLUMN : esm2_score
+  JOIN   : roster (position, mut_aa) -> task32 (position, mut_aa), left
+  RANGE  : -18.007029 .. 7.807393 over 11344 rows, 0 nulls
+
+  SIGN CONVENTION CHECK AGAINST LABELLED EXAMPLES (AGENTS 5):
+    most disruptive (lowest esm2_score):
+      V179W  -18.007029
+      G158H  -17.871993
+      L45D  -17.750033
+      T227W  -17.735583
+    most conservative (highest esm2_score):
+      R594Q  +7.807393
+      R134S  +6.351555
+      M327V  +6.235535
+      L437R  +6.082635
+    -> all four of the lowest destroy a side chain (V->W packs, G->H breaks a helix, L->D and T->W destabilise); all four of the highest are conservative surface substitutions.
+    -> SIGN ESTABLISHED: LOW esm2_score = MORE SEVERE.  severity := -esm2_score.  Both correlations are printed below so the flip cannot be misread.
+
+------------------------------------------------------------------------------
+RETRIEVABILITY: 75 OF 96 -- THE 21 MISSING ARE ACCOUNTED FOR
+------------------------------------------------------------------------------
+  retrieved 75 of 96
+  wt_aa roster vs task32 on the 75 retrieved rows: 0 mismatches (expect 0) -> the join is landing on the right rows, not merely on the right (position, mut_aa) key
+
+  MISSING, Arm S (18): A222_C, A222_D, A222_E, A222_F, A222_G, A222_H, A222_I, A222_K, A222_L, A222_M, A222_N, A222_P, A222_Q, A222_R, A222_S, A222_T, A222_W, A222_Y
+    REASON: position 222 has 0 rows in task32 -- the atlas never treats its own background residue as a target variant.  Same fact as script 125's gate G-C.  All 18 are Arm S, and D6's statistic is over N, so this does not touch the primary test.
+
+  MISSING, Arm G (3):
+    G_E383T: task32 lists E383->{ACDFGHIKLMNRSVWY} and does NOT contain 'T'.  Not a join bug -- the reference table never scored that mutant at that position.
+    G_D629C: task32 lists D629->{AEGHIKLNPRSVY} and does NOT contain 'C'.  Not a join bug -- the reference table never scored that mutant at that position.
+    G_P346V: task32 lists P346->{AFHLNQRST} and does NOT contain 'V'.  Not a join bug -- the reference table never scored that mutant at that position.
+
+  CONSEQUENCE (disclosed): D6's null set is N = 78 minus 3 = 75, NOT 78.  The three excluded backgrounds' own rho values and positions:
+       G_E383T pos=383 dist_222=161  rho_full=-0.020285940  rho_H=-0.011306110
+       G_D629C pos=629 dist_222=407  rho_full=-0.031212310  rho_H=-0.028485037
+       G_P346V pos=346 dist_222=124  rho_full=-0.011818561  rho_H=-0.008553976
+  ALSO: A222V's own severity is NOT retrievable (position 222 absent from task32, same reason as Arm S).  This task can say whether PLACEBO severity tracks rho_b; it cannot place A222V on the same axis.  Stated rather than glossed.
+
+  N = 78; retrievable subset used below = 75
+
+------------------------------------------------------------------------------
+D6.1  Spearman(rho_b, background_severity_b) across N
+------------------------------------------------------------------------------
+  severity = -esm2_score (LOW esm2_score = MORE severe); |N_retrievable| = 75
+
+  [full | severity (-esm2)] n = 75
+    Spearman(rho_b, x) = -0.175504979
+    background-level bootstrap 95% CI = [-0.407048, +0.071882]  (INCLUDES ZERO)
+    permutation p (TWO-SIDED, PRIMARY, D6.3) = 0.134487 = (1 + 1344)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.065893
+    identity check (D6.4): |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D6.5): mean=+0.001213 (MCSE 0.001164), median=+0.003186 (MCSE 0.001459) -> DOES NOT CENTRE ON ZERO
+
+  [full | esm2_score (raw)] n = 75
+    Spearman(rho_b, x) = +0.175504979
+    background-level bootstrap 95% CI = [-0.071882, +0.407048]  (INCLUDES ZERO)
+    permutation p (TWO-SIDED, PRIMARY, D6.3) = 0.134487 = (1 + 1344)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.065893
+    identity check (D6.4): |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D6.5): mean=-0.001213 (MCSE 0.001164), median=-0.003186 (MCSE 0.001459) -> DOES NOT CENTRE ON ZERO
+
+  [H | severity (-esm2)] n = 75
+    Spearman(rho_b, x) = -0.147937411
+    background-level bootstrap 95% CI = [-0.377687, +0.094270]  (INCLUDES ZERO)
+    permutation p (TWO-SIDED, PRIMARY, D6.3) = 0.208179 = (1 + 2081)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.103690
+    identity check (D6.4): |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D6.5): mean=+0.000954 (MCSE 0.001165), median=+0.002617 (MCSE 0.001461) -> centres on zero
+
+  [H | esm2_score (raw)] n = 75
+    Spearman(rho_b, x) = +0.147937411
+    background-level bootstrap 95% CI = [-0.094270, +0.377687]  (INCLUDES ZERO)
+    permutation p (TWO-SIDED, PRIMARY, D6.3) = 0.208179 = (1 + 2081)/(1 + 10000)
+    permutation p (one-sided, observed direction) = 0.103690
+    identity check (D6.4): |diff| = 0.000e+00 (gate < 1e-12)
+    null centring (D6.5): mean=-0.000954 (MCSE 0.001165), median=-0.002617 (MCSE 0.001461) -> centres on zero
+
+  side-by-side (the two axes are exact negatives of each other, so the correlations must be exact negatives -- printed to make the sign convention checkable):
+    full sev                  n=75  rho=-0.175505  CI [-0.407048, +0.071882] INCLUDES ZERO  p_two=0.134487
+    full raw                  n=75  rho=+0.175505  CI [-0.071882, +0.407048] INCLUDES ZERO  p_two=0.134487
+    H    sev                  n=75  rho=-0.147937  CI [-0.377687, +0.094270] INCLUDES ZERO  p_two=0.208179
+    H    raw                  n=75  rho=+0.147937  CI [-0.094270, +0.377687] INCLUDES ZERO  p_two=0.208179
+    sign-convention self-check (full): |-0.175505 + +0.175505| = 0.000e+00 (must be ~0)
+
+------------------------------------------------------------------------------
+D6.2  SEVERITY DISTRIBUTION: Arm V vs Arm G (descriptive)
+------------------------------------------------------------------------------
+  Arm V is exhaustive over A->V positions; Arm G is a seed-0 uniform draw.  They are NOT exchangeable, so this is reported, not tested for significance as a biological contrast.
+  (The severity numbers are identical for `full` and `H` and are printed twice because the loop is over views -- that is correct, not a duplicated computation: a background's severity is a property of the substitution alone and does not depend on which frame's rows the statistic is evaluated over.  Only the rho_b side of D6 changes between views.)
+  [full]
+    Arm V: n=38  severity mean=+4.942302 median=+5.623503 range=[-0.185290, +11.058872] sd=2.935096
+    Arm G: n=37  severity mean=+6.790772 median=+6.464176 range=[-1.398707, +14.907699] sd=4.709865
+    mean severity difference (G - V) = +1.848470; label-permutation p (two-sided) = 0.046295
+    Spearman(severity, dist_222) within N = -0.238414   <- printed because a severity gradient in POSITION would be indistinguishable from D2's locality gradient
+  [H]
+    Arm V: n=38  severity mean=+4.942302 median=+5.623503 range=[-0.185290, +11.058872] sd=2.935096
+    Arm G: n=37  severity mean=+6.790772 median=+6.464176 range=[-1.398707, +14.907699] sd=4.709865
+    mean severity difference (G - V) = +1.848470; label-permutation p (two-sided) = 0.046295
+    Spearman(severity, dist_222) within N = -0.238414   <- printed because a severity gradient in POSITION would be indistinguishable from D2's locality gradient
+
+------------------------------------------------------------------------------
+D6.2b  SAME CORRELATION, SPLIT BY ARM (so an arm-driven result is visible)
+------------------------------------------------------------------------------
+  [full | Arm V] n=38  Spearman(rho_b, severity) = -0.297735  CI [-0.596849, +0.043195] INCLUDES ZERO  p_two=0.072693  identity |diff|=0.0e+00
+  [full | Arm G] n=37  Spearman(rho_b, severity) = -0.137743  CI [-0.474945, +0.240127] INCLUDES ZERO  p_two=0.413759  identity |diff|=0.0e+00
+  [H | Arm V] n=38  Spearman(rho_b, severity) = -0.258781  CI [-0.569960, +0.081770] INCLUDES ZERO  p_two=0.119088  identity |diff|=0.0e+00
+  [H | Arm G] n=37  Spearman(rho_b, severity) = -0.148174  CI [-0.466399, +0.217489] INCLUDES ZERO  p_two=0.378862  identity |diff|=0.0e+00
+  (n = 37-38 per arm: small, and the within-arm CIs are wide.  These are reported so a pooled result driven by one arm cannot hide, not as independent confirmations.)
+
+------------------------------------------------------------------------------
+D6 SUMMARY
+------------------------------------------------------------------------------
+  full sev                  n=75  rho=-0.175505  CI [-0.407048, +0.071882] INCLUDES ZERO  p_two=0.134487
+  full raw                  n=75  rho=+0.175505  CI [-0.071882, +0.407048] INCLUDES ZERO  p_two=0.134487
+  H    sev                  n=75  rho=-0.147937  CI [-0.377687, +0.094270] INCLUDES ZERO  p_two=0.208179
+  H    raw                  n=75  rho=+0.147937  CI [-0.094270, +0.377687] INCLUDES ZERO  p_two=0.208179
+
+LIMITATIONS: see docstring.  esm2_score is a MODEL score, not a measurement.  STRUCTURAL OVERLAP: delta_b(v) = score_b(v) - esm2_score(v) SUBTRACTS the very column used as the severity proxy, so severity and rho_b are not independent quantities and this test cannot separate 'disruptive backgrounds behave differently' from 'subtracting a large constant changes the ranks'.  D6's null set is 75, not 78 (three Arm G backgrounds have no esm2_score row; all three are named in the output).  A222V's own severity is not retrievable, so A222V cannot be placed on this axis.  Arm V and Arm G are not exchangeable, so the arm comparison is descriptive only.  dist_222 (D2) and mean_abs_delta_b (D4) are both already strongly associated with rho_b on this same set of backgrounds -- a severity gradient here is a third overlapping axis, not independent corroboration.  The 75 rho_b share one y-vector and are mutually correlated; the background-level bootstrap does not model that, so these CIs are if anything optimistic.  Nothing here is a decision rule.
+Elapsed 13.7s
