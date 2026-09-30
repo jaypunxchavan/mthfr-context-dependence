@@ -1,0 +1,184 @@
+
+==============================================================================
+D9 -- SHIFT-ADJUSTED p_spec: THE FROZEN CONSTRUCTION ON RESIDUALS (script 137)
+==============================================================================
+SCOPE: descriptive.  p_spec_adj is a companion to the frozen p_spec, never a replacement.  No outcome word is computed or used as a label.
+RESAMPLING UNIT: NONE.  No bootstrap, no permutation, no Monte-Carlo uncertainty.  N_BOOT / N_PERM are not read by this script.  Every number below is a deterministic OLS fit on a fixed set of points or an exact rank count.
+INEQUALITY DIRECTION: FROZEN.  one-sided, signed, r_b <= r_A.  It is not flipped anywhere in this script.
+
+------------------------------------------------------------------------------
+GATE D9-G1 (HARD; tol 1e-8 on correlations, 2e-6 on the 6-dp quantities) -- reproduce D4's PRINTED values before any new analysis
+------------------------------------------------------------------------------
+  input table sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] D9-G1 input table sha256: match
+  script 134 imported; its ols_resid is the residualiser used throughout (imported, not reimplemented).
+  [PASS] D9-G1 Spearman(rho_b, mean|delta|) (full): got -0.6141888225718937 vs -0.614188823 |diff|=4.281e-10
+  [PASS] D9-G1 all-96 OLS slope (full): got -0.896325500 vs -0.896326
+  [PASS] D9-G1 all-96 OLS intercept (full): got +0.034053200 vs 0.034053
+  [PASS] D9-G1 A222V mean|delta| (full): got 0.070330 vs 0.07033
+  [PASS] D9-G1 A222V residual, all-96 fit (full): got -0.059133 vs -0.059133
+  [PASS] D9-G1 G_P254F mean|delta| (full): got 0.208008 vs 0.208008
+  [PASS] D9-G1 G_P254F residual, all-96 fit (full): got +0.056146 vs +0.056146
+  [PASS] D9-G1 AV_220 mean|delta| (full): got 0.047893 vs 0.047893
+  [PASS] D9-G1 AV_220 residual, all-96 fit (full): got -0.075724 vs -0.075724
+  [PASS] D9-G1 AV_195 mean|delta| (full): got 0.095630 vs 0.09563
+  [PASS] D9-G1 AV_195 residual, all-96 fit (full): got -0.032500 vs -0.032500
+  [PASS] D9-G1 Spearman(rho_b, mean|delta|) (H): got -0.6126966901790558 vs -0.61269669 |diff|=1.791e-10
+  [PASS] D9-G1 all-96 OLS slope (H): got -0.964705251 vs -0.964705
+  [PASS] D9-G1 all-96 OLS intercept (H): got +0.037990057 vs 0.03799
+  [PASS] D9-G1 A222V mean|delta| (H): got 0.069403 vs 0.069403
+  [PASS] D9-G1 A222V residual, all-96 fit (H): got -0.061058 vs -0.061058
+  [PASS] D9-G1 G_P254F mean|delta| (H): got 0.200143 vs 0.200143
+  [PASS] D9-G1 G_P254F residual, all-96 fit (H): got +0.053135 vs +0.053135
+  [PASS] D9-G1 AV_220 mean|delta| (H): got 0.050233 vs 0.050233
+  [PASS] D9-G1 AV_220 residual, all-96 fit (H): got -0.084010 vs -0.084010
+  [PASS] D9-G1 AV_195 mean|delta| (H): got 0.098154 vs 0.098154
+  [PASS] D9-G1 AV_195 residual, all-96 fit (H): got -0.036722 vs -0.036722
+
+  23/23 D9-G1 checks PASS, 0 FAIL
+  GATE PASS: D4's printed values reproduce.  New analysis below.
+
+------------------------------------------------------------------------------
+D9 -- THE THREE RESIDUAL VARIANTS
+------------------------------------------------------------------------------
+PRIMARY = leave-one-out on N (designated in advance; every residual comes from a fit that excluded that background, so A222V and the nulls are exchangeable).
+SENS 1  = in-sample fit on N (fit once on the 78).
+SENS 2  = D4's all-96 fit (Arm S included, A222V excluded).
+
+  === PRIMARY (leave-one-out on N) ===
+    [full]  fit on n = 78;  OLS rho ~ +0.029386 -0.726287*mean|delta|
+      A222V  mean|delta| = 0.070330  rho = -0.088118  ->  r_A = -0.066425
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.047893    -0.084598    -0.080278
+                        AV_85    V       137     0.039341    -0.071229    -0.073252
+    [H]  fit on n = 78;  OLS rho ~ +0.032440 -0.774750*mean|delta|
+      A222V  mean|delta| = 0.069403  rho = -0.090022  ->  r_A = -0.068692
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.050233    -0.094480    -0.089189
+                        AV_85    V       137     0.042106    -0.081935    -0.083078
+
+  === SENSITIVITY 1 (in-sample fit on N) ===
+    [full]  fit on n = 78;  OLS rho ~ +0.029386 -0.726287*mean|delta|
+      A222V  mean|delta| = 0.070330  rho = -0.088118  ->  r_A = -0.066425
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.047893    -0.084598    -0.079201
+                        AV_85    V       137     0.039341    -0.071229    -0.072043
+    [H]  fit on n = 78;  OLS rho ~ +0.032440 -0.774750*mean|delta|
+      A222V  mean|delta| = 0.069403  rho = -0.090022  ->  r_A = -0.068692
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.050233    -0.094480    -0.088002
+                        AV_85    V       137     0.042106    -0.081935    -0.081753
+
+  === SENSITIVITY 2 (D4's all-96 fit) ===
+    [full]  fit on n = 96;  OLS rho ~ +0.034053 -0.896326*mean|delta|
+      A222V  mean|delta| = 0.070330  rho = -0.088118  ->  r_A = -0.059133
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.047893    -0.084598    -0.075724
+                        AV_85    V       137     0.039341    -0.071229    -0.070021
+    [H]  fit on n = 96;  OLS rho ~ +0.037990 -0.964705*mean|delta|
+      A222V  mean|delta| = 0.069403  rho = -0.090022  ->  r_A = -0.061058
+      #{b in N : r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 3/79  (rank 1 = most negative)
+      nulls at or below r_A:      bg_id  arm  dist_222  mean|delta|          rho          r_b
+                       AV_220    V         2     0.050233    -0.094480    -0.084010
+                        AV_85    V       137     0.042106    -0.081935    -0.079305
+
+------------------------------------------------------------------------------
+TEN MOST NEGATIVE NULL RESIDUALS -- PRIMARY (leave-one-out on N)
+------------------------------------------------------------------------------
+So the reader can see exactly who lies beyond A222V.  A222V's own r_A is marked.  These are DETERMINISTIC fits, not resampled draws.
+
+  [full]  A222V r_A = -0.066425
+    rank      bg_id  arm  dist_222  mean|delta|          rho          r_b  <= r_A?
+       1     AV_220    V         2     0.047893    -0.084598    -0.080278      YES
+       2      AV_85    V       137     0.039341    -0.071229    -0.073252      YES
+       3    G_L178T    G        44     0.063864    -0.070331    -0.054126       no
+       4     AV_242    V        20     0.055971    -0.062924    -0.052335       no
+       5     AV_113    V       109     0.079641    -0.077808    -0.050605       no
+       6     AV_293    V        71     0.062199    -0.062145    -0.047020       no
+       7     AV_195    V        27     0.095630    -0.084162    -0.046124       no
+       8     AV_116    V       106     0.075102    -0.068926    -0.044702       no
+       9     AV_155    V        67     0.081750    -0.070396    -0.041520       no
+      10     AV_145    V        77     0.065572    -0.055803    -0.038149       no
+    -> 2 of the 78 nulls are at or below A222V's residual on this view
+
+  [H]  A222V r_A = -0.068692
+    rank      bg_id  arm  dist_222  mean|delta|          rho          r_b  <= r_A?
+       1     AV_220    V         2     0.050233    -0.094480    -0.089189      YES
+       2      AV_85    V       137     0.042106    -0.081935    -0.083078      YES
+       3     AV_242    V        20     0.051866    -0.067521    -0.060568       no
+       4     AV_155    V        67     0.087136    -0.088806    -0.055422       no
+       5    G_L178T    G        44     0.071155    -0.074356    -0.052569       no
+       6     AV_195    V        27     0.098154    -0.093421    -0.052149       no
+       7     AV_113    V       109     0.095327    -0.086932    -0.047446       no
+       8     AV_175    V        47     0.064560    -0.061863    -0.044926       no
+       9      AV_73    V       149     0.058394    -0.053321    -0.041053       no
+      10     AV_293    V        71     0.065113    -0.058014    -0.040595       no
+    -> 2 of the 78 nulls are at or below A222V's residual on this view
+
+------------------------------------------------------------------------------
+D9 SUMMARY TABLE
+------------------------------------------------------------------------------
+                             variant  view   k  p_spec_adj         r_A    rank  vs frozen threshold
+        PRIMARY (leave-one-out on N)  full   2    0.037975   -0.066425    3/79  AT OR BELOW 0.05
+        PRIMARY (leave-one-out on N)     H   2    0.037975   -0.068692    3/79  AT OR BELOW 0.1
+  SENSITIVITY 1 (in-sample fit on N)  full   2    0.037975   -0.066425    3/79  AT OR BELOW 0.05
+  SENSITIVITY 1 (in-sample fit on N)     H   2    0.037975   -0.068692    3/79  AT OR BELOW 0.1
+     SENSITIVITY 2 (D4's all-96 fit)  full   2    0.037975   -0.059133    3/79  AT OR BELOW 0.05
+     SENSITIVITY 2 (D4's all-96 fit)     H   2    0.037975   -0.061058    3/79  AT OR BELOW 0.1
+
+                             variant  view       slope   intercept  n_fit
+        PRIMARY (leave-one-out on N)  full   -0.726287   +0.029386     78
+        PRIMARY (leave-one-out on N)     H   -0.774750   +0.032440     78
+  SENSITIVITY 1 (in-sample fit on N)  full   -0.726287   +0.029386     78
+  SENSITIVITY 1 (in-sample fit on N)     H   -0.774750   +0.032440     78
+     SENSITIVITY 2 (D4's all-96 fit)  full   -0.896326   +0.034053     96
+     SENSITIVITY 2 (D4's all-96 fit)     H   -0.964705   +0.037990     96
+
+------------------------------------------------------------------------------
+D9 GATE TABLE (for the SUMMARY)
+------------------------------------------------------------------------------
+  [PASS] D9-G1 input table sha256: match
+  [PASS] D9-G1 Spearman(rho_b, mean|delta|) (full): got -0.6141888225718937 vs -0.614188823 |diff|=4.281e-10
+  [PASS] D9-G1 all-96 OLS slope (full): got -0.896325500 vs -0.896326
+  [PASS] D9-G1 all-96 OLS intercept (full): got +0.034053200 vs 0.034053
+  [PASS] D9-G1 A222V mean|delta| (full): got 0.070330 vs 0.07033
+  [PASS] D9-G1 A222V residual, all-96 fit (full): got -0.059133 vs -0.059133
+  [PASS] D9-G1 G_P254F mean|delta| (full): got 0.208008 vs 0.208008
+  [PASS] D9-G1 G_P254F residual, all-96 fit (full): got +0.056146 vs +0.056146
+  [PASS] D9-G1 AV_220 mean|delta| (full): got 0.047893 vs 0.047893
+  [PASS] D9-G1 AV_220 residual, all-96 fit (full): got -0.075724 vs -0.075724
+  [PASS] D9-G1 AV_195 mean|delta| (full): got 0.095630 vs 0.09563
+  [PASS] D9-G1 AV_195 residual, all-96 fit (full): got -0.032500 vs -0.032500
+  [PASS] D9-G1 Spearman(rho_b, mean|delta|) (H): got -0.6126966901790558 vs -0.61269669 |diff|=1.791e-10
+  [PASS] D9-G1 all-96 OLS slope (H): got -0.964705251 vs -0.964705
+  [PASS] D9-G1 all-96 OLS intercept (H): got +0.037990057 vs 0.03799
+  [PASS] D9-G1 A222V mean|delta| (H): got 0.069403 vs 0.069403
+  [PASS] D9-G1 A222V residual, all-96 fit (H): got -0.061058 vs -0.061058
+  [PASS] D9-G1 G_P254F mean|delta| (H): got 0.200143 vs 0.200143
+  [PASS] D9-G1 G_P254F residual, all-96 fit (H): got +0.053135 vs +0.053135
+  [PASS] D9-G1 AV_220 mean|delta| (H): got 0.050233 vs 0.050233
+  [PASS] D9-G1 AV_220 residual, all-96 fit (H): got -0.084010 vs -0.084010
+  [PASS] D9-G1 AV_195 mean|delta| (H): got 0.098154 vs 0.098154
+  [PASS] D9-G1 AV_195 residual, all-96 fit (H): got -0.036722 vs -0.036722
+
+  D9-G1: PASS (23/23 checks).
+
+LIMITATIONS (printed, not just in the docstring): PARTIAL CONSTRUCTIONAL OVERLAP -- mean_abs_delta_b and rho_b are both functions of the SAME delta_b, so this is not an independent control; it removes the overall-magnitude component of delta_b and nothing else.  A surviving (or failed) p_spec_adj is NOT evidence that delta_b's influence is gone or absent -- only that its overall magnitude does or does not account for the ranking.  mean|delta| is scale-only and blind to sign, so a shift confound operating through heteroscedasticity or sign pattern is neither removed nor ruled out.  Leave-one-out residuals are exact but not exchangeable draws from a common population: they come from 78 overlapping fits on the same 78 points, and a background at a leverage point gets a larger LOO residual mechanically, so a small p_spec_adj is a rank count and not a calibrated tail probability.  The 96 rho_b share one y-vector and are mutually correlated; that is disclosed, not modelled.  NOTHING HERE IS A DECISION RULE AND NOTHING FROZEN IS REDEFINED.  No resampling was performed in this task: no bootstrap, no permutation, N_BOOT/N_PERM not read.
+Elapsed 0.7s

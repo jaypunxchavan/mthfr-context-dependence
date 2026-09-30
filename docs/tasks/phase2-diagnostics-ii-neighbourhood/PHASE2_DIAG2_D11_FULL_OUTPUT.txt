@@ -1,0 +1,332 @@
+
+==============================================================================
+D11 -- 3D STRUCTURAL DISTANCE TO RESIDUE 222 (script 139)
+==============================================================================
+SCOPE: descriptive.  No torch, no esm, no model scoring, no Biopython, no thermompnn import anywhere in this script.
+LOADER: script 126's dependency-free SOURCE 3 float64 fixed-column parse, TRANSCRIBED VERBATIM (lines 322-344) -- it cannot be imported because script 126 executes `from thermompnn.ssm_utils import load_pdb` at module level and that package pulls in torch.
+  verified before writing this script: `import thermompnn.ssm_utils` -> IMPORT OK, 'torch' in sys.modules -> True.  Script 107's load_pdb is therefore NOT usable under this session's rules.
+RESAMPLING UNIT: BACKGROUND for D11.2 and D11.4 (10,000 draws, SEED=0, per-background rho_b / mean|delta| / distance held FIXED).  D11.1, D11.3, D11.5 do NO resampling.
+  N_BOOT=10000 N_PERM=10000 SEED=0
+
+------------------------------------------------------------------------------
+D11-G1 (HARD GATES) -- (a) numbering mapping, (b) script 107's known figures
+------------------------------------------------------------------------------
+  background_rho_table.csv sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796  MATCH
+
+  STRUCTURE READ: data/raw/6FCX.pdb
+    max |coordinate| in file = 67.107 A
+    chain A: 596 CA-resolved residues, window 40..651
+    chain B: 590 CA-resolved residues, window 41..648
+    elements present: chain A ['C', 'N', 'O', 'S'], chain B ['C', 'N', 'O', 'S']
+    hydrogens in the heavy set: 0 -> 'heavy atoms only' requires no filtering
+    chain A internal gaps: ['161-171', '392-396']
+    chain B internal gaps: ['161-171', '203-204', '220-221', '314-316']
+
+  frozen frame: task77_thermompnnD_doubles.csv rows with own_e_b finite = 9595 (586 distinct positions)
+  [PASS] D11-G1a numbering mapping: |d_AA(p) - stored ca_dist_222|: max|diff| = 7.105e-15 A over 9595 rows (gate < 1e-06); unresolved positions in this frame are 0
+  [PASS] D11-G1b monomer far (>10 A): 9232/9595 = 96.2168% (script 107/126: 9232 = 96.22%)
+  [PASS] D11-G1b dimer-aware far (>10 A): 9128/9595 = 95.1329% (script 107/126: 9128 = 95.13%)
+
+  3/3 D11-G1 checks PASS, 0 FAIL
+  GATE PASS: numbering mapping reproduces to 7.105e-15 A and script 107's known figures reproduce exactly. D11 proceeds.
+
+------------------------------------------------------------------------------
+D11.1 -- 3D DISTANCES FOR ALL 96 BACKGROUNDS
+------------------------------------------------------------------------------
+  wrote data/processed/phase2_diagnostics/background_3d_distance.csv  (96 rows + header)
+  sha256 = 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+
+  RESOLUTION ACCOUNTING -- no position is imputed, ever:
+    chain A resolves 40..651 with internal gaps 161-171 and 392-396
+    so positions 2-39, 161-171, 392-396 and 652-656 have NO chain-A coordinates
+    unresolved backgrounds: 11 of 96 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    of those, in the NULL SET N: 11 -> ['AV_19', 'AV_396', 'AV_5', 'AV_655', 'G_E168S', 'G_E16V', 'G_K27I', 'G_N12P', 'G_N3K', 'G_P395F', 'G_S23A']
+    N = 78; resolved N (the D11 subset) = 67
+
+  d3_CA over the 96: min = 0.000 A, median = 25.098 A, max = 76.194 A
+  d3_atom over the 96: min = 0.000 A, median = 23.983 A, max = 71.264 A
+
+  NOTE ON d3_atom: the plan's phrase 'minimum heavy-atom distance in chain A' is read LITERALLY as min over ALL heavy atoms of residue p and ALL heavy atoms of residue 222, both in chain A.  This is a different quantity from a CA-CA contact and is always smaller; it is a sensitivity, never primary.
+
+  full 3D table:
+  bg_id arm  position  dist_seq     d3_CA  d3_dimer   d3_atom  resolved
+ A222_C   S       222         0  0.000000  0.000000  0.000000      True
+ A222_D   S       222         0  0.000000  0.000000  0.000000      True
+ A222_E   S       222         0  0.000000  0.000000  0.000000      True
+ A222_F   S       222         0  0.000000  0.000000  0.000000      True
+ A222_G   S       222         0  0.000000  0.000000  0.000000      True
+ A222_H   S       222         0  0.000000  0.000000  0.000000      True
+ A222_I   S       222         0  0.000000  0.000000  0.000000      True
+ A222_K   S       222         0  0.000000  0.000000  0.000000      True
+ A222_L   S       222         0  0.000000  0.000000  0.000000      True
+ A222_M   S       222         0  0.000000  0.000000  0.000000      True
+ A222_N   S       222         0  0.000000  0.000000  0.000000      True
+ A222_P   S       222         0  0.000000  0.000000  0.000000      True
+ A222_Q   S       222         0  0.000000  0.000000  0.000000      True
+ A222_R   S       222         0  0.000000  0.000000  0.000000      True
+ A222_S   S       222         0  0.000000  0.000000  0.000000      True
+ A222_T   S       222         0  0.000000  0.000000  0.000000      True
+ A222_W   S       222         0  0.000000  0.000000  0.000000      True
+ A222_Y   S       222         0  0.000000  0.000000  0.000000      True
+ AV_113   V       113       109 20.330866 20.121366 19.045801      True
+ AV_116   V       116       106 22.959513 22.404138 21.759228      True
+ AV_145   V       145        77 17.953086 17.234495 16.671476      True
+ AV_155   V       155        67  8.638769  8.638769  7.564229      True
+ AV_175   V       175        47 10.536870 10.536870  9.096768      True
+  AV_19   V        19       203       NaN       NaN       NaN     False
+ AV_195   V       195        27 10.150227 10.150227  8.881864      True
+ AV_204   V       204        18 20.625921 20.625921 19.466240      True
+ AV_209   V       209        13 18.861612 18.861612 16.574196      True
+ AV_220   V       220         2  6.480267  6.480267  5.568054      True
+ AV_233   V       233        11 24.486598 24.486598 23.037179      True
+ AV_242   V       242        20 17.903214 17.903214 16.508795      True
+ AV_292   V       292        70 39.912996 39.912996 38.950488      True
+ AV_293   V       293        71 40.571160 40.571160 38.834057      True
+ AV_302   V       302        80 28.059659 28.059659 27.294760      True
+ AV_311   V       311        89 26.344117 24.421140 25.533518      True
+ AV_328   V       328       106 31.132747 30.984658 29.946760      True
+ AV_350   V       350       128 31.429212 30.005385 30.475325      True
+ AV_353   V       353       131 22.455822 21.803953 20.638031      True
+ AV_368   V       368       146 40.187323 38.959240 39.100905      True
+ AV_396   V       396       174       NaN 38.699985       NaN     False
+ AV_461   V       461       239 43.658702 41.857383 43.120806      True
+ AV_462   V       462       240 45.252437 43.444750 44.285754      True
+   AV_5   V         5       217       NaN       NaN       NaN     False
+ AV_511   V       511       289 51.824541 50.840500 51.547942      True
+ AV_522   V       522       300 63.089243 49.975157 62.249261      True
+ AV_524   V       524       302 67.607711 51.017443 66.665153      True
+ AV_551   V       551       329 54.215186 36.273008 52.945578      True
+ AV_558   V       558       336 45.621326 42.491635 45.228393      True
+ AV_587   V       587       365 47.988483 46.749668 47.098513      True
+ AV_589   V       589       367 49.350971 47.935773 48.222573      True
+ AV_650   V       650       428 76.193832 65.403532 71.264187      True
+ AV_655   V       655       433       NaN       NaN       NaN     False
+  AV_70   V        70       152 33.766375 33.766375 33.349271      True
+  AV_73   V        73       149 30.177811 30.177811 30.002713      True
+  AV_84   V        84       138 26.120220 25.661387 26.120220      True
+  AV_85   V        85       137 29.080031 28.478974 28.185105      True
+  AV_98   V        98       124 26.349219 26.149820 24.950776      True
+G_A462S   G       462       240 45.252437 43.444750 44.285754      True
+G_A551K   G       551       329 54.215186 36.273008 52.945578      True
+G_D629C   G       629       407 59.128434 55.032737 58.849312      True
+G_E168S   G       168        54       NaN       NaN       NaN     False
+ G_E16V   G        16       206       NaN       NaN       NaN     False
+G_E279K   G       279        57 36.759440 36.759440 34.958016      True
+G_E383T   G       383       161 30.907942 30.907942 30.702099      True
+ G_E54R   G        54       168 20.097963 18.370330 18.904757      True
+G_G317Q   G       317        95 17.647561 16.926383 17.357683      True
+G_G562M   G       562       340 41.404140 40.962008 40.657843      True
+G_H354F   G       354       132 22.237705 21.714747 21.900795      True
+G_H613R   G       613       391 56.937907 54.807645 54.032514      True
+G_I192T   G       192        30  5.058262  4.948035  3.824856      True
+ G_K27I   G        27       195       NaN       NaN       NaN     False
+G_K401S   G       401       179 38.567428 38.567428 37.154159      True
+ G_K48P   G        48       174 15.882831 13.860180 14.949694      True
+G_K510H   G       510       288 50.182094 48.942902 48.910386      True
+G_L178T   G       178        44 10.312666  9.803922  9.022714      True
+G_L318F   G       318        96 18.650250 18.609909 18.135901      True
+G_L408H   G       408       186 42.943226 34.845630 41.607728      True
+G_L472H   G       472       250 58.776851 56.944921 57.425804      True
+G_L526R   G       526       304 64.610260 45.985204 62.723671      True
+G_M111N   G       111       111 24.284687 24.037807 23.311568      True
+ G_N12P   G        12       210       NaN       NaN       NaN     False
+  G_N3K   G         3       219       NaN       NaN       NaN     False
+G_P254F   G       254        32 16.280091 15.926540 15.391336      True
+G_P346V   G       346       124 31.985621 31.109472 29.880688      True
+G_P395F   G       395       173       NaN 37.194078       NaN     False
+G_R357M   G       357       135 26.102929 26.052515 24.886492      True
+G_R358V   G       358       136 25.097884 24.659823 19.103103      True
+ G_S23A   G        23       199       NaN       NaN       NaN     False
+G_S430P   G       430       208 62.730299 60.727375 60.556578      True
+G_S494H   G       494       272 40.813982 39.095881 40.813982      True
+G_T115G   G       115       107 25.020999 24.487094 23.983483      True
+G_T521D   G       521       299 65.257300 53.643655 63.870911      True
+G_T549H   G       549       327 56.859906 38.671746 54.612558      True
+G_V574C   G       574       352 43.601672 43.174092 42.423516      True
+G_W595H   G       595       373 52.336381 50.323498 51.071644      True
+ G_W59C   G        59       163 20.111651 18.738739 14.300668      True
+G_Y197V   G       197        25 15.721985 15.721985 13.971264      True
+
+------------------------------------------------------------------------------
+D11.2 -- IS LOCALITY SPATIAL?  Spearman(rho_b, d3_CA) on the IDENTICAL resolved subset
+------------------------------------------------------------------------------
+  RESAMPLING UNIT: BACKGROUND.  Each draw resamples which of the 67 resolved nulls were drawn, n = 67 with replacement; each background's rho_b and distance are held FIXED.  N_BOOT = 10000, N_PERM = 10000, SEED = 0.
+  NULL MODEL: ASSOCIATION null (distance labels shuffled across backgrounds; rho_b is NOT re-derived).  Identity check and null-centring check are run in every view.
+  *** The SEQUENCE-distance correlation is recomputed on the SAME resolved subset so the two are comparable.  D2's numbers used n = 78 and must NOT be compared against these. ***
+
+                 set  view                       axis    n    Spearman                     95% CI  excl0     p_two
+    all96 (resolved)  full           d3_CA  [PRIMARY]   85   +0.793553 [+0.715280, +0.845734]   True  0.000100
+    all96 (resolved)  full    dist_seq  [SAME SUBSET]   85   +0.779383 [+0.687504, +0.838500]   True  0.000100
+    all96 (resolved)  full    d3_dimer  [SENSITIVITY]   85   +0.788585 [+0.705677, +0.844906]   True  0.000100
+    all96 (resolved)  full     d3_atom  [SENSITIVITY]   85   +0.787603 [+0.705733, +0.841206]   True  0.000100
+    all96 (resolved)     H           d3_CA  [PRIMARY]   85   +0.791540 [+0.712508, +0.844979]   True  0.000100
+    all96 (resolved)     H    dist_seq  [SAME SUBSET]   85   +0.775692 [+0.687297, +0.834959]   True  0.000100
+    all96 (resolved)     H    d3_dimer  [SENSITIVITY]   85   +0.785001 [+0.703060, +0.841129]   True  0.000100
+    all96 (resolved)     H     d3_atom  [SENSITIVITY]   85   +0.785924 [+0.703020, +0.841078]   True  0.000100
+   N_only (resolved)  full           d3_CA  [PRIMARY]   67   +0.731577 [+0.600332, +0.817699]   True  0.000100
+   N_only (resolved)  full    dist_seq  [SAME SUBSET]   67   +0.713294 [+0.579689, +0.806713]   True  0.000100
+   N_only (resolved)  full    d3_dimer  [SENSITIVITY]   67   +0.724035 [+0.588062, +0.815498]   True  0.000100
+   N_only (resolved)  full     d3_atom  [SENSITIVITY]   67   +0.720962 [+0.581481, +0.812259]   True  0.000100
+   N_only (resolved)     H           d3_CA  [PRIMARY]   67   +0.713319 [+0.571904, +0.809793]   True  0.000100
+   N_only (resolved)     H    dist_seq  [SAME SUBSET]   67   +0.695235 [+0.561403, +0.791078]   True  0.000100
+   N_only (resolved)     H    d3_dimer  [SENSITIVITY]   67   +0.702065 [+0.557926, +0.801047]   True  0.000100
+   N_only (resolved)     H     d3_atom  [SENSITIVITY]   67   +0.703342 [+0.555247, +0.804826]   True  0.000100
+
+  sanity checks (identity + centring), every view:
+      all96 (resolved)  full     d3_CA  identity |diff| = 0.000e+00  null mean = -0.001445 (MCSE 0.001084), median = -0.002111 (MCSE 0.001359) -> centres on zero
+      all96 (resolved)  full  dist_seq  identity |diff| = 0.000e+00  null mean = -0.001358 (MCSE 0.001087), median = -0.001826 (MCSE 0.001362) -> centres on zero
+      all96 (resolved)  full  d3_dimer  identity |diff| = 0.000e+00  null mean = -0.001615 (MCSE 0.001083), median = -0.001797 (MCSE 0.001357) -> centres on zero
+      all96 (resolved)  full   d3_atom  identity |diff| = 0.000e+00  null mean = -0.001359 (MCSE 0.001083), median = -0.001757 (MCSE 0.001357) -> centres on zero
+      all96 (resolved)     H     d3_CA  identity |diff| = 0.000e+00  null mean = -0.001664 (MCSE 0.001085), median = -0.002239 (MCSE 0.001360) -> centres on zero
+      all96 (resolved)     H  dist_seq  identity |diff| = 0.000e+00  null mean = -0.001616 (MCSE 0.001088), median = -0.001286 (MCSE 0.001364) -> centres on zero
+      all96 (resolved)     H  d3_dimer  identity |diff| = 0.000e+00  null mean = -0.001807 (MCSE 0.001083), median = -0.002199 (MCSE 0.001357) -> centres on zero
+      all96 (resolved)     H   d3_atom  identity |diff| = 0.000e+00  null mean = -0.001596 (MCSE 0.001084), median = -0.001954 (MCSE 0.001358) -> centres on zero
+     N_only (resolved)  full     d3_CA  identity |diff| = 0.000e+00  null mean = -0.001227 (MCSE 0.001228), median = -0.000798 (MCSE 0.001540) -> centres on zero
+     N_only (resolved)  full  dist_seq  identity |diff| = 0.000e+00  null mean = -0.001125 (MCSE 0.001235), median = +0.000639 (MCSE 0.001547) -> centres on zero
+     N_only (resolved)  full  d3_dimer  identity |diff| = 0.000e+00  null mean = -0.001169 (MCSE 0.001231), median = -0.001556 (MCSE 0.001543) -> centres on zero
+     N_only (resolved)  full   d3_atom  identity |diff| = 0.000e+00  null mean = -0.001119 (MCSE 0.001229), median = -0.000499 (MCSE 0.001541) -> centres on zero
+     N_only (resolved)     H     d3_CA  identity |diff| = 0.000e+00  null mean = -0.001273 (MCSE 0.001228), median = -0.000878 (MCSE 0.001539) -> centres on zero
+     N_only (resolved)     H  dist_seq  identity |diff| = 0.000e+00  null mean = -0.001256 (MCSE 0.001233), median = +0.000499 (MCSE 0.001545) -> centres on zero
+     N_only (resolved)     H  d3_dimer  identity |diff| = 0.000e+00  null mean = -0.001152 (MCSE 0.001230), median = -0.001497 (MCSE 0.001541) -> centres on zero
+     N_only (resolved)     H   d3_atom  identity |diff| = 0.000e+00  null mean = -0.001184 (MCSE 0.001229), median = -0.000519 (MCSE 0.001540) -> centres on zero
+
+  HEAD TO HEAD on the IDENTICAL resolved N-only subset (n = 67), full frame:
+    Spearman(rho, dist_seq) = +0.713293691  CI [+0.579689, +0.806713]  p_two=0.000100
+    Spearman(rho, d3_CA)    = +0.731577372  CI [+0.600332, +0.817699]  p_two=0.000100
+    -> 3D distance tracks rho at least as well as sequence distance does (d3_CA is 1.026x the sequence coefficient on this subset)
+
+------------------------------------------------------------------------------
+D11.3 -- WHERE ARE THE BEATERS IN SPACE?
+------------------------------------------------------------------------------
+  ranks by 3D distance are among the 67 RESOLVED nulls (unresolved ones are excluded from the ranking and are never imputed)
+
+       bg_id  arm  dist_seq     d3_CA   d3_dimer   d3_atom   3D rank  note
+      AV_220    V         2     6.480      6.480     5.568         2  BEATER (at or below A222V on rho); in the 10 sequence-nearest
+      AV_195    V        27    10.150     10.150     8.882         4  BEATER (at or below A222V on rho); in the 10 sequence-nearest
+     G_P254F    G        32    16.280     15.927    15.391         9  BEATER (at or below A222V on rho); in the 10 sequence-nearest
+      AV_233    V        11    24.487     24.487    23.037        23  in the 10 sequence-nearest
+      AV_209    V        13    18.862     18.862    16.574        14  in the 10 sequence-nearest
+      AV_204    V        18    20.626     20.626    19.466        18  in the 10 sequence-nearest
+      AV_242    V        20    17.903     17.903    16.509        11  in the 10 sequence-nearest
+     G_Y197V    G        25    15.722     15.722    13.971         7  in the 10 sequence-nearest
+     G_I192T    G        30     5.058      4.948     3.825         1  in the 10 sequence-nearest
+     G_L178T    G        44    10.313      9.804     9.023         5  in the 10 sequence-nearest
+
+  the 10 NEAREST nulls BY 3D DISTANCE (d3_CA):
+      1.    G_I192T arm=G  d3_CA=  5.058 A  dist_seq= 30  
+      2.     AV_220 arm=V  d3_CA=  6.480 A  dist_seq=  2  <-- BEATER
+      3.     AV_155 arm=V  d3_CA=  8.639 A  dist_seq= 67  
+      4.     AV_195 arm=V  d3_CA= 10.150 A  dist_seq= 27  <-- BEATER
+      5.    G_L178T arm=G  d3_CA= 10.313 A  dist_seq= 44  
+      6.     AV_175 arm=V  d3_CA= 10.537 A  dist_seq= 47  
+      7.    G_Y197V arm=G  d3_CA= 15.722 A  dist_seq= 25  
+      8.     G_K48P arm=G  d3_CA= 15.883 A  dist_seq=174  
+      9.    G_P254F arm=G  d3_CA= 16.280 A  dist_seq= 32  <-- BEATER
+     10.    G_G317Q arm=G  d3_CA= 17.648 A  dist_seq= 95  
+
+  the 3 3D-nearest beater ranks: AV_220 rank 2, AV_195 rank 4, G_P254F rank 9
+  the informative question is whether the beaters are also 3D-near, NOT whether removing them lowers p_spec.
+
+  k-nearest-REMOVAL by 3D order -- REPORTED AS MECHANICAL WHERE LABELLED:
+    k= 5 (full): |N| = 73, beaters inside removed set = ['AV_220', 'AV_195'] (2/3) -> NOT all beaters removed
+           p_spec = (1 + 1)/(1 + 73) = 0.027027
+    k= 5 (   H): |N| = 73, beaters inside removed set = ['AV_220', 'AV_195'] (2/3) -> NOT all beaters removed
+           p_spec = (1 + 1)/(1 + 73) = 0.027027
+    k=10 (full): |N| = 68, beaters inside removed set = ['AV_220', 'AV_195', 'G_P254F'] (3/3) -> MECHANICAL: all beaters removed, p_spec at its floor is guaranteed, not informative
+           p_spec = (1 + 0)/(1 + 68) = 0.014493  (floor 1/69 = 0.014493)
+    k=10 (   H): |N| = 68, beaters inside removed set = ['AV_220', 'AV_195', 'G_P254F'] (3/3) -> MECHANICAL: all beaters removed, p_spec at its floor is guaranteed, not informative
+           p_spec = (1 + 0)/(1 + 68) = 0.014493  (floor 1/69 = 0.014493)
+
+------------------------------------------------------------------------------
+D11.4 -- JOINT ADJUSTMENT WITH 3D DISTANCE, on the resolved subset
+------------------------------------------------------------------------------
+
+  === log1p(d3_CA) ===
+    [full]  n = 67 resolved nulls;  OLS rho ~ intercept -0.158981 + mean|delta|*-0.324445   + log1p(d3_CA)*+0.048009
+      r_A = +0.093681;  # at or below = 67 of 67
+      p_spec_adj = (1 + 67)/(1 + 67) = 1.000000   -> ABOVE the frozen threshold 0.05
+      A222V rank within resolved N u {A222V} = 68/68
+      at or below r_A: AV_113 (V, d3_CA=20.33), AV_116 (V, d3_CA=22.96), AV_145 (V, d3_CA=17.95), AV_155 (V, d3_CA=8.64), AV_175 (V, d3_CA=10.54), AV_195 (V, d3_CA=10.15), AV_204 (V, d3_CA=20.63), AV_209 (V, d3_CA=18.86), AV_220 (V, d3_CA=6.48), AV_233 (V, d3_CA=24.49), AV_242 (V, d3_CA=17.90), AV_292 (V, d3_CA=39.91), AV_293 (V, d3_CA=40.57), AV_302 (V, d3_CA=28.06), AV_311 (V, d3_CA=26.34), AV_328 (V, d3_CA=31.13), AV_350 (V, d3_CA=31.43), AV_353 (V, d3_CA=22.46), AV_368 (V, d3_CA=40.19), AV_461 (V, d3_CA=43.66), AV_462 (V, d3_CA=45.25), AV_511 (V, d3_CA=51.82), AV_522 (V, d3_CA=63.09), AV_524 (V, d3_CA=67.61), AV_551 (V, d3_CA=54.22), AV_558 (V, d3_CA=45.62), AV_587 (V, d3_CA=47.99), AV_589 (V, d3_CA=49.35), AV_650 (V, d3_CA=76.19), AV_70 (V, d3_CA=33.77), AV_73 (V, d3_CA=30.18), AV_84 (V, d3_CA=26.12), AV_85 (V, d3_CA=29.08), AV_98 (V, d3_CA=26.35), G_A462S (G, d3_CA=45.25), G_A551K (G, d3_CA=54.22), G_D629C (G, d3_CA=59.13), G_E279K (G, d3_CA=36.76), G_E383T (G, d3_CA=30.91), G_E54R (G, d3_CA=20.10), G_G317Q (G, d3_CA=17.65), G_G562M (G, d3_CA=41.40), G_H354F (G, d3_CA=22.24), G_H613R (G, d3_CA=56.94), G_I192T (G, d3_CA=5.06), G_K401S (G, d3_CA=38.57), G_K48P (G, d3_CA=15.88), G_K510H (G, d3_CA=50.18), G_L178T (G, d3_CA=10.31), G_L318F (G, d3_CA=18.65), G_L408H (G, d3_CA=42.94), G_L472H (G, d3_CA=58.78), G_L526R (G, d3_CA=64.61), G_M111N (G, d3_CA=24.28), G_P254F (G, d3_CA=16.28), G_P346V (G, d3_CA=31.99), G_R357M (G, d3_CA=26.10), G_R358V (G, d3_CA=25.10), G_S430P (G, d3_CA=62.73), G_S494H (G, d3_CA=40.81), G_T115G (G, d3_CA=25.02), G_T521D (G, d3_CA=65.26), G_T549H (G, d3_CA=56.86), G_V574C (G, d3_CA=43.60), G_W595H (G, d3_CA=52.34), G_W59C (G, d3_CA=20.11), G_Y197V (G, d3_CA=15.72)
+    [H]  n = 67 resolved nulls;  OLS rho ~ intercept -0.165246 + mean|delta|*-0.338456   + log1p(d3_CA)*+0.049915
+      r_A = +0.098715;  # at or below = 67 of 67
+      p_spec_adj = (1 + 67)/(1 + 67) = 1.000000   -> ABOVE the frozen threshold 0.1
+      A222V rank within resolved N u {A222V} = 68/68
+      at or below r_A: AV_113 (V, d3_CA=20.33), AV_116 (V, d3_CA=22.96), AV_145 (V, d3_CA=17.95), AV_155 (V, d3_CA=8.64), AV_175 (V, d3_CA=10.54), AV_195 (V, d3_CA=10.15), AV_204 (V, d3_CA=20.63), AV_209 (V, d3_CA=18.86), AV_220 (V, d3_CA=6.48), AV_233 (V, d3_CA=24.49), AV_242 (V, d3_CA=17.90), AV_292 (V, d3_CA=39.91), AV_293 (V, d3_CA=40.57), AV_302 (V, d3_CA=28.06), AV_311 (V, d3_CA=26.34), AV_328 (V, d3_CA=31.13), AV_350 (V, d3_CA=31.43), AV_353 (V, d3_CA=22.46), AV_368 (V, d3_CA=40.19), AV_461 (V, d3_CA=43.66), AV_462 (V, d3_CA=45.25), AV_511 (V, d3_CA=51.82), AV_522 (V, d3_CA=63.09), AV_524 (V, d3_CA=67.61), AV_551 (V, d3_CA=54.22), AV_558 (V, d3_CA=45.62), AV_587 (V, d3_CA=47.99), AV_589 (V, d3_CA=49.35), AV_650 (V, d3_CA=76.19), AV_70 (V, d3_CA=33.77), AV_73 (V, d3_CA=30.18), AV_84 (V, d3_CA=26.12), AV_85 (V, d3_CA=29.08), AV_98 (V, d3_CA=26.35), G_A462S (G, d3_CA=45.25), G_A551K (G, d3_CA=54.22), G_D629C (G, d3_CA=59.13), G_E279K (G, d3_CA=36.76), G_E383T (G, d3_CA=30.91), G_E54R (G, d3_CA=20.10), G_G317Q (G, d3_CA=17.65), G_G562M (G, d3_CA=41.40), G_H354F (G, d3_CA=22.24), G_H613R (G, d3_CA=56.94), G_I192T (G, d3_CA=5.06), G_K401S (G, d3_CA=38.57), G_K48P (G, d3_CA=15.88), G_K510H (G, d3_CA=50.18), G_L178T (G, d3_CA=10.31), G_L318F (G, d3_CA=18.65), G_L408H (G, d3_CA=42.94), G_L472H (G, d3_CA=58.78), G_L526R (G, d3_CA=64.61), G_M111N (G, d3_CA=24.28), G_P254F (G, d3_CA=16.28), G_P346V (G, d3_CA=31.99), G_R357M (G, d3_CA=26.10), G_R358V (G, d3_CA=25.10), G_S430P (G, d3_CA=62.73), G_S494H (G, d3_CA=40.81), G_T115G (G, d3_CA=25.02), G_T521D (G, d3_CA=65.26), G_T549H (G, d3_CA=56.86), G_V574C (G, d3_CA=43.60), G_W595H (G, d3_CA=52.34), G_W59C (G, d3_CA=20.11), G_Y197V (G, d3_CA=15.72)
+
+  === log1p(dist_seq) ===
+    [full]  n = 67 resolved nulls;  OLS rho ~ intercept -0.101820 + mean|delta|*-0.471277   + log1p(dist_seq)*+0.024049
+      r_A = +0.046847;  # at or below = 60 of 67
+      p_spec_adj = (1 + 60)/(1 + 67) = 0.897059   -> ABOVE the frozen threshold 0.05
+      A222V rank within resolved N u {A222V} = 61/68
+      at or below r_A: AV_113 (V, d3_CA=20.33), AV_116 (V, d3_CA=22.96), AV_145 (V, d3_CA=17.95), AV_155 (V, d3_CA=8.64), AV_175 (V, d3_CA=10.54), AV_195 (V, d3_CA=10.15), AV_220 (V, d3_CA=6.48), AV_233 (V, d3_CA=24.49), AV_242 (V, d3_CA=17.90), AV_292 (V, d3_CA=39.91), AV_293 (V, d3_CA=40.57), AV_302 (V, d3_CA=28.06), AV_311 (V, d3_CA=26.34), AV_328 (V, d3_CA=31.13), AV_350 (V, d3_CA=31.43), AV_353 (V, d3_CA=22.46), AV_368 (V, d3_CA=40.19), AV_461 (V, d3_CA=43.66), AV_462 (V, d3_CA=45.25), AV_511 (V, d3_CA=51.82), AV_522 (V, d3_CA=63.09), AV_524 (V, d3_CA=67.61), AV_551 (V, d3_CA=54.22), AV_558 (V, d3_CA=45.62), AV_587 (V, d3_CA=47.99), AV_589 (V, d3_CA=49.35), AV_650 (V, d3_CA=76.19), AV_70 (V, d3_CA=33.77), AV_73 (V, d3_CA=30.18), AV_84 (V, d3_CA=26.12), AV_85 (V, d3_CA=29.08), AV_98 (V, d3_CA=26.35), G_A462S (G, d3_CA=45.25), G_A551K (G, d3_CA=54.22), G_D629C (G, d3_CA=59.13), G_E279K (G, d3_CA=36.76), G_E383T (G, d3_CA=30.91), G_E54R (G, d3_CA=20.10), G_G317Q (G, d3_CA=17.65), G_G562M (G, d3_CA=41.40), G_H354F (G, d3_CA=22.24), G_H613R (G, d3_CA=56.94), G_I192T (G, d3_CA=5.06), G_K48P (G, d3_CA=15.88), G_L178T (G, d3_CA=10.31), G_L318F (G, d3_CA=18.65), G_L472H (G, d3_CA=58.78), G_L526R (G, d3_CA=64.61), G_M111N (G, d3_CA=24.28), G_P254F (G, d3_CA=16.28), G_P346V (G, d3_CA=31.99), G_R357M (G, d3_CA=26.10), G_S430P (G, d3_CA=62.73), G_S494H (G, d3_CA=40.81), G_T115G (G, d3_CA=25.02), G_T521D (G, d3_CA=65.26), G_T549H (G, d3_CA=56.86), G_V574C (G, d3_CA=43.60), G_W59C (G, d3_CA=20.11), G_Y197V (G, d3_CA=15.72)
+    [H]  n = 67 resolved nulls;  OLS rho ~ intercept -0.102523 + mean|delta|*-0.523085   + log1p(dist_seq)*+0.024773
+      r_A = +0.048805;  # at or below = 60 of 67
+      p_spec_adj = (1 + 60)/(1 + 67) = 0.897059   -> ABOVE the frozen threshold 0.1
+      A222V rank within resolved N u {A222V} = 61/68
+      at or below r_A: AV_113 (V, d3_CA=20.33), AV_116 (V, d3_CA=22.96), AV_145 (V, d3_CA=17.95), AV_155 (V, d3_CA=8.64), AV_175 (V, d3_CA=10.54), AV_195 (V, d3_CA=10.15), AV_209 (V, d3_CA=18.86), AV_220 (V, d3_CA=6.48), AV_233 (V, d3_CA=24.49), AV_242 (V, d3_CA=17.90), AV_292 (V, d3_CA=39.91), AV_293 (V, d3_CA=40.57), AV_302 (V, d3_CA=28.06), AV_311 (V, d3_CA=26.34), AV_328 (V, d3_CA=31.13), AV_350 (V, d3_CA=31.43), AV_353 (V, d3_CA=22.46), AV_368 (V, d3_CA=40.19), AV_461 (V, d3_CA=43.66), AV_462 (V, d3_CA=45.25), AV_511 (V, d3_CA=51.82), AV_522 (V, d3_CA=63.09), AV_524 (V, d3_CA=67.61), AV_551 (V, d3_CA=54.22), AV_558 (V, d3_CA=45.62), AV_587 (V, d3_CA=47.99), AV_589 (V, d3_CA=49.35), AV_650 (V, d3_CA=76.19), AV_70 (V, d3_CA=33.77), AV_73 (V, d3_CA=30.18), AV_84 (V, d3_CA=26.12), AV_85 (V, d3_CA=29.08), AV_98 (V, d3_CA=26.35), G_A462S (G, d3_CA=45.25), G_A551K (G, d3_CA=54.22), G_D629C (G, d3_CA=59.13), G_E279K (G, d3_CA=36.76), G_E383T (G, d3_CA=30.91), G_E54R (G, d3_CA=20.10), G_G317Q (G, d3_CA=17.65), G_G562M (G, d3_CA=41.40), G_H354F (G, d3_CA=22.24), G_H613R (G, d3_CA=56.94), G_I192T (G, d3_CA=5.06), G_K48P (G, d3_CA=15.88), G_L178T (G, d3_CA=10.31), G_L318F (G, d3_CA=18.65), G_L472H (G, d3_CA=58.78), G_M111N (G, d3_CA=24.28), G_P254F (G, d3_CA=16.28), G_P346V (G, d3_CA=31.99), G_R357M (G, d3_CA=26.10), G_S430P (G, d3_CA=62.73), G_S494H (G, d3_CA=40.81), G_T115G (G, d3_CA=25.02), G_T521D (G, d3_CA=65.26), G_T549H (G, d3_CA=56.86), G_V574C (G, d3_CA=43.60), G_W59C (G, d3_CA=20.11), G_Y197V (G, d3_CA=15.72)
+
+  === shift only ===
+    [full]  n = 67 resolved nulls;  OLS rho ~ intercept +0.031062 + mean|delta|*-0.764872
+      r_A = -0.065387;  # at or below = 2 of 67
+      p_spec_adj = (1 + 2)/(1 + 67) = 0.044118   -> AT OR BELOW the frozen threshold 0.05
+      A222V rank within resolved N u {A222V} = 3/68
+      at or below r_A: AV_220 (V, d3_CA=6.48), AV_85 (V, d3_CA=29.08)
+    [H]  n = 67 resolved nulls;  OLS rho ~ intercept +0.034429 + mean|delta|*-0.816494
+      r_A = -0.067783;  # at or below = 2 of 67
+      p_spec_adj = (1 + 2)/(1 + 67) = 0.044118   -> AT OR BELOW the frozen threshold 0.1
+      A222V rank within resolved N u {A222V} = 3/68
+      at or below r_A: AV_220 (V, d3_CA=6.48), AV_85 (V, d3_CA=29.08)
+
+                axis  view   k  p_spec_adj         r_A     rank  vs frozen
+        log1p(d3_CA)  full  67    1.000000   +0.093681   68/68  ABOVE 0.05
+        log1p(d3_CA)     H  67    1.000000   +0.098715   68/68  ABOVE 0.1
+     log1p(dist_seq)  full  60    0.897059   +0.046847   61/68  ABOVE 0.05
+     log1p(dist_seq)     H  60    0.897059   +0.048805   61/68  ABOVE 0.1
+          shift only  full   2    0.044118   -0.065387    3/68  AT OR BELOW 0.05
+          shift only     H   2    0.044118   -0.067783    3/68  AT OR BELOW 0.1
+
+  D11.4 PARTIAL CORRELATIONS with d3_CA on the resolved subset:
+  *** NO PERMUTATION p.  A partial correlation is a function of THREE correlations; shuffling one variable leaves the conditioning variable unpermuted and the other two are not independent under the shuffle, so a naive shuffle is not a valid null for a partial statistic.  The bootstrap CI is the whole uncertainty statement. ***
+  RESAMPLING UNIT: BACKGROUND (67 draws per bootstrap draw, per-background values held FIXED, N_BOOT = 10000, SEED = 0)
+
+    [full]  n = 67
+      pairwise Spearman(rho, mean|delta|) = -0.449437305;  Spearman(rho, d3_CA) = +0.731577372;  Spearman(mean|delta|, d3_CA) = -0.528863614
+      PARTIAL Spearman(rho, d3_CA | mean|delta|) = +0.651427677
+        background bootstrap 95% CI = [+0.472958, +0.769040] (10000 draws)  (EXCLUDES ZERO)
+      PARTIAL Spearman(rho, mean|delta| | d3_CA) = -0.108073357
+        background bootstrap 95% CI = [-0.354953, +0.130566] (10000 draws)  (INCLUDES ZERO)
+
+    [H]  n = 67
+      pairwise Spearman(rho, mean|delta|) = -0.449796472;  Spearman(rho, d3_CA) = +0.713319366;  Spearman(mean|delta|, d3_CA) = -0.527187469
+      PARTIAL Spearman(rho, d3_CA | mean|delta|) = +0.627446210
+        background bootstrap 95% CI = [+0.441136, +0.757830] (10000 draws)  (EXCLUDES ZERO)
+      PARTIAL Spearman(rho, mean|delta| | d3_CA) = -0.123826727
+        background bootstrap 95% CI = [-0.365496, +0.114504] (10000 draws)  (INCLUDES ZERO)
+
+------------------------------------------------------------------------------
+D11.5 -- HEAD-TO-HEAD, identical denominators
+------------------------------------------------------------------------------
+  ONE table, ONE denominator per view.  The resolved N-only subset has n = 67 in BOTH views, so the three variants are directly comparable and no denominator differs between them.
+  DESCRIPTIVE.  No variant is declared "the" answer.
+
+   view                 adjustment   k    n  p_spec_adj  vs frozen
+   full               log1p(d3_CA)  67   67    1.000000  ABOVE 0.05
+      H               log1p(d3_CA)  67   67    1.000000  ABOVE 0.1
+   full            log1p(dist_seq)  60   67    0.897059  ABOVE 0.05
+      H            log1p(dist_seq)  60   67    0.897059  ABOVE 0.1
+   full                 shift only   2   67    0.044118  AT OR BELOW 0.05
+      H                 shift only   2   67    0.044118  AT OR BELOW 0.1
+
+  denominators: n = 67 in every row above.  The unadjusted frozen p_spec used n = 78 and is NOT in this table because its denominator differs; comparing the two would be comparing different null sets.
+
+------------------------------------------------------------------------------
+D11 GATE TABLE (for the SUMMARY)
+------------------------------------------------------------------------------
+  [PASS] D11-G1a numbering mapping: |d_AA(p) - stored ca_dist_222|: max|diff| = 7.105e-15 A over 9595 rows (gate < 1e-06); unresolved positions in this frame are 0
+  [PASS] D11-G1b monomer far (>10 A): 9232/9595 = 96.2168% (script 107/126: 9232 = 96.22%)
+  [PASS] D11-G1b dimer-aware far (>10 A): 9128/9595 = 95.1329% (script 107/126: 9128 = 95.13%)
+
+  D11-G1: PASS (3/3 checks).
+
+LIMITATIONS (printed, not only in the docstring):  d3_CA is a CA-CA distance in ONE 2.50 A crystal structure of the DIMER; side chains and alternate conformations are not modelled and a CA-CA minimum is not a contact.  d3_dimer is a property of the dimer, not the isolated chain, and is a sensitivity only.  Unresolved positions are never imputed: they are named, counted, and the resolved n is printed at every use.  Partial correlations have NO permutation p by design (a naive shuffle of one variable is not a valid null for a three-correlation statistic) and only a background-level bootstrap CI, which does NOT model the fact that the 96 rho_b share one y-vector and are mutually correlated.  PARTIAL CONSTRUCTIONAL OVERLAP: mean|delta| and rho_b are both functions of the same delta_b.  Nothing here is a decision rule and nothing frozen is redefined.
+Elapsed 39.3s

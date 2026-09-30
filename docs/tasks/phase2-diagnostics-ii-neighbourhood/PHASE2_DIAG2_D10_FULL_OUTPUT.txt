@@ -1,0 +1,145 @@
+
+==============================================================================
+D10 -- JOINT ADJUSTMENT, NEIGHBOURHOOD RANKS, PARTIAL CORRELATIONS (script 138)
+==============================================================================
+SCOPE: descriptive.  p_spec_adj is a companion to the frozen p_spec, never a replacement.  No outcome word is used as a label.
+RESAMPLING UNIT: BACKGROUND for D10c only (10,000 draws, SEED=0, per-background rho_b / mean|delta| / dist held FIXED).  D10a and D10b do NO resampling -- deterministic fits and exact rank counts.
+  N_BOOT=10000 SEED=0
+
+INPUT GATE PASS: table sha256 = e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+
+------------------------------------------------------------------------------
+A222V IS AT THE EDGE OF THE DISTANCE RANGE -- stated before any adjustment is reported
+------------------------------------------------------------------------------
+  sequence distance dist_b = |position_b - 222|
+    A222V               dist = 0
+    null set N          dist min = 2 (['AV_220']), median = 162, max = 433 (['AV_655'])
+    -> A222V's distance covariate is an EXTRAPOLATION in every variant with a distance term: no null can reach dist = 0.
+    This is why the CLAMPED sensitivity below (A222V evaluated at dist = 2, the null minimum) is reported.  It is a sensitivity, NOT a selection.
+
+  LEVERAGE (hat value) of A222V in the D10a primary design (full frame; the H design gives the same covariate structure):
+    h(A222V) at dist = 0          = 0.383410
+    h(A222V) at dist = 2 (clamped)= 0.231801
+    null leverage h_b: mean = 0.038462, max = 0.441777 (['G_P254F', 'AV_220', 'G_Y197V']), min = 0.012935
+    the mean leverage of a 3-parameter fit on 78 points is p/n = 0.038462
+    -> A222V's leverage at dist = 0 is within the null leverage range; the clamped value is inside it.  A high leverage point's residual is partly extrapolation, not evidence.
+
+------------------------------------------------------------------------------
+D10a -- JOINT OLS: rho ~ a + c1*mean|delta| + c2*<distance>
+------------------------------------------------------------------------------
+PRIMARY: log1p(dist).  Fit on N (78); leave-one-out residuals for the nulls, out-of-sample for A222V (exactly D9's primary, so the two are exchangeable).
+SENSITIVITIES, ALL REPORTED, NONE SELECTED: (i) linear dist; (ii) CLAMPED (A222V at dist = 2); (iii) shift-only = D9 primary.
+
+  === PRIMARY  log1p(dist) ===
+    [full]  fit on n = 78;  OLS coefficients: intercept -0.103920  mean|delta| -0.418381  log1p(dist) +0.023870
+      A222V covariates = mean|delta| 0.070330, log1p(dist) 0.000000
+      r_A = +0.045227;  #{b in N: r_b <= r_A} = 69 of 78
+      p_spec_adj = (1 + 69)/(1 + 78) = 0.886076   -> ABOVE the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 70/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.079641, r_b=-0.054127); AV_116 (V, d=106, mean|d|=0.075102, r_b=-0.046093); AV_145 (V, d=77, mean|d|=0.065572, r_b=-0.028959); AV_155 (V, d=67, mean|d|=0.081750, r_b=-0.033958); AV_175 (V, d=47, mean|d|=0.060158, r_b=-0.010784); AV_19 (V, d=203, mean|d|=0.012399, r_b=-0.015165); AV_195 (V, d=27, mean|d|=0.095630, r_b=-0.021065); AV_220 (V, d=2, mean|d|=0.047893, r_b=+0.017836); AV_233 (V, d=11, mean|d|=0.049868, r_b=+0.041423); AV_242 (V, d=20, mean|d|=0.055971, r_b=-0.008865); AV_292 (V, d=70, mean|d|=0.037361, r_b=+0.004094); AV_293 (V, d=71, mean|d|=0.062199, r_b=-0.034929); AV_302 (V, d=80, mean|d|=0.057178, r_b=-0.011263); AV_311 (V, d=89, mean|d|=0.053856, r_b=-0.021237); AV_328 (V, d=106, mean|d|=0.062255, r_b=-0.022186); AV_350 (V, d=128, mean|d|=0.037454, r_b=-0.030360); AV_353 (V, d=131, mean|d|=0.033249, r_b=+0.011246); AV_368 (V, d=146, mean|d|=0.055175, r_b=+0.012641); AV_396 (V, d=174, mean|d|=0.031679, r_b=+0.022852); AV_461 (V, d=239, mean|d|=0.029808, r_b=+0.027339); AV_462 (V, d=240, mean|d|=0.028121, r_b=-0.018538); AV_5 (V, d=217, mean|d|=0.018001, r_b=-0.014557); AV_511 (V, d=289, mean|d|=0.061070, r_b=+0.013785); AV_522 (V, d=300, mean|d|=0.039924, r_b=-0.004646); AV_524 (V, d=302, mean|d|=0.036766, r_b=+0.011970); AV_551 (V, d=329, mean|d|=0.024444, r_b=-0.022436); AV_558 (V, d=336, mean|d|=0.036667, r_b=+0.021354); AV_587 (V, d=365, mean|d|=0.046555, r_b=+0.030935); AV_589 (V, d=367, mean|d|=0.071049, r_b=+0.037754); AV_650 (V, d=428, mean|d|=0.023658, r_b=-0.009349); AV_655 (V, d=433, mean|d|=0.026796, r_b=-0.022516); AV_70 (V, d=152, mean|d|=0.056154, r_b=-0.038892); AV_73 (V, d=149, mean|d|=0.048172, r_b=-0.037033); AV_84 (V, d=138, mean|d|=0.042824, r_b=-0.035479); AV_85 (V, d=137, mean|d|=0.039341, r_b=-0.069639); AV_98 (V, d=124, mean|d|=0.056045, r_b=-0.019317); G_A462S (G, d=240, mean|d|=0.023763, r_b=-0.010431); G_A551K (G, d=329, mean|d|=0.040495, r_b=+0.017881); G_D629C (G, d=407, mean|d|=0.050469, r_b=-0.051331); G_E168S (G, d=54, mean|d|=0.055522, r_b=+0.008234); G_E16V (G, d=206, mean|d|=0.026296, r_b=+0.000346); G_E279K (G, d=57, mean|d|=0.048420, r_b=+0.036064); G_E383T (G, d=161, mean|d|=0.024198, r_b=-0.028507); G_E54R (G, d=168, mean|d|=0.074310, r_b=-0.029958); G_G317Q (G, d=95, mean|d|=0.083687, r_b=-0.012269); G_G562M (G, d=340, mean|d|=0.052264, r_b=+0.013135); G_H354F (G, d=132, mean|d|=0.058515, r_b=+0.025589); G_H613R (G, d=391, mean|d|=0.046716, r_b=+0.014230); G_I192T (G, d=30, mean|d|=0.066874, r_b=+0.017756); G_K27I (G, d=195, mean|d|=0.041987, r_b=+0.011272); G_K48P (G, d=174, mean|d|=0.091033, r_b=-0.033770); G_L178T (G, d=44, mean|d|=0.063864, r_b=-0.031498); G_L318F (G, d=96, mean|d|=0.076720, r_b=-0.030706); G_L472H (G, d=250, mean|d|=0.040689, r_b=+0.006652); G_M111N (G, d=111, mean|d|=0.072854, r_b=-0.039641); G_N12P (G, d=210, mean|d|=0.034684, r_b=-0.043302); G_N3K (G, d=219, mean|d|=0.033709, r_b=-0.040337); G_P254F (G, d=32, mean|d|=0.208008, r_b=+0.020137); G_P346V (G, d=124, mean|d|=0.065969, r_b=+0.004519); G_R357M (G, d=135, mean|d|=0.074845, r_b=+0.037218); G_S23A (G, d=199, mean|d|=0.037058, r_b=+0.045135); G_S430P (G, d=208, mean|d|=0.064768, r_b=+0.016145); G_S494H (G, d=272, mean|d|=0.038424, r_b=+0.029775); G_T115G (G, d=107, mean|d|=0.056861, r_b=-0.005662); G_T521D (G, d=299, mean|d|=0.036518, r_b=-0.015673); G_T549H (G, d=327, mean|d|=0.033579, r_b=+0.003606); G_V574C (G, d=352, mean|d|=0.029341, r_b=+0.024238); G_W59C (G, d=163, mean|d|=0.055211, r_b=-0.036907); G_Y197V (G, d=25, mean|d|=0.137584, r_b=+0.007970)
+    [H]  fit on n = 78;  OLS coefficients: intercept -0.104791  mean|delta| -0.464836  log1p(dist) +0.024540
+      A222V covariates = mean|delta| 0.069403, log1p(dist) 0.000000
+      r_A = +0.047030;  #{b in N: r_b <= r_A} = 70 of 78
+      p_spec_adj = (1 + 70)/(1 + 78) = 0.898734   -> ABOVE the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 71/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.095327, r_b=-0.055526); AV_116 (V, d=106, mean|d|=0.089718, r_b=-0.025813); AV_145 (V, d=77, mean|d|=0.070800, r_b=-0.021665); AV_155 (V, d=67, mean|d|=0.087136, r_b=-0.048594); AV_175 (V, d=47, mean|d|=0.064560, r_b=-0.022695); AV_19 (V, d=203, mean|d|=0.011486, r_b=-0.018255); AV_195 (V, d=27, mean|d|=0.098154, r_b=-0.026416); AV_209 (V, d=13, mean|d|=0.047261, r_b=+0.044501); AV_220 (V, d=2, mean|d|=0.050233, r_b=+0.009070); AV_233 (V, d=11, mean|d|=0.046850, r_b=+0.032246); AV_242 (V, d=20, mean|d|=0.051866, r_b=-0.014378); AV_292 (V, d=70, mean|d|=0.038504, r_b=+0.010848); AV_293 (V, d=71, mean|d|=0.065113, r_b=-0.028431); AV_302 (V, d=80, mean|d|=0.058618, r_b=-0.008927); AV_311 (V, d=89, mean|d|=0.052451, r_b=-0.022816); AV_328 (V, d=106, mean|d|=0.059746, r_b=-0.034433); AV_350 (V, d=128, mean|d|=0.038476, r_b=-0.020864); AV_353 (V, d=131, mean|d|=0.034613, r_b=+0.012343); AV_368 (V, d=146, mean|d|=0.057613, r_b=+0.024802); AV_396 (V, d=174, mean|d|=0.032514, r_b=+0.026551); AV_461 (V, d=239, mean|d|=0.029241, r_b=+0.025130); AV_462 (V, d=240, mean|d|=0.028836, r_b=-0.019448); AV_5 (V, d=217, mean|d|=0.017291, r_b=-0.006005); AV_511 (V, d=289, mean|d|=0.060814, r_b=+0.009754); AV_522 (V, d=300, mean|d|=0.041415, r_b=-0.014425); AV_524 (V, d=302, mean|d|=0.037340, r_b=+0.008072); AV_551 (V, d=329, mean|d|=0.026299, r_b=-0.027012); AV_558 (V, d=336, mean|d|=0.036049, r_b=+0.014411); AV_587 (V, d=365, mean|d|=0.048179, r_b=+0.017892); AV_589 (V, d=367, mean|d|=0.072841, r_b=+0.030913); AV_650 (V, d=428, mean|d|=0.024623, r_b=-0.027673); AV_655 (V, d=433, mean|d|=0.027849, r_b=-0.036136); AV_70 (V, d=152, mean|d|=0.059448, r_b=-0.036074); AV_73 (V, d=149, mean|d|=0.058394, r_b=-0.044948); AV_84 (V, d=138, mean|d|=0.047626, r_b=-0.039008); AV_85 (V, d=137, mean|d|=0.042106, r_b=-0.079782); AV_98 (V, d=124, mean|d|=0.057796, r_b=-0.009984); G_A462S (G, d=240, mean|d|=0.023214, r_b=-0.025531); G_A551K (G, d=329, mean|d|=0.043827, r_b=+0.021563); G_D629C (G, d=407, mean|d|=0.053420, r_b=-0.047952); G_E168S (G, d=54, mean|d|=0.061893, r_b=+0.003315); G_E16V (G, d=206, mean|d|=0.026851, r_b=-0.000564); G_E279K (G, d=57, mean|d|=0.051116, r_b=+0.035384); G_E383T (G, d=161, mean|d|=0.024467, r_b=-0.020616); G_E54R (G, d=168, mean|d|=0.068873, r_b=-0.034188); G_G317Q (G, d=95, mean|d|=0.081278, r_b=-0.021653); G_G562M (G, d=340, mean|d|=0.051908, r_b=+0.005004); G_H354F (G, d=132, mean|d|=0.059461, r_b=+0.028794); G_H613R (G, d=391, mean|d|=0.050113, r_b=+0.012323); G_I192T (G, d=30, mean|d|=0.072520, r_b=+0.025660); G_K27I (G, d=195, mean|d|=0.043738, r_b=+0.015874); G_K48P (G, d=174, mean|d|=0.090253, r_b=-0.031871); G_L178T (G, d=44, mean|d|=0.071155, r_b=-0.030837); G_L318F (G, d=96, mean|d|=0.076880, r_b=-0.035225); G_L472H (G, d=250, mean|d|=0.040119, r_b=+0.007858); G_M111N (G, d=111, mean|d|=0.083627, r_b=-0.029694); G_N12P (G, d=210, mean|d|=0.032655, r_b=-0.043301); G_N3K (G, d=219, mean|d|=0.032853, r_b=-0.043678); G_P254F (G, d=32, mean|d|=0.200143, r_b=+0.016302); G_P346V (G, d=124, mean|d|=0.066640, r_b=+0.008861); G_R357M (G, d=135, mean|d|=0.075622, r_b=+0.044960); G_S23A (G, d=199, mean|d|=0.037501, r_b=+0.044797); G_S430P (G, d=208, mean|d|=0.063800, r_b=+0.023997); G_S494H (G, d=272, mean|d|=0.039488, r_b=+0.040196); G_T115G (G, d=107, mean|d|=0.067814, r_b=-0.001988); G_T521D (G, d=299, mean|d|=0.036010, r_b=-0.033538); G_T549H (G, d=327, mean|d|=0.036599, r_b=+0.015939); G_V574C (G, d=352, mean|d|=0.031136, r_b=+0.032602); G_W59C (G, d=163, mean|d|=0.058900, r_b=-0.041167); G_Y197V (G, d=25, mean|d|=0.138760, r_b=+0.019580)
+
+
+  === SENS (i)  linear dist ===
+    [full]  fit on n = 78;  OLS coefficients: intercept -0.028857  mean|delta| -0.363298  dist +0.000215
+      A222V covariates = mean|delta| 0.070330, dist 0.000000
+      r_A = -0.033711;  #{b in N: r_b <= r_A} = 9 of 78
+      p_spec_adj = (1 + 9)/(1 + 78) = 0.126582   -> ABOVE the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 10/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.079641, r_b=-0.044636); AV_116 (V, d=106, mean|d|=0.075102, r_b=-0.036437); AV_220 (V, d=2, mean|d|=0.047893, r_b=-0.041011); AV_650 (V, d=428, mean|d|=0.023658, r_b=-0.035478); AV_655 (V, d=433, mean|d|=0.026796, r_b=-0.050334); AV_85 (V, d=137, mean|d|=0.039341, r_b=-0.058867); G_D629C (G, d=407, mean|d|=0.050469, r_b=-0.077099); G_N12P (G, d=210, mean|d|=0.034684, r_b=-0.037610); G_N3K (G, d=219, mean|d|=0.033709, r_b=-0.035541)
+    [H]  fit on n = 78;  OLS coefficients: intercept -0.025010  mean|delta| -0.418766  dist +0.000210
+      A222V covariates = mean|delta| 0.069403, dist 0.000000
+      r_A = -0.035948;  #{b in N: r_b <= r_A} = 10 of 78
+      p_spec_adj = (1 + 10)/(1 + 78) = 0.139241   -> ABOVE the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 11/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.095327, r_b=-0.046750); AV_155 (V, d=67, mean|d|=0.087136, r_b=-0.042826); AV_220 (V, d=2, mean|d|=0.050233, r_b=-0.051656); AV_650 (V, d=428, mean|d|=0.024623, r_b=-0.052351); AV_655 (V, d=433, mean|d|=0.027849, r_b=-0.062304); AV_85 (V, d=137, mean|d|=0.042106, r_b=-0.069466); G_D629C (G, d=407, mean|d|=0.053420, r_b=-0.071534); G_N12P (G, d=210, mean|d|=0.032655, r_b=-0.037114); G_N3K (G, d=219, mean|d|=0.032853, r_b=-0.038366); G_T521D (G, d=299, mean|d|=0.036010, r_b=-0.037913)
+
+
+  === SENS (ii) CLAMPED: A222V at dist = 2 ===
+    [full]  fit on n = 78;  OLS coefficients: intercept -0.103920  mean|delta| -0.418381  log1p(dist) +0.023870
+      A222V covariates = mean|delta| 0.070330, log1p(dist) 1.098612
+      r_A = +0.019003;  #{b in N: r_b <= r_A} = 56 of 78
+      p_spec_adj = (1 + 56)/(1 + 78) = 0.721519   -> ABOVE the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 57/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.079641, r_b=-0.054127); AV_116 (V, d=106, mean|d|=0.075102, r_b=-0.046093); AV_145 (V, d=77, mean|d|=0.065572, r_b=-0.028959); AV_155 (V, d=67, mean|d|=0.081750, r_b=-0.033958); AV_175 (V, d=47, mean|d|=0.060158, r_b=-0.010784); AV_19 (V, d=203, mean|d|=0.012399, r_b=-0.015165); AV_195 (V, d=27, mean|d|=0.095630, r_b=-0.021065); AV_220 (V, d=2, mean|d|=0.047893, r_b=+0.017836); AV_242 (V, d=20, mean|d|=0.055971, r_b=-0.008865); AV_292 (V, d=70, mean|d|=0.037361, r_b=+0.004094); AV_293 (V, d=71, mean|d|=0.062199, r_b=-0.034929); AV_302 (V, d=80, mean|d|=0.057178, r_b=-0.011263); AV_311 (V, d=89, mean|d|=0.053856, r_b=-0.021237); AV_328 (V, d=106, mean|d|=0.062255, r_b=-0.022186); AV_350 (V, d=128, mean|d|=0.037454, r_b=-0.030360); AV_353 (V, d=131, mean|d|=0.033249, r_b=+0.011246); AV_368 (V, d=146, mean|d|=0.055175, r_b=+0.012641); AV_462 (V, d=240, mean|d|=0.028121, r_b=-0.018538); AV_5 (V, d=217, mean|d|=0.018001, r_b=-0.014557); AV_511 (V, d=289, mean|d|=0.061070, r_b=+0.013785); AV_522 (V, d=300, mean|d|=0.039924, r_b=-0.004646); AV_524 (V, d=302, mean|d|=0.036766, r_b=+0.011970); AV_551 (V, d=329, mean|d|=0.024444, r_b=-0.022436); AV_650 (V, d=428, mean|d|=0.023658, r_b=-0.009349); AV_655 (V, d=433, mean|d|=0.026796, r_b=-0.022516); AV_70 (V, d=152, mean|d|=0.056154, r_b=-0.038892); AV_73 (V, d=149, mean|d|=0.048172, r_b=-0.037033); AV_84 (V, d=138, mean|d|=0.042824, r_b=-0.035479); AV_85 (V, d=137, mean|d|=0.039341, r_b=-0.069639); AV_98 (V, d=124, mean|d|=0.056045, r_b=-0.019317); G_A462S (G, d=240, mean|d|=0.023763, r_b=-0.010431); G_A551K (G, d=329, mean|d|=0.040495, r_b=+0.017881); G_D629C (G, d=407, mean|d|=0.050469, r_b=-0.051331); G_E168S (G, d=54, mean|d|=0.055522, r_b=+0.008234); G_E16V (G, d=206, mean|d|=0.026296, r_b=+0.000346); G_E383T (G, d=161, mean|d|=0.024198, r_b=-0.028507); G_E54R (G, d=168, mean|d|=0.074310, r_b=-0.029958); G_G317Q (G, d=95, mean|d|=0.083687, r_b=-0.012269); G_G562M (G, d=340, mean|d|=0.052264, r_b=+0.013135); G_H613R (G, d=391, mean|d|=0.046716, r_b=+0.014230); G_I192T (G, d=30, mean|d|=0.066874, r_b=+0.017756); G_K27I (G, d=195, mean|d|=0.041987, r_b=+0.011272); G_K48P (G, d=174, mean|d|=0.091033, r_b=-0.033770); G_L178T (G, d=44, mean|d|=0.063864, r_b=-0.031498); G_L318F (G, d=96, mean|d|=0.076720, r_b=-0.030706); G_L472H (G, d=250, mean|d|=0.040689, r_b=+0.006652); G_M111N (G, d=111, mean|d|=0.072854, r_b=-0.039641); G_N12P (G, d=210, mean|d|=0.034684, r_b=-0.043302); G_N3K (G, d=219, mean|d|=0.033709, r_b=-0.040337); G_P346V (G, d=124, mean|d|=0.065969, r_b=+0.004519); G_S430P (G, d=208, mean|d|=0.064768, r_b=+0.016145); G_T115G (G, d=107, mean|d|=0.056861, r_b=-0.005662); G_T521D (G, d=299, mean|d|=0.036518, r_b=-0.015673); G_T549H (G, d=327, mean|d|=0.033579, r_b=+0.003606); G_W59C (G, d=163, mean|d|=0.055211, r_b=-0.036907); G_Y197V (G, d=25, mean|d|=0.137584, r_b=+0.007970)
+    [H]  fit on n = 78;  OLS coefficients: intercept -0.104791  mean|delta| -0.464836  log1p(dist) +0.024540
+      A222V covariates = mean|delta| 0.069403, log1p(dist) 1.098612
+      r_A = +0.020070;  #{b in N: r_b <= r_A} = 55 of 78
+      p_spec_adj = (1 + 55)/(1 + 78) = 0.708861   -> ABOVE the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 56/79
+      at or below r_A: AV_113 (V, d=109, mean|d|=0.095327, r_b=-0.055526); AV_116 (V, d=106, mean|d|=0.089718, r_b=-0.025813); AV_145 (V, d=77, mean|d|=0.070800, r_b=-0.021665); AV_155 (V, d=67, mean|d|=0.087136, r_b=-0.048594); AV_175 (V, d=47, mean|d|=0.064560, r_b=-0.022695); AV_19 (V, d=203, mean|d|=0.011486, r_b=-0.018255); AV_195 (V, d=27, mean|d|=0.098154, r_b=-0.026416); AV_220 (V, d=2, mean|d|=0.050233, r_b=+0.009070); AV_242 (V, d=20, mean|d|=0.051866, r_b=-0.014378); AV_292 (V, d=70, mean|d|=0.038504, r_b=+0.010848); AV_293 (V, d=71, mean|d|=0.065113, r_b=-0.028431); AV_302 (V, d=80, mean|d|=0.058618, r_b=-0.008927); AV_311 (V, d=89, mean|d|=0.052451, r_b=-0.022816); AV_328 (V, d=106, mean|d|=0.059746, r_b=-0.034433); AV_350 (V, d=128, mean|d|=0.038476, r_b=-0.020864); AV_353 (V, d=131, mean|d|=0.034613, r_b=+0.012343); AV_462 (V, d=240, mean|d|=0.028836, r_b=-0.019448); AV_5 (V, d=217, mean|d|=0.017291, r_b=-0.006005); AV_511 (V, d=289, mean|d|=0.060814, r_b=+0.009754); AV_522 (V, d=300, mean|d|=0.041415, r_b=-0.014425); AV_524 (V, d=302, mean|d|=0.037340, r_b=+0.008072); AV_551 (V, d=329, mean|d|=0.026299, r_b=-0.027012); AV_558 (V, d=336, mean|d|=0.036049, r_b=+0.014411); AV_587 (V, d=365, mean|d|=0.048179, r_b=+0.017892); AV_650 (V, d=428, mean|d|=0.024623, r_b=-0.027673); AV_655 (V, d=433, mean|d|=0.027849, r_b=-0.036136); AV_70 (V, d=152, mean|d|=0.059448, r_b=-0.036074); AV_73 (V, d=149, mean|d|=0.058394, r_b=-0.044948); AV_84 (V, d=138, mean|d|=0.047626, r_b=-0.039008); AV_85 (V, d=137, mean|d|=0.042106, r_b=-0.079782); AV_98 (V, d=124, mean|d|=0.057796, r_b=-0.009984); G_A462S (G, d=240, mean|d|=0.023214, r_b=-0.025531); G_D629C (G, d=407, mean|d|=0.053420, r_b=-0.047952); G_E168S (G, d=54, mean|d|=0.061893, r_b=+0.003315); G_E16V (G, d=206, mean|d|=0.026851, r_b=-0.000564); G_E383T (G, d=161, mean|d|=0.024467, r_b=-0.020616); G_E54R (G, d=168, mean|d|=0.068873, r_b=-0.034188); G_G317Q (G, d=95, mean|d|=0.081278, r_b=-0.021653); G_G562M (G, d=340, mean|d|=0.051908, r_b=+0.005004); G_H613R (G, d=391, mean|d|=0.050113, r_b=+0.012323); G_K27I (G, d=195, mean|d|=0.043738, r_b=+0.015874); G_K48P (G, d=174, mean|d|=0.090253, r_b=-0.031871); G_L178T (G, d=44, mean|d|=0.071155, r_b=-0.030837); G_L318F (G, d=96, mean|d|=0.076880, r_b=-0.035225); G_L472H (G, d=250, mean|d|=0.040119, r_b=+0.007858); G_M111N (G, d=111, mean|d|=0.083627, r_b=-0.029694); G_N12P (G, d=210, mean|d|=0.032655, r_b=-0.043301); G_N3K (G, d=219, mean|d|=0.032853, r_b=-0.043678); G_P254F (G, d=32, mean|d|=0.200143, r_b=+0.016302); G_P346V (G, d=124, mean|d|=0.066640, r_b=+0.008861); G_T115G (G, d=107, mean|d|=0.067814, r_b=-0.001988); G_T521D (G, d=299, mean|d|=0.036010, r_b=-0.033538); G_T549H (G, d=327, mean|d|=0.036599, r_b=+0.015939); G_W59C (G, d=163, mean|d|=0.058900, r_b=-0.041167); G_Y197V (G, d=25, mean|d|=0.138760, r_b=+0.019580)
+
+
+  === SENS (iii) shift-only (= D9 primary) ===
+    [full]  fit on n = 78;  OLS coefficients: intercept +0.029386  mean|delta| -0.726287
+      A222V covariates = mean|delta| 0.070330
+      r_A = -0.066425;  #{b in N: r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.05
+      A222V signed rank within N u {A222V} = 3/79
+      at or below r_A: AV_220 (V, d=2, mean|d|=0.047893, r_b=-0.080278); AV_85 (V, d=137, mean|d|=0.039341, r_b=-0.073252)
+    [H]  fit on n = 78;  OLS coefficients: intercept +0.032440  mean|delta| -0.774750
+      A222V covariates = mean|delta| 0.069403
+      r_A = -0.068692;  #{b in N: r_b <= r_A} = 2 of 78
+      p_spec_adj = (1 + 2)/(1 + 78) = 0.037975   -> AT OR BELOW the frozen threshold 0.1
+      A222V signed rank within N u {A222V} = 3/79
+      at or below r_A: AV_220 (V, d=2, mean|d|=0.050233, r_b=-0.089189); AV_85 (V, d=137, mean|d|=0.042106, r_b=-0.083078)
+
+                                 variant  view   k  p_spec_adj         r_A    rank  vs frozen
+                    PRIMARY  log1p(dist)  full  69    0.886076   +0.045227   70/79  ABOVE 0.05
+                    PRIMARY  log1p(dist)     H  70    0.898734   +0.047030   71/79  ABOVE 0.1
+                   SENS (i)  linear dist  full   9    0.126582   -0.033711   10/79  ABOVE 0.05
+                   SENS (i)  linear dist     H  10    0.139241   -0.035948   11/79  ABOVE 0.1
+    SENS (ii) CLAMPED: A222V at dist = 2  full  56    0.721519   +0.019003   57/79  ABOVE 0.05
+    SENS (ii) CLAMPED: A222V at dist = 2     H  55    0.708861   +0.020070   56/79  ABOVE 0.1
+    SENS (iii) shift-only (= D9 primary)  full   2    0.037975   -0.066425    3/79  AT OR BELOW 0.05
+    SENS (iii) shift-only (= D9 primary)     H   2    0.037975   -0.068692    3/79  AT OR BELOW 0.1
+
+------------------------------------------------------------------------------
+D10b -- NEIGHBOURHOOD RESTRICTED RANKS on D9's PRIMARY residuals
+------------------------------------------------------------------------------
+*** RANK FRACTIONS, NOT TESTS.  n is tiny by construction; these are descriptive counts. ***
+  k=10 nearest (full):  # at or below =  8 of 10  ->  rank fraction (1 + 8)/(1 + 10) = 0.8182   at or below: AV_195, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+  k=10 nearest (   H):  # at or below =  9 of 10  ->  rank fraction (1 + 9)/(1 + 10) = 0.9091   at or below: AV_195, AV_209, AV_220, AV_233, AV_242, G_I192T, G_L178T, G_P254F, G_Y197V
+  k=20 nearest (full):  # at or below = 18 of 20  ->  rank fraction (1 + 18)/(1 + 20) = 0.9048   at or below: AV_145, AV_155, AV_175, AV_195, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+  k=20 nearest (   H):  # at or below = 19 of 20  ->  rank fraction (1 + 19)/(1 + 20) = 0.9524   at or below: AV_145, AV_155, AV_175, AV_195, AV_209, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, G_E168S, G_E279K, G_G317Q, G_I192T, G_L178T, G_P254F, G_Y197V
+
+  the 20 nearest by sequence distance: ['AV_220', 'AV_233', 'AV_209', 'AV_204', 'AV_242', 'G_Y197V', 'AV_195', 'G_I192T', 'G_P254F', 'G_L178T', 'AV_175', 'G_E168S', 'G_E279K', 'AV_155', 'AV_292', 'AV_293', 'AV_145', 'AV_302', 'AV_311', 'G_G317Q']
+  ties in dist within N present at the cut? none (tie-break by ascending bg_id is the pre-registered rule)
+
+------------------------------------------------------------------------------
+D10c -- PARTIAL RANK CORRELATIONS across N (78)
+------------------------------------------------------------------------------
+  RESAMPLING UNIT: BACKGROUND.  Each draw resamples which of the 78 nulls were drawn, n = 78 with replacement, and recomputes the statistic; each background's rho_b, mean|delta| and dist are held FIXED.  Nothing is re-derived.  N_BOOT = 10000, SEED = 0.
+  *** NO PERMUTATION p IS COMPUTED, AND NONE MAY BE. ***  A partial correlation is a function of THREE correlations; shuffling ONE variable leaves the conditioning variable unpermuted and the other two correlations are not independent under the shuffle, so the resulting distribution is not a null for the partial statistic.  A naive shuffle is invalid here.  The bootstrap CI below is the whole uncertainty statement.
+
+  [full]  n = 78
+    pairwise Spearman(rho, mean|delta|) = -0.407276268   Spearman(rho, dist) = +0.696831550   Spearman(mean|delta|, dist) = -0.449969334
+    PARTIAL  Spearman(rho, dist | mean|delta|) = -0.146323470
+      background-level bootstrap 95% CI = [-0.401778, +0.106788]  (10000 usable draws)  (INCLUDES ZERO)
+    PARTIAL  Spearman(rho, mean|delta| | dist) = +0.629666674
+      background-level bootstrap 95% CI = [+0.472642, +0.742385]  (10000 usable draws)  (EXCLUDES ZERO)
+    no permutation p is reported for either -- see the reasoning above
+
+  [H]  n = 78
+    pairwise Spearman(rho, mean|delta|) = -0.404595405   Spearman(rho, dist) = +0.673992906   Spearman(mean|delta|, dist) = -0.441230960
+    PARTIAL  Spearman(rho, dist | mean|delta|) = -0.161717649
+      background-level bootstrap 95% CI = [-0.416825, +0.083508]  (10000 usable draws)  (INCLUDES ZERO)
+    PARTIAL  Spearman(rho, mean|delta| | dist) = +0.603747329
+      background-level bootstrap 95% CI = [+0.451631, +0.719109]  (10000 usable draws)  (EXCLUDES ZERO)
+    no permutation p is reported for either -- see the reasoning above
+
+  side-by-side (which axis carries the association once the other is held fixed?):
+   view     rho~dist | mean|d|                         CI  excl0       rho~mean|d| | dist                         CI  excl0
+   full              -0.146323 [-0.401778, +0.106788]  False                +0.629667 [+0.472642, +0.742385]   True
+      H              -0.161718 [-0.416825, +0.083508]  False                +0.603747 [+0.451631, +0.719109]   True
+
+------------------------------------------------------------------------------
+D10 LIMITATIONS (printed, not only in the docstring)
+------------------------------------------------------------------------------
+  A222V's distance covariate is an EXTRAPOLATION (dist = 0, null minimum 2) in every variant with a distance term; the CLAMPED sensitivity addresses this and is reported, not selected.  dist is SEQUENCE distance and licenses no spatial reading -- D11 is that task.  D10a's and D10b's p_spec_adj and rank fractions are deterministic OLS fits and exact rank counts with NO Monte-Carlo component; only D10c has resampling, and its unit is the BACKGROUND, which does NOT model the fact that the 96 rho_b share one y-vector and are mutually correlated (disclosed, not corrected).  D10c has NO permutation p by design and the reason is printed above.  PARTIAL CONSTRUCTIONAL OVERLAP: mean|delta| and rho_b are both functions of the same delta_b.  Nothing here is a decision rule and nothing frozen is redefined.
+Elapsed 11.1s
