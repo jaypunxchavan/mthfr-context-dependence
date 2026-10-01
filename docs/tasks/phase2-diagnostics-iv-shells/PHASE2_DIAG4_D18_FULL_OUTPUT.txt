@@ -1,0 +1,367 @@
+
+==============================================================================
+D18 -- BOOTSTRAP REPRODUCTION GATE + CORRECTED CIs FOR A222V's RHO  (script 148)
+==============================================================================
+SCOPE: descriptive; nothing frozen is redefined; the frozen PHASE2_PREREG.md verdict is not touched.
+NO MODEL SCORING.  NO torch / esm / thermompnn import anywhere in this file.
+  N_BOOT=10000 N_DRAW=200 SEED=0   (BOOT_FULL=True, DRAW_FULL=True)
+  RESAMPLING UNIT: POSITION CLUSTER for every bootstrap below (whole retained target positions).  The matched-deletion control has no resampling unit inside a draw.
+
+------------------------------------------------------------------------------
+D18-G1 (HARD, SESSION-WIDE) -- reproduce Diagnostics III's machinery before anything new
+------------------------------------------------------------------------------
+  Every row: MY recomputed value beside the doc's target.  A mismatch means the DOC is wrong; the item stops and both numbers are reported.  Any FAIL here stops the whole session.
+
+  --- sha256 rows ---
+  [PASS] D18-G1 sha256 background_rho_table.csv: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] D18-G1 sha256 background_3d_distance.csv: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] D18-G1 sha256 PHASE2_DIAGNOSTICS_II_CORRECTIONS.md: 8089890ab84b0da931e3b2ef43a39c8be36babc7d9dd1281a36306c2d37fd176
+  [PASS] D18-G1 sha256 PHASE2_DIAGNOSTICS_II_CORRECTIONS_III.md: c32d0edb2b5f4b416eedccd52ff639da66b5ef346e8749dfeaa0ded125931f2d
+
+  --- building the shared state (script 125 construction via phase2_diag3.build) ---
+  build() elapsed 0.8s
+  bgs = 96, N_ids = 78, resN = 67, res96 = 85
+
+  --- A222V rho (re-derived) ---
+  [PASS] D18-G1 A222V rho re-derived (full): got -0.08811806424891734 vs target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] D18-G1 A222V rho re-derived (H): got -0.09002168303339808 vs target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+
+  --- frozen p_spec and beaters ---
+  [PASS] D18-G1 frozen p_spec k/n (full): k = 1, n = 78, p = (1+k)/(1+n) = 0.025316456  [the doc writes this as 2/79]
+  [PASS] D18-G1 frozen p_spec value (full): got 0.02531645569620253 vs target 0.025316456 |diff| = 3.038e-10 (gate < 1e-09)
+  [PASS] D18-G1 frozen beaters (full): ['G_P254F'] vs target ['G_P254F']
+  [PASS] D18-G1 frozen p_spec k/n (H): k = 3, n = 78, p = (1+k)/(1+n) = 0.050632911  [the doc writes this as 4/79]
+  [PASS] D18-G1 frozen p_spec value (H): got 0.05063291139240506 vs target 0.050632911 |diff| = 3.924e-10 (gate < 1e-09)
+  [PASS] D18-G1 frozen beaters (H): ['AV_195', 'AV_220', 'G_P254F'] vs target ['AV_195', 'AV_220', 'G_P254F']
+
+  --- k_R (positions removed from the resolved universe) ---
+  [PASS] D18-G1 k_R (full, R=10): got 23 vs target 23
+  [PASS] D18-G1 k_R (full, R=20): got 121 vs target 121
+  [PASS] D18-G1 k_R (full, R=30): got 247 vs target 247
+  [PASS] D18-G1 k_R (H, R=10): got 13 vs target 13
+  [PASS] D18-G1 k_R (H, R=20): got 86 vs target 86
+  [PASS] D18-G1 k_R (H, R=30): got 172 vs target 172
+
+  --- S1 statistics (R = 10/20/30, both views) ---
+  [PASS] D18-G1 S1 A222V rho (full, R=10): got -0.07923713938832432 vs target -0.079237139 |diff| = 3.883e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=10): got 0.6894542553502687 vs target 0.689454255 |diff| = 3.503e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=10): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+        [full, R=10] at or below (n=78): ['AV_220', 'G_P254F']
+  [PASS] D18-G1 S1 A222V rho (full, R=20): got -0.06594789054089026 vs target -0.065947891 |diff| = 4.591e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=20): got 0.6620971766258761 vs target 0.662097177 |diff| = 3.741e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=20): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+        [full, R=20] at or below (n=78): ['AV_220', 'G_P254F']
+  [PASS] D18-G1 S1 A222V rho (full, R=30): got -0.02736012725503149 vs target -0.027360127 |diff| = 2.550e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=30): got 0.40067843966871375 vs target 0.40067844 |diff| = 3.313e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=30): got 0.06329113924050633 vs target 0.063291 |diff| = 1.392e-07 (gate < 2e-06)
+        [full, R=30] at or below (n=78): ['AV_145', 'AV_220', 'G_L318F', 'G_P254F']
+  [PASS] D18-G1 S1 A222V rho (H, R=10): got -0.0821018891212313 vs target -0.082101889 |diff| = 1.212e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=10): got 0.6865808641494574 vs target 0.686580864 |diff| = 1.495e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=10): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+        [H, R=10] at or below (n=78): ['AV_220', 'G_P254F']
+  [PASS] D18-G1 S1 A222V rho (H, R=20): got -0.0635966285430177 vs target -0.063596629 |diff| = 4.570e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=20): got 0.6403472015641779 vs target 0.640347202 |diff| = 4.358e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=20): got 0.05063291139240506 vs target 0.050633 |diff| = 8.861e-08 (gate < 2e-06)
+        [H, R=20] at or below (n=78): ['AV_220', 'G_L318F', 'G_P254F']
+  [PASS] D18-G1 S1 A222V rho (H, R=30): got -0.024367373837117238 vs target -0.024367374 |diff| = 1.629e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=30): got 0.2413449067626042 vs target 0.241344907 |diff| = 2.374e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=30): got 0.10126582278481013 vs target 0.101266 |diff| = 1.772e-07 (gate < 2e-06)
+        [H, R=30] at or below (n=78): ['AV_145', 'AV_220', 'AV_328', 'AV_650', 'G_G317Q', 'G_L318F', 'G_P254F']
+
+  --- matched-deletion gradient ranges (same generator calls as script 144's control loop) ---
+  [PASS] D18-G1 matched-deletion gradient range (full, R=10): got [+0.680406565, +0.706900130] vs target [+0.680407, +0.706900] |diff| = 4.350e-07 / 1.298e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (full, R=20): got [+0.663147261, +0.723050983] vs target [+0.663147, +0.723051] |diff| = 2.614e-07 / 1.712e-08 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (full, R=30): got [+0.615026439, +0.731210217] vs target [+0.615026, +0.731210] |diff| = 4.393e-07 / 2.166e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=10): got [+0.675493864, +0.702835977] vs target [+0.675494, +0.702836] |diff| = 1.358e-07 / 2.261e-08 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=20): got [+0.642046793, +0.720171605] vs target [+0.642047, +0.720172] |diff| = 2.075e-07 / 3.945e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=30): got [+0.602546643, +0.726412751] vs target [+0.602547, +0.726413] |diff| = 3.572e-07 / 2.492e-07 (gate < 2e-06)
+
+  D18-G1 SUMMARY: 42/42 checks PASS, 0 FAIL
+  GATE PASS: D18-G1 satisfied.  D15's machinery reproduces, so the deletion routine may be used for new statistics (D19-D21).
+
+------------------------------------------------------------------------------
+D18.0 -- what did Phase 1 do?  (verbatim quotes, file:line)
+------------------------------------------------------------------------------
+  PHASE1_LOG.md line 383 (section [A1]), verbatim:
+  docs/tasks/phase1-corrections-diagnostics/PHASE1_LOG.md:383:   G2 PASS: headline row reproduced exactly (-0.0881180642489173, CI [-0.1173334458953319, -0.0595113844951173])
+
+  The script that printed it is 111_a1_b1_within_family_disattenuation.py (print spans lines 221-222); the CI it reads comes from task32_delta_esm_primary.csv:
+  scripts/111_a1_b1_within_family_disattenuation.py:221:     print(f"  G2 PASS: headline row reproduced exactly "
+  scripts/111_a1_b1_within_family_disattenuation.py:222:           f"({rho_head!r}, CI [{ci_lo!r}, {ci_hi!r}])")
+  data/processed/task32_delta_esm_primary.csv, row (primary,'signed, own e_b'): value = -0.0881180642489173, ci_lo = -0.1173334458953319, ci_hi = -0.0595113844951173, n = 10757
+
+  The bootstrap behind it -- scripts/lib/stats.py lines 34-56 (what a cluster is; how clusters are drawn; how rho is computed on a resample):
+  scripts/lib/stats.py:34: def _cluster_indices(d, cluster_col):
+  scripts/lib/stats.py:35:     clusters = d[cluster_col].unique()
+  scripts/lib/stats.py:36:     return clusters, {c: d.index[d[cluster_col] == c].to_numpy() for c in clusters}
+  scripts/lib/stats.py:37: 
+  scripts/lib/stats.py:38: 
+  scripts/lib/stats.py:39: def position_cluster_bootstrap(df, cluster_col, x_col, y_col, n_boot=10000, seed=0):
+  scripts/lib/stats.py:40:     """Cluster bootstrap for a Spearman correlation.
+  scripts/lib/stats.py:41:     p_boot == 0.0 means no resample crossed zero -> report p < 1/n_boot."""
+  scripts/lib/stats.py:42:     d = df[[cluster_col, x_col, y_col]].dropna()
+  scripts/lib/stats.py:43:     clusters, idx_by = _cluster_indices(d, cluster_col)
+  scripts/lib/stats.py:44:     x, y = d[x_col].to_numpy(), d[y_col].to_numpy()
+  scripts/lib/stats.py:45:     pos = {c: np.searchsorted(d.index.to_numpy(), idx_by[c]) for c in clusters}
+  scripts/lib/stats.py:46: 
+  scripts/lib/stats.py:47:     observed = _spearman(x, y)
+  scripts/lib/stats.py:48:     rng = np.random.default_rng(seed)
+  scripts/lib/stats.py:49:     boot = np.empty(n_boot)
+  scripts/lib/stats.py:50:     for b in range(n_boot):
+  scripts/lib/stats.py:51:         drawn = rng.choice(clusters, size=len(clusters), replace=True)
+  scripts/lib/stats.py:52:         i = np.concatenate([pos[c] for c in drawn])
+  scripts/lib/stats.py:53:         boot[b] = _spearman(x[i], y[i])
+  scripts/lib/stats.py:54:     out = _summarize(observed, boot)
+  scripts/lib/stats.py:55:     out.update({"n_rows": len(d), "n_clusters": len(clusters)})
+  scripts/lib/stats.py:56:     return out
+
+  N_BOOT and the seed -- scripts/32_delta_esm_primary.py lines 48-49 and the call at 101-102:
+  scripts/32_delta_esm_primary.py:48: N_BOOT = int(os.environ.get("N_BOOT", 10000))
+  scripts/32_delta_esm_primary.py:49: SEED = 0
+  scripts/32_delta_esm_primary.py:101:         r = position_cluster_bootstrap(sub, "position", xc, yc,
+  scripts/32_delta_esm_primary.py:102:                                        n_boot=N_BOOT, seed=SEED)
+
+  In words: a CLUSTER is one residue position (all substitutions sharing it); each draw samples len(clusters) cluster LABELS with replacement via rng.choice(..., replace=True) from a np.random.default_rng(0) stream; the drawn clusters' row indices are CONCATENATED (every row of every sampled cluster, repeats included) and rho is recomputed on that resampled row set as Spearman (ranks + Pearson, _spearman, line 13-15); N_BOOT = 10000, seed = 0.
+
+------------------------------------------------------------------------------
+D18.1 -- reproduce Phase 1's CI with Phase 1's OWN routine (gate D18-G2)
+------------------------------------------------------------------------------
+  rows: 10757, positions: 654, columns ['position', 'delta', 'own_e_b', 'region']
+  calling scripts/lib/stats.py position_cluster_bootstrap(df, 'position', 'delta', 'own_e_b', n_boot=10000, seed=0) -- imported, unmodified
+  elapsed 14.4s
+  Phase 1 routine: observed = -0.08811806424891734, CI = [np.float64(-0.1173334458953319), np.float64(-0.05951138449511738)], median n/a, n_rows = 10757, n_clusters = 654, p_boot = 0.0
+  published CI (task32 CSV)          = [-0.1173334458953319, -0.0595113844951173], point = -0.0881180642489173
+  [PASS] D18-G2 Phase 1 routine reproduces the published CI (1e-9): |diff| lo = 0.000e+00, hi = 7.633e-17, point = 4.163e-17 (gate < 1e-9)
+
+------------------------------------------------------------------------------
+D18.2 -- script 144's pos_cluster_boot on the same rows (transcribed; its rng stream is its own)
+------------------------------------------------------------------------------
+  row set                                 point       p2.5        p50      p97.5         SE  centre-pt      width    nk rows/draw
+  (i) UNRESTRICTED (same rows as Phase 1) -0.088118064  -0.120939  -0.042333  +0.035496   0.039598  +0.045397   0.156435   654       654
+  (ii) R = 0 resolved rows (full)  -0.076685523  -0.109464  -0.029645  +0.051530   0.040967  +0.047719   0.160993   595       595
+  (iii) S1 R = 10 (full)           -0.079237139  -0.112073  -0.028585  +0.053240   0.042205  +0.049821   0.165313   572       572
+  (iii) S1 R = 20 (full)           -0.065947891  -0.105245  -0.013324  +0.077592   0.046330  +0.052121   0.182837   474       474
+  (iii) S1 R = 30 (full)           -0.027360127  -0.125006  -0.019606  +0.087795   0.054359  +0.008755   0.212801   348       348
+  ('rows/draw' is what script 144's routine actually evaluates: exactly nk rows per draw (one per sampled cluster occurrence), not the sampled clusters' full row complement.)
+  D18.1 (Phase 1) on the SAME rows:  point -0.088118064, CI [-0.117333, -0.059511], width 0.057822
+  script 144 on the SAME rows:       point -0.088118064, CI [-0.120939, +0.035496], width 0.156435;  width ratio = 2.71x, centre - point = +0.045397
+
+------------------------------------------------------------------------------
+D18.3 -- transcription fidelity vs D15's printed output, then gate D18-G3 (draw-by-draw reference)
+------------------------------------------------------------------------------
+  parsed 16 CI lines from D15's full output (PHASE2_DIAG3_D15_FULL_OUTPUT.txt); expected 16
+  [PASS] D18 transcription of pos_cluster_boot vs all 16 CIs in D15's printed output: max|diff| over 16 CIs = 4.571e-07 (gate < 2e-06); cluster counts all matched
+
+  --- 3c: pre-drawn variant vs the verbatim transcription (same generator) ---
+  [PASS] D18 pre-drawn variant == verbatim ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((ii) R = 0 resolved rows (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 10 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 20 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 30 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+
+  --- D18-G3: script 144's routine vs the slow reference, SAME pre-drawn positions, 200 draws ---
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| = 1.415e-01; draw 0 uses 10712 rows in the reference vs exactly 654 rows in script 144's routine (retained clusters = 654, retained rows = 10757)
+        first 5 clusters of draw 0 -> labels [559, 419, 337, 178, 203]
+        reference idx[:10]  = [10567, 10568, 10569, 10570, 10571, 10572, 10573, 10574, 10575, 10576]
+        144 idx[:10]       = see line 477 of the transcription (base + occurrence offset)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((ii) R = 0 resolved rows (full)): max|diff| = 1.680e-01; draw 0 uses 9632 rows in the reference vs exactly 595 rows in script 144's routine (retained clusters = 595, retained rows = 9740)
+        first 5 clusters of draw 0 -> labels [563, 435, 356, 211, 235]
+        reference idx[:10]  = [9033, 9034, 9035, 9036, 9037, 9038, 9039, 9040, 9041, 9042]
+        144 idx[:10]       = see line 477 of the transcription (base + occurrence offset)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 10 (full)): max|diff| = 1.836e-01; draw 0 uses 9340 rows in the reference vs exactly 572 rows in script 144's routine (retained clusters = 572, retained rows = 9377)
+        first 5 clusters of draw 0 -> labels [566, 444, 367, 228, 251]
+        reference idx[:10]  = [8883, 8884, 8885, 8886, 8887, 8888, 8889, 8890, 8891, 8892]
+        144 idx[:10]       = see line 477 of the transcription (base + occurrence offset)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 20 (full)): max|diff| = 1.665e-01; draw 0 uses 7804 rows in the reference vs exactly 474 rows in script 144's routine (retained clusters = 474, retained rows = 7742)
+        first 5 clusters of draw 0 -> labels [581, 479, 420, 294, 312]
+        reference idx[:10]  = [9540, 9541, 9542, 9543, 9544, 9545, 9546, 9547, 9548, 9549]
+        144 idx[:10]       = see line 477 of the transcription (base + occurrence offset)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 30 (full)): max|diff| = 1.452e-01; draw 0 uses 5741 rows in the reference vs exactly 348 rows in script 144's routine (retained clusters = 348, retained rows = 5701)
+        first 5 clusters of draw 0 -> labels [600, 525, 481, 397, 411]
+        reference idx[:10]  = [8629, 8630, 8631, 8632, 8633, 8634, 8635, 8636, 8637, 8638]
+        144 idx[:10]       = see line 477 of the transcription (base + occurrence offset)
+  D18-G3 result: DISAGREE on: (i) UNRESTRICTED (same rows as Phase 1), (ii) R = 0 resolved rows (full), (iii) S1 R = 10 (full), (iii) S1 R = 20 (full), (iii) S1 R = 30 (full)
+
+------------------------------------------------------------------------------
+D18.4 -- the defect, the corrected routine, and its gates
+------------------------------------------------------------------------------
+  D18-G3 FAILED -- script 144's routine does not reproduce the reference.  QUOTED SOURCE, scripts/144_phase2_diag3_farvariants.py lines 458-479 (the routine under test):
+  scripts/144_phase2_diag3_farvariants.py:458:     def pos_cluster_boot(view, keep, n_boot, rng):
+  scripts/144_phase2_diag3_farvariants.py:459:         """POSITION-CLUSTER bootstrap: whole retained target positions are
+  scripts/144_phase2_diag3_farvariants.py:460:         resampled with replacement; all their rows come with them."""
+  scripts/144_phase2_diag3_farvariants.py:461:         sa = store[view]["A"]
+  scripts/144_phase2_diag3_farvariants.py:462:         rows_sorted, sizes, base, npos = cluster_index(
+  scripts/144_phase2_diag3_farvariants.py:463:             store[view]["POSV"], sa.code, keep)
+  scripts/144_phase2_diag3_farvariants.py:464:         d, y = sa.delta[rows_sorted], sa.y[rows_sorted]
+  scripts/144_phase2_diag3_farvariants.py:465:         kept_sizes = sizes[keep]
+  scripts/144_phase2_diag3_farvariants.py:466:         kept_base = base[keep]
+  scripts/144_phase2_diag3_farvariants.py:467:         draws = np.empty(n_boot, float)
+  scripts/144_phase2_diag3_farvariants.py:468:         nk = len(kept_sizes)
+  scripts/144_phase2_diag3_farvariants.py:469:         for i in range(n_boot):
+  scripts/144_phase2_diag3_farvariants.py:470:             cnt = np.bincount(rng.integers(0, nk, nk), minlength=nk)
+  scripts/144_phase2_diag3_farvariants.py:471:             m = int(cnt.sum())
+  scripts/144_phase2_diag3_farvariants.py:472:             rep = np.repeat(np.arange(nk), cnt)
+  scripts/144_phase2_diag3_farvariants.py:473:             cum = np.concatenate([[0], np.cumsum(cnt)])
+  scripts/144_phase2_diag3_farvariants.py:474:             j = np.arange(m) - np.repeat(cum[:-1], cnt)
+  scripts/144_phase2_diag3_farvariants.py:475:             # `kept_base`/`j` are offsets into rows_sorted, i.e. into
+  scripts/144_phase2_diag3_farvariants.py:476:             # the RETAINED arrays d and y -- NOT into the original rows.
+  scripts/144_phase2_diag3_farvariants.py:477:             idx = np.repeat(kept_base, cnt)[rep] + j
+  scripts/144_phase2_diag3_farvariants.py:478:             draws[i] = rho_of(d[idx], y[idx])
+  scripts/144_phase2_diag3_farvariants.py:479:         return draws
+
+  WHAT IS WRONG (line by line):
+    line 470  cnt[s] = how often cluster s was drawn this draw.
+    line 475  j = np.arange(m) - np.repeat(cum[:-1], cnt) is the OCCURRENCE
+              index within a draw slot (0,1,2,... for slot s), NOT the row
+              offset within that cluster's rows.
+    line 477  idx = np.repeat(kept_base, cnt)[rep] + j therefore addresses
+              kept_base[s'] + occurrence-index, so a cluster drawn cnt[s]
+              times contributes rows base+0 .. base+cnt[s]-1 -- ONE row per
+              occurrence -- instead of ALL of the cluster's
+              sizes[s] rows.  Every draw evaluates exactly m = nk rows
+              (~595) rather than the sampled clusters' full complement
+              (~9,740 on the R = 0 resolved set), and the rows it does take
+              are the FIRST rows of each cluster, not the whole cluster.
+              The point-estimate identity gate cannot see this: it only ever
+              concatenates every cluster ONCE (line 486), a path that never
+              uses cnt or j.
+  CONSEQUENCE MEASURED ABOVE: a CI ~2.8x wider than Phase 1's and a centre
+  displaced from the point estimate, because the resample is a different
+  (one-row-per-cluster, order-biased) statistic.
+  FIX: scripts/lib/phase2_diag4.py pos_cluster_boot_corrected -- each drawn
+  cluster contributes ALL of its rows, concatenated in draw order (the
+  construction scripts/lib/stats.py lines 51-53 performs).  Script 144 is
+  NOT edited.
+  --- D18-G4a: corrected routine vs the reference, same pre-drawn positions (200 draws) ---
+  [PASS] D18-G4a corrected vs reference ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 10757 retained rows over 654 clusters
+  [PASS] D18-G4a corrected vs reference ((ii) R = 0 resolved rows (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 9740 retained rows over 595 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 10 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 9377 retained rows over 572 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 20 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 7742 retained rows over 474 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 30 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 5701 retained rows over 348 clusters
+  --- D18-G4b: corrected routine vs Phase 1's published CI on the unrestricted rows ---
+  [PASS] D18-G4b corrected routine reproduces Phase 1's published CI (1e-9): corrected CI [-0.1173334458953319, -0.05951138449511738] vs published [-0.1173334458953319, -0.0595113844951173]; |diff| 0.000e+00 / 7.633e-17 (gate < 1e-9)
+  (cluster order: first appearance in row order, Phase 1's own convention -- scripts/lib/stats.py lines 34-36; draw stream: rng.integers(0, nk, nk), the same stream Generator.choice consumes; verified in this run by G4b itself.)
+
+------------------------------------------------------------------------------
+D18.5 -- the twelve corrected CIs (N_BOOT=10000, SEED=0, fresh rng per cell)
+------------------------------------------------------------------------------
+   view cell                point      CI lo      CI hi     median        SE    ctr-pt     width  excl0   nk               old D15 CI    old w
+   full S1 R = 0     -0.076685523  -0.107547  -0.045843  -0.076636  0.015764 -0.000010  0.061703   True  595 [-0.110517, +0.052946] 0.163463
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 0): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 595 vs now 595
+   full S1 R = 10    -0.079237139  -0.110958  -0.047323  -0.079252  0.016225 +0.000097  0.063634   True  572 [-0.108943, +0.053475] 0.162418
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 10): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 572 vs now 572
+   full S1 R = 20    -0.065947891  -0.100593  -0.030938  -0.065740  0.017816 +0.000182  0.069655   True  474 [-0.106446, +0.077385] 0.183831
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 20): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 474 vs now 474
+   full S1 R = 30    -0.027360127  -0.067875  +0.012911  -0.027644  0.020565 -0.000122  0.080787  False  348 [-0.126369, +0.088052] 0.214421
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 30): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 348 vs now 348
+   full SEQ Rs = 25  -0.081584044  -0.113697  -0.049861  -0.081229  0.016036 -0.000194  0.063836   True  545 [-0.115971, +0.055396] 0.171367
+  [PASS] D18.5 identity, every cluster once (full / SEQ Rs = 25): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 545 vs now 545
+   full SEQ Rs = 50  -0.072880941  -0.106218  -0.039834  -0.073001  0.017053 -0.000145  0.066384   True  495 [-0.107525, +0.069562] 0.177087
+  [PASS] D18.5 identity, every cluster once (full / SEQ Rs = 50): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 495 vs now 495
+      H S1 R = 0     -0.080432398  -0.114432  -0.046209  -0.080330  0.017346 +0.000112  0.068223   True  418 [-0.136966, +0.050697] 0.187663
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 0): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 418 vs now 418
+      H S1 R = 10    -0.082101889  -0.116434  -0.046886  -0.081962  0.017986 +0.000442  0.069547   True  405 [-0.133307, +0.060709] 0.194016
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 10): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 405 vs now 405
+      H S1 R = 20    -0.063596629  -0.102800  -0.025367  -0.063631  0.019787 -0.000487  0.077433   True  332 [-0.131090, +0.087967] 0.219057
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 20): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 332 vs now 332
+      H S1 R = 30    -0.024367374  -0.071605  +0.023131  -0.024694  0.024286 +0.000130  0.094736  False  246 [-0.145818, +0.109530] 0.255348
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 30): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 246 vs now 246
+      H SEQ Rs = 25  -0.087875866  -0.123753  -0.052020  -0.087586  0.018138 -0.000011  0.071733   True  393 [-0.144621, +0.054462] 0.199083
+  [PASS] D18.5 identity, every cluster once (H / SEQ Rs = 25): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 393 vs now 393
+      H SEQ Rs = 50  -0.077360307  -0.114467  -0.039157  -0.076704  0.019291 +0.000548  0.075311   True  350 [-0.135943, +0.073553] 0.209496
+  [PASS] D18.5 identity, every cluster once (H / SEQ Rs = 50): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 350 vs now 350
+
+  widths and zero-exclusion, corrected vs old:
+  corrected CIs excluding zero: 10/12;  old D15 CIs excluding zero: 0/12
+     full S1 R = 0     corrected [-0.107547, -0.045843] EXCLUDES zero;  old [-0.110517, +0.052946] includes zero;  width 0.061703 vs 0.163463 (0.38x)
+     full S1 R = 10    corrected [-0.110958, -0.047323] EXCLUDES zero;  old [-0.108943, +0.053475] includes zero;  width 0.063634 vs 0.162418 (0.39x)
+     full S1 R = 20    corrected [-0.100593, -0.030938] EXCLUDES zero;  old [-0.106446, +0.077385] includes zero;  width 0.069655 vs 0.183831 (0.38x)
+     full S1 R = 30    corrected [-0.067875, +0.012911] includes zero;  old [-0.126369, +0.088052] includes zero;  width 0.080787 vs 0.214421 (0.38x)
+     full SEQ Rs = 25  corrected [-0.113697, -0.049861] EXCLUDES zero;  old [-0.115971, +0.055396] includes zero;  width 0.063836 vs 0.171367 (0.37x)
+     full SEQ Rs = 50  corrected [-0.106218, -0.039834] EXCLUDES zero;  old [-0.107525, +0.069562] includes zero;  width 0.066384 vs 0.177087 (0.37x)
+        H S1 R = 0     corrected [-0.114432, -0.046209] EXCLUDES zero;  old [-0.136966, +0.050697] includes zero;  width 0.068223 vs 0.187663 (0.36x)
+        H S1 R = 10    corrected [-0.116434, -0.046886] EXCLUDES zero;  old [-0.133307, +0.060709] includes zero;  width 0.069547 vs 0.194016 (0.36x)
+        H S1 R = 20    corrected [-0.102800, -0.025367] EXCLUDES zero;  old [-0.131090, +0.087967] includes zero;  width 0.077433 vs 0.219057 (0.35x)
+        H S1 R = 30    corrected [-0.071605, +0.023131] includes zero;  old [-0.145818, +0.109530] includes zero;  width 0.094736 vs 0.255348 (0.37x)
+        H SEQ Rs = 25  corrected [-0.123753, -0.052020] EXCLUDES zero;  old [-0.144621, +0.054462] includes zero;  width 0.071733 vs 0.199083 (0.36x)
+        H SEQ Rs = 50  corrected [-0.114467, -0.039157] EXCLUDES zero;  old [-0.135943, +0.073553] includes zero;  width 0.075311 vs 0.209496 (0.36x)
+
+------------------------------------------------------------------------------
+D18 GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] D18-G1 sha256 background_rho_table.csv: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796
+  [PASS] D18-G1 sha256 background_3d_distance.csv: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de
+  [PASS] D18-G1 sha256 PHASE2_DIAGNOSTICS_II_CORRECTIONS.md: 8089890ab84b0da931e3b2ef43a39c8be36babc7d9dd1281a36306c2d37fd176
+  [PASS] D18-G1 sha256 PHASE2_DIAGNOSTICS_II_CORRECTIONS_III.md: c32d0edb2b5f4b416eedccd52ff639da66b5ef346e8749dfeaa0ded125931f2d
+  [PASS] D18-G1 A222V rho re-derived (full): got -0.08811806424891734 vs target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] D18-G1 A222V rho re-derived (H): got -0.09002168303339808 vs target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] D18-G1 frozen p_spec k/n (full): k = 1, n = 78, p = (1+k)/(1+n) = 0.025316456  [the doc writes this as 2/79]
+  [PASS] D18-G1 frozen p_spec value (full): got 0.02531645569620253 vs target 0.025316456 |diff| = 3.038e-10 (gate < 1e-09)
+  [PASS] D18-G1 frozen beaters (full): ['G_P254F'] vs target ['G_P254F']
+  [PASS] D18-G1 frozen p_spec k/n (H): k = 3, n = 78, p = (1+k)/(1+n) = 0.050632911  [the doc writes this as 4/79]
+  [PASS] D18-G1 frozen p_spec value (H): got 0.05063291139240506 vs target 0.050632911 |diff| = 3.924e-10 (gate < 1e-09)
+  [PASS] D18-G1 frozen beaters (H): ['AV_195', 'AV_220', 'G_P254F'] vs target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] D18-G1 k_R (full, R=10): got 23 vs target 23
+  [PASS] D18-G1 k_R (full, R=20): got 121 vs target 121
+  [PASS] D18-G1 k_R (full, R=30): got 247 vs target 247
+  [PASS] D18-G1 k_R (H, R=10): got 13 vs target 13
+  [PASS] D18-G1 k_R (H, R=20): got 86 vs target 86
+  [PASS] D18-G1 k_R (H, R=30): got 172 vs target 172
+  [PASS] D18-G1 S1 A222V rho (full, R=10): got -0.07923713938832432 vs target -0.079237139 |diff| = 3.883e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=10): got 0.6894542553502687 vs target 0.689454255 |diff| = 3.503e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=10): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+  [PASS] D18-G1 S1 A222V rho (full, R=20): got -0.06594789054089026 vs target -0.065947891 |diff| = 4.591e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=20): got 0.6620971766258761 vs target 0.662097177 |diff| = 3.741e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=20): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+  [PASS] D18-G1 S1 A222V rho (full, R=30): got -0.02736012725503149 vs target -0.027360127 |diff| = 2.550e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (full, R=30): got 0.40067843966871375 vs target 0.40067844 |diff| = 3.313e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (full, R=30): got 0.06329113924050633 vs target 0.063291 |diff| = 1.392e-07 (gate < 2e-06)
+  [PASS] D18-G1 S1 A222V rho (H, R=10): got -0.0821018891212313 vs target -0.082101889 |diff| = 1.212e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=10): got 0.6865808641494574 vs target 0.686580864 |diff| = 1.495e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=10): got 0.0379746835443038 vs target 0.037975 |diff| = 3.165e-07 (gate < 2e-06)
+  [PASS] D18-G1 S1 A222V rho (H, R=20): got -0.0635966285430177 vs target -0.063596629 |diff| = 4.570e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=20): got 0.6403472015641779 vs target 0.640347202 |diff| = 4.358e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=20): got 0.05063291139240506 vs target 0.050633 |diff| = 8.861e-08 (gate < 2e-06)
+  [PASS] D18-G1 S1 A222V rho (H, R=30): got -0.024367373837117238 vs target -0.024367374 |diff| = 1.629e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 gradient n=67 (H, R=30): got 0.2413449067626042 vs target 0.241344907 |diff| = 2.374e-10 (gate < 1e-09)
+  [PASS] D18-G1 S1 p_spec n=78 (H, R=30): got 0.10126582278481013 vs target 0.101266 |diff| = 1.772e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (full, R=10): got [+0.680406565, +0.706900130] vs target [+0.680407, +0.706900] |diff| = 4.350e-07 / 1.298e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (full, R=20): got [+0.663147261, +0.723050983] vs target [+0.663147, +0.723051] |diff| = 2.614e-07 / 1.712e-08 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (full, R=30): got [+0.615026439, +0.731210217] vs target [+0.615026, +0.731210] |diff| = 4.393e-07 / 2.166e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=10): got [+0.675493864, +0.702835977] vs target [+0.675494, +0.702836] |diff| = 1.358e-07 / 2.261e-08 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=20): got [+0.642046793, +0.720171605] vs target [+0.642047, +0.720172] |diff| = 2.075e-07 / 3.945e-07 (gate < 2e-06)
+  [PASS] D18-G1 matched-deletion gradient range (H, R=30): got [+0.602546643, +0.726412751] vs target [+0.602547, +0.726413] |diff| = 3.572e-07 / 2.492e-07 (gate < 2e-06)
+  [PASS] D18-G2 Phase 1 routine reproduces the published CI (1e-9): |diff| lo = 0.000e+00, hi = 7.633e-17, point = 4.163e-17 (gate < 1e-9)
+  [PASS] D18 transcription of pos_cluster_boot vs all 16 CIs in D15's printed output: max|diff| over 16 CIs = 4.571e-07 (gate < 2e-06); cluster counts all matched
+  [PASS] D18 pre-drawn variant == verbatim ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((ii) R = 0 resolved rows (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 10 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 20 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [PASS] D18 pre-drawn variant == verbatim ((iii) S1 R = 30 (full)): max|diff| over 200 draws = 0.000e+00 (required EXACTLY 0)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| = 1.415e-01; draw 0 uses 10712 rows in the reference vs exactly 654 rows in script 144's routine (retained clusters = 654, retained rows = 10757)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((ii) R = 0 resolved rows (full)): max|diff| = 1.680e-01; draw 0 uses 9632 rows in the reference vs exactly 595 rows in script 144's routine (retained clusters = 595, retained rows = 9740)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 10 (full)): max|diff| = 1.836e-01; draw 0 uses 9340 rows in the reference vs exactly 572 rows in script 144's routine (retained clusters = 572, retained rows = 9377)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 20 (full)): max|diff| = 1.665e-01; draw 0 uses 7804 rows in the reference vs exactly 474 rows in script 144's routine (retained clusters = 474, retained rows = 7742)
+  [FAIL] D18-G3 first 200 draws agree to 1e-12 ((iii) S1 R = 30 (full)): max|diff| = 1.452e-01; draw 0 uses 5741 rows in the reference vs exactly 348 rows in script 144's routine (retained clusters = 348, retained rows = 5701)
+  [PASS] D18-G4a corrected vs reference ((i) UNRESTRICTED (same rows as Phase 1)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 10757 retained rows over 654 clusters
+  [PASS] D18-G4a corrected vs reference ((ii) R = 0 resolved rows (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 9740 retained rows over 595 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 10 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 9377 retained rows over 572 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 20 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 7742 retained rows over 474 clusters
+  [PASS] D18-G4a corrected vs reference ((iii) S1 R = 30 (full)): max|diff| over 200 draws = 0.000e+00 (gate < 1e-12); 5701 retained rows over 348 clusters
+  [PASS] D18-G4b corrected routine reproduces Phase 1's published CI (1e-9): corrected CI [-0.1173334458953319, -0.05951138449511738] vs published [-0.1173334458953319, -0.0595113844951173]; |diff| 0.000e+00 / 7.633e-17 (gate < 1e-9)
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 0): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 595 vs now 595
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 10): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 572 vs now 572
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 20): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 474 vs now 474
+  [PASS] D18.5 identity, every cluster once (full / S1 R = 30): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 348 vs now 348
+  [PASS] D18.5 identity, every cluster once (full / SEQ Rs = 25): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 545 vs now 545
+  [PASS] D18.5 identity, every cluster once (full / SEQ Rs = 50): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 495 vs now 495
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 0): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 418 vs now 418
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 10): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 405 vs now 405
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 20): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 332 vs now 332
+  [PASS] D18.5 identity, every cluster once (H / S1 R = 30): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 246 vs now 246
+  [PASS] D18.5 identity, every cluster once (H / SEQ Rs = 25): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 393 vs now 393
+  [PASS] D18.5 identity, every cluster once (H / SEQ Rs = 50): |diff| = 0.000e+00 (gate < 1e-12); old D15 clusters 350 vs now 350
+
+  D18 gates: 67/72 PASS, 5 FAIL
+
+Elapsed 302.0s

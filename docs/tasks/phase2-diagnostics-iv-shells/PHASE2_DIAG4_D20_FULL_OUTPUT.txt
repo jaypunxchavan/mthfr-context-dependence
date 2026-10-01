@@ -1,0 +1,815 @@
+
+==============================================================================
+D20 -- SHELL DECOMPOSITION: WHERE DOES THE FAR-VARIANT SIGNAL LIVE?  (script 150)
+==============================================================================
+SCOPE: descriptive.  Nothing frozen is redefined.  No frozen outcome word is used as a label anywhere.
+NO MODEL SCORING.  NO torch / esm / thermompnn import anywhere in this file.
+  N_DRAW=200 N_BOOT=10000 SEED=0
+RESAMPLING UNITS (not interchangeable):
+  * matched-control draws -> NONE inside a draw: a deterministic recomputation on a deleted/retained position set; the spread is the DELETION EFFECT (re-derivation null), not a bootstrap CI.
+  * the gradient 95% CI   -> BACKGROUND, N_BOOT draws, rho_b held FIXED.
+  * p_spec, row counts    -> NO resampling.
+  * A222V's rho           -> point statistic here; NO position-cluster CI is run in this script (D18.5 is this session's CI record).
+
+  --- building the shared state (script 125 construction via phase2_diag3.build) ---
+  build() elapsed 0.8s
+  bgs = 96, N_ids (p_spec nulls) = 78, resN (gradient nulls) = 67, res96 = 85
+  parsed 8 S1 table rows and k_R geometry for views ['H', 'full'] from PHASE2_DIAG3_D15_FULL_OUTPUT.txt
+
+------------------------------------------------------------------------------
+GEOMETRY -- THE FIVE SHELLS ON d3_222, PER VIEW
+------------------------------------------------------------------------------
+  QUOTED SOURCE of the premises (D15 full output):
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:37:   frame positions = 654;  position 222 itself IS NOT a frame target position
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:45:            R =    0 A: k_R =   0 positions removed, 595 retained  (min d3_222 among retained = 3.805 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:46:            R =   10 A: k_R =  23 positions removed, 572 retained  (min d3_222 among retained = 10.029 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:47:            R =   20 A: k_R = 121 positions removed, 474 retained  (min d3_222 among retained = 20.098 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:48:            R =   30 A: k_R = 247 positions removed, 348 retained  (min d3_222 among retained = 30.091 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:55:            R =    0 A: k_R =   0 positions removed, 418 retained  (min d3_222 among retained = 5.058 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:56:            R =   10 A: k_R =  13 positions removed, 405 retained  (min d3_222 among retained = 10.029 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:57:            R =   20 A: k_R =  86 positions removed, 332 retained  (min d3_222 among retained = 20.098 A)
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAG3_D15_FULL_OUTPUT.txt:58:            R =   30 A: k_R = 172 positions removed, 246 retained  (min d3_222 among retained = 30.091 A)
+  QUOTED SOURCE of the shell definition and its targets (task doc lines 202-204):
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:202: Pre-register in the docstring. **Shells** on `d3_222(p)` over the resolved target positions, fixed now, not tuned:
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:203: **(0, 10], (10, 20], (20, 30], (30, 45], (45, inf)**. Print the position count in each shell per view (targets from
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:204: D15's k_R differences, full frame: 23, 98, 126; report the other two). Two variants per shell and view:
+
+  [full] resolved universe = 595 positions;  min d3_222 = 3.805 A;  max = 81.011 A;  positions with d3_222 == 0 = 0
+  [full] shell counts: (0,10] = 23  (10,20] = 98  (20,30] = 126  (30,45] = 145  (45,inf) = 203   (sum = 595, resolved = 595)
+  [PASS] D20-G1c shells partition the full resolved universe: sum of shell counts = 595 vs resolved = 595; union = 595; pairwise intersections all empty = True
+  [full] *** ROWS AT UNRESOLVED POSITIONS DROPPED FROM EVERY VARIANT INCLUDING THE R = 0 BASELINE, NEVER IMPUTED: A222V 1017 of 10757 rows; per background min = 998, max = 1017 ***
+
+  [H] resolved universe = 418 positions;  min d3_222 = 5.058 A;  max = 81.011 A;  positions with d3_222 == 0 = 0
+  [H] shell counts: (0,10] = 13  (10,20] = 73  (20,30] = 86  (30,45] = 100  (45,inf) = 146   (sum = 418, resolved = 418)
+  [PASS] D20-G1c shells partition the H resolved universe: sum of shell counts = 418 vs resolved = 418; union = 418; pairwise intersections all empty = True
+  [H] *** ROWS AT UNRESOLVED POSITIONS DROPPED FROM EVERY VARIANT INCLUDING THE R = 0 BASELINE, NEVER IMPUTED: A222V 640 of 7526 rows; per background min = 621, max = 640 ***
+
+  SHELL COUNTS vs THEIR TARGETS (rule 2 -- the doc's values are recomputations, not facts):
+  [PASS] D20-G1c full shell (0,10] count vs doc target 23: recomputed from d3_222 = 23;  D15 k_R-derived = 23;  doc target = 23  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (0,10] count vs D15 k_R difference: recomputed = 23 vs D15 k_R-derived = 23 (exact integer equality)
+  [PASS] D20-G1c full shell (10,20] count vs doc target 98: recomputed from d3_222 = 98;  D15 k_R-derived = 98;  doc target = 98  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (10,20] count vs D15 k_R difference: recomputed = 98 vs D15 k_R-derived = 98 (exact integer equality)
+  [PASS] D20-G1c full shell (20,30] count vs doc target 126: recomputed from d3_222 = 126;  D15 k_R-derived = 126;  doc target = 126  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (20,30] count vs D15 k_R difference: recomputed = 126 vs D15 k_R-derived = 126 (exact integer equality)
+  [PASS] D20-G1c H shell (0,10] count vs D15 k_R difference: recomputed = 13 vs D15 k_R-derived = 13 (exact integer equality)
+  [PASS] D20-G1c H shell (10,20] count vs D15 k_R difference: recomputed = 73 vs D15 k_R-derived = 73 (exact integer equality)
+  [PASS] D20-G1c H shell (20,30] count vs D15 k_R difference: recomputed = 86 vs D15 k_R-derived = 86 (exact integer equality)
+  The two large shells have no doc target; REPORTED:
+    full: (30,45] = 145, (45,inf) = 203  (no target exists -- reported as is)
+    H: (30,45] = 100, (45,inf) = 146  (no target exists -- reported as is)
+
+------------------------------------------------------------------------------
+GATE D20-G1 (HARD) -- zero-deletion == R = 0 baseline; union of the first three shells == D15's R = 30
+------------------------------------------------------------------------------
+  QUOTED SOURCE of the gate (task doc lines 215-217):
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:215: **Gate D20-G1 (HARD):** deleting zero positions reproduces the R = 0 baseline exactly, and (as a cross-check of the
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:216: machinery) REMOVE-ONE-SHELL applied to the union of shells (0,10] and (10,20] and (20,30] reproduces D15's S1 R = 30
+  docs/tasks/phase2-diagnostics-iv-shells/PHASE2_DIAGNOSTICS_IV.md:217: statistics exactly (A222V rho -0.027360127, gradient +0.400678440 full).
+  TOLERANCES: compared against D15's PRINTED rows, each quantity is gated at its own print precision -- rho and gradient 9-dp prints -> 1e-9; p_spec is a 6-dp print (script 144 line 783) -> 5e-7.  DISCLOSURE: the first smoke run used a uniform 1e-9, which a 6-dp print cannot satisfy for ANY implementation; corrected to print precision before the full run, with no shell statistic seen (G1 runs first).
+  [PASS] D20-G1a zero-deletion == R = 0 baseline (full): keep arrays identical = True (required True); max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D20-G1a R = 0 baseline reproduces D15's printed row (full): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 3.08e-10 (tol 1e-09), gradient n=67 6.39e-11 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+    [full] R = 0 baseline: A222V rho = -0.076685523; gradient n=67 = +0.698473511; gradient n=85 = +0.780769661; p_spec n=78 = 0.037974684 (k = 2)
+  [PASS] D20-G1a zero-deletion == R = 0 baseline (H): keep arrays identical = True (required True); max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D20-G1a R = 0 baseline reproduces D15's printed row (H): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 2.96e-10 (tol 1e-09), gradient n=67 3.33e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+    [H] R = 0 baseline: A222V rho = -0.080432398; gradient n=67 = +0.688316871; gradient n=85 = +0.777402074; p_spec n=78 = 0.037974684 (k = 2)
+
+  [full] REMOVE union of shells (0,10]+(10,20]+(20,30] = 247 positions; D15's R = 30 removed 247 positions from D15's own k_R print
+  [PASS] D20-G1b union keep-mask == R = 30 keep-mask (full): boolean arrays identical = True (required EXACTLY True); union count = 247, R = 30 count = 247
+  [PASS] D20-G1b union removal reproduces D15's printed R = 30 row (full): worst is p_spec n=78: recomputed 0.06329113924050633 vs D15 printed 0.063291 |diff| = 1.392e-07 (gate < 5e-07 = that quantity's print precision); all: rho 2.55e-10 (tol 1e-09), gradient n=67 3.31e-10 (tol 1e-09), p_spec n=78 1.39e-07 (tol 5e-07)
+  [PASS] D20-G1b union removal reproduces the DOC target (A222V rho, full): recomputed -0.02736012725503149  vs  doc target -0.027360127  |diff| = 2.550e-10 (gate < 1e-09)
+  [PASS] D20-G1b union removal reproduces the DOC target (gradient n=67, full): recomputed 0.40067843966871375  vs  doc target 0.40067844  |diff| = 3.313e-10 (gate < 1e-09)
+  [PASS] D20-G1b REMOVE shell (0,10] reproduces D15's printed R = 10 row (full): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 3.88e-10 (tol 1e-09), gradient n=67 3.50e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+
+  [H] REMOVE union of shells (0,10]+(10,20]+(20,30] = 172 positions; D15's R = 30 removed 172 positions from D15's own k_R print
+  [PASS] D20-G1b union keep-mask == R = 30 keep-mask (H): boolean arrays identical = True (required EXACTLY True); union count = 172, R = 30 count = 172
+  [PASS] D20-G1b union removal reproduces D15's printed R = 30 row (H): worst is p_spec n=78: recomputed 0.10126582278481013 vs D15 printed 0.101266 |diff| = 1.772e-07 (gate < 5e-07 = that quantity's print precision); all: rho 1.63e-10 (tol 1e-09), gradient n=67 2.37e-10 (tol 1e-09), p_spec n=78 1.77e-07 (tol 5e-07)
+  [PASS] D20-G1b REMOVE shell (0,10] reproduces D15's printed R = 10 row (H): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 1.21e-10 (tol 1e-09), gradient n=67 1.49e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+
+  D20-G1: 23/23 checks PASS, 0 FAIL
+  GATE PASS: D20-G1 satisfied.  The shell analysis may run.
+
+------------------------------------------------------------------------------
+THE VARIANTS -- 5 shells x REMOVE / KEEP-ONLY x 2 views, each against its OWN size-matched control
+------------------------------------------------------------------------------
+  Matched controls: N_DRAW = 200, SEED = 0.  A FRESH np.random.default_rng(SEED) per (view, shell, variant-type) block, exactly as script 144 created a fresh rng per (view, R), so draws do not depend on loop order.
+  REMOVE is matched by DELETING k_s random positions from the resolved universe; KEEP-ONLY by RETAINING a random subset of k_s positions; whole positions, same chosen set for every background within a draw.
+  REPORTING RULE (task doc rule 11): value, range, fraction at or below, fraction at or above, distance to nearest bound, INSIDE / OUTSIDE / MARGINAL.
+
+  === [full] REMOVE-ONE-SHELL shell (0,10]: k_s = 23 positions (removed), 572 of 595 resolved positions kept ===
+    rows retained: A222V = 9377;  across the 96 backgrounds min = 9358, median = 9362, max = 9377;  positions kept = 572
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.079237139
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.689454255  BACKGROUND-level bootstrap 95% CI = [+0.528623, +0.798974] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.772866140
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 2, p_spec = 0.037974684   at or below: AV_220, G_P254F   -> at or below the frozen numeric threshold 0.05 (full)
+    --- matched control (DELETING 23 random positions per draw from the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.079237139
+      matched-control mean           = -0.076620772   sd = 0.003526670
+      matched-control 2.5 / 97.5 pct = [-0.083258800, -0.069624333]
+      fraction of draws at or below  = 0.2350;  at or above = 0.7650
+      distance to nearest bound      = 0.004021661   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.689454255
+      matched-control mean           = +0.693202335   sd = 0.006832549
+      matched-control 2.5 / 97.5 pct = [+0.680406565, +0.706900130]
+      fraction of draws at or below  = 0.2800;  at or above = 0.7200
+      distance to nearest bound      = 0.009047690   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.037974684
+      matched-control mean           = +0.035759494   sd = 0.005736873
+      matched-control 2.5 / 97.5 pct = [+0.025000000, +0.037974684]
+      fraction of draws at or below  = 0.9950;  at or above = 0.8450
+      distance to nearest bound      = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] KEEP-ONLY-SHELL shell (0,10]: k_s = 23 positions (retained), 23 of 595 resolved positions kept ===
+    rows retained: A222V = 363;  across the 96 backgrounds min = 344, median = 363, max = 363;  positions kept = 23
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.129216559
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: -0.084984536  BACKGROUND-level bootstrap 95% CI = [-0.334546, +0.168665] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): -0.100782161
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 78, p_spec = 1.000000000   at or below: AV_113, AV_116, AV_145, AV_155, AV_175, AV_19, AV_195, AV_204, AV_209, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, AV_328, AV_350, AV_353, AV_368, AV_396, AV_461, AV_462, AV_5, AV_511, AV_522, AV_524, AV_551, AV_558, AV_587, AV_589, AV_650, AV_655, AV_70, AV_73, AV_84, AV_85, AV_98, G_A462S, G_A551K, G_D629C, G_E168S, G_E16V, G_E279K, G_E383T, G_E54R, G_G317Q, G_G562M, G_H354F, G_H613R, G_I192T, G_K27I, G_K401S, G_K48P, G_K510H, G_L178T, G_L318F, G_L408H, G_L472H, G_L526R, G_M111N, G_N12P, G_N3K, G_P254F, G_P346V, G_P395F, G_R357M, G_R358V, G_S23A, G_S430P, G_S494H, G_T115G, G_T521D, G_T549H, G_V574C, G_W595H, G_W59C, G_Y197V   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (RETAINING a random 23-position subset per draw of the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.129216559
+      matched-control mean           = -0.073757241   sd = 0.084261695
+      matched-control 2.5 / 97.5 pct = [-0.242817826, +0.090402924]
+      fraction of draws at or below  = 0.9900;  at or above = 0.0100
+      distance to nearest bound      = 0.038813634   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    gradient n=67
+      variant value                  = -0.084984536
+      matched-control mean           = +0.369745685   sd = 0.190588407
+      matched-control 2.5 / 97.5 pct = [-0.103557817, +0.668713459]
+      fraction of draws at or below  = 0.0300;  at or above = 0.9700
+      distance to nearest bound      = 0.018573281   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +1.000000000
+      matched-control mean           = +0.270000000   sd = 0.255488696
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.886075949]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.113924051   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+
+  === [full] REMOVE-ONE-SHELL shell (10,20]: k_s = 98 positions (removed), 497 of 595 resolved positions kept ===
+    rows retained: A222V = 8105;  across the 96 backgrounds min = 8086, median = 8093, max = 8105;  positions kept = 497
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.066536360
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.663793276  BACKGROUND-level bootstrap 95% CI = [+0.516030, +0.764234] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.786375761
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 2, p_spec = 0.037974684   at or below: AV_220, G_P254F   -> at or below the frozen numeric threshold 0.05 (full)
+    --- matched control (DELETING 98 random positions per draw from the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.066536360
+      matched-control mean           = -0.076715903   sd = 0.006852301
+      matched-control 2.5 / 97.5 pct = [-0.090585112, -0.063511211]
+      fraction of draws at or below  = 0.9200;  at or above = 0.0800
+      distance to nearest bound      = 0.003025149   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.663793276
+      matched-control mean           = +0.691562606   sd = 0.015188556
+      matched-control 2.5 / 97.5 pct = [+0.659378929, +0.720370648]
+      fraction of draws at or below  = 0.0450;  at or above = 0.9550
+      distance to nearest bound      = 0.004414347   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.037974684
+      matched-control mean           = +0.034177215   sd = 0.014689728
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.063607595]
+      fraction of draws at or below  = 0.8350;  at or above = 0.5600
+      distance to nearest bound      = 0.025316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] KEEP-ONLY-SHELL shell (10,20]: k_s = 98 positions (retained), 98 of 595 resolved positions kept ===
+    rows retained: A222V = 1635;  across the 96 backgrounds min = 1616, median = 1635, max = 1635;  positions kept = 98
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.004812725
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: -0.288556321  BACKGROUND-level bootstrap 95% CI = [-0.472215, -0.079791] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): -0.389265574
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 49, p_spec = 0.632911392   at or below: AV_145, AV_155, AV_293, AV_311, AV_328, AV_350, AV_353, AV_368, AV_396, AV_461, AV_462, AV_5, AV_511, AV_522, AV_524, AV_551, AV_589, AV_655, AV_70, AV_85, G_A462S, G_E168S, G_E16V, G_E279K, G_E383T, G_E54R, G_G562M, G_H613R, G_K27I, G_K401S, G_K48P, G_L178T, G_L318F, G_L408H, G_L472H, G_L526R, G_N12P, G_N3K, G_P346V, G_R357M, G_R358V, G_S23A, G_S430P, G_S494H, G_T521D, G_T549H, G_W595H, G_W59C, G_Y197V   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (RETAINING a random 98-position subset per draw of the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.004812725
+      matched-control mean           = -0.076800010   sd = 0.034625942
+      matched-control 2.5 / 97.5 pct = [-0.142783648, -0.008159729]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.012972453   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    gradient n=67
+      variant value                  = -0.288556321
+      matched-control mean           = +0.582044997   sd = 0.089617475
+      matched-control 2.5 / 97.5 pct = [+0.362863414, +0.726807343]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.651419735   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.632911392
+      matched-control mean           = +0.124873418   sd = 0.116428019
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.418037975]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.214873418   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+
+  === [full] REMOVE-ONE-SHELL shell (20,30]: k_s = 126 positions (removed), 469 of 595 resolved positions kept ===
+    rows retained: A222V = 7699;  across the 96 backgrounds min = 7680, median = 7689, max = 7699;  positions kept = 469
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.061991680
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.681612292  BACKGROUND-level bootstrap 95% CI = [+0.508694, +0.795815] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.775909732
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 3, p_spec = 0.050632911   at or below: AV_220, G_K48P, G_P254F   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (DELETING 126 random positions per draw from the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.061991680
+      matched-control mean           = -0.076221743   sd = 0.007837818
+      matched-control 2.5 / 97.5 pct = [-0.089021151, -0.059819627]
+      fraction of draws at or below  = 0.9550;  at or above = 0.0450
+      distance to nearest bound      = 0.002172053   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.681612292
+      matched-control mean           = +0.690097177   sd = 0.018418778
+      matched-control 2.5 / 97.5 pct = [+0.655228973, +0.726362367]
+      fraction of draws at or below  = 0.3550;  at or above = 0.6450
+      distance to nearest bound      = 0.026383318   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.050632911
+      matched-control mean           = +0.034556962   sd = 0.013826270
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.063291139]
+      fraction of draws at or below  = 0.9450;  at or above = 0.1650
+      distance to nearest bound      = 0.012658228   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] KEEP-ONLY-SHELL shell (20,30]: k_s = 126 positions (retained), 126 of 595 resolved positions kept ===
+    rows retained: A222V = 2041;  across the 96 backgrounds min = 2022, median = 2041, max = 2041;  positions kept = 126
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.118108396
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.182639928  BACKGROUND-level bootstrap 95% CI = [-0.077800, +0.424722] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.563791019
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 2, p_spec = 0.037974684   at or below: AV_220, AV_242   -> at or below the frozen numeric threshold 0.05 (full)
+    --- matched control (RETAINING a random 126-position subset per draw of the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.118108396
+      matched-control mean           = -0.078056860   sd = 0.028991273
+      matched-control 2.5 / 97.5 pct = [-0.136823363, -0.029657763]
+      fraction of draws at or below  = 0.0750;  at or above = 0.9250
+      distance to nearest bound      = 0.018714967   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.182639928
+      matched-control mean           = +0.617585254   sd = 0.080132924
+      matched-control 2.5 / 97.5 pct = [+0.452590542, +0.724480695]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.269950614   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.037974684
+      matched-control mean           = +0.091835443   sd = 0.088612116
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.316772152]
+      fraction of draws at or below  = 0.3750;  at or above = 0.7500
+      distance to nearest bound      = 0.025316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] REMOVE-ONE-SHELL shell (30,45]: k_s = 145 positions (removed), 450 of 595 resolved positions kept ===
+    rows retained: A222V = 7421;  across the 96 backgrounds min = 7402, median = 7410, max = 7421;  positions kept = 450
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.076655422
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.767255313  BACKGROUND-level bootstrap 95% CI = [+0.661671, +0.832778] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.757520547
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 6, p_spec = 0.088607595   at or below: AV_113, AV_195, AV_220, G_L178T, G_P254F, G_Y197V   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (DELETING 145 random positions per draw from the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.076655422
+      matched-control mean           = -0.077022398   sd = 0.008834506
+      matched-control 2.5 / 97.5 pct = [-0.094027983, -0.059689099]
+      fraction of draws at or below  = 0.5400;  at or above = 0.4600
+      distance to nearest bound      = 0.016966323   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.767255313
+      matched-control mean           = +0.689915495   sd = 0.019625360
+      matched-control 2.5 / 97.5 pct = [+0.648858625, +0.728599222]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.038656091   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.088607595
+      matched-control mean           = +0.035822785   sd = 0.017634524
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.075949367]
+      fraction of draws at or below  = 0.9900;  at or above = 0.0200
+      distance to nearest bound      = 0.012658228   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+
+  === [full] KEEP-ONLY-SHELL shell (30,45]: k_s = 145 positions (retained), 145 of 595 resolved positions kept ===
+    rows retained: A222V = 2319;  across the 96 backgrounds min = 2300, median = 2319, max = 2319;  positions kept = 145
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.076330478
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.339539060  BACKGROUND-level bootstrap 95% CI = [+0.107945, +0.542137] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.589219738
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 4, p_spec = 0.063291139   at or below: AV_311, G_D629C, G_L318F, G_P254F   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (RETAINING a random 145-position subset per draw of the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.076330478
+      matched-control mean           = -0.075286879   sd = 0.027428848
+      matched-control 2.5 / 97.5 pct = [-0.129534070, -0.023304264]
+      fraction of draws at or below  = 0.4650;  at or above = 0.5350
+      distance to nearest bound      = 0.053026215   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.339539060
+      matched-control mean           = +0.624545944   sd = 0.069796268
+      matched-control 2.5 / 97.5 pct = [+0.465522798, +0.740299811]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.125983737   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.063291139
+      matched-control mean           = +0.093734177   sd = 0.089580001
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.316455696]
+      fraction of draws at or below  = 0.5150;  at or above = 0.5500
+      distance to nearest bound      = 0.050632911   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] REMOVE-ONE-SHELL shell (45,inf): k_s = 203 positions (removed), 392 of 595 resolved positions kept ===
+    rows retained: A222V = 6358;  across the 96 backgrounds min = 6339, median = 6358, max = 6358;  positions kept = 392
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.082001025
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.561648209  BACKGROUND-level bootstrap 95% CI = [+0.359744, +0.718860] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.713231377
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 0, p_spec = 0.012658228   at or below: NONE   -> at or below the frozen numeric threshold 0.05 (full)
+    --- matched control (DELETING 203 random positions per draw from the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.082001025
+      matched-control mean           = -0.077120417   sd = 0.011077151
+      matched-control 2.5 / 97.5 pct = [-0.099124366, -0.056445478]
+      fraction of draws at or below  = 0.3100;  at or above = 0.6900
+      distance to nearest bound      = 0.017123341   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.561648209
+      matched-control mean           = +0.684646214   sd = 0.024882748
+      matched-control 2.5 / 97.5 pct = [+0.632717749, +0.727086701]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.071069540   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.012658228
+      matched-control mean           = +0.039746835   sd = 0.026830858
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.114240506]
+      fraction of draws at or below  = 0.1700;  at or above = 1.0000
+      distance to nearest bound      = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [full] KEEP-ONLY-SHELL shell (45,inf): k_s = 203 positions (retained), 203 of 595 resolved positions kept ===
+    rows retained: A222V = 3382;  across the 96 backgrounds min = 3363, median = 3382, max = 3382;  positions kept = 203
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.012893786
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.058265988  BACKGROUND-level bootstrap 95% CI = [-0.208404, +0.319535] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.153485389
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 56, p_spec = 0.721518987   at or below: AV_113, AV_145, AV_155, AV_175, AV_19, AV_195, AV_204, AV_209, AV_220, AV_233, AV_242, AV_302, AV_328, AV_350, AV_353, AV_368, AV_396, AV_5, AV_511, AV_522, AV_551, AV_558, AV_587, AV_589, AV_650, AV_655, AV_70, AV_98, G_A462S, G_A551K, G_E383T, G_G317Q, G_G562M, G_H354F, G_H613R, G_I192T, G_K27I, G_K48P, G_K510H, G_L178T, G_L408H, G_L472H, G_M111N, G_N12P, G_N3K, G_P254F, G_P346V, G_P395F, G_R357M, G_R358V, G_S430P, G_T115G, G_T549H, G_V574C, G_W595H, G_Y197V   -> above the frozen numeric threshold 0.05 (full)
+    --- matched control (RETAINING a random 203-position subset per draw of the 595-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.012893786
+      matched-control mean           = -0.075443814   sd = 0.021440397
+      matched-control 2.5 / 97.5 pct = [-0.112616276, -0.032594563]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.045488348   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    gradient n=67
+      variant value                  = +0.058265988
+      matched-control mean           = +0.650193455   sd = 0.049690807
+      matched-control 2.5 / 97.5 pct = [+0.544745585, +0.738356780]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.486479597   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.721518987
+      matched-control mean           = +0.075886076   sd = 0.073825852
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.253797468]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.467721519   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+
+  === [H] REMOVE-ONE-SHELL shell (0,10]: k_s = 13 positions (removed), 405 of 418 resolved positions kept ===
+    rows retained: A222V = 6666;  across the 96 backgrounds min = 6647, median = 6656, max = 6666;  positions kept = 405
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.082101889
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.686580864  BACKGROUND-level bootstrap 95% CI = [+0.522101, +0.797799] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.770372359
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 2, p_spec = 0.037974684   at or below: AV_220, G_P254F   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (DELETING 13 random positions per draw from the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.082101889
+      matched-control mean           = -0.080517203   sd = 0.003283885
+      matched-control 2.5 / 97.5 pct = [-0.086499760, -0.073431733]
+      fraction of draws at or below  = 0.3200;  at or above = 0.6800
+      distance to nearest bound      = 0.004397871   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.686580864
+      matched-control mean           = +0.688953208   sd = 0.006911357
+      matched-control 2.5 / 97.5 pct = [+0.675493864, +0.702835977]
+      fraction of draws at or below  = 0.3750;  at or above = 0.6250
+      distance to nearest bound      = 0.011087000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.037974684
+      matched-control mean           = +0.042215190   sd = 0.009087089
+      matched-control 2.5 / 97.5 pct = [+0.037658228, +0.063291139]
+      fraction of draws at or below  = 0.7500;  at or above = 0.9750
+      distance to nearest bound      = 0.000316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] KEEP-ONLY-SHELL shell (0,10]: k_s = 13 positions (retained), 13 of 418 resolved positions kept ===
+    rows retained: A222V = 220;  across the 96 backgrounds min = 202, median = 220, max = 220;  positions kept = 13
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.109952243
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.068761848  BACKGROUND-level bootstrap 95% CI = [-0.181217, +0.323098] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): -0.011987825
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 74, p_spec = 0.949367089   at or below: AV_113, AV_116, AV_145, AV_155, AV_19, AV_195, AV_204, AV_209, AV_220, AV_233, AV_242, AV_292, AV_293, AV_302, AV_311, AV_328, AV_350, AV_353, AV_368, AV_396, AV_461, AV_462, AV_5, AV_511, AV_522, AV_524, AV_558, AV_587, AV_589, AV_650, AV_655, AV_70, AV_73, AV_84, AV_85, AV_98, G_A462S, G_A551K, G_E168S, G_E16V, G_E383T, G_E54R, G_G317Q, G_G562M, G_H354F, G_H613R, G_I192T, G_K27I, G_K401S, G_K48P, G_K510H, G_L178T, G_L318F, G_L408H, G_L472H, G_L526R, G_M111N, G_N12P, G_N3K, G_P254F, G_P346V, G_P395F, G_R357M, G_R358V, G_S23A, G_S430P, G_S494H, G_T115G, G_T521D, G_T549H, G_V574C, G_W595H, G_W59C, G_Y197V   -> above the frozen numeric threshold 0.1 (H)
+    --- matched control (RETAINING a random 13-position subset per draw of the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.109952243
+      matched-control mean           = -0.073627096   sd = 0.097338782
+      matched-control 2.5 / 97.5 pct = [-0.266903270, +0.100267184]
+      fraction of draws at or below  = 0.9800;  at or above = 0.0200
+      distance to nearest bound      = 0.009685059   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    gradient n=67
+      variant value                  = +0.068761848
+      matched-control mean           = +0.270741714   sd = 0.231650570
+      matched-control 2.5 / 97.5 pct = [-0.261774419, +0.644144468]
+      fraction of draws at or below  = 0.1800;  at or above = 0.8200
+      distance to nearest bound      = 0.330536267   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.949367089
+      matched-control mean           = +0.319620253   sd = 0.261043203
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.949367089]
+      fraction of draws at or below  = 0.9800;  at or above = 0.0300
+      distance to nearest bound      = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] REMOVE-ONE-SHELL shell (10,20]: k_s = 73 positions (removed), 345 of 418 resolved positions kept ===
+    rows retained: A222V = 5664;  across the 96 backgrounds min = 5645, median = 5664, max = 5664;  positions kept = 345
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.065071860
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.645056370  BACKGROUND-level bootstrap 95% CI = [+0.495828, +0.747527] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.788172462
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 3, p_spec = 0.050632911   at or below: AV_220, G_L318F, G_P254F   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (DELETING 73 random positions per draw from the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.065071860
+      matched-control mean           = -0.080531184   sd = 0.007529568
+      matched-control 2.5 / 97.5 pct = [-0.094858647, -0.066379839]
+      fraction of draws at or below  = 0.9850;  at or above = 0.0150
+      distance to nearest bound      = 0.001307979   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    gradient n=67
+      variant value                  = +0.645056370
+      matched-control mean           = +0.682302604   sd = 0.018009997
+      matched-control 2.5 / 97.5 pct = [+0.646044598, +0.712329143]
+      fraction of draws at or below  = 0.0250;  at or above = 0.9750
+      distance to nearest bound      = 0.000988227   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    p_spec n=78
+      variant value                  = +0.050632911
+      matched-control mean           = +0.046645570   sd = 0.019518574
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.088607595]
+      fraction of draws at or below  = 0.7400;  at or above = 0.4550
+      distance to nearest bound      = 0.037974684   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] KEEP-ONLY-SHELL shell (10,20]: k_s = 73 positions (retained), 73 of 418 resolved positions kept ===
+    rows retained: A222V = 1222;  across the 96 backgrounds min = 1204, median = 1222, max = 1222;  positions kept = 73
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.006162621
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: -0.287139579  BACKGROUND-level bootstrap 95% CI = [-0.481982, -0.060343] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): -0.486179428
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 51, p_spec = 0.658227848   at or below: AV_145, AV_155, AV_175, AV_195, AV_209, AV_293, AV_311, AV_350, AV_353, AV_368, AV_396, AV_461, AV_462, AV_5, AV_511, AV_522, AV_524, AV_551, AV_587, AV_589, AV_650, AV_655, AV_70, AV_85, G_A462S, G_A551K, G_D629C, G_E168S, G_E16V, G_E279K, G_E383T, G_E54R, G_G562M, G_H613R, G_K27I, G_K401S, G_L178T, G_L318F, G_L408H, G_L472H, G_L526R, G_N12P, G_N3K, G_P254F, G_P346V, G_R357M, G_R358V, G_S430P, G_S494H, G_T549H, G_W59C   -> above the frozen numeric threshold 0.1 (H)
+    --- matched control (RETAINING a random 73-position subset per draw of the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.006162621
+      matched-control mean           = -0.079098083   sd = 0.035511702
+      matched-control 2.5 / 97.5 pct = [-0.143573143, -0.007834556]
+      fraction of draws at or below  = 0.9900;  at or above = 0.0100
+      distance to nearest bound      = 0.013997177   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    gradient n=67
+      variant value                  = -0.287139579
+      matched-control mean           = +0.556159733   sd = 0.106782230
+      matched-control 2.5 / 97.5 pct = [+0.344517610, +0.727093685]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.631657189   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.658227848
+      matched-control mean           = +0.140316456   sd = 0.126835048
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.443670886]
+      fraction of draws at or below  = 0.9950;  at or above = 0.0100
+      distance to nearest bound      = 0.214556962   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+
+  === [H] REMOVE-ONE-SHELL shell (20,30]: k_s = 86 positions (removed), 332 of 418 resolved positions kept ===
+    rows retained: A222V = 5483;  across the 96 backgrounds min = 5464, median = 5483, max = 5483;  positions kept = 332
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.067160511
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.667385015  BACKGROUND-level bootstrap 95% CI = [+0.484174, +0.790421] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.776390816
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 4, p_spec = 0.063291139   at or below: AV_113, AV_155, AV_220, G_P254F   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (DELETING 86 random positions per draw from the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.067160511
+      matched-control mean           = -0.080928195   sd = 0.008721983
+      matched-control 2.5 / 97.5 pct = [-0.096713499, -0.064444959]
+      fraction of draws at or below  = 0.9300;  at or above = 0.0700
+      distance to nearest bound      = 0.002715552   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.667385015
+      matched-control mean           = +0.680514118   sd = 0.020945431
+      matched-control 2.5 / 97.5 pct = [+0.642046793, +0.720171605]
+      fraction of draws at or below  = 0.2500;  at or above = 0.7500
+      distance to nearest bound      = 0.025338222   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec n=78
+      variant value                  = +0.063291139
+      matched-control mean           = +0.047658228   sd = 0.021609440
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.101265823]
+      fraction of draws at or below  = 0.8550;  at or above = 0.3100
+      distance to nearest bound      = 0.037974684   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] KEEP-ONLY-SHELL shell (20,30]: k_s = 86 positions (retained), 86 of 418 resolved positions kept ===
+    rows retained: A222V = 1403;  across the 96 backgrounds min = 1384, median = 1403, max = 1403;  positions kept = 86
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.114275722
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.137324154  BACKGROUND-level bootstrap 95% CI = [-0.116459, +0.382501] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.486631058
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 1, p_spec = 0.025316456   at or below: AV_220   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (RETAINING a random 86-position subset per draw of the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.114275722
+      matched-control mean           = -0.078033234   sd = 0.033946482
+      matched-control 2.5 / 97.5 pct = [-0.144011040, -0.013568896]
+      fraction of draws at or below  = 0.1500;  at or above = 0.8500
+      distance to nearest bound      = 0.029735319   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.137324154
+      matched-control mean           = +0.571919685   sd = 0.100838908
+      matched-control 2.5 / 97.5 pct = [+0.358043500, +0.719287140]
+      fraction of draws at or below  = 0.0050;  at or above = 0.9950
+      distance to nearest bound      = 0.220719346   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.025316456
+      matched-control mean           = +0.123227848   sd = 0.108360035
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.392721519]
+      fraction of draws at or below  = 0.1700;  at or above = 0.9150
+      distance to nearest bound      = 0.012658228   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] REMOVE-ONE-SHELL shell (30,45]: k_s = 100 positions (removed), 318 of 418 resolved positions kept ===
+    rows retained: A222V = 5280;  across the 96 backgrounds min = 5261, median = 5280, max = 5280;  positions kept = 318
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.076244032
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.728723935  BACKGROUND-level bootstrap 95% CI = [+0.608092, +0.807308] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.726053735
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 11, p_spec = 0.151898734   at or below: AV_113, AV_155, AV_195, AV_220, AV_242, AV_73, AV_85, G_K48P, G_L178T, G_P254F, G_Y197V   -> above the frozen numeric threshold 0.1 (H)
+    --- matched control (DELETING 100 random positions per draw from the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.076244032
+      matched-control mean           = -0.080292219   sd = 0.009782783
+      matched-control 2.5 / 97.5 pct = [-0.097593271, -0.061234544]
+      fraction of draws at or below  = 0.6600;  at or above = 0.3400
+      distance to nearest bound      = 0.015009488   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.728723935
+      matched-control mean           = +0.677531877   sd = 0.022109157
+      matched-control 2.5 / 97.5 pct = [+0.633191659, +0.717418937]
+      fraction of draws at or below  = 0.9950;  at or above = 0.0050
+      distance to nearest bound      = 0.011304999   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.151898734
+      matched-control mean           = +0.049683544   sd = 0.026066663
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.101265823]
+      fraction of draws at or below  = 0.9950;  at or above = 0.0050
+      distance to nearest bound      = 0.050632911   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+
+  === [H] KEEP-ONLY-SHELL shell (30,45]: k_s = 100 positions (retained), 100 of 418 resolved positions kept ===
+    rows retained: A222V = 1606;  across the 96 backgrounds min = 1587, median = 1606, max = 1606;  positions kept = 100
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.083150869
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.295560212  BACKGROUND-level bootstrap 95% CI = [+0.046621, +0.518762] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.566019714
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 2, p_spec = 0.037974684   at or below: G_L318F, G_P254F   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (RETAINING a random 100-position subset per draw of the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.083150869
+      matched-control mean           = -0.079939344   sd = 0.031004709
+      matched-control 2.5 / 97.5 pct = [-0.139549064, -0.018024049]
+      fraction of draws at or below  = 0.4900;  at or above = 0.5100
+      distance to nearest bound      = 0.056398196   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.295560212
+      matched-control mean           = +0.601608501   sd = 0.074547717
+      matched-control 2.5 / 97.5 pct = [+0.428702983, +0.720871995]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.133142772   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.037974684
+      matched-control mean           = +0.115696203   sd = 0.103343921
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.367721519]
+      fraction of draws at or below  = 0.2750;  at or above = 0.7850
+      distance to nearest bound      = 0.025316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] REMOVE-ONE-SHELL shell (45,inf): k_s = 146 positions (removed), 272 of 418 resolved positions kept ===
+    rows retained: A222V = 4451;  across the 96 backgrounds min = 4432, median = 4451, max = 4451;  positions kept = 272
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = -0.094766180
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: +0.566317470  BACKGROUND-level bootstrap 95% CI = [+0.353244, +0.731084] (10000 usable, 0 nan, 10000 draws, SEED=0)  EXCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.717796765
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 0, p_spec = 0.012658228   at or below: NONE   -> at or below the frozen numeric threshold 0.1 (H)
+    --- matched control (DELETING 146 random positions per draw from the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = -0.094766180
+      matched-control mean           = -0.081642867   sd = 0.012098955
+      matched-control 2.5 / 97.5 pct = [-0.102861954, -0.057083291]
+      fraction of draws at or below  = 0.1250;  at or above = 0.8750
+      distance to nearest bound      = 0.008095774   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    gradient n=67
+      variant value                  = +0.566317470
+      matched-control mean           = +0.671518508   sd = 0.028233556
+      matched-control 2.5 / 97.5 pct = [+0.612122119, +0.723096877]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.045804649   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.012658228
+      matched-control mean           = +0.053417722   sd = 0.030697194
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.126582278]
+      fraction of draws at or below  = 0.0950;  at or above = 1.0000
+      distance to nearest bound      = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+
+  === [H] KEEP-ONLY-SHELL shell (45,inf): k_s = 146 positions (retained), 146 of 418 resolved positions kept ===
+    rows retained: A222V = 2435;  across the 96 backgrounds min = 2416, median = 2435, max = 2435;  positions kept = 146
+    A222V rho (point; no cluster CI run here, D18.5 holds the CIs) = +0.018337201
+    gradient Spearman(rho_b, d3_b) on resolved nulls n = 67: -0.058285942  BACKGROUND-level bootstrap 95% CI = [-0.309077, +0.197694] (10000 usable, 0 nan, 10000 draws, SEED=0)  INCLUDES ZERO
+    gradient on all resolved backgrounds n = 85 (context only, no CI -- the task specifies n = 67): +0.127153411
+    p_spec (n = 78 nulls, frozen direction rho_b <= rho_A222V): k = 64, p_spec = 0.822784810   at or below: AV_113, AV_145, AV_155, AV_175, AV_19, AV_195, AV_204, AV_209, AV_220, AV_233, AV_242, AV_292, AV_302, AV_328, AV_350, AV_353, AV_368, AV_396, AV_511, AV_522, AV_524, AV_551, AV_558, AV_587, AV_589, AV_650, AV_655, AV_70, AV_73, AV_85, AV_98, G_A462S, G_A551K, G_E383T, G_G317Q, G_G562M, G_H354F, G_H613R, G_I192T, G_K27I, G_K401S, G_K48P, G_K510H, G_L178T, G_L318F, G_L408H, G_L472H, G_M111N, G_N12P, G_N3K, G_P254F, G_P346V, G_P395F, G_R357M, G_R358V, G_S430P, G_S494H, G_T115G, G_T521D, G_T549H, G_V574C, G_W595H, G_W59C, G_Y197V   -> above the frozen numeric threshold 0.1 (H)
+    --- matched control (RETAINING a random 146-position subset per draw of the 418-position resolved universe; N_DRAW = 200, SEED = 0; no resampling inside a draw) ---
+    A222V rho
+      variant value                  = +0.018337201
+      matched-control mean           = -0.078019766   sd = 0.022290822
+      matched-control 2.5 / 97.5 pct = [-0.123930384, -0.035639615]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.053976816   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    gradient n=67
+      variant value                  = -0.058285942
+      matched-control mean           = +0.623699092   sd = 0.065484563
+      matched-control 2.5 / 97.5 pct = [+0.484100569, +0.727111145]
+      fraction of draws at or below  = 0.0000;  at or above = 1.0000
+      distance to nearest bound      = 0.542386511   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    p_spec n=78
+      variant value                  = +0.822784810
+      matched-control mean           = +0.084556962   sd = 0.069514755
+      matched-control 2.5 / 97.5 pct = [+0.012658228, +0.291455696]
+      fraction of draws at or below  = 1.0000;  at or above = 0.0000
+      distance to nearest bound      = 0.531329114   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+
+------------------------------------------------------------------------------
+D20 SUMMARY TABLE A -- the GRADIENT (n = 67): REMOVE effect and KEEP-ONLY retained fraction, each with its own matched flag
+------------------------------------------------------------------------------
+   view     shell   k_s      R0 grad    REMOVE grad         drop   drop %      flag     KEEP grad  frac of R0      flag
+   full    (0,10]    23 +0.698473511   +0.689454255 +0.009019256    1.29%    INSIDE  -0.084984536     -0.1217    INSIDE
+   full   (10,20]    98 +0.698473511   +0.663793276 +0.034680235    4.97%    INSIDE  -0.288556321     -0.4131   OUTSIDE
+   full   (20,30]   126 +0.698473511   +0.681612292 +0.016861219    2.41%    INSIDE  +0.182639928      0.2615   OUTSIDE
+   full   (30,45]   145 +0.698473511   +0.767255313 -0.068781802   -9.85%   OUTSIDE  +0.339539060      0.4861   OUTSIDE
+   full  (45,inf)   203 +0.698473511   +0.561648209 +0.136825302   19.59%   OUTSIDE  +0.058265988      0.0834   OUTSIDE
+      H    (0,10]    13 +0.688316871   +0.686580864 +0.001736007    0.25%    INSIDE  +0.068761848      0.0999    INSIDE
+      H   (10,20]    73 +0.688316871   +0.645056370 +0.043260501    6.28%  MARGINAL  -0.287139579     -0.4172   OUTSIDE
+      H   (20,30]    86 +0.688316871   +0.667385015 +0.020931857    3.04%    INSIDE  +0.137324154      0.1995   OUTSIDE
+      H   (30,45]   100 +0.688316871   +0.728723935 -0.040407064   -5.87%   OUTSIDE  +0.295560212      0.4294   OUTSIDE
+      H  (45,inf)   146 +0.688316871   +0.566317470 +0.121999401   17.72%   OUTSIDE  -0.058285942     -0.0847   OUTSIDE
+  drop = R0 - REMOVE (positive = gradient fell);  drop % = drop relative to that view's R = 0 gradient;  frac of R0 = KEEP / R0 (fraction of the baseline gradient retained).
+
+------------------------------------------------------------------------------
+D20 SUMMARY TABLE B -- A222V's RHO: REMOVE effect and KEEP-ONLY retained fraction, each with its own matched flag
+------------------------------------------------------------------------------
+   view     shell   k_s        R0 rho    REMOVE rho       change  |chg| %R0      flag      KEEP rho  frac of R0      flag
+   full    (0,10]    23  -0.076685523  -0.079237139 -0.002551617     -3.33%    INSIDE  +0.129216559     -1.6850  MARGINAL
+   full   (10,20]    98  -0.076685523  -0.066536360 +0.010149163     13.23%    INSIDE  +0.004812725     -0.0628   OUTSIDE
+   full   (20,30]   126  -0.076685523  -0.061991680 +0.014693842     19.16%    INSIDE  -0.118108396      1.5402    INSIDE
+   full   (30,45]   145  -0.076685523  -0.076655422 +0.000030101      0.04%    INSIDE  -0.076330478      0.9954    INSIDE
+   full  (45,inf)   203  -0.076685523  -0.082001025 -0.005315502     -6.93%    INSIDE  +0.012893786     -0.1681   OUTSIDE
+      H    (0,10]    13  -0.080432398  -0.082101889 -0.001669491     -2.08%    INSIDE  +0.109952243     -1.3670  MARGINAL
+      H   (10,20]    73  -0.080432398  -0.065071860 +0.015360538     19.10%  MARGINAL  +0.006162621     -0.0766  MARGINAL
+      H   (20,30]    86  -0.080432398  -0.067160511 +0.013271886     16.50%    INSIDE  -0.114275722      1.4208    INSIDE
+      H   (30,45]   100  -0.080432398  -0.076244032 +0.004188365      5.21%    INSIDE  -0.083150869      1.0338    INSIDE
+      H  (45,inf)   146  -0.080432398  -0.094766180 -0.014333782    -17.82%    INSIDE  +0.018337201     -0.2280   OUTSIDE
+  change = REMOVE - R0 (rho_R0 < 0, so a POSITIVE change means the association's magnitude was attenuated);  frac of R0 = KEEP / R0 (both negative is a positive fraction; ABOVE 1 means the magnitude EXCEEDS the baseline).
+
+------------------------------------------------------------------------------
+D20 SUMMARY TABLE C -- p_spec (n = 78) values and flags against the frozen NUMERIC thresholds (rule 10)
+------------------------------------------------------------------------------
+    full REMOVE shell    (0,10]: p_spec = 0.037974684 (k = 2) -> at or below the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full KEEP   shell    (0,10]: p_spec = 1.000000000 (k = 78) -> above the threshold 0.05   flag vs its own size-matched range: OUTSIDE
+    full REMOVE shell   (10,20]: p_spec = 0.037974684 (k = 2) -> at or below the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full KEEP   shell   (10,20]: p_spec = 0.632911392 (k = 49) -> above the threshold 0.05   flag vs its own size-matched range: OUTSIDE
+    full REMOVE shell   (20,30]: p_spec = 0.050632911 (k = 3) -> above the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full KEEP   shell   (20,30]: p_spec = 0.037974684 (k = 2) -> at or below the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full REMOVE shell   (30,45]: p_spec = 0.088607595 (k = 6) -> above the threshold 0.05   flag vs its own size-matched range: MARGINAL
+    full KEEP   shell   (30,45]: p_spec = 0.063291139 (k = 4) -> above the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full REMOVE shell  (45,inf): p_spec = 0.012658228 (k = 0) -> at or below the threshold 0.05   flag vs its own size-matched range: INSIDE
+    full KEEP   shell  (45,inf): p_spec = 0.721518987 (k = 56) -> above the threshold 0.05   flag vs its own size-matched range: OUTSIDE
+       H REMOVE shell    (0,10]: p_spec = 0.037974684 (k = 2) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H KEEP   shell    (0,10]: p_spec = 0.949367089 (k = 74) -> above the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H REMOVE shell   (10,20]: p_spec = 0.050632911 (k = 3) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H KEEP   shell   (10,20]: p_spec = 0.658227848 (k = 51) -> above the threshold 0.1   flag vs its own size-matched range: MARGINAL
+       H REMOVE shell   (20,30]: p_spec = 0.063291139 (k = 4) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H KEEP   shell   (20,30]: p_spec = 0.025316456 (k = 1) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H REMOVE shell   (30,45]: p_spec = 0.151898734 (k = 11) -> above the threshold 0.1   flag vs its own size-matched range: OUTSIDE
+       H KEEP   shell   (30,45]: p_spec = 0.037974684 (k = 2) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H REMOVE shell  (45,inf): p_spec = 0.012658228 (k = 0) -> at or below the threshold 0.1   flag vs its own size-matched range: INSIDE
+       H KEEP   shell  (45,inf): p_spec = 0.822784810 (k = 64) -> above the threshold 0.1   flag vs its own size-matched range: OUTSIDE
+
+------------------------------------------------------------------------------
+THE ANSWER -- which shell's removal is most damaging, which shell alone best preserves the signal
+------------------------------------------------------------------------------
+  Pre-registered definitions (docstring): 'most damaging removal' = largest gradient drop from R = 0; 'best preserves alone' = largest retained fraction of the R = 0 gradient.  Both computed from the tables above.
+
+  --- full view (R = 0 gradient +0.698473511, R = 0 rho -0.076685523) ---
+    gradient drop by shell (REMOVE, descending): (45,inf) +0.136825, (10,20] +0.034680, (20,30] +0.016861, (0,10] +0.009019, (30,45] -0.068782
+    MOST DAMAGING REMOVAL = shell (45,inf) (k = 203): gradient +0.698473511 -> +0.561648209 (drop +0.136825302, 19.59% of R0), flag OUTSIDE
+    next = shell (10,20] (drop +0.034680235, flag INSIDE)
+    separation check (rule 11, own ranges): the top two REMOVE gradient ranges are [+0.632717749, +0.727086701] and [+0.659378929, +0.720370648] -> OVERLAP: their ordering is NOT separated by their own matched ranges
+    rho attenuation by shell (REMOVE, descending): (20,30] +0.014694, (10,20] +0.010149, (30,45] +0.000030, (0,10] -0.002552, (45,inf) -0.005316
+    the rho ordering says most damaging = shell (20,30] -> DIFFERS with the gradient ordering
+    retained fraction of R = 0 gradient by shell (KEEP-ONLY, descending): (30,45] 0.4861, (20,30] 0.2615, (45,inf) 0.0834, (0,10] -0.1217, (10,20] -0.4131
+    BEST PRESERVES ALONE = shell (30,45] (k = 145): gradient +0.339539060 = 48.61% of R0, flag OUTSIDE
+    next = shell (20,30] (fraction 0.2615, flag OUTSIDE)
+    separation check: the top two KEEP gradient ranges are [+0.465522798, +0.740299811] and [+0.452590542, +0.724480695] -> OVERLAP: their ordering is NOT separated by their own matched ranges
+    rho fraction (KEEP / R0) by shell: (0,10] -1.6850, (10,20] -0.0628, (20,30] 1.5402, (30,45] 0.9954, (45,inf) -0.1681   (above 1.0000 = magnitude exceeds baseline)
+    rho ordering of KEEP preservation says best = shell (20,30] -> DIFFERS with the gradient ordering
+
+  --- H view (R = 0 gradient +0.688316871, R = 0 rho -0.080432398) ---
+    gradient drop by shell (REMOVE, descending): (45,inf) +0.121999, (10,20] +0.043261, (20,30] +0.020932, (0,10] +0.001736, (30,45] -0.040407
+    MOST DAMAGING REMOVAL = shell (45,inf) (k = 146): gradient +0.688316871 -> +0.566317470 (drop +0.121999401, 17.72% of R0), flag OUTSIDE
+    next = shell (10,20] (drop +0.043260501, flag MARGINAL)
+    separation check (rule 11, own ranges): the top two REMOVE gradient ranges are [+0.612122119, +0.723096877] and [+0.646044598, +0.712329143] -> OVERLAP: their ordering is NOT separated by their own matched ranges
+    rho attenuation by shell (REMOVE, descending): (10,20] +0.015361, (20,30] +0.013272, (30,45] +0.004188, (0,10] -0.001669, (45,inf) -0.014334
+    the rho ordering says most damaging = shell (10,20] -> DIFFERS with the gradient ordering
+    retained fraction of R = 0 gradient by shell (KEEP-ONLY, descending): (30,45] 0.4294, (20,30] 0.1995, (0,10] 0.0999, (45,inf) -0.0847, (10,20] -0.4172
+    BEST PRESERVES ALONE = shell (30,45] (k = 100): gradient +0.295560212 = 42.94% of R0, flag OUTSIDE
+    next = shell (20,30] (fraction 0.1995, flag OUTSIDE)
+    separation check: the top two KEEP gradient ranges are [+0.428702983, +0.720871995] and [+0.358043500, +0.719287140] -> OVERLAP: their ordering is NOT separated by their own matched ranges
+    rho fraction (KEEP / R0) by shell: (0,10] -1.3670, (10,20] -0.0766, (20,30] 1.4208, (30,45] 1.0338, (45,inf) -0.2280   (above 1.0000 = magnitude exceeds baseline)
+    rho ordering of KEEP preservation says best = shell (20,30] -> DIFFERS with the gradient ordering
+
+  BETWEEN THE TWO VIEWS:
+    most damaging removal: full = (45,inf), H = (45,inf) -> the SAME shell in both views
+    best preserving alone: full = (30,45], H = (30,45] -> the SAME shell in both views
+
+------------------------------------------------------------------------------
+LIMITS STATED WITH THE RESULT (AGENTS 6; task doc lines 223-225)
+------------------------------------------------------------------------------
+  * SHELLS DIFFER IN SIZE, so every effect above is compared ONLY with its own size-matched control, never across shells: the tables report each variant against the range from deleting/retaining the SAME NUMBER of random positions.
+  * The (30,45] and (45,inf) shells are LARGE: full (30,45] = 145, (45,inf) = 203, H (30,45] = 100, (45,inf) = 146.
+  * KEEP-ONLY of a SMALL shell leaves few rows per background and a noisy rho_b:
+      full (0,10] keeps 344-363 rows per background (A222V 363 rows, 23 positions)
+      H (0,10] keeps 202-220 rows per background (A222V 220 rows, 13 positions)
+  * p_spec under a variant compares DIFFERENTLY-THINNED row sets (each background has its own usable rows), exactly as in D15: disclosed, not corrected.
+  * A222V's rho here has NO bootstrap CI by construction of this task; D18.5 holds the session's corrected CIs.  The matched range answers only 'is this what the same NUMBER of random positions does?', not 'is it nonzero'.
+  * d3_222 is a CA-CA distance in ONE 2.50 A crystal structure of the dimer; a CA-CA distance is not a contact.
+  * Unresolved positions and their rows are dropped and counted (printed per view above), never imputed.
+  * Rank fractions over small n are rank fractions, not tests (rule 10).  p_spec is compared only to the frozen numeric thresholds 0.05 (full) / 0.10 (H).
+  * The matched-deletion spread is a RE-DERIVATION null over 200 draws; the smallest one-sided fraction it can resolve is 0.0050.
+
+------------------------------------------------------------------------------
+D20 GATE TABLE (for the SUMMARY)
+------------------------------------------------------------------------------
+  [PASS] D20-G1c shells partition the full resolved universe: sum of shell counts = 595 vs resolved = 595; union = 595; pairwise intersections all empty = True
+  [PASS] D20-G1c shells partition the H resolved universe: sum of shell counts = 418 vs resolved = 418; union = 418; pairwise intersections all empty = True
+  [PASS] D20-G1c full shell (0,10] count vs doc target 23: recomputed from d3_222 = 23;  D15 k_R-derived = 23;  doc target = 23  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (0,10] count vs D15 k_R difference: recomputed = 23 vs D15 k_R-derived = 23 (exact integer equality)
+  [PASS] D20-G1c full shell (10,20] count vs doc target 98: recomputed from d3_222 = 98;  D15 k_R-derived = 98;  doc target = 98  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (10,20] count vs D15 k_R difference: recomputed = 98 vs D15 k_R-derived = 98 (exact integer equality)
+  [PASS] D20-G1c full shell (20,30] count vs doc target 126: recomputed from d3_222 = 126;  D15 k_R-derived = 126;  doc target = 126  (MISMATCH would mean the doc is wrong -- both numbers printed above)
+  [PASS] D20-G1c full shell (20,30] count vs D15 k_R difference: recomputed = 126 vs D15 k_R-derived = 126 (exact integer equality)
+  [PASS] D20-G1c H shell (0,10] count vs D15 k_R difference: recomputed = 13 vs D15 k_R-derived = 13 (exact integer equality)
+  [PASS] D20-G1c H shell (10,20] count vs D15 k_R difference: recomputed = 73 vs D15 k_R-derived = 73 (exact integer equality)
+  [PASS] D20-G1c H shell (20,30] count vs D15 k_R difference: recomputed = 86 vs D15 k_R-derived = 86 (exact integer equality)
+  [PASS] D20-G1a zero-deletion == R = 0 baseline (full): keep arrays identical = True (required True); max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D20-G1a R = 0 baseline reproduces D15's printed row (full): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 3.08e-10 (tol 1e-09), gradient n=67 6.39e-11 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+  [PASS] D20-G1a zero-deletion == R = 0 baseline (H): keep arrays identical = True (required True); max|diff| over rho_A222V, both gradients and both k's = 0.000e+00 (required EXACTLY 0)
+  [PASS] D20-G1a R = 0 baseline reproduces D15's printed row (H): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 2.96e-10 (tol 1e-09), gradient n=67 3.33e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+  [PASS] D20-G1b union keep-mask == R = 30 keep-mask (full): boolean arrays identical = True (required EXACTLY True); union count = 247, R = 30 count = 247
+  [PASS] D20-G1b union removal reproduces D15's printed R = 30 row (full): worst is p_spec n=78: recomputed 0.06329113924050633 vs D15 printed 0.063291 |diff| = 1.392e-07 (gate < 5e-07 = that quantity's print precision); all: rho 2.55e-10 (tol 1e-09), gradient n=67 3.31e-10 (tol 1e-09), p_spec n=78 1.39e-07 (tol 5e-07)
+  [PASS] D20-G1b union removal reproduces the DOC target (A222V rho, full): recomputed -0.02736012725503149  vs  doc target -0.027360127  |diff| = 2.550e-10 (gate < 1e-09)
+  [PASS] D20-G1b union removal reproduces the DOC target (gradient n=67, full): recomputed 0.40067843966871375  vs  doc target 0.40067844  |diff| = 3.313e-10 (gate < 1e-09)
+  [PASS] D20-G1b REMOVE shell (0,10] reproduces D15's printed R = 10 row (full): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 3.88e-10 (tol 1e-09), gradient n=67 3.50e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+  [PASS] D20-G1b union keep-mask == R = 30 keep-mask (H): boolean arrays identical = True (required EXACTLY True); union count = 172, R = 30 count = 172
+  [PASS] D20-G1b union removal reproduces D15's printed R = 30 row (H): worst is p_spec n=78: recomputed 0.10126582278481013 vs D15 printed 0.101266 |diff| = 1.772e-07 (gate < 5e-07 = that quantity's print precision); all: rho 1.63e-10 (tol 1e-09), gradient n=67 2.37e-10 (tol 1e-09), p_spec n=78 1.77e-07 (tol 5e-07)
+  [PASS] D20-G1b REMOVE shell (0,10] reproduces D15's printed R = 10 row (H): worst is p_spec n=78: recomputed 0.0379746835443038 vs D15 printed 0.037975 |diff| = 3.165e-07 (gate < 5e-07 = that quantity's print precision); all: rho 1.21e-10 (tol 1e-09), gradient n=67 1.49e-10 (tol 1e-09), p_spec n=78 3.16e-07 (tol 5e-07)
+
+  D20 gates: 23/23 PASS, 0 FAIL
+
+Elapsed 213.8s

@@ -139,6 +139,16 @@ Run **Phase 1's own routine** on A222V's unrestricted rows with its own seed and
 stream cannot be recovered, the gate is Monte-Carlo agreement: both endpoints within 0.003 of the published ones and
 the bootstrap median within 0.002 of the point estimate; state which version applied and why.
 
+**Verification note (D18.1 bootstrap-count provenance, checked before the first full run):** the published CI's
+bootstrap count is `N_BOOT=10000`, `SEED=0`, from `scripts/32_delta_esm_primary.py:48-49`
+(`N_BOOT = int(os.environ.get("N_BOOT", 10000))`, `SEED = 0`), with the call at `:102`
+(`n_boot=N_BOOT, seed=SEED`); `scripts/111_a1_b1_within_family_disattenuation.py:44` records the same
+"(script 32, n_boot=10000, seed 0, positions resampled)". Script 148's default `N_BOOT` is also 10000 with
+`SEED=0`, so the reproduction gate compares like with like without adjustment. `task32_delta_esm_primary.csv`
+carries **no** bootstrap-count column at all (header: `stage,quantity,value,ci_lo,ci_hi,p,n,ci_includes_zero,overlaps_pooled`),
+so the gate reads only `value`, `ci_lo`, `ci_hi`, `n` from it, as specified above. No `scripts/31_*.py` exists in this
+repository. This note records a premise check that came back clean, not a change to the gate.
+
 ### D18.2 - run D15's routine on the same rows, and on restricted rows
 
 Run script 144's `pos_cluster_boot` on (i) the same unrestricted rows, (ii) the R = 0 resolved rows, (iii) S1 R = 10, 20,

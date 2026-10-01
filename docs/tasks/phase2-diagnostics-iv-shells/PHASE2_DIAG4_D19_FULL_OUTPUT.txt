@@ -1,0 +1,319 @@
+
+==============================================================================
+D19 -- MATCHED-DELETION RANGES FOR A222V's RHO, k AND p_spec  (script 149)
+==============================================================================
+SCOPE: descriptive; nothing frozen is redefined; the frozen PHASE2_PREREG.md verdict is not touched.
+NO MODEL SCORING.  NO torch / esm / thermompnn import anywhere in this file.
+  N_DRAW=200 SEED=0   (DRAW_FULL=True)
+  RESAMPLING UNIT: NONE inside a draw.  Each draw is a deterministic recomputation on a deleted row set; the spread over draws is the DELETION EFFECT, not a bootstrap CI.  RE-DERIVATION null: the whole statistic is re-derived per draw.
+  Statistics: A222V's rho; k = number of the 78 nulls at or below A222V; p_spec = (1+k)/79.  k and p_spec are ONE statistic at two scales (p_spec strictly increasing in k), so their flags must agree.
+
+  --- building the shared state (script 125 construction via phase2_diag3.build) ---
+  build() elapsed 0.8s
+  bgs = 96, N_ids = 78, resN = 67, res96 = 85
+
+------------------------------------------------------------------------------
+D19-G2 (doc-target check) -- the R = 0 resolved baselines
+------------------------------------------------------------------------------
+  Target (task doc): full -0.076685523, H -0.080432398.
+  [PASS] D19-G2 R=0 resolved baseline (full): recomputed -0.07668552269189256 vs doc target -0.076685523 |diff| = 3.081e-10 (gate < 1e-09)
+  [PASS] D19-G2 R=0 resolved baseline (H): recomputed -0.0804323977038959 vs doc target -0.080432398 |diff| = 2.961e-10 (gate < 1e-09)
+
+------------------------------------------------------------------------------
+S1 statistics (the real deletions), both views
+------------------------------------------------------------------------------
+  full R = 10: k_R = 23 positions removed from a universe of 595;  A222V rho = -0.079237139;  k (n=78) = 2;  p_spec = 0.037974684;  gradient n=67 = +0.689454255
+        nulls at or below A222V in this S1 case (n=78): ['AV_220', 'G_P254F']
+  full R = 20: k_R = 121 positions removed from a universe of 595;  A222V rho = -0.065947891;  k (n=78) = 2;  p_spec = 0.037974684;  gradient n=67 = +0.662097177
+        nulls at or below A222V in this S1 case (n=78): ['AV_220', 'G_P254F']
+  full R = 30: k_R = 247 positions removed from a universe of 595;  A222V rho = -0.027360127;  k (n=78) = 4;  p_spec = 0.063291139;  gradient n=67 = +0.400678440
+        nulls at or below A222V in this S1 case (n=78): ['AV_145', 'AV_220', 'G_L318F', 'G_P254F']
+     H R = 10: k_R = 13 positions removed from a universe of 418;  A222V rho = -0.082101889;  k (n=78) = 2;  p_spec = 0.037974684;  gradient n=67 = +0.686580864
+        nulls at or below A222V in this S1 case (n=78): ['AV_220', 'G_P254F']
+     H R = 20: k_R = 86 positions removed from a universe of 418;  A222V rho = -0.063596629;  k (n=78) = 3;  p_spec = 0.050632911;  gradient n=67 = +0.640347202
+        nulls at or below A222V in this S1 case (n=78): ['AV_220', 'G_L318F', 'G_P254F']
+     H R = 30: k_R = 172 positions removed from a universe of 418;  A222V rho = -0.024367374;  k (n=78) = 7;  p_spec = 0.101265823;  gradient n=67 = +0.241344907
+        nulls at or below A222V in this S1 case (n=78): ['AV_145', 'AV_220', 'AV_328', 'AV_650', 'G_G317Q', 'G_L318F', 'G_P254F']
+
+------------------------------------------------------------------------------
+THE MATCHED-DELETION CONTROL (S1 only) -- NOT OPTIONAL
+------------------------------------------------------------------------------
+  QUOTED SOURCE of the loop being transcribed -- scripts/144_phase2_diag3_farvariants.py lines 705-724:
+  scripts/144_phase2_diag3_farvariants.py:705:     for view in p3.VIEWS:
+  scripts/144_phase2_diag3_farvariants.py:706:         POSV, resolved, d3 = (store[view]["POSV"], geo[view]["resolved"],
+  scripts/144_phase2_diag3_farvariants.py:707:                               geo[view]["d3"])
+  scripts/144_phase2_diag3_farvariants.py:708:         univ = geo[view]["univ_pos"]
+  scripts/144_phase2_diag3_farvariants.py:709:         for R in RADII:
+  scripts/144_phase2_diag3_farvariants.py:710:             rm = sorted(POSV[resolved & (d3 <= R)].tolist())
+  scripts/144_phase2_diag3_farvariants.py:711:             k_R = len(rm)
+  scripts/144_phase2_diag3_farvariants.py:712:             tag = f"S1  3D  R = {R:.0f} A  (keep d3_222(p) > {R:.0f})"
+  scripts/144_phase2_diag3_farvariants.py:713:             s1 = results[(tag, view)]
+  scripts/144_phase2_diag3_farvariants.py:714:             acc = {kk: np.empty(N_DRAW, float)
+  scripts/144_phase2_diag3_farvariants.py:715:                    for kk in ("rho_a", "grad_n67", "grad_n85", "p_n78",
+  scripts/144_phase2_diag3_farvariants.py:716:                               "p_n67", "k_n78")}
+  scripts/144_phase2_diag3_farvariants.py:717:             rg = np.random.default_rng(SEED)
+  scripts/144_phase2_diag3_farvariants.py:718:             for i in range(N_DRAW):
+  scripts/144_phase2_diag3_farvariants.py:719:                 drop = rg.choice(univ, size=k_R, replace=False) if k_R else \
+  scripts/144_phase2_diag3_farvariants.py:720:                     np.array([], dtype=univ.dtype)
+  scripts/144_phase2_diag3_farvariants.py:721:                 s = stats(view, keep_from_removed(POSV, resolved, drop))
+  scripts/144_phase2_diag3_farvariants.py:722:                 for kk in acc:
+  scripts/144_phase2_diag3_farvariants.py:723:                     acc[kk][i] = float(s[kk])
+  scripts/144_phase2_diag3_farvariants.py:724:             md[(view, R)] = acc
+
+  N_DRAW = 200 random deletions, SEED = 0.  Each draw removes k_R positions chosen UNIFORMLY WITHOUT REPLACEMENT from the same RESOLVED universe -- WHOLE POSITIONS, all their variants -- and the SAME removed set is applied to EVERY background within a draw.
+  A FRESH np.random.default_rng(SEED) IS CREATED PER (view, R) -- script 144 line 717 sits inside both loops, so this is its own construction, not a simplification.
+  REPORTING RULE (task doc rule 11): the S1 value, the range, the fraction of draws at or below and at or above it, the distance to the nearest bound, and INSIDE / OUTSIDE / MARGINAL.
+  parsed 8 (view, R) cells with printed matched-deletion blocks from PHASE2_DIAG3_D15_FULL_OUTPUT.txt
+
+  === full, R = 10: k_R = 23 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.079237139
+      random-deletion mean          = -0.076620772   sd = 0.003526670
+      random-deletion 2.5 / 97.5 pct = [-0.083258800, -0.069624333]
+      fraction of draws at or below S1 = 0.2350;  at or above = 0.7650
+      distance to nearest bound     = 0.004021661   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +1.825000000   sd = 0.453212985
+      random-deletion 2.5 / 97.5 pct = [+0.975000000, +2.000000000]
+      fraction of draws at or below S1 = 0.9950;  at or above = 0.8450
+      distance to nearest bound     = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.035759494   sd = 0.005736873
+      random-deletion 2.5 / 97.5 pct = [+0.025000000, +0.037974684]
+      fraction of draws at or below S1 = 0.9950;  at or above = 0.8450
+      distance to nearest bound     = 0.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (full, R=10) reproduces D15's printed value: worst is hi: got np.float64(-0.06962433265242225) vs D15 -0.069624333 |diff| = 3.476e-10 (gate < 5e-05); all six: mean 2.14e-10, sd 4.68e-11, lo 1.94e-10, hi 3.48e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (full, R=10) reproduces D15's printed value: worst is sd: got 0.45321298530630305 vs D15 0.453212985 |diff| = 3.063e-10 (gate < 5e-05); all six: mean 0.00e+00, sd 3.06e-10, lo 5.55e-16, hi 0.00e+00, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (full, R=10) reproduces D15's printed value: worst is hi: got np.float64(0.0379746835443038) vs D15 0.037974684 |diff| = 4.557e-10 (gate < 5e-05); all six: mean 3.29e-10, sd 2.32e-10, lo 3.47e-18, hi 4.56e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (full, R=10) reproduces D15's printed value: worst is mean: got 0.6932023347683551 vs D15 0.693202335 |diff| = 2.316e-10 (gate < 5e-05); all six: mean 2.32e-10, sd 8.89e-11, lo 3.62e-11, hi 1.58e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+  === full, R = 20: k_R = 121 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.065947891
+      random-deletion mean          = -0.076253257   sd = 0.007281463
+      random-deletion 2.5 / 97.5 pct = [-0.091007274, -0.062448598]
+      fraction of draws at or below S1 = 0.9200;  at or above = 0.0800
+      distance to nearest bound     = 0.003499293   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +1.880000000   sd = 1.387525182
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +4.025000000]
+      fraction of draws at or below S1 = 0.7950;  at or above = 0.6200
+      distance to nearest bound     = 2.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.036455696   sd = 0.017563610
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.063607595]
+      fraction of draws at or below S1 = 0.7950;  at or above = 0.6200
+      distance to nearest bound     = 0.025316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (full, R=20) reproduces D15's printed value: worst is hi: got np.float64(-0.06244859754997231) vs D15 -0.062448598 |diff| = 4.500e-10 (gate < 5e-05); all six: mean 6.91e-12, sd 2.96e-12, lo 6.18e-11, hi 4.50e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (full, R=20) reproduces D15's printed value: worst is sd: got 1.387525181988877 vs D15 1.387525182 |diff| = 1.112e-11 (gate < 5e-05); all six: mean 0.00e+00, sd 1.11e-11, lo 0.00e+00, hi 5.33e-15, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (full, R=20) reproduces D15's printed value: worst is mean: got 0.03645569620253165 vs D15 0.036455696 |diff| = 2.025e-10 (gate < 5e-05); all six: mean 2.03e-10, sd 1.01e-10, lo 1.52e-10, hi 6.33e-11, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (full, R=20) reproduces D15's printed value: worst is mean: got 0.6909737604887535 vs D15 0.69097376 |diff| = 4.888e-10 (gate < 5e-05); all six: mean 4.89e-10, sd 2.90e-10, lo 4.31e-10, hi 1.16e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+  === full, R = 30: k_R = 247 positions removed from a universe of 595 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.027360127
+      random-deletion mean          = -0.075062605   sd = 0.013446537
+      random-deletion 2.5 / 97.5 pct = [-0.098275992, -0.047691236]
+      fraction of draws at or below S1 = 1.0000;  at or above = 0.0000
+      distance to nearest bound     = 0.020331109   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    k at or below, 78 nulls
+      S1 value                      = +4.000000000
+      random-deletion mean          = +2.760000000   sd = 2.895569306
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +10.025000000]
+      fraction of draws at or below S1 = 0.7700;  at or above = 0.3000
+      distance to nearest bound     = 4.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.063291139
+      random-deletion mean          = +0.047594937   sd = 0.036652776
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.139556962]
+      fraction of draws at or below S1 = 0.7700;  at or above = 0.3000
+      distance to nearest bound     = 0.050632911   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (full, R=30) reproduces D15's printed value: worst is mean: got -0.07506260545985426 vs D15 -0.075062605 |diff| = 4.599e-10 (gate < 5e-05); all six: mean 4.60e-10, sd 4.14e-10, lo 2.74e-10, hi 2.48e-12, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (full, R=30) reproduces D15's printed value: worst is sd: got 2.8955693063783157 vs D15 2.895569306 |diff| = 3.783e-10 (gate < 5e-05); all six: mean 0.00e+00, sd 3.78e-10, lo 0.00e+00, hi 5.33e-15, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (full, R=30) reproduces D15's printed value: worst is mean: got 0.047594936708860766 vs D15 0.047594937 |diff| = 2.911e-10 (gate < 5e-05); all six: mean 2.91e-10, sd 3.01e-11, lo 1.52e-10, hi 2.53e-11, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (full, R=30) reproduces D15's printed value: worst is sd: got 0.028686151376419104 vs D15 0.028686151 |diff| = 3.764e-10 (gate < 5e-05); all six: mean 2.41e-10, sd 3.76e-10, lo 3.12e-10, hi 3.52e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+  === H, R = 10: k_R = 13 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.082101889
+      random-deletion mean          = -0.080517203   sd = 0.003283885
+      random-deletion 2.5 / 97.5 pct = [-0.086499760, -0.073431733]
+      fraction of draws at or below S1 = 0.3200;  at or above = 0.6800
+      distance to nearest bound     = 0.004397871   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    k at or below, 78 nulls
+      S1 value                      = +2.000000000
+      random-deletion mean          = +2.335000000   sd = 0.717880045
+      random-deletion 2.5 / 97.5 pct = [+1.975000000, +4.000000000]
+      fraction of draws at or below S1 = 0.7500;  at or above = 0.9750
+      distance to nearest bound     = 0.025000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.037974684
+      random-deletion mean          = +0.042215190   sd = 0.009087089
+      random-deletion 2.5 / 97.5 pct = [+0.037658228, +0.063291139]
+      fraction of draws at or below S1 = 0.7500;  at or above = 0.9750
+      distance to nearest bound     = 0.000316456   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (H, R=10) reproduces D15's printed value: worst is hi: got np.float64(-0.07343173347616502) vs D15 -0.073431733 |diff| = 4.762e-10 (gate < 5e-05); all six: mean 3.97e-10, sd 3.04e-11, lo 1.68e-10, hi 4.76e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (H, R=10) reproduces D15's printed value: worst is sd: got 0.7178800448500918 vs D15 0.717880045 |diff| = 1.499e-10 (gate < 5e-05); all six: mean 0.00e+00, sd 1.50e-10, lo 4.44e-16, hi 0.00e+00, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (H, R=10) reproduces D15's printed value: worst is hi: got np.float64(0.06329113924050633) vs D15 0.063291139 |diff| = 2.405e-10 (gate < 5e-05); all six: mean 1.27e-10, sd 1.75e-10, lo 1.52e-10, hi 2.41e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (H, R=10) reproduces D15's printed value: worst is sd: got 0.006911356533488614 vs D15 0.006911357 |diff| = 4.665e-10 (gate < 5e-05); all six: mean 2.40e-10, sd 4.67e-10, lo 2.47e-10, hi 3.92e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+  === H, R = 20: k_R = 86 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.063596629
+      random-deletion mean          = -0.080928195   sd = 0.008721983
+      random-deletion 2.5 / 97.5 pct = [-0.096713499, -0.064444959]
+      fraction of draws at or below S1 = 0.9750;  at or above = 0.0250
+      distance to nearest bound     = 0.000848330   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): MARGINAL
+    k at or below, 78 nulls
+      S1 value                      = +3.000000000
+      random-deletion mean          = +2.765000000   sd = 1.707145786
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +7.000000000]
+      fraction of draws at or below S1 = 0.6900;  at or above = 0.5150
+      distance to nearest bound     = 3.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.050632911
+      random-deletion mean          = +0.047658228   sd = 0.021609440
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.101265823]
+      fraction of draws at or below S1 = 0.6900;  at or above = 0.5150
+      distance to nearest bound     = 0.037974684   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (H, R=20) reproduces D15's printed value: worst is lo: got np.float64(-0.09671349926343871) vs D15 -0.096713499 |diff| = 2.634e-10 (gate < 5e-05); all six: mean 4.51e-11, sd 2.36e-10, lo 2.63e-10, hi 2.01e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (H, R=20) reproduces D15's printed value: worst is sd: got 1.7071457857102719 vs D15 1.707145786 |diff| = 2.897e-10 (gate < 5e-05); all six: mean 0.00e+00, sd 2.90e-10, lo 0.00e+00, hi 0.00e+00, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (H, R=20) reproduces D15's printed value: worst is sd: got 0.02160944032544648 vs D15 0.02160944 |diff| = 3.254e-10 (gate < 5e-05); all six: mean 1.52e-10, sd 3.25e-10, lo 1.52e-10, hi 2.15e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (H, R=20) reproduces D15's printed value: worst is lo: got np.float64(0.6420467925053523) vs D15 0.642046793 |diff| = 4.946e-10 (gate < 5e-05); all six: mean 3.35e-10, sd 2.75e-10, lo 4.95e-10, hi 4.51e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+  === H, R = 30: k_R = 172 positions removed from a universe of 418 (matched-deletion draws: 200) ===
+    A222V rho
+      S1 value                      = -0.024367374
+      random-deletion mean          = -0.078787588   sd = 0.013127572
+      random-deletion 2.5 / 97.5 pct = [-0.104682320, -0.054086245]
+      fraction of draws at or below S1 = 1.0000;  at or above = 0.0000
+      distance to nearest bound     = 0.029718871   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): OUTSIDE
+    k at or below, 78 nulls
+      S1 value                      = +7.000000000
+      random-deletion mean          = +3.800000000   sd = 2.989092399
+      random-deletion 2.5 / 97.5 pct = [+0.000000000, +12.000000000]
+      fraction of draws at or below S1 = 0.8850;  at or above = 0.1650
+      distance to nearest bound     = 5.000000000   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+    p_spec, 78 nulls
+      S1 value                      = +0.101265823
+      random-deletion mean          = +0.060759494   sd = 0.037836613
+      random-deletion 2.5 / 97.5 pct = [+0.012658228, +0.164556962]
+      fraction of draws at or below S1 = 0.8850;  at or above = 0.1650
+      distance to nearest bound     = 0.063291139   (MARGINAL distance threshold 0.002)
+      -> FLAG (rule 11): INSIDE
+  [PASS] D19-G1 matched-deletion A222V rho (H, R=30) reproduces D15's printed value: worst is lo: got np.float64(-0.10468231952983388) vs D15 -0.10468232 |diff| = 4.702e-10 (gate < 5e-05); all six: mean 4.44e-10, sd 3.15e-10, lo 4.70e-10, hi 1.64e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion k at or below, 78 nulls (H, R=30) reproduces D15's printed value: worst is sd: got 2.9890923985106532 vs D15 2.989092399 |diff| = 4.893e-10 (gate < 5e-05); all six: mean 0.00e+00, sd 4.89e-10, lo 0.00e+00, hi 0.00e+00, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion p_spec, 78 nulls (H, R=30) reproduces D15's printed value: worst is sd: got 0.037836612639375364 vs D15 0.037836613 |diff| = 3.606e-10 (gate < 5e-05); all six: mean 3.29e-10, sd 3.61e-10, lo 1.52e-10, hi 2.53e-11, frac_le 0.00e+00, frac_ge 0.00e+00
+  [PASS] D19-G1 matched-deletion gradient Spearman(rho_b,d3_b), resolved nulls n=67 (H, R=30) reproduces D15's printed value: worst is mean: got 0.6656069042530339 vs D15 0.665606904 |diff| = 2.530e-10 (gate < 5e-05); all six: mean 2.53e-10, sd 2.09e-10, lo 1.58e-10, hi 1.82e-10, frac_le 0.00e+00, frac_ge 0.00e+00
+
+------------------------------------------------------------------------------
+Does THINNING ALONE move A222V's rho?  random-deletion mean vs the R = 0 baseline
+------------------------------------------------------------------------------
+  The R = 0 resolved baseline is the statistic on the SAME rows before any deletion; the random-deletion mean is what deleting k_R RANDOM positions does to it.
+   view    R   k_R    R=0 baseline     random mean         shift     S1 (real)   S1 - random mean
+   full   10    23    -0.076685523    -0.076620772  +0.000064750  -0.079237139       -0.002616367
+   full   20   121    -0.076685523    -0.076253257  +0.000432266  -0.065947891       +0.010305366
+   full   30   247    -0.076685523    -0.075062605  +0.001622917  -0.027360127       +0.047702478
+      H   10    13    -0.080432398    -0.080517203  -0.000084806  -0.082101889       -0.001584686
+      H   20    86    -0.080432398    -0.080928195  -0.000495797  -0.063596629       +0.017331566
+      H   30   172    -0.080432398    -0.078787588  +0.001644810  -0.024367374       +0.054420214
+
+------------------------------------------------------------------------------
+THE R = 30 'FALL' -- is it inside or outside what deleting 247 (172) RANDOM positions produces?
+------------------------------------------------------------------------------
+  The task doc asks me to report D15's claim 'in its own terms' as: "A222V's rho falls 64% (full) and 70% (H) at R = 30".
+
+  FIRST, THE ATTRIBUTION CHECK: that sentence does not occur in Diagnostics III's log.  A grep for 'falls 64' / '64% (full)' over docs/ and scripts/ returns only the task doc itself (PHASE2_DIAGNOSTICS_IV.md line 192).  What D15 actually wrote, verbatim:
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_III_LOG.md:833: - **THE ANCHOR PERSISTS AMONG DISTAL VARIANTS, WEAKENING MONOTONICALLY.** A222V's rho on the retained rows: -0.0767 (R=0) -> -0.0792 (R=10) -> -0.0659 (R=20) -> **-0.0274** (R=30) full; -0.0804 -> -0.0821 -> -0.0636 -> **-0.0244** H. `p_spec` stays at 2/78 = 0.037975 through R = 20 and rises to 4/78 = 0.063291 at R = 30 (full) and 7/78 = 0.101266 (H). **A222V's own negative association is halved by removing target variants within 30 A of 222.**
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_III_LOG.md:1248: **DOES THE ANCHOR PERSIST? Only weakly.** A222V's rho falls monotonically -0.0767 -> -0.0792 -> -0.0659 -> **-0.0274** (full) and -0.0804 -> -0.0821 -> -0.0636 -> **-0.0244** (H); `p_spec` holds at 2/78 = 0.037975 through R = 20 and rises to 0.063291 (full) and 0.101266 (H) at R = 30. **A222V's own negative association is roughly halved by removing target variants within 30 A of 222.**
+  docs/tasks/phase2-diagnostics-iii-mechanism/PHASE2_DIAGNOSTICS_III_LOG.md:1314: - **Against "tied to position 222 specifically" / for "the region around 222":** the gradient of rho_b against 3D distance is real and large (+0.732 unrestricted), and **removing target variants within 20-30 A of 222 collapses it to +0.400 (full) and +0.241 (H) - outside the matched-deletion range, on both views.** Every distance-aware adjustment puts A222V's `p_spec_adj` **above** the frozen thresholds: isotonic 0.19-0.75, parametric 0.13-1.00. The log1p distance forms **mispredict the entire distance-0 site** (Arm S predicted -0.141 and -0.188 against an observed -0.065, overshoots of 0.076 and 0.123, several times the site's own sd of 0.015) and predict A222V **below every observed null**. A222V's own association is roughly halved by deleting near-222 target variants.
+  So D15's own wording is 'halved' / 'roughly halved', and the 64% / 70% figures are a RECOMPUTATION (the task doc's, and mine below), not D15's printed words.  D15's 'roughly halved' UNDERSTATES its own printed numbers: the fall computed from them is larger than 50%.
+  fall = 1 - rho(R = 30) / rho(R = 0), on the R = 0 resolved rows of the same view.  Percentages of the ASSOCIATION'S MAGNITUDE lost.
+  [PASS] D19-G3 fall at R=30 (full) vs the doc's 64%: recomputed 64.3217%  = 1 - (-0.027360127)/(-0.076685523) vs doc target 64%  |diff| = 0.3217 percentage points (gate < 0.5 = rounding); the doc rounds 64.32% to 64%
+
+  --- full, R = 30 (k_R = 247) ---
+    S1 fall                          = +0.643216525 (64.3217% of the association's magnitude lost)
+    random-deletion fall mean        = +0.021163281   sd = 0.175346481
+    random-deletion fall 2.5/97.5    = [-0.281545568, +0.378093357]
+    fraction at or below S1 fall     = 1.0000;  at or above = 0.0000
+    distance to nearest bound        = 0.265123168   (on the FALL scale; 0.002 threshold)
+    FLAG on the fall scale (rule 11) : OUTSIDE
+    FLAG on the rho scale  (rule 11) : OUTSIDE  [S1 rho -0.027360127 vs range [-0.098275992, -0.047691236]; frac at/below 1.0000, at/above 0.0000; distance to nearest bound 0.020331109]
+    the two scales must agree (fall is a monotone increasing transform of rho because rho(R0) < 0): AGREE
+    transform identity check: max|fall_i - (1 - rho_i/rho(R0))| = 0.000e+00
+  [PASS] D19-G3 fall at R=30 (H) vs the doc's 70%: recomputed 69.7045%  = 1 - (-0.024367374)/(-0.080432398) vs doc target 70%  |diff| = 0.2955 percentage points (gate < 0.5 = rounding); the doc rounds 69.70% to 70%
+
+  --- H, R = 30 (k_R = 172) ---
+    S1 fall                          = +0.697045289 (69.7045% of the association's magnitude lost)
+    random-deletion fall mean        = +0.020449597   sd = 0.163212487
+    random-deletion fall 2.5/97.5    = [-0.301494454, +0.327556473]
+    fraction at or below S1 fall     = 1.0000;  at or above = 0.0000
+    distance to nearest bound        = 0.369488815   (on the FALL scale; 0.002 threshold)
+    FLAG on the fall scale (rule 11) : OUTSIDE
+    FLAG on the rho scale  (rule 11) : OUTSIDE  [S1 rho -0.024367374 vs range [-0.104682320, -0.054086245]; frac at/below 1.0000, at/above 0.0000; distance to nearest bound 0.029718871]
+    the two scales must agree (fall is a monotone increasing transform of rho because rho(R0) < 0): AGREE
+    transform identity check: max|fall_i - (1 - rho_i/rho(R0))| = 0.000e+00
+
+------------------------------------------------------------------------------
+D19 SUMMARY TABLE -- S1 value, matched-deletion range, rule-11 flag
+------------------------------------------------------------------------------
+   view    R   k_R      stat       S1 value       range lo       range hi     f<=     f>=        dist      flag
+   full   10    23       rho   -0.079237139   -0.083258800   -0.069624333  0.2350  0.7650 0.004021661    INSIDE
+   full   10    23         k   +2.000000000   +0.975000000   +2.000000000  0.9950  0.8450 0.000000000    INSIDE
+   full   10    23    p_spec   +0.037974684   +0.025000000   +0.037974684  0.9950  0.8450 0.000000000    INSIDE
+   full   20   121       rho   -0.065947891   -0.091007274   -0.062448598  0.9200  0.0800 0.003499293    INSIDE
+   full   20   121         k   +2.000000000   +0.000000000   +4.025000000  0.7950  0.6200 2.000000000    INSIDE
+   full   20   121    p_spec   +0.037974684   +0.012658228   +0.063607595  0.7950  0.6200 0.025316456    INSIDE
+   full   30   247       rho   -0.027360127   -0.098275992   -0.047691236  1.0000  0.0000 0.020331109   OUTSIDE
+   full   30   247         k   +4.000000000   +0.000000000  +10.025000000  0.7700  0.3000 4.000000000    INSIDE
+   full   30   247    p_spec   +0.063291139   +0.012658228   +0.139556962  0.7700  0.3000 0.050632911    INSIDE
+      H   10    13       rho   -0.082101889   -0.086499760   -0.073431733  0.3200  0.6800 0.004397871    INSIDE
+      H   10    13         k   +2.000000000   +1.975000000   +4.000000000  0.7500  0.9750 0.025000000    INSIDE
+      H   10    13    p_spec   +0.037974684   +0.037658228   +0.063291139  0.7500  0.9750 0.000316456    INSIDE
+      H   20    86       rho   -0.063596629   -0.096713499   -0.064444959  0.9750  0.0250 0.000848330  MARGINAL
+      H   20    86         k   +3.000000000   +0.000000000   +7.000000000  0.6900  0.5150 3.000000000    INSIDE
+      H   20    86    p_spec   +0.050632911   +0.012658228   +0.101265823  0.6900  0.5150 0.037974684    INSIDE
+      H   30   172       rho   -0.024367374   -0.104682320   -0.054086245  1.0000  0.0000 0.029718871   OUTSIDE
+      H   30   172         k   +7.000000000   +0.000000000  +12.000000000  0.8850  0.1650 5.000000000    INSIDE
+      H   30   172    p_spec   +0.101265823   +0.012658228   +0.164556962  0.8850  0.1650 0.063291139    INSIDE
+
+  p_spec against the frozen NUMERIC thresholds only (rule 10):
+    full R = 10: p_spec = 0.037974684 vs threshold 0.05 -> at or below the threshold
+    full R = 20: p_spec = 0.037974684 vs threshold 0.05 -> at or below the threshold
+    full R = 30: p_spec = 0.063291139 vs threshold 0.05 -> above the threshold
+       H R = 10: p_spec = 0.037974684 vs threshold 0.1 -> at or below the threshold
+       H R = 20: p_spec = 0.050632911 vs threshold 0.1 -> at or below the threshold
+       H R = 30: p_spec = 0.101265823 vs threshold 0.1 -> above the threshold
+
+  INSIDE / OUTSIDE / MARGINAL counts over the six (view, R) cells:
+        rho: INSIDE 3, OUTSIDE 2, MARGINAL 1  (of 6 cells)
+          k: INSIDE 6, OUTSIDE 0, MARGINAL 0  (of 6 cells)
+     p_spec: INSIDE 6, OUTSIDE 0, MARGINAL 0  (of 6 cells)
+
+  LIMITS: k and p_spec are one statistic at two scales, so their agreeing flags are NOT two pieces of evidence.  p_spec's draws are discrete (multiples of 1/79), so its fractions carry ties and frac_le + frac_ge can exceed 1; over 200 draws the smallest resolvable one-sided fraction is 0.005.  Rank fractions over small n are rank fractions, not tests.
+  LIMIT: the matched-deletion range answers 'is this what deleting the same NUMBER of random positions does?'; it says nothing about WHICH positions, and it is not a significance test of the deletion itself.
+
+  D19 gates: 28/28 PASS, 0 FAIL
+
+Elapsed 88.3s
