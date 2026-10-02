@@ -1,0 +1,347 @@
+
+==========================================================================
+PHASE 2 pre-registered analysis (script 125)  mode=phase2  N_BOOT=300 N_PERM=300 SEED=0
+==========================================================================
+PRE-REGISTERED: frozen PHASE2_PREREG.md sections 2/4/5/6/7 (quoted in this script's docstring); this run's mode 'phase2' selected BEFORE any output was seen.
+DISCLOSURE (frozen section 9): the AE1/AE2 split that motivates this test was observed in Phase 1 after F1 was run (POST-HOC); confirmatory weight rests on this frozen rule and on H.
+PIN-10 rng streams: SEED+0 primary full-frame draws; SEED+1 primary H draws; SEED+2 D_site permutation; SEED+3 secondary full-frame; SEED+4 secondary H (SEED=0).
+PIN-9: NAIVE spearmanr loop on explicit resampled indices (the pin's default); weighted mid-rank acceleration NOT used.
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+
+[G-A] A222V's full-frame rho vs the frozen anchor
+  rho = -0.08811806424891734; target -0.088118 |diff| = 6.425e-08 (gate < 1e-6)
+  G-A PASS
+
+--------------------------------------------------------------------------
+MODE phase2 -- reads data/processed/phase2/ (SESSION 2b; no Phase 2 score exists during session 2a)
+--------------------------------------------------------------------------
+  roster 96 backgrounds; bg_*.csv files found = 96 (all 96 expected before session 2b)
+  rows outside own position without scores (coverage gaps) = 0 across all backgrounds (none)
+  arms: S=18 V=38 G=40 -> N (null set) = 78; A222V is neither S nor N (frozen section 3)
+  G-C PASS: 0 rows with target position == background position in any rho_b input (own-position rows pre-dropped: 1267)
+
+[point rho_b] full analysis set (all backgrounds)
+      A222_C arm=S  rho=-0.093529969
+      A222_D arm=S  rho=-0.081657235
+      A222_E arm=S  rho=-0.072118749
+      A222_F arm=S  rho=-0.076109024
+      A222_G arm=S  rho=-0.047518529
+      A222_H arm=S  rho=-0.053981871
+      A222_I arm=S  rho=-0.069322876
+      A222_K arm=S  rho=-0.045641128
+      A222_L arm=S  rho=-0.053895221
+      A222_M arm=S  rho=-0.045990178
+      A222_N arm=S  rho=-0.076712110
+      A222_P arm=S  rho=-0.064488894
+      A222_Q arm=S  rho=-0.061575739
+      A222_R arm=S  rho=-0.053242246
+      A222_S arm=S  rho=-0.068299813
+      A222_T arm=S  rho=-0.085890371
+      A222_W arm=S  rho=-0.057926447
+      A222_Y arm=S  rho=-0.064967616
+      AV_113 arm=V  rho=-0.077807949
+      AV_116 arm=V  rho=-0.068925603
+      AV_145 arm=V  rho=-0.055803278
+      AV_155 arm=V  rho=-0.070395718
+      AV_175 arm=V  rho=-0.047162207
+       AV_19 arm=V  rho=+0.003329242
+      AV_195 arm=V  rho=-0.084161807
+      AV_204 arm=V  rho=-0.002578066
+      AV_209 arm=V  rho=-0.018056192
+      AV_220 arm=V  rho=-0.084598081
+      AV_233 arm=V  rho=-0.028766221
+      AV_242 arm=V  rho=-0.062924344
+      AV_292 arm=V  rho=-0.013826243
+      AV_293 arm=V  rho=-0.062145352
+      AV_302 arm=V  rho=-0.034023698
+      AV_311 arm=V  rho=-0.039952066
+      AV_328 arm=V  rho=-0.040293167
+      AV_350 arm=V  rho=-0.033384357
+      AV_353 arm=V  rho=+0.009726848
+      AV_368 arm=V  rho=+0.004593843
+      AV_396 arm=V  rho=+0.028472302
+      AV_461 arm=V  rho=+0.041107575
+      AV_462 arm=V  rho=-0.002825264
+        AV_5 arm=V  rho=+0.003037793
+      AV_511 arm=V  rho=+0.019289908
+      AV_522 arm=V  rho=+0.011066907
+      AV_524 arm=V  rho=+0.028768424
+      AV_551 arm=V  rho=+0.002577630
+      AV_558 arm=V  rho=+0.040456450
+      AV_587 arm=V  rho=+0.047573205
+      AV_589 arm=V  rho=+0.043480167
+      AV_650 arm=V  rho=+0.021886580
+      AV_655 arm=V  rho=+0.008157871
+       AV_70 arm=V  rho=-0.045706706
+       AV_73 arm=V  rho=-0.041005620
+       AV_84 arm=V  rho=-0.038993461
+       AV_85 arm=V  rho=-0.071229445
+       AV_98 arm=V  rho=-0.031182516
+     G_A462S arm=G  rho=+0.006938093
+     G_A551K arm=G  rho=+0.034996797
+     G_D629C arm=G  rho=-0.031212310
+     G_E168S arm=G  rho=-0.023467898
+      G_E16V arm=G  rho=+0.012707895
+     G_E279K arm=G  rho=+0.007840911
+     G_E383T arm=G  rho=-0.020285940
+      G_E54R arm=G  rho=-0.041779469
+     G_G317Q arm=G  rho=-0.041896710
+     G_G562M arm=G  rho=+0.026201519
+     G_H354F arm=G  rho=+0.013581125
+     G_H613R arm=G  rho=+0.032872622
+     G_I192T arm=G  rho=-0.032947897
+      G_K27I arm=G  rho=+0.015592029
+     G_K401S arm=G  rho=+0.050707607
+      G_K48P arm=G  rho=-0.050903091
+     G_K510H arm=G  rho=+0.062861003
+     G_L178T arm=G  rho=-0.070330933
+     G_L318F arm=G  rho=-0.056842348
+     G_L408H arm=G  rho=+0.051669241
+     G_L472H arm=G  rho=+0.017473125
+     G_L526R arm=G  rho=+0.052743208
+     G_M111N arm=G  rho=-0.060641100
+      G_N12P arm=G  rho=-0.033115854
+       G_N3K arm=G  rho=-0.028768377
+     G_P254F arm=G  rho=-0.096243863
+     G_P346V arm=G  rho=-0.011818561
+     G_P395F arm=G  rho=+0.038434010
+     G_R357M arm=G  rho=+0.018424160
+     G_R358V arm=G  rho=+0.045470601
+      G_S23A arm=G  rho=+0.051353615
+     G_S430P arm=G  rho=+0.012312980
+     G_S494H arm=G  rho=+0.043037621
+     G_T115G arm=G  rho=-0.021532385
+     G_T521D arm=G  rho=+0.001652990
+     G_T549H arm=G  rho=+0.023820317
+     G_V574C arm=G  rho=+0.047332311
+     G_W595H arm=G  rho=+0.063116028
+      G_W59C arm=G  rho=-0.041685097
+     G_Y197V arm=G  rho=-0.076879798
+  __A222V__  rho=-0.088118064 (full frame)
+  G-D: identity draw (every cluster once) vs point rho: max|diff| = 0.000e+00 (gate < 1e-12)
+  G-D PASS
+
+[G-E] background position coverage
+  min positions covered by any background = 653 (denominator 654; gate >= 621.3)
+  G-E PASS
+
+--------------------------------------------------------------------------
+PRIMARY ANALYSIS (frozen sections 2 + 4)
+--------------------------------------------------------------------------
+    [SEED+0 full frame] 60/300 draws, 8s
+    [SEED+0 full frame] 120/300 draws, 17s
+    [SEED+0 full frame] 180/300 draws, 26s
+    [SEED+0 full frame] 240/300 draws, 34s
+    [SEED+0 full frame] 300/300 draws, 43s
+    [SEED+0 full frame] 300 draws x 96+A222V rho in 42.9s (143.0 ms/draw); draws with any NaN = 0 (dropped from CIs)
+
+  p_spec(FULL FRAME): threshold = A222V's rho on the same rows = -0.088118064
+    #{b in N : rho_b <= rho_A222V} = 1 of |N| = 78
+    p_spec(full) = (1 + 1) / (1 + 78) = 0.025316456
+    [SEED+1 H] 60/300 draws, 6s
+    [SEED+1 H] 120/300 draws, 12s
+    [SEED+1 H] 180/300 draws, 17s
+    [SEED+1 H] 240/300 draws, 24s
+    [SEED+1 H] 300/300 draws, 30s
+    [SEED+1 H] 300 draws x 96+A222V rho in 29.6s (98.7 ms/draw); draws with any NaN = 0 (dropped from CIs)
+
+  p_spec(HELD-OUT H): threshold = A222V's rho on H rows = -0.090021683
+    #{b in N : rho_b <= rho_A222V} = 3 of |N| = 78
+    p_spec(H) = (1 + 3) / (1 + 78) = 0.050632911
+
+  per-background rho on H (frozen section 4b):
+        A222_C arm=S  rho_H=-0.090964259 CI=[-0.126765, -0.055925]
+        A222_D arm=S  rho_H=-0.086809350 CI=[-0.121190, -0.055431]
+        A222_E arm=S  rho_H=-0.076475523 CI=[-0.112591, -0.045167]
+        A222_F arm=S  rho_H=-0.086085057 CI=[-0.119617, -0.049836]
+        A222_G arm=S  rho_H=-0.054062709 CI=[-0.086935, -0.024601]
+        A222_H arm=S  rho_H=-0.066669904 CI=[-0.099339, -0.031712]
+        A222_I arm=S  rho_H=-0.073831566 CI=[-0.107086, -0.041764]
+        A222_K arm=S  rho_H=-0.051971717 CI=[-0.086488, -0.019588]
+        A222_L arm=S  rho_H=-0.056760414 CI=[-0.086738, -0.023686]
+        A222_M arm=S  rho_H=-0.048929841 CI=[-0.086021, -0.018532]
+        A222_N arm=S  rho_H=-0.080240992 CI=[-0.115010, -0.046755]
+        A222_P arm=S  rho_H=-0.070547723 CI=[-0.103801, -0.039303]
+        A222_Q arm=S  rho_H=-0.065190461 CI=[-0.098800, -0.032345]
+        A222_R arm=S  rho_H=-0.060413066 CI=[-0.092547, -0.029131]
+        A222_S arm=S  rho_H=-0.067111522 CI=[-0.104124, -0.035449]
+        A222_T arm=S  rho_H=-0.081679896 CI=[-0.118733, -0.050265]
+        A222_W arm=S  rho_H=-0.067434748 CI=[-0.099109, -0.037963]
+        A222_Y arm=S  rho_H=-0.078083625 CI=[-0.110302, -0.045391]
+        AV_113 arm=V  rho_H=-0.086932386 CI=[-0.118876, -0.053861]
+        AV_116 arm=V  rho_H=-0.056756538 CI=[-0.088118, -0.026397]
+        AV_145 arm=V  rho_H=-0.052044109 CI=[-0.089133, -0.019756]
+        AV_155 arm=V  rho_H=-0.088806375 CI=[-0.121911, -0.055842]
+        AV_175 arm=V  rho_H=-0.061862861 CI=[-0.094116, -0.030133]
+         AV_19 arm=V  rho_H=+0.002978692 CI=[-0.026728, +0.036012]
+        AV_195 arm=V  rho_H=-0.093420822 CI=[-0.127558, -0.066198]
+        AV_204 arm=V  rho_H=+0.002257283 CI=[-0.035970, +0.038388]
+        AV_209 arm=V  rho_H=-0.022231037 CI=[-0.054841, +0.013683]
+        AV_220 arm=V  rho_H=-0.094480281 CI=[-0.128965, -0.062789]
+        AV_233 arm=V  rho_H=-0.037194932 CI=[-0.070966, -0.007518]
+        AV_242 arm=V  rho_H=-0.067520962 CI=[-0.098921, -0.036335]
+        AV_292 arm=V  rho_H=-0.007557261 CI=[-0.042333, +0.024452]
+        AV_293 arm=V  rho_H=-0.058014165 CI=[-0.090197, -0.025717]
+        AV_302 arm=V  rho_H=-0.032978927 CI=[-0.068468, +0.005015]
+        AV_311 arm=V  rho_H=-0.041197119 CI=[-0.071587, -0.008386]
+        AV_328 arm=V  rho_H=-0.051856616 CI=[-0.091580, -0.019374]
+        AV_350 arm=V  rho_H=-0.023886479 CI=[-0.061181, +0.008768]
+        AV_353 arm=V  rho_H=+0.011018907 CI=[-0.027536, +0.042087]
+        AV_368 arm=V  rho_H=+0.015369131 CI=[-0.030253, +0.051545]
+        AV_396 arm=V  rho_H=+0.032804301 CI=[-0.003992, +0.069313]
+        AV_461 arm=V  rho_H=+0.040588603 CI=[+0.009616, +0.072422]
+        AV_462 arm=V  rho_H=-0.002534037 CI=[-0.032976, +0.032577]
+          AV_5 arm=V  rho_H=+0.013531788 CI=[-0.021224, +0.048544]
+        AV_511 arm=V  rho_H=+0.015586617 CI=[-0.022162, +0.051764]
+        AV_522 arm=V  rho_H=+0.001917565 CI=[-0.040634, +0.035123]
+        AV_524 arm=V  rho_H=+0.025941561 CI=[-0.004450, +0.054028]
+        AV_551 arm=V  rho_H=-0.000838942 CI=[-0.037970, +0.038306]
+        AV_558 arm=V  rho_H=+0.035295454 CI=[-0.003148, +0.069507]
+        AV_587 arm=V  rho_H=+0.035058265 CI=[-0.005736, +0.070426]
+        AV_589 arm=V  rho_H=+0.035901876 CI=[-0.001362, +0.073352]
+        AV_650 arm=V  rho_H=+0.005934441 CI=[-0.027696, +0.037686]
+        AV_655 arm=V  rho_H=-0.003477699 CI=[-0.036558, +0.025587]
+         AV_70 arm=V  rho_H=-0.044557756 CI=[-0.078461, -0.013185]
+         AV_73 arm=V  rho_H=-0.053320790 CI=[-0.089026, -0.020262]
+         AV_84 arm=V  rho_H=-0.044301511 CI=[-0.073573, -0.010567]
+         AV_85 arm=V  rho_H=-0.081934801 CI=[-0.115600, -0.052632]
+         AV_98 arm=V  rho_H=-0.023025631 CI=[-0.059242, +0.011458]
+       G_A462S arm=G  rho_H=-0.005709314 CI=[-0.037497, +0.026959]
+       G_A551K arm=G  rho_H=+0.038173492 CI=[+0.003038, +0.074603]
+       G_D629C arm=G  rho_H=-0.028485037 CI=[-0.059658, +0.007681]
+       G_E168S arm=G  rho_H=-0.031986857 CI=[-0.068046, -0.000284]
+        G_E16V arm=G  rho_H=+0.013043630 CI=[-0.023035, +0.047624]
+       G_E279K arm=G  rho_H=+0.005547519 CI=[-0.026919, +0.038565]
+       G_E383T arm=G  rho_H=-0.011306110 CI=[-0.048676, +0.025640]
+        G_E54R arm=G  rho_H=-0.044466149 CI=[-0.076534, -0.008177]
+       G_G317Q arm=G  rho_H=-0.051686196 CI=[-0.080932, -0.016717]
+       G_G562M arm=G  rho_H=+0.019066125 CI=[-0.021762, +0.052843]
+       G_H354F arm=G  rho_H=+0.015993685 CI=[-0.026624, +0.047996]
+       G_H613R arm=G  rho_H=+0.030397426 CI=[-0.005139, +0.067752]
+       G_I192T arm=G  rho_H=-0.029689252 CI=[-0.065285, +0.003134]
+        G_K27I arm=G  rho_H=+0.020019379 CI=[-0.012173, +0.051627]
+       G_K401S arm=G  rho_H=+0.057378285 CI=[+0.018245, +0.091245]
+        G_K48P arm=G  rho_H=-0.050518077 CI=[-0.085393, -0.017755]
+       G_K510H arm=G  rho_H=+0.068247435 CI=[+0.035702, +0.102639]
+       G_L178T arm=G  rho_H=-0.074355887 CI=[-0.107137, -0.039253]
+       G_L318F arm=G  rho_H=-0.062753627 CI=[-0.094259, -0.030373]
+       G_L408H arm=G  rho_H=+0.052618442 CI=[+0.019489, +0.088764]
+       G_L472H arm=G  rho_H=+0.019854049 CI=[-0.011931, +0.051466]
+       G_L526R arm=G  rho_H=+0.060719935 CI=[+0.028490, +0.089099]
+       G_M111N arm=G  rho_H=-0.056756827 CI=[-0.087254, -0.024469]
+        G_N12P arm=G  rho_H=-0.030965570 CI=[-0.068750, +0.003379]
+         G_N3K arm=G  rho_H=-0.030395999 CI=[-0.063448, +0.003254]
+       G_P254F arm=G  rho_H=-0.101954441 CI=[-0.136709, -0.068068]
+       G_P346V arm=G  rho_H=-0.008553976 CI=[-0.045209, +0.023690]
+       G_P395F arm=G  rho_H=+0.046986113 CI=[+0.012374, +0.082469]
+       G_R357M arm=G  rho_H=+0.024619804 CI=[-0.014684, +0.060354]
+       G_R358V arm=G  rho_H=+0.053831560 CI=[+0.020785, +0.088863]
+        G_S23A arm=G  rho_H=+0.051743008 CI=[+0.019509, +0.089680]
+       G_S430P arm=G  rho_H=+0.020189417 CI=[-0.014392, +0.053089]
+       G_S494H arm=G  rho_H=+0.053832029 CI=[+0.019520, +0.083634]
+       G_T115G arm=G  rho_H=-0.023370898 CI=[-0.055740, +0.006587]
+       G_T521D arm=G  rho_H=-0.014265790 CI=[-0.049382, +0.020323]
+       G_T549H arm=G  rho_H=+0.035875355 CI=[+0.002772, +0.070732]
+       G_V574C arm=G  rho_H=+0.056302359 CI=[+0.024810, +0.087698]
+       G_W595H arm=G  rho_H=+0.067668503 CI=[+0.032639, +0.104971]
+        G_W59C arm=G  rho_H=-0.047607332 CI=[-0.079449, -0.016292]
+       G_Y197V arm=G  rho_H=-0.072497990 CI=[-0.109222, -0.036231]
+
+--------------------------------------------------------------------------
+FROZEN SECTION 5 DECISION RULE
+--------------------------------------------------------------------------
+  GENERIC iff p_spec(full) > 0.10;  "A222V BEATS NON-SITE BACKGROUNDS" iff p_spec(full) <= 0.05 AND p_spec(H) <= 0.10; INDETERMINATE otherwise.
+  Wording rule: only "A222V BEATS NON-SITE BACKGROUNDS" may be written up as supporting background-specificity; GENERIC and INDETERMINATE get equal prominence.
+  OUTCOME WORD: A222V BEATS NON-SITE BACKGROUNDS  (p_spec(full)=0.025316456, p_spec(H)=0.050632911)
+
+--------------------------------------------------------------------------
+D_site (frozen section 5, reported irrespective)
+--------------------------------------------------------------------------
+  mean rho_b(S, n=18) = -0.065159334; mean rho_b(N, n=78) = -0.009633775
+  D_site = mean(S) - mean(N) = -0.055525559
+  position-cluster bootstrap 95% CI (SEED+0, 300 draws) = [-0.078432318, -0.030344342] (valid 300)
+  label permutation (300 shuffles over 96 arm backgrounds, n(S)=18 kept fixed, TWO-SIDED on |D| per script 121's precedent -- sidedness not stated in frozen section 5, logged as an ambiguity resolution, SEED+2): p = (1 + 0) / (1 + 300) = 0.003322
+  Interpretation (frozen): D_site < 0 means a shared site tracks A222V's e.b beyond arbitrary backgrounds; that is compatible with a real site-specific effect and is not evidence of substitution-specificity.
+
+--------------------------------------------------------------------------
+WITHIN-SITE GRANTHAM GRADIENT T (frozen section 5)
+--------------------------------------------------------------------------
+  d_b = Grantham(X, V) via scripts.lib.features.grantham (P1's Grantham gate source); 18 finite values, range [21.5, 191.2]
+  T = Spearman(rho_b, d_b) over Arm S (n=18) = -0.347781218
+  bootstrap T 95% CI (SEED+0) = [-0.685294118, +0.139834881] (valid 300/300)
+  bootstrap SE(T) = 0.230087482 -> minimum detectable |T| approx 2.8 x SE = 0.644244949
+  leave-one-out range = [-0.436274510, -0.225490196] (T > 0 in 0/18)
+  T RULE: CI lower > 0 (False) AND T > 0 in all leave-one-out fits (False); CI upper < 0 (False) -> NOT RESOLVED
+  REQUIRED WORDING for NOT RESOLVED: "n = 18 cannot resolve this," never "flat" / "the gradient is flat".
+
+--------------------------------------------------------------------------
+PER-ARM SUMMARY TABLES (frozen section 6)
+--------------------------------------------------------------------------
+  primary, full frame:
+    arm S: n=18 mean=-0.065159334 median=-0.064728255 range=[-0.093529969, -0.045641128]
+    arm V: n=38 mean=-0.019532174 median=-0.023411207 range=[-0.084598081, +0.047573205]
+    arm G: n=40 mean=-0.000230296 median=+0.010076945 range=[-0.096243863, +0.063116028]
+    null set N (V u G): n=78 mean=-0.009633775 median=-0.002701665 range=[-0.096243863, +0.063116028]
+    A222V rho = -0.088118064; signed rank within N u {A222V} = 2/79 (rank 1 = most negative; reported, not tested)
+  primary, held-out H:
+    arm S: n=18 mean=-0.070181243 median=-0.068991235 range=[-0.090964259, -0.048929841]
+    arm V: n=38 mean=-0.022540725 median=-0.022628334 range=[-0.094480281, +0.040588603]
+    arm G: n=40 mean=+0.000869556 median=+0.009295575 range=[-0.101954441, +0.068247435]
+    null set N (V u G): n=78 mean=-0.010535453 median=-0.006633288 range=[-0.101954441, +0.068247435]
+    A222V rho = -0.090021683; signed rank within N u {A222V} = 4/79 (rank 1 = most negative; reported, not tested)
+  p_spec(full) = 0.025316456 (1/78 at or below A222V); p_spec(H) = 0.050632911 (3/78)
+
+--------------------------------------------------------------------------
+SECONDARY: REGION-DEMEANED (frozen section 6; NON-DECISION)
+--------------------------------------------------------------------------
+  residualization = within-region demeaning of delta_b and own_e_b over the SAME rows as each rho_b (implementation choice, printed); regions = PIN-8, gated above against task32.region.
+    [SEED+3 secondary full frame] 60/300 draws, 9s
+    [SEED+3 secondary full frame] 120/300 draws, 18s
+    [SEED+3 secondary full frame] 180/300 draws, 27s
+    [SEED+3 secondary full frame] 240/300 draws, 36s
+    [SEED+3 secondary full frame] 300/300 draws, 45s
+    [SEED+3 secondary full frame] 300 draws x 96+A222V rho in 44.9s (149.5 ms/draw); draws with any NaN = 0 (dropped from CIs)
+  [SEED+3 secondary full frame] on full frame (NON-DECISION):
+    secondary p_spec(full frame) = (1 + 5) / (1 + 78) = 0.075949367  (threshold A222V resid rho = -0.053781437)
+    secondary D_site = -0.033048195, CI [-0.053466001, -0.011858701] (valid 300)
+  secondary per-arm table (full frame, region-demeaned, NON-DECISION):
+    arm S: n=18 mean=-0.043454337 median=-0.044071778 range=[-0.061109452, -0.027236839]
+    arm V: n=38 mean=-0.016610668 median=-0.013040471 range=[-0.062276307, +0.023307666]
+    arm G: n=40 mean=-0.004511842 median=-0.001101938 range=[-0.062816778, +0.049487637]
+    null set N (V u G): n=78 mean=-0.010406142 median=-0.007605768 range=[-0.062816778, +0.049487637]
+    A222V rho = -0.053781437; signed rank within N u {A222V} = 6/79 (rank 1 = most negative; reported, not tested)
+    [SEED+4 secondary H] 60/300 draws, 6s
+    [SEED+4 secondary H] 120/300 draws, 12s
+    [SEED+4 secondary H] 180/300 draws, 18s
+    [SEED+4 secondary H] 240/300 draws, 24s
+    [SEED+4 secondary H] 300/300 draws, 30s
+    [SEED+4 secondary H] 300 draws x 96+A222V rho in 30.3s (101.0 ms/draw); draws with any NaN = 0 (dropped from CIs)
+  [SEED+4 secondary H] on H (NON-DECISION):
+    secondary p_spec(H) = (1 + 5) / (1 + 78) = 0.075949367  (threshold A222V resid rho = -0.052700937)
+    secondary D_site = -0.031510979, CI [-0.058337867, -0.010018865] (valid 300)
+  secondary per-arm table (H, region-demeaned, NON-DECISION):
+    arm S: n=18 mean=-0.042324925 median=-0.042947010 range=[-0.055181841, -0.023967943]
+    arm V: n=38 mean=-0.017137116 median=-0.013057670 range=[-0.062659783, +0.018594821]
+    arm G: n=40 mean=-0.004806934 median=-0.003481885 range=[-0.071200389, +0.045233348]
+    null set N (V u G): n=78 mean=-0.010813946 median=-0.011259123 range=[-0.071200389, +0.045233348]
+    A222V rho = -0.052700937; signed rank within N u {A222V} = 6/79 (rank 1 = most negative; reported, not tested)
+  secondary outcome word WOULD BE (NON-DECISION; the pre-registered decision uses primary p_spec only): INDETERMINATE
+
+--------------------------------------------------------------------------
+RUNTIME / PROJECTION
+--------------------------------------------------------------------------
+  measured: 42.9s for 300 primary full-frame draws -> projection for N_BOOT=10000: 1430s (23.8 min) for this pass; primary H pass measured 29.6s
+  naive loop (PIN-9 default); session 2b runs the full N_BOOT=10000 phase2 mode DETACHED per frozen section 8.
+
+--------------------------------------------------------------------------
+SCRIPT 125 SUMMARY
+--------------------------------------------------------------------------
+  mode = phase2; G-A PASS; G-C PASS; G-D PASS; G-E PASS; input gates PASS
+  p_spec(full) = 0.025316456; p_spec(H) = 0.050632911
+  D_site = -0.055525559, CI [-0.078432318, -0.030344342], perm p = 0.003322
+  T = -0.347781218, CI [-0.685294118, +0.139834881], LOO [-0.436274510, -0.225490196], min detectable |T| = 0.644244949 -> NOT RESOLVED
+
+LIMITATIONS (AGENTS 6): shared y (own_e_b) across backgrounds -> rho_b mutually correlated; position-cluster bootstrap recomputes rhos from raw scores and propagates this. p_spec is bounded below by 1/(1+|N|) -- an empirical rank count, not a tail model. Reproduction of Phase 1b numbers in cached-ae is REPRODUCTION, NOT REPLICATION. Secondary analyses are NON-DECISION (frozen section 6). cached-ae output must never be quoted as the pre-registered result.
+Elapsed 151.3s

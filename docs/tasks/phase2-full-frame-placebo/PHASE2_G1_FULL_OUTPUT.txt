@@ -1,0 +1,35 @@
+==========================================================================
+G1 -- frozen gate G-B, quoted verbatim from PHASE2_PREREG.md section 7:
+  "G-B: for at least three backgrounds already cached in
+   task82_ae_raw.csv, freshly scored values on the cached positions
+   reproduce the cached scores to 1e-6 (same model, same settings)."
+Execution doc G1: first Arm S row, first Arm V row, last Arm V row of
+the roster; write to data/processed/phase2_scratch/ ONLY; unbatched,
+one pass per position (PIN-4), same code path as scripts 63/69/82.
+DISCLOSURE: attempt 1 crashed on an inverted self-assertion before
+any score existed (see the docstring above and the log); corrected
+and re-run here -- threshold, inputs and gate unchanged.
+==========================================================================
+  roster rows selected: ['A222_C', 'AV_5', 'AV_655'] (expect ['A222_C', 'AV_5', 'AV_655'])
+Length check passed: 656
+Position 222 check passed: Ala
+  cache: task82_ae_raw.csv = 129960 rows, score column 'score_bg'
+Using device: mps
+Loading ESM-2 650M from the LOCAL torch.hub cache (~/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt, 2.6 GB, verified present before this run -- no download attempted)...
+
+  --- A222_C: background A->C at 222; WT residue check = A==A True; cached grid = 120 positions, own position in grid = False; cached rows = 2280
+      fresh rows = 2280, merged = 2280, max |diff| = 1.776e-15, 63.0s for 120 passes (0.525 s/pass)
+
+  --- AV_5: background A->V at 5; WT residue check = A==A True; cached grid = 120 positions, own position in grid = False; cached rows = 2280
+      fresh rows = 2280, merged = 2280, max |diff| = 1.776e-15, 63.7s for 120 passes (0.531 s/pass)
+
+  --- AV_655: background A->V at 655; WT residue check = A==A True; cached grid = 120 positions, own position in grid = False; cached rows = 2280
+      fresh rows = 2280, merged = 2280, max |diff| = 1.776e-15, 64.1s for 120 passes (0.534 s/pass)
+
+--------------------------------------------------------------------------
+  G-B A222_C: max |diff| = 1.776e-15 -> PASS (< 1e-6)
+  G-B AV_5: max |diff| = 1.776e-15 -> PASS (< 1e-6)
+  G-B AV_655: max |diff| = 1.776e-15 -> PASS (< 1e-6)
+  device = mps; 360 passes in 190.8s = 0.530 s/pass (530 ms/pass)
+G1 VERDICT: G-B PASS -- all three backgrounds reproduce the cached scores to < 1e-6; proceed to G2-G4.
+Elapsed 194.4s

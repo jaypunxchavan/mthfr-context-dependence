@@ -1,0 +1,285 @@
+
+============================================================================
+T2 -- OLSON 2014 WHOLE-DOMAIN MATRIX: STRUCTURE AS THE FILE STATES IT
+============================================================================
+file            : data/external/gb1_olson2014/1-s2.0-S0960982214012688-mmc2.xlsx
+bytes           : 28,090,836
+sha256          : e912c93cf3d1d95a7d8fc5bb8e8d50a523eb9398c51613b2a74693f07a50fe29
+sheetnames      : ['DoubleSub.xls']
+sheet           : 'DoubleSub.xls'  max_row=535920 max_col=22
+  header excel row 1: (None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None)
+  header excel row 2: (None, 'DOUBLE MUTANTS', None, None, None, None, None, None, None, None, None, None, None, 'SINGLE MUTANTS', None, None, None, None, None, None, 'WILD TYPE', None)
+  header excel row 3: (None, 'Mut1 WT amino acid', 'Mut1 Position', 'Mut1 Mutation', 'Mut2 WT amino acid', 'Mut2 Position', 'Mut2 Mutation', 'Input Count', 'Selection Count', 'Mut1 Fitness', 'Mut2 Fitness', None, None, 'WT amino acid', 'Position', 'Mutation', 'Input Count', 'Selection Count', None, None, 'Input Count', 'Selection Count')
+
+DOUBLE MUTANTS : 535,917 rows
+SINGLE MUTANTS : 1,045 rows
+WILD TYPE     : input=1,759,616 selection=3,041,819
+
+============================================================================
+T2 STEP 1 -- IS THERE A 'HIGH CONFIDENCE' COLUMN? (asked before counting)
+============================================================================
+every column name in the file, verbatim:
+    'Mut1 WT amino acid'
+    'Mut1 Position'
+    'Mut1 Mutation'
+    'Mut2 WT amino acid'
+    'Mut2 Position'
+    'Mut2 Mutation'
+    'Input Count'
+    'Selection Count'
+    'Mut1 Fitness'
+    'Mut2 Fitness'
+    'WT amino acid'
+    'Position'
+    'Mutation'
+    'Input Count'
+    'Selection Count'
+    'Input Count'
+    'Selection Count'
+
+columns that could carry a confidence signal: ['Input Count', 'Selection Count', 'Input Count', 'Selection Count', 'Input Count', 'Selection Count']
+VERDICT: a column literally named 'high confidence' / 'error' / 'SE' / 'SD' exists: False
+  -> NO. The file has no confidence flag, no error bar, no replicate,
+     no q-value. The ONLY confidence signal present is the read depth
+     'Input Count'. T2-G1 is therefore reported as a disclosed PROXY
+     sweep, exactly as pre-registered.
+
+============================================================================
+T2 -- COMPACTED RE-DISTRIBUTION FOR SCRIPT 129
+============================================================================
+  data/external/gb1_olson2014/gb1_olson2014_doubles.csv  rows=535,917  bytes=8,973,371  sha256=89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769
+  data/external/gb1_olson2014/gb1_olson2014_singles.csv  rows=1,045  bytes=17,183  sha256=0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3
+  column names verbatim: ['pos1', 'mut1', 'pos2', 'mut2', 'input_count', 'sel_count']
+  column names verbatim: ['pos', 'mut', 'input_count', 'sel_count']
+  WILD TYPE input_count=1759616 sel_count=3041819
+
+============================================================================
+T2-G4 -- WILD-TYPE SEQUENCE AS THE DATA IMPLIES IT
+============================================================================
+distinct positions in the data : n = 55
+position range                  : 2..56  (contiguous: True; gaps: [])
+WT-residue conflicts within a position: 0 []
+derived WT sequence, verbatim (55 aa, positions 2..56):
+  pos   2: QYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+C(n,2) for n=55  = 1485
+C(56,2)                        = 1540
+C(55,2)                        = 1485
+n*19 for n=55     = 1045
+C(n,2)*19^2 for n=55 = 536085
+paper's library figure          = 536085
+
+============================================================================
+T2-G4b -- OLSON FRAME vs THE PROJECT'S 2GB1 FRAME (compared, never merged)
+============================================================================
+project GB1_SEQ (script 73 L135), 56 aa:
+  MTYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+  positions 1-based; 39,40,41 = 'VDG'; pos54 = 'V'
+olson-derived, 55 aa at positions 2..56:
+  QYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+best 1-based offset of olson sequence within 2GB1 frame: 1 (1-based start 2), mismatches = 1
+  per-position differences (2GB1_pos, 2GB1_aa, olson_aa): [(2, 'T', 'Q')]
+olson position of 2GB1 position 54 (V, the V54A background): 54
+  olson WT residue at that position: 'V' (must be 'V' for V54A to be the same substitution)
+olson positions of 2GB1 39/40/41 (V/D/G): 39/40/41
+
+============================================================================
+T2-G1 -- HIGH-CONFIDENCE DOUBLE COUNT (disclosed read-depth proxy sweep)
+============================================================================
+RAW double count in the file: 535,917
+paper's stated range         : [509,693, 517,278]
+paper's stated denominator   : 536,085 (= the COMBINATORIAL possible count C(n,2)*19^2 for n=55: 536,085)
+
+Input Count (read depth) over doubles: min=1 median=248 max=64,627 mean=539.9
+Selection Count over doubles        : min=0 median=43 max=225,561
+
+DISCLOSED PROXY SWEEP -- every integer threshold t, count retained:
+   t      retained    inside paper range?
+     1     535,917
+     2     535,620
+     3     535,241
+     4     534,766
+     5     534,214
+     6     533,675
+     7     533,018
+     8     532,275
+     9     531,535
+    10     530,737
+    11     529,902
+    12     529,041
+    13     528,079
+    14     527,089
+    15     526,047
+    16     524,949
+    17     523,847
+    18     522,704
+    19     521,516
+    20     520,316
+    23     516,436  <== INSIDE [509693, 517278]
+    24     515,119  <== INSIDE [509693, 517278]
+    25     513,808  <== INSIDE [509693, 517278]
+    26     512,447  <== INSIDE [509693, 517278]
+    27     511,145  <== INSIDE [509693, 517278]
+    28     509,754  <== INSIDE [509693, 517278]
+    30     506,920
+    40     492,378
+    50     477,492
+    60     462,834
+    70     448,417
+    80     434,090
+    90     420,556
+   100     407,591
+   110     394,898
+   120     382,828
+   130     371,447
+   140     360,357
+   150     349,821
+   160     339,833
+   170     330,378
+   180     321,194
+   190     312,478
+   200     304,085
+
+integer thresholds t whose retained count lands inside the paper's range: 6
+  t range: 23..28; first=(23, 516436) last=(28, 509754)
+  >>> T2-G1 high-confidence double count: PASS   value = raw=535,917; thresholds_inside_range=6 (t=23..28)   
+
+============================================================================
+T2-G2 -- POSITION PAIRS
+============================================================================
+distinct unordered position pairs present: 1,485
+paper's figure                          : 1,485
+C(n,2) with n=55 positions      : 1,485
+double rows with pos1 == pos2 (data defect): 0
+positions present in the file            : 55 (2..56)
+positions present but in NO double pair  : []  (count 0)
+positions in 2..56 absent from the file: []
+  >>> T2-G2 position pairs covered: PASS   value = 1,485 vs paper 1,485; n_positions=55; C(n,2)=1,485   
+
+RESOLUTION OF THE 1,485-vs-1,540 DISCREPANCY (pre-registered check):
+  the data carries 55 mutated positions, numbered 2..56, NOT 56.
+  C(55,2) = 1,485, which equals the paper's 1,485 EXACTLY.
+  1,540 = C(56,2) is the count for a 56-mutated-position frame. The
+  residue that a 56-position frame would add is 2GB1 position 1, the
+  initiating Met, which appears in NO row of this library (the data
+  starts at position 2 and position 1 is absent from every block).
+  The paper's 1,485 is therefore the CORRECT number for the
+  55-position domain actually assayed. The 1,540 figure comes
+  from assuming the full 56-residue construct including the Met.
+
+============================================================================
+T2-G3 -- SINGLES
+============================================================================
+SINGLE MUTANTS block rows : 1,045
+paper's figure            : ~1,045
+possible at n=55         : 1,045
+possible at n=56           : 1,064  (the doc's 1,064)
+missing (pos, mut_aa) vs n*19 : 0 []
+observed singles per position: min=19 max=19 over 55 positions (19 everywhere is complete)
+  >>> T2-G3 singles count: PASS   value = 1,045 vs paper ~1,045; missing=0   
+
+============================================================================
+T2-G5 -- WHAT THE SCORE COLUMN IS, AND THE MUT-FITNESS IDENTITY CHECK
+============================================================================
+F_B,wt = selection/input = 3,041,819/1,759,616 = 1.728683
+the file has NO score column; W is computed as
+  F_B,mut = Selection Count / Input Count ;  W = F_B,mut / F_B,wt
+
+W recomputed from the SINGLE block's own counts spans [0.0021, 5.0219] over 1,045 singles
+'Mut1/Mut2 Fitness' column vs W of the PARENT SINGLE, over 1,045 shared keys: max|diff| = 4.999e-04
+  (the file stores that column to 3 DECIMAL PLACES -- the first data row carries the literal 1.518 -- so a max|diff| at the 5e-4 scale is the file's own rounding, not a disagreement. Agreement to the stored precision: True.)
+  >>> T2-G5 Mut-Fitness column is the parent single's W: PASS   value = max|diff|=4.999e-04   
+W over the raw doubles: min=0.0000 median=0.1415 max=14.4619 mean=0.4636
+  -> the double mutant's own score is NOT in the file; it must be
+     derived from the two read counts by the formula above.
+
+============================================================================
+T3 -- V54A TRANSPLANT REPRODUCTION (NO MODEL LOADED)
+============================================================================
+data/external/GB1_fitness_landscape.txt  bytes=3,343,308  sha256=7c9aedcf44416ba8c3a442f041d0b53f8981f8a0bcaaf86afd8ebb8088ec0ad2
+data/processed/task_AA1_gb1_eb_analog.csv  bytes=6,906  sha256=0ca45ba329441f1de3af9086c95947c8fadeb8ebb39de41dcec12501f888213c
+data/processed/task_AA1_gb1_signflip_nulls.csv  bytes=462  sha256=b02363c63fb8386af4ee7e7306405b819ad9478a055ecaac3ba882d33433f45d
+
+THE STATISTIC, quoted from the project's own code (scripts/lib/stats.py), not reimplemented from memory:
+def _spearman(a, b):
+    """Spearman rho via ranks + Pearson. Matches scipy.stats.spearmanr exactly."""
+    return float(np.corrcoef(rankdata(a), rankdata(b))[0, 1])
+
+
+raw GB1_fitness_landscape.txt: rows=160,000 columns=['sequence', 'fitness']
+f(WT=VDGV)          = 1.000000
+f(background VDGA)  = 1.372949   <- V54A, the recorded control
+
+rebuilt e_b rows=57  cached rows=57
+  rebuilt columns, verbatim: ['site', 'variant', 'f_single', 'f_double', 'f_wt', 'f_bg', 'expected_multiplicative', 'e_b']
+  cached  columns, verbatim: ['site', 'variant', 'f_single', 'f_double', 'f_wt', 'f_bg', 'expected_multiplicative', 'e_b', 'delta_esm']
+  cached has one extra column, 'delta_esm' -- the CACHED ESM-2 half; shared prefix identical: True
+RE-DERIVED e_b vs SCRIPT 73's STORED e_b: max|diff| = 2.220e-16
+                     f_single: max|diff| = 0.000e+00
+                     f_double: max|diff| = 0.000e+00
+                         f_bg: max|diff| = 0.000e+00
+      expected_multiplicative: max|diff| = 4.441e-16
+  -> the fitness side is reproduced EXACTLY from raw data.
+
+delta_esm source: CACHED column 'delta_esm' of data/processed/task_AA1_gb1_eb_analog.csv -- NOT re-derived (model forbidden this session). This is the disclosed limit of T3-G1.
+delta_esm: n=57 min=-0.2836 max=+0.4760 mean=+0.0316; all finite: True
+
+n partners = 57   partner positions = [39, 40, 41]
+partner position list (distinct) = [39, 40, 41]
+COMPUTED rho(delta, e_b) = 0.12218045112781956   (0.12218045112781956)
+RECORDED rho            = 0.12218045112781956   (0.12218045112781956)
+ABSOLUTE DIFFERENCE     = 0.000000e+00
+T3-G1a (|diff| <= 1e-12) : PASS
+T3-G1b (|diff| <= 5e-05, the 4-dp digit the original recorded at) : PASS
+  >>> T3-G1a rho exact reproduction: PASS   value = abs diff=0.000e+00   tolerance 1e-12
+  >>> T3-G1b rho reproduces recorded 4-dp value: PASS   value = abs diff=0.000e+00   tolerance 5e-05
+
+re-running script 73's sign-flip re-derivation null in its exact loop order (N_PERM=10000, SEED=0); the ESM-2 half is cached, the e_b half is freshly re-derived:
+  observed = +0.1222  null mean = -0.0004  null sd = 0.1408  p = 0.3849
+  RECORDED p = 0.3849  ABSOLUTE DIFFERENCE = 0.000e+00  T3-G1p PASS
+  >>> T3-G1p sign-flip p reproduces recorded 0.3849: PASS   value = abs diff=0.000e+00   tolerance 5e-05
+  FLAG: script 73's docstring says '+0 correction identical to script 33' but its CODE is a bare .mean() with no +1. This script replicates the CODE. The two p-values are therefore not directly comparable to a +1-corrected pipeline.
+  null-centring (script 33's expression): null mean IS consistent with zero (AGENTS §4: a sign-flip null on a signed variable centres on zero by construction -- rules out one artifact mechanism, nothing more)
+
+============================================================================
+T3-G2 -- BOOTSTRAP IDENTITY (every cluster exactly once)
+============================================================================
+n clusters (site,variant partner identities) = 57
+every-cluster-exactly-once rho = 0.12218045112781956
+point estimate                 = 0.12218045112781956
+ABSOLUTE DIFFERENCE            = 0.000000e+00  (tolerance 1e-12)
+  >>> T3-G2 bootstrap identity: PASS   value = abs diff=0.000e+00   tolerance 1e-12
+
+============================================================================
+GATE TABLE (Phase 3a, script 128)
+============================================================================
+                                             gate verdict                                              value            note
+               T2-G1 high-confidence double count    PASS  raw=535,917; thresholds_inside_range=6 (t=23..28)                
+                     T2-G2 position pairs covered    PASS 1,485 vs paper 1,485; n_positions=55; C(n,2)=1,485                
+                              T2-G3 singles count    PASS                   1,045 vs paper ~1,045; missing=0                
+T2-G5 Mut-Fitness column is the parent single's W    PASS                                max|diff|=4.999e-04                
+                    T3-G1a rho exact reproduction    PASS                                 abs diff=0.000e+00 tolerance 1e-12
+        T3-G1b rho reproduces recorded 4-dp value    PASS                                 abs diff=0.000e+00 tolerance 5e-05
+    T3-G1p sign-flip p reproduces recorded 0.3849    PASS                                 abs diff=0.000e+00 tolerance 5e-05
+                         T3-G2 bootstrap identity    PASS                                 abs diff=0.000e+00 tolerance 1e-12
+
+FAIL count: 0
+
+============================================================================
+LIMITATIONS (printed by this script, AGENTS §6)
+============================================================================
+  - No 'high confidence' column exists in the publisher's file. Every
+    T2-G1 number is a disclosed read-depth proxy; the threshold was
+    SWEPT over all integers 1..200 and reported as a set, not chosen.
+  - The file carries no score column, no error bar and no replicate.
+    W must be derived from two read counts.
+  - The ESM-2 half of the V54A control is loaded from cache, not
+    re-derived this session (model loading is forbidden). T3-G1
+    therefore validates the statistic and the fitness construction,
+    NOT the forward passes.
+  - The Olson whole-domain frame and the project's 2GB1 frame are
+    different numbering. They are compared in this output; they are
+    NOT merged, and a V54A claim must be re-expressed in the frame
+    it was measured in.
+  - Settings: N_BOOT=10000, N_PERM=10000, SEED=0.
+
+Elapsed: 54.7s

@@ -1,0 +1,199 @@
+C2 INDEPENDENT RECOMPUTE (session 3b)
+N_BOOT=300 N_PERM=300 SEED=0 (env defaults = the frozen values)
+No staged analysis script (153/155/157) is imported or run.
+
+============================================================================
+MODULE G -- GB1: rho_b from raw doubles/singles + bg scores,
+             4 covariate Spearmans x 4 thresholds, vs 155's
+             printed table in driver_stage_S3.log
+============================================================================
+  parsed staged table: thresholds ['t25', 't23', 't28', 'unfiltered']; covariates each: [4]
+  doubles 535,917 rows, singles 1,045, roster 1,045, roster_v2 400
+  partner table: 410,271 rows for the 400 backgrounds | same-position rows 0 (G-2 structural, must be 0) | missing W_v 0 / W_bg 0 (must be 0)
+  CHECK gb1 partner rows for the 400 backgrounds vs staged 155: mine=410271 staged=410271 -> OK
+  score files: wt_arm 1045 rows, completed 400/400 (roster order)
+  CHECK gb1 staged rho csv ids vs my completed ids: symmetric diff: mine=set() staged=set() -> OK
+
+  THRESHOLD t25 (PRIMARY): completed 400 | below 100-floor 0 | dropped for missing delta 0
+  CHECK gb1[t25] completed / floor-excluded / dropped vs staged 155: mine=(400, 0, 0) staged=(400, 0, 0) -> OK
+  CHECK gb1[t25] n completed vs staged n: mine=400 staged=400 -> OK
+  CHECK gb1[t25] dist mean: mine=np.float64(-0.009125049245666152) staged=-0.009125 |diff|=4.925e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist median: mine=np.float64(-0.004175240576028761) staged=-0.004175 |diff|=2.406e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist sd(ddof=0): mine=np.float64(0.09691148168559856) staged=0.096911 |diff|=4.817e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist lo: mine=np.float64(-0.3079146815751426) staged=-0.307915 |diff|=3.184e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist hi: mine=np.float64(0.22537647315905424) staged=0.225376 |diff|=4.732e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist frac<0: mine=0.505 staged=0.505 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK gb1[t25] centering lo: mine=-0.018546551206758865 staged=-0.018633 |diff|=8.645e-05 tol=5.1e-07 -> DISAGREE
+  MODULE G STOPPED at its first disagreement (both numbers printed above) -- not interpreted in C3
+
+============================================================================
+MODULE R -- RBD: rho_b for all 100 backgrounds x 12
+             (target x phenotype x mask) frames from raw bg
+             files + e_T.csv, and p_spec for both targets,
+             vs analysis_results_full.json + rho_b_full.csv
+============================================================================
+  inputs: e_T 7,600 rows, roster 100, wt_arm 3,819 rows, bg files 100/100
+  CHECK rbd bg files vs roster ids: symmetric diff: mine=set() staged=set() -> OK
+  in_null flags: N501Y 57, E484K 45 (dtype bool)
+  target N501Y: bg_id TGT_N501Y, site 501, master rows 3800 (rows at own site: 0, must be 0)
+  target E484K: bg_id TGT_E484K, site 484, master rows 3800 (rows at own site: 0, must be 0)
+  per-background rho_b: 1200 rows compared (staged rho_b_full.csv), max|diff| = 0.000e+00, rows outside 1e-12 or n mismatch: 0
+  CHECK rbd per-background rho_b (1200 rows) outside tolerance: mine=0 staged=0 -> OK
+  CHECK rbd rho rows compared: mine=1200 staged=1200 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] rho_target: mine=-0.07737084440224973 staged=-0.07737084440224973 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_abs: mine=3 staged=3 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_abs: mine=0.06896551724137931 staged=0.06896551724137931 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_neg: mine=3 staged=3 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_neg: mine=0.06896551724137931 staged=0.06896551724137931 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_pos: mine=54 staged=54 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_pos: mine=0.9482758620689655 staged=0.9482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] outcome word: mine='RBD-INCONCLUSIVE' staged='RBD-INCONCLUSIVE' -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] rho_target: mine=-0.09049377121986184 staged=-0.09049377121986184 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_abs: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_abs: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_neg: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_neg: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_pos: mine=56 staged=56 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_pos: mine=0.9827586206896551 staged=0.9827586206896551 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] outcome word: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.outcomes_primary[N501Y]: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] rho_target: mine=-0.10076126100116566 staged=-0.10076126100116566 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_abs: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_abs: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_neg: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_neg: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_pos: mine=56 staged=56 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_pos: mine=0.9827586206896551 staged=0.9827586206896551 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] outcome word: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] rho_target: mine=-0.02542898714077923 staged=-0.02542898714077923 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_abs: mine=35 staged=35 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_abs: mine=0.6206896551724138 staged=0.6206896551724138 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_neg: mine=16 staged=16 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_neg: mine=0.29310344827586204 staged=0.29310344827586204 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_pos: mine=41 staged=41 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_pos: mine=0.7241379310344828 staged=0.7241379310344828 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] rho_target: mine=-0.02783368131048632 staged=-0.02783368131048632 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_abs: mine=32 staged=32 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_abs: mine=0.5689655172413793 staged=0.5689655172413793 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_neg: mine=14 staged=14 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_neg: mine=0.25862068965517243 staged=0.25862068965517243 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_pos: mine=43 staged=43 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_pos: mine=0.7586206896551724 staged=0.7586206896551724 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] rho_target: mine=-0.032926106807232784 staged=-0.032926106807232784 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_abs: mine=34 staged=34 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_abs: mine=0.603448275862069 staged=0.603448275862069 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_neg: mine=15 staged=15 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_neg: mine=0.27586206896551724 staged=0.27586206896551724 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_pos: mine=42 staged=42 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_pos: mine=0.7413793103448276 staged=0.7413793103448276 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge1] rho_target: mine=-0.019324887901774977 staged=-0.019324887901774977 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_abs: mine=25 staged=25 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_abs: mine=0.5652173913043478 staged=0.5652173913043478 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_neg: mine=11 staged=11 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_neg: mine=0.2608695652173913 staged=0.2608695652173913 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_pos: mine=34 staged=34 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_pos: mine=0.7608695652173914 staged=0.7608695652173914 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge3] rho_target: mine=-0.023931167920018745 staged=-0.023931167920018745 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_abs: mine=23 staged=23 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_abs: mine=0.5217391304347826 staged=0.5217391304347826 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_neg: mine=10 staged=10 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_neg: mine=0.2391304347826087 staged=0.2391304347826087 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_pos: mine=35 staged=35 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_pos: mine=0.782608695652174 staged=0.782608695652174 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.outcomes_primary[E484K]: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge5] rho_target: mine=-0.03261767410351891 staged=-0.03261767410351891 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_abs: mine=19 staged=19 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_abs: mine=0.43478260869565216 staged=0.43478260869565216 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_neg: mine=10 staged=10 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_neg: mine=0.2391304347826087 staged=0.2391304347826087 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_pos: mine=35 staged=35 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_pos: mine=0.782608695652174 staged=0.782608695652174 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge1] rho_target: mine=0.02679669181961617 staged=0.02679669181961617 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_abs: mine=12 staged=12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_abs: mine=0.2826086956521739 staged=0.2826086956521739 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_neg: mine=42 staged=42 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_neg: mine=0.9347826086956522 staged=0.9347826086956522 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_pos: mine=3 staged=3 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_pos: mine=0.08695652173913043 staged=0.08695652173913043 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge3] rho_target: mine=0.015646993892634974 staged=0.015646993892634974 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_abs: mine=28 staged=28 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_abs: mine=0.6304347826086957 staged=0.6304347826086957 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_neg: mine=37 staged=37 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_neg: mine=0.8260869565217391 staged=0.8260869565217391 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_pos: mine=8 staged=8 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_pos: mine=0.1956521739130435 staged=0.1956521739130435 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge5] rho_target: mine=0.013253596306202084 staged=0.013253596306202084 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_abs: mine=31 staged=31 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_abs: mine=0.6956521739130435 staged=0.6956521739130435 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_neg: mine=38 staged=38 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_neg: mine=0.8478260869565217 staged=0.8478260869565217 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_pos: mine=7 staged=7 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_pos: mine=0.17391304347826086 staged=0.17391304347826086 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+
+  module R wall 1.0s
+
+MODULE R (RBD, vs staged 157) RESULT: PASS (113 checks, all within tolerance)
+
+============================================================================
+MODULE M1 -- per-background rho_b^GE from Phase-2 bg files +
+             m1_own_e_b_ge.csv, then headline rows (a)-(f)
+             vs PHASE3_A3_FULL_OUTPUT.txt (the full-run record)
+============================================================================
+  parsed staged record: (a) 3, (b) 4, (c) 6, (d) 8, (e) 4, (f) 4, words 3
+  pdg.build() -- cached Phase-2 row construction ... 0.7s
+  frame 10,757 rows / 654 positions; bgs 96; |N| 78; |S| 18; H 455 positions
+  CHECK m1 GE-ISO maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 GE-SIG maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 GE-LIN-CF maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 OWN maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 identity own_e_b vs frame recorded own_e_b (max|diff|): mine=2.220446049250313e-16 staged=0.0 |diff|=2.220e-16 tol=1e-12 -> OK
+  CHECK m1 a222v delta vs frame.delta_esm (max|diff|): mine=0.0 staged=0.0 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK m1 original A222V rho full vs staged repr: mine=-0.08811806424891734 staged=-0.08811806424891734 |diff|=0.000e+00 tol=1e-12 -> OK
+  row-construction cross-checks vs cached bg_rows: max |join count diff| = 0, position mismatches = 0, max|delta diff| = 0.000e+00
+  CHECK m1 join count vs cached bg_rows: max |diff| over 96 bgs: mine=0 staged=0 -> OK
+  CHECK m1 position alignment mismatches vs cached (total): mine=0 staged=0 -> OK
+  CHECK m1 delta (score - esm2) vs cached delta: max|diff|: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=1e-12 -> OK
+  per-background rho: 776 staged rows compared (96 bgs + A222V, 2 views x 4 constructions), max|diff| = 1.388e-17, rows outside 1e-12: 0
+  CHECK m1 per-background rho rows compared: mine=776 staged=776 -> OK
+  CHECK m1 per-background rho rows outside tolerance: mine=0 staged=0 -> OK
+
+  (a) Spearman(own_e.b^GE, own_e.b):
+  CHECK m1.(a) GE-ISO: mine=0.9498141962909014 staged=0.949814 |diff|=1.963e-07 tol=5.1e-07 -> OK
+  CHECK m1.(a) GE-SIG: mine=0.9515434415216675 staged=0.951543 |diff|=4.415e-07 tol=5.1e-07 -> OK
+  CHECK m1.(a) GE-LIN-CF: mine=0.9997398013890574 staged=0.99974 |diff|=1.986e-07 tol=5.1e-07 -> OK
+
+  (b) rho^GE + position-cluster CI (draws via the frozen shared bootstrap; wiring verified):
+  CHECK m1.(b) original CI lo: mine=-0.11758289017825974 staged=-0.117333 |diff|=2.499e-04 tol=5.1e-07 -> DISAGREE
+  MODULE M1 STOPPED at its first disagreement (both numbers printed above) -- not interpreted in C3
+
+============================================================================
+C2 SUMMARY
+  module G  : FAIL -- module must not be interpreted in C3
+  module R  : PASS
+  module M1 : FAIL -- module must not be interpreted in C3
+  TOTAL: 1/3 modules PASS; FAILING: ['G', 'M1']
+  wall 4.8s
+  RULE 1 check: torch/esm imported = NONE
+
+C2 FAIL

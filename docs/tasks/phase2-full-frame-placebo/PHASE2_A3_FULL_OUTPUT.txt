@@ -1,0 +1,129 @@
+==========================================================================
+A3 -- extended reproduction check, DESCRIPTIVE ONLY (execution doc A3)
+    fresh  = data/processed/phase2/bg_<bg_id>.csv  (column 'score')
+    cached = data/processed/task82_ae_raw.csv      (column 'score_bg')
+    Both column names read off disk / script 82's RAW_CACHE, not guessed.
+    The 1e-6 figure is the frozen G-B threshold, reused here for
+    comparability.  NOTHING DECIDES ON THIS TABLE.
+==========================================================================
+
+  cache task82_ae_raw.csv : 129960 rows, 57 bg_ids, 120 positions
+  AE grid                 : 120 positions (script 82's 120-position grid)
+  cached bg_id set == Arm S + Arm V + A222_V : True
+  Arm S + Arm V backgrounds compared         : 56
+
+  cached AE cells per background        : [np.int64(2280)] (expect 2280 = 120x19)
+  fresh cells on the grid               : [np.int64(2280)]
+  cached cells with NO fresh score      : 0 (backgrounds affected: 0)
+  backgrounds whose OWN position is in the AE grid: []
+  NaNs among compared cells             : 0
+  header line, cached : bg_id,position,mut_aa,score_bg
+  header line, fresh  : bg_id,position,mut_aa,score
+
+  PER-BACKGROUND (all 56 Arm S + Arm V backgrounds)
+  bg_id     arm  cmp_cells  max|d|_parsed  max|d|_storedtext  n_txt_diff
+  A222_C    S         2280   0.000000e+00       1.776357e-15         386
+  A222_D    S         2280   0.000000e+00       1.776357e-15         399
+  A222_E    S         2280   0.000000e+00       1.776357e-15         418
+  A222_F    S         2280   0.000000e+00       1.776357e-15         396
+  A222_G    S         2280   0.000000e+00       1.776357e-15         392
+  A222_H    S         2280   0.000000e+00       1.776357e-15         358
+  A222_I    S         2280   0.000000e+00       1.776357e-15         423
+  A222_K    S         2280   0.000000e+00       1.776357e-15         397
+  A222_L    S         2280   0.000000e+00       1.776357e-15         364
+  A222_M    S         2280   0.000000e+00       1.776357e-15         378
+  A222_N    S         2280   0.000000e+00       1.776357e-15         388
+  A222_P    S         2280   0.000000e+00       1.776357e-15         396
+  A222_Q    S         2280   0.000000e+00       1.776357e-15         379
+  A222_R    S         2280   0.000000e+00       1.776357e-15         397
+  A222_S    S         2280   0.000000e+00       1.776357e-15         393
+  A222_T    S         2280   0.000000e+00       1.776357e-15         379
+  A222_W    S         2280   0.000000e+00       1.776357e-15         395
+  A222_Y    S         2280   0.000000e+00       1.776357e-15         403
+  AV_113    V         2280   0.000000e+00       1.776357e-15         394
+  AV_116    V         2280   0.000000e+00       1.776357e-15         385
+  AV_145    V         2280   0.000000e+00       1.776357e-15         365
+  AV_155    V         2280   0.000000e+00       1.776357e-15         382
+  AV_175    V         2280   0.000000e+00       1.776357e-15         373
+  AV_19     V         2280   0.000000e+00       1.776357e-15         362
+  AV_195    V         2280   0.000000e+00       1.776357e-15         383
+  AV_204    V         2280   0.000000e+00       1.776357e-15         394
+  AV_209    V         2280   0.000000e+00       1.776357e-15         382
+  AV_220    V         2280   0.000000e+00       1.776357e-15         394
+  AV_233    V         2280   0.000000e+00       1.776357e-15         367
+  AV_242    V         2280   0.000000e+00       1.776357e-15         390
+  AV_292    V         2280   0.000000e+00       1.776357e-15         387
+  AV_293    V         2280   0.000000e+00       1.776357e-15         367
+  AV_302    V         2280   0.000000e+00       1.776357e-15         373
+  AV_311    V         2280   0.000000e+00       1.776357e-15         387
+  AV_328    V         2280   0.000000e+00       1.776357e-15         373
+  AV_350    V         2280   0.000000e+00       1.776357e-15         353
+  AV_353    V         2280   0.000000e+00       1.776357e-15         402
+  AV_368    V         2280   0.000000e+00       1.776357e-15         369
+  AV_396    V         2280   0.000000e+00       1.776357e-15         404
+  AV_461    V         2280   0.000000e+00       0.000000e+00           0
+  AV_462    V         2280   0.000000e+00       0.000000e+00           0
+  AV_5      V         2280   0.000000e+00       1.776357e-15         413
+  AV_511    V         2280   0.000000e+00       0.000000e+00           0
+  AV_522    V         2280   0.000000e+00       0.000000e+00           0
+  AV_524    V         2280   0.000000e+00       0.000000e+00           0
+  AV_551    V         2280   0.000000e+00       0.000000e+00           0
+  AV_558    V         2280   0.000000e+00       0.000000e+00           0
+  AV_587    V         2280   0.000000e+00       0.000000e+00           0
+  AV_589    V         2280   0.000000e+00       0.000000e+00           0
+  AV_650    V         2280   0.000000e+00       0.000000e+00           0
+  AV_655    V         2280   0.000000e+00       0.000000e+00           0
+  AV_70     V         2280   0.000000e+00       1.776357e-15         391
+  AV_73     V         2280   0.000000e+00       1.776357e-15         381
+  AV_84     V         2280   0.000000e+00       1.776357e-15         415
+  AV_85     V         2280   0.000000e+00       1.776357e-15         368
+  AV_98     V         2280   0.000000e+00       1.776357e-15         395
+
+  ----------------------------------------------------------------------
+  (1) PARSED COMPARISON  (pandas.read_csv on both sides -- what every
+      downstream analysis in this project sees):
+      backgrounds with max|d| < 1e-6  : 56 / 56
+      backgrounds with max|d| >= 1e-6 : 0 / 56
+      LARGEST max|d| over all 56      : 0.000000e+00
+      cells compared                  : 127680 (= 56 x 2280)
+      cells with |d| exactly 0.0      : 127680 / 127680
+
+  (2) STORED-TEXT COMPARISON  (literal decimal strings -> exact Python
+      float(); the stricter test.  Non-zero ONLY where the two files were
+      serialised with a different number of significant digits:
+      cells identical as text         : 110290 / 127680
+      cells differing as text         : 17390 / 127680
+      LARGEST |d| over all cells     : 1.776357e-15
+      by arm: S = 1.776357e-15  V = 1.776357e-15
+      backgrounds with max|d|_text < 1e-6 : 56 / 56
+      backgrounds with max|d|_text == 0.0 : 11 / 56  (['AV_461', 'AV_462', 'AV_511', 'AV_522', 'AV_524', 'AV_551', 'AV_558', 'AV_587', 'AV_589', 'AV_650', 'AV_655'])
+
+  WHY the two comparisons differ -- one example cell, verbatim:
+    cell (bg=A222_C, position=3, mut_aa=F)
+      cached string : 0.1476681232452392
+      fresh  string : 0.14766812324523926
+      cached float  : 0.1476681232452392
+      fresh  float  : 0.14766812324523926
+      difference    : 5.551e-17 (3.8e-16 relative)
+    -> the cache was written with 16 significant digits; the fresh files carry
+       the shortest representation that round-trips float64 (17 digits for these
+       values).  The gap is at most 1 ulp.  pandas' default read_csv float parser
+       is not correctly rounded (session 2a [G1] flag 3: 29,049/200,000 values
+       round-trip differently, max error 3.55e-15), so BOTH strings parse to the
+       same float64 -- which is why comparison (1) is exactly 0.0 everywhere.
+    CAUSE (verified, not assumed): task82_ae_raw.csv mtime is 2026-09-24T17:29:14.685769,
+       five days BEFORE the Phase 2 run, and BOTH writers use a plain `to_csv`
+       with no float_format (script 82 line 492, script 124 line 254).  The
+       difference is therefore the pandas serialiser, not a rounding step in
+       either script: the cache was written under an older pandas, and the current
+       pandas 3.0.5 emits the shortest round-tripping repr (17 digits for these
+       values), which is exactly what the fresh files contain.
+    The text difference is a PER-VALUE property, not a per-file or per-process one:
+       a cell whose float64 needs <=16 significant digits is byte-identical in both
+       files, and only cells needing 17 digits differ.  That is why 11 backgrounds
+       show 0 textual differences and 45 show ~380 of 2280.  (An earlier draft of
+       this note attributed the split to the scorer chains; that was wrong and is
+       withdrawn here -- the numbers above supersede it.)
+
+  NO cell differs by more than 1 ulp (1.78e-15); nothing is near the 1e-6 gate.
+A3 DONE -- DESCRIPTIVE ONLY; no decision rests on any number above.

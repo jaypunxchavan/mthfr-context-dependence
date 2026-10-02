@@ -1,0 +1,144 @@
+
+==========================================================================
+R1 -- Phase 2 arm roster (script 123)  N_BOOT=10000 SEED=0 (no bootstrap, no model; Arm G draw is PINNED at default_rng(0) by PIN-1, not by SEED)
+==========================================================================
+  usable rows = 10757 (expect 10757)
+  |frame| = 654 (expect 654); 222 in frame = False
+  FASTA length = 656; residue p = FASTA index p-1
+  wrote data/processed/phase2_arm_roster.csv  (96 rows)
+  roster sha256 (computed in-script) = 9b31721a0ad98422c1923f316c76f5e4349deb9bb4b3e5ba46eadd39b1a9445b
+  before-any-scoring check: data/processed/phase2/ exists = False, bg_*.csv files = 0 (expect 0)
+
+--------------------------------------------------------------------------
+R1 GATES
+--------------------------------------------------------------------------
+  counts by arm = {'G': 40, 'V': 38, 'S': 18} (expect S=18, V=38, G=40)
+  R1-G1 PASS (18 / 38 / 40, total 96)
+  wt_aa == FASTA residue: 96/96 roster rows
+  FASTA vs esm2_wt_scores.csv agreement over all 654 frame positions: 654/654
+  R1-G2 PASS
+  Arm V/G rows at position 222 = 0; 222 in frame = False; A222_V row present = False
+  (assumption logged: 'no position is 222' is read as applying to the null arms V/G and to the frame -- Arm S rows are A222X by frozen section 3, position=222 by definition)
+  R1-G3 PASS
+  Arm V positions == Q3's 38-list: True
+    Arm V = [5, 19, 70, 73, 84, 85, 98, 113, 116, 145, 155, 175, 195, 204, 209, 220, 233, 242, 292, 293, 302, 311, 328, 350, 353, 368, 396, 461, 462, 511, 522, 524, 551, 558, 587, 589, 650, 655]
+  R1-G4 PASS
+  Arm G: n = 40, distinct = 40, all in frame = True, 222 among them = False, mut == wt rows = 0
+  R1-G5 PASS
+
+--------------------------------------------------------------------------
+PIN-2 COLLISION CHECK (report only, never dropped)
+--------------------------------------------------------------------------
+  Arm G rows with same position AND mutant as an Arm V row: 0
+    none
+
+--------------------------------------------------------------------------
+FULL ROSTER (96 rows, verbatim)
+--------------------------------------------------------------------------
+      A222_C  arm=S  pos=222  A->C
+      A222_D  arm=S  pos=222  A->D
+      A222_E  arm=S  pos=222  A->E
+      A222_F  arm=S  pos=222  A->F
+      A222_G  arm=S  pos=222  A->G
+      A222_H  arm=S  pos=222  A->H
+      A222_I  arm=S  pos=222  A->I
+      A222_K  arm=S  pos=222  A->K
+      A222_L  arm=S  pos=222  A->L
+      A222_M  arm=S  pos=222  A->M
+      A222_N  arm=S  pos=222  A->N
+      A222_P  arm=S  pos=222  A->P
+      A222_Q  arm=S  pos=222  A->Q
+      A222_R  arm=S  pos=222  A->R
+      A222_S  arm=S  pos=222  A->S
+      A222_T  arm=S  pos=222  A->T
+      A222_W  arm=S  pos=222  A->W
+      A222_Y  arm=S  pos=222  A->Y
+        AV_5  arm=V  pos=  5  A->V
+       AV_19  arm=V  pos= 19  A->V
+       AV_70  arm=V  pos= 70  A->V
+       AV_73  arm=V  pos= 73  A->V
+       AV_84  arm=V  pos= 84  A->V
+       AV_85  arm=V  pos= 85  A->V
+       AV_98  arm=V  pos= 98  A->V
+      AV_113  arm=V  pos=113  A->V
+      AV_116  arm=V  pos=116  A->V
+      AV_145  arm=V  pos=145  A->V
+      AV_155  arm=V  pos=155  A->V
+      AV_175  arm=V  pos=175  A->V
+      AV_195  arm=V  pos=195  A->V
+      AV_204  arm=V  pos=204  A->V
+      AV_209  arm=V  pos=209  A->V
+      AV_220  arm=V  pos=220  A->V
+      AV_233  arm=V  pos=233  A->V
+      AV_242  arm=V  pos=242  A->V
+      AV_292  arm=V  pos=292  A->V
+      AV_293  arm=V  pos=293  A->V
+      AV_302  arm=V  pos=302  A->V
+      AV_311  arm=V  pos=311  A->V
+      AV_328  arm=V  pos=328  A->V
+      AV_350  arm=V  pos=350  A->V
+      AV_353  arm=V  pos=353  A->V
+      AV_368  arm=V  pos=368  A->V
+      AV_396  arm=V  pos=396  A->V
+      AV_461  arm=V  pos=461  A->V
+      AV_462  arm=V  pos=462  A->V
+      AV_511  arm=V  pos=511  A->V
+      AV_522  arm=V  pos=522  A->V
+      AV_524  arm=V  pos=524  A->V
+      AV_551  arm=V  pos=551  A->V
+      AV_558  arm=V  pos=558  A->V
+      AV_587  arm=V  pos=587  A->V
+      AV_589  arm=V  pos=589  A->V
+      AV_650  arm=V  pos=650  A->V
+      AV_655  arm=V  pos=655  A->V
+     G_T549H  arm=G  pos=549  T->H
+     G_G317Q  arm=G  pos=317  G->Q
+     G_R357M  arm=G  pos=357  R->M
+     G_H354F  arm=G  pos=354  H->F
+     G_S494H  arm=G  pos=494  S->H
+      G_E54R  arm=G  pos= 54  E->R
+      G_N12P  arm=G  pos= 12  N->P
+     G_G562M  arm=G  pos=562  G->M
+     G_L472H  arm=G  pos=472  L->H
+     G_E168S  arm=G  pos=168  E->S
+      G_K27I  arm=G  pos= 27  K->I
+     G_L408H  arm=G  pos=408  L->H
+      G_E16V  arm=G  pos= 16  E->V
+     G_T115G  arm=G  pos=115  T->G
+     G_L318F  arm=G  pos=318  L->F
+     G_H613R  arm=G  pos=613  H->R
+      G_K48P  arm=G  pos= 48  K->P
+      G_S23A  arm=G  pos= 23  S->A
+      G_W59C  arm=G  pos= 59  W->C
+     G_E279K  arm=G  pos=279  E->K
+     G_E383T  arm=G  pos=383  E->T
+     G_A551K  arm=G  pos=551  A->K
+     G_A462S  arm=G  pos=462  A->S
+     G_K510H  arm=G  pos=510  K->H
+     G_P254F  arm=G  pos=254  P->F
+     G_L178T  arm=G  pos=178  L->T
+     G_R358V  arm=G  pos=358  R->V
+     G_D629C  arm=G  pos=629  D->C
+     G_V574C  arm=G  pos=574  V->C
+     G_S430P  arm=G  pos=430  S->P
+     G_W595H  arm=G  pos=595  W->H
+     G_M111N  arm=G  pos=111  M->N
+     G_T521D  arm=G  pos=521  T->D
+     G_P346V  arm=G  pos=346  P->V
+       G_N3K  arm=G  pos=  3  N->K
+     G_Y197V  arm=G  pos=197  Y->V
+     G_I192T  arm=G  pos=192  I->T
+     G_L526R  arm=G  pos=526  L->R
+     G_P395F  arm=G  pos=395  P->F
+     G_K401S  arm=G  pos=401  K->S
+
+--------------------------------------------------------------------------
+SUMMARY
+--------------------------------------------------------------------------
+  96 backgrounds written to data/processed/phase2_arm_roster.csv BEFORE any scoring (bg_*.csv = 0)
+  roster sha256 = 9b31721a0ad98422c1923f316c76f5e4349deb9bb4b3e5ba46eadd39b1a9445b
+  gates: R1-G1 PASS  R1-G2 PASS  R1-G3 PASS  R1-G4 PASS  R1-G5 PASS
+  PINs used: PIN-1 (draw, default_rng(0)), PIN-2 (collisions reported: 0), PIN-3 (arms/bg_ids)
+
+LIMITATIONS (AGENTS 6): deterministic enumeration plus one pinned fitness-blind draw; no inference; no scoring; row order assumption logged in the docstring.
+Elapsed 0.0s

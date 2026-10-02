@@ -1,0 +1,20 @@
+==========================================================================
+R2 -- INFORMATIONAL pre-flight: A222V's own rho only (cached CSVs;
+no bootstrap, no placebo quantity, changes nothing)
+==========================================================================
+  frame = 654 positions, usable rows = 10757 (expect 654 / 10757)
+  |H| = 455 (expect 455)
+
+(i) FULL FRAME : n = 10757 rows, rho = np.float64(-0.08811806424891734)
+    frozen anchor target = -0.088118  |diff| = 6.425e-08
+(ii) HELD-OUT H: n = 7526 rows over 455 positions, rho = np.float64(-0.09002168303339808)
+(iii) HELD-IN  : n = 3231 rows over 199 positions, rho = np.float64(-0.08368142781814307)
+
+  row accounting: 7526 + 3231 = 10757 (expect 10757)
+
+GATE G-A (frozen): A222V's rho over the full frame reproduces -0.088118 to 1e-6
+  count cross-check vs execution doc (654/10757/455/7526/3231): AGREE
+  G-A PASS: |np.float64(-0.08811806424891734) - (-0.088118)| = 6.425e-08 < 1e-6
+
+INFORMATIONAL: no arm, rule, or constant may change on the basis of these values; reported so Arnav can decide whether to run.
+No placebo quantity is computed here (frozen rule; placebo rho_b belongs to the analysis script after scoring).

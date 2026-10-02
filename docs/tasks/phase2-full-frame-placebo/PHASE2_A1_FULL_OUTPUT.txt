@@ -1,0 +1,117 @@
+==========================================================================
+A1 -- Phase 2 session 2b: completion, coverage (frozen gate G-E), script integrity
+    run inline (execution doc A1 allocates no script number; same decision as
+    session 2a's R2/G1, PHASE2_LOG troubleshooting rule 4/5). N_BOOT/SEED unused.
+==========================================================================
+
+  roster bg_ids                 : 96 (unique 96)
+  frame (task32 usable rows)    : 654 positions (expect 654); 654*19=12426, 653*19=12407
+  usable frame rows             : 10757 (expect 10757)
+
+--------------------------------------------------------------------------
+A1.1 -- file presence and completeness (script 124's OWN completeness
+        function is imported and used, not reimplemented: file_is_complete()
+        + expected_positions(), the same strengthened criteria the scorer's
+        resume/skip logic used)
+--------------------------------------------------------------------------
+  bg_*.csv files in phase2/     : 96 (expect 96)
+  roster bg_ids with no file    : []
+  files not in the roster       : []
+  other files in phase2/        : []
+  ALL complete by script 124's own criteria : 96/96
+  files whose row count != expected          : 0
+  files with a duplicate (position, mut_aa)  : 0
+  distinct column sets                       : ['bg_id,position,mut_aa,score']
+
+  rows/positions by arm (expect S: 654 pos / 12426 rows; V,G: 653 / 12407):
+    n_expect_pos      n_rows        n_pos     
+             min  max    min    max   min  max
+arm                                           
+G            653  653  12407  12407   653  653
+S            654  654  12426  12426   654  654
+V            653  653  12407  12407   653  653
+
+--------------------------------------------------------------------------
+A1.2 -- FROZEN GATE G-E:  'each background scores at least 95% of the
+        frame's positions'  (PHASE2_PREREG.md section 7; denominator = the
+        frame's 654 positions, NOT 653 and NOT the 120-position cached grid)
+--------------------------------------------------------------------------
+  frozen threshold 0.95 x 654 = 621.3
+  minimum n_positions over the 96 backgrounds : 653 (background AV_5, arm V)
+  maximum n_positions                          : 654
+  backgrounds below the threshold              : 0
+  min coverage as a fraction of the frame      : 0.998471 (653/654)
+  (Arm S scores 654/654 = 100.0%; Arms V and G score 653/654 = 0.998471 because PIN-5/G-C exclude the background's own position,
+   which is a REQUIRED exclusion, not missing coverage.)
+
+  G-E PASS: min n_positions 653 >= 621.3 -> True
+
+--------------------------------------------------------------------------
+A1.3 -- manifest_dedup.csv (A0's output) cross-checked against the files
+        on disk, per the session-2b instruction to use manifest_dedup.csv
+--------------------------------------------------------------------------
+  manifest.csv      : 158 data rows / 96 unique bg_id
+  manifest_dedup.csv: 96 data rows / 96 unique bg_id
+  dedup vs roster merge: {'both': 96, 'left_only': 0, 'right_only': 0} (expect both=96)
+  rows where dedup n_positions != positions actually in the file : 0
+  rows where dedup n_rows      != rows actually in the file       : 0
+  dedup device column values  : ['mps'] (expect ['mps'])
+
+--------------------------------------------------------------------------
+A1.4 -- script integrity: nothing changed since session 2a
+--------------------------------------------------------------------------
+
+  *** IMPORTANT: session 2a's SUMMARY (2a) records NO sha256 for scripts
+      123/124/125.  It records the roster sha256 and the prereg sha256 only.
+      So the instructed comparison -- 'against the checksums logged in 2a' --
+      HAS NO BASELINE TO COMPARE AGAINST.  Reported, not papered over.
+      The available evidence is recorded below instead:
+
+  earliest Phase 2 score file mtime : 2026-09-28T15:46:26.616961
+  latest   Phase 2 score file mtime : 2026-09-29T12:38:44.931501
+
+  file                                   mtime                  sha256                                                             hours before first score
+  scripts/123_phase2_arm_roster.py       2026-09-28T01:12:47.725483  f16655ad494ea398e67024dddb9382d943d940a4b9955083bbbd92f24a5e9aba     14.56
+  scripts/124_phase2_score_backgrounds.py 2026-09-28T01:34:06.995622  8e2175d416d59a5b474f62ec27b5a884b3b44fffe6eabe79aa3f6e9c119d9408     14.21
+  scripts/125_phase2_analysis.py         2026-09-28T01:55:36.586725  6c5b82217234b8f4339d7cfebb9fa8dd234592586a57767d17702b9cfe3bf37d     13.85
+  scripts/130_phase2_dedup_manifest.py   2026-09-29T17:25:04.427857  0e73d1343de31731dc68aa93bf54216611864c6435c21763b58db3e7c9c19857    -25.64
+  scripts/launch_phase2.sh               2026-09-28T02:07:47.534161  69b4053676cfc70763cf09e0cd06a79ea928e48c398d7a79359bfec2a9f03b34     13.64
+
+  => all three Phase 2 scripts (123/124/125) and the launcher have mtimes
+     13.6-14.6 h BEFORE the first Phase 2 score existed, i.e. none was
+     written after any score -- which is the rule that actually protects
+     the result (execution doc rule 7).  mtime is weaker than a hash: a
+     file could be edited and its mtime restored.  No evidence of that is
+     present, and it is not claimed to be excluded.
+
+  the ONE checksum session 2a did record, re-verified now:
+    data/processed/phase2_arm_roster.csv
+      now     : 9b31721a0ad98422c1923f316c76f5e4349deb9bb4b3e5ba46eadd39b1a9445b
+      in 2a   : 9b31721a0ad98422c1923f316c76f5e4349deb9bb4b3e5ba46eadd39b1a9445b
+      MATCH   : True
+
+  git: scripts 123/124/125 and launch_phase2.sh are UNTRACKED (`??`), so
+  `git status`/`git diff` give no committed baseline either.  Their checksums
+  above are recorded here as the baseline for any future session.
+
+  content spot-checks that the frozen contracts are still in place:
+    OK   124 output contract 'bg_id, position, mut_aa, score'
+    OK   124 still does atomic os.replace publish
+    OK   124 still imports get_position_logprobs (PIN-4)
+    OK   124 still skips its own position (PIN-5)
+    OK   125 has both --mode phase2 and --mode cached-ae
+    OK   125 pre-registered docstring still present
+    OK   125 quotes frozen G-A / G-C / G-D / G-E
+    OK   125 uses the NAIVE spearmanr loop (PIN-9 acceleration NOT used)
+
+  torch/esm must appear ONLY in 124 (execution doc: model scoring only in 124/G1):
+    scripts/123_phase2_arm_roster.py: none
+    scripts/125_phase2_analysis.py: none
+    scripts/130_phase2_dedup_manifest.py: none
+    scripts/124_phase2_score_backgrounds.py: ['import esm', 'esm.pretrained'] (expected)
+
+==========================================================================
+A1 VERDICT: file completeness 96/96 PASS | G-E PASS | manifest_dedup vs files agree PASS |
+          script integrity: NO 2a HASH BASELINE EXISTS (flagged); mtime and
+          content evidence all consistent with 123/124/125 being unmodified.
+==========================================================================

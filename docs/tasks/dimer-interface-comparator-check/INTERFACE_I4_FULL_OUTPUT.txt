@@ -1,0 +1,102 @@
+
+==========================================================================
+I4 — ThermoMPNN comparator, full vs non-interface (scripts/127)  N_BOOT=10000 seed=0
+==========================================================================
+  I4-G0 PASS: both inputs present
+  full frame (script 119 L167 recipe): 9595 rows / 586 positions; columns interaction_D, own_e_b present
+  I4-G2a PASS: full-frame index strictly increasing (required by position_cluster_bootstrap's np.searchsorted on df.index)
+
+--------------------------------------------------------------------------
+I4-G1 (HARD GATE) — reproduce L3's rho(interaction_D, own_e_b) on the full frame
+--------------------------------------------------------------------------
+  computed rho_full = 0.015350499380143039
+  recorded (script 119 L459 / PHASE1_LOG L1709) = 0.015350499380143039
+  |difference| = 0.000e+00  (tolerance 1e-09)
+  full-frame CI [-0.016584632010637815, 0.04646129646113297] p_boot=0.3406 (n 9595, clusters 586) — 12.8s
+  I4-G1 PASS: reproduced to 0.0e+00 < 1e-09. The comparator table is being read exactly as L3 read it. Every p-value and CI below is computed on these same values, so it transfers to the published number to the same precision.
+
+--------------------------------------------------------------------------
+SUBSET CONSTRUCTION (positions from script 126; rows from the frame)
+--------------------------------------------------------------------------
+  structure-resolved positions R = 596; structure-unresolved = 59 (I2-G2: excluded from BOTH subsets at both cutoffs)
+  of the frame's 586 positions, 586 are structure-resolved and 0 are NOT: none - no frame position is lost to structure-unresolvedness
+  I4-G3 PASS: nesting holds — Interface-proximal(5) subset of Interface-proximal(8), Non-interface(5) superset of Non-interface(8), as nested cutoffs require
+
+--------------------------------------------------------------------------
+I4-G4 — dynamic range of both variables in every set (a subset rho is uninterpretable without this)
+--------------------------------------------------------------------------
+  full frame (n=9595, 586 pos): interaction_D SD 0.379038 IQR 0.488110 (q25 -1.538895 q75 -1.050784)
+  full frame                            : own_e_b       SD 0.234659 IQR 0.222158 (q25 -0.103365 q75 0.118793)
+  non-interface@5A (n=9000, 551 pos): interaction_D SD 0.382819 IQR 0.491986 (SD ratio vs full 1.010, IQR ratio 1.008)
+  non-interface@5A                        : own_e_b       SD 0.231599 IQR 0.213980 (SD ratio vs full 0.987, IQR ratio 0.963)
+  non-interface@8A (n=8504, 522 pos): interaction_D SD 0.373318 IQR 0.476729 (SD ratio vs full 0.985, IQR ratio 0.977)
+  non-interface@8A                        : own_e_b       SD 0.230071 IQR 0.211103 (SD ratio vs full 0.980, IQR ratio 0.950)
+  RANGE CHECK @5A: the smallest SD/IQR ratio across both variables is 0.963 — range is substantially PRESERVED; a rho difference here is not obviously a floor/range effect
+  RANGE CHECK @8A: the smallest SD/IQR ratio across both variables is 0.950 — range is substantially PRESERVED; a rho difference here is not obviously a floor/range effect
+
+--------------------------------------------------------------------------
+I4 — THREE-WAY COMPARISON, side by side
+--------------------------------------------------------------------------
+  set                     n_rows   n_pos   %rows    %pos           rho                      95% CI    p_boot
+  ------------------------------------------------------------------------------------------------------------
+  FULL frame                9595     586 100.00% 100.00%  0.0153504994       [-0.016585, 0.046461]    0.3406
+  non-interface@5A          9000     551  93.80%  94.03%  0.0125491654       [-0.019298, 0.044705]    0.4346
+  non-interface@8A          8504     522  88.63%  89.08%  0.0207856304       [-0.011213, 0.052868]    0.2060
+
+  denominators: %rows and %pos are against the full frame's 9595 rows / 586 positions. The full frame's 586 positions are all structure-resolved, so no frame position is lost to I2-G2's 59 unresolved positions.
+  CIs are percentile intervals of a POSITION-CLUSTER bootstrap, n_boot=10000, seed=0, clusters = the positions in that set. Never row-level.
+  p_boot is the two-sided bootstrap fraction (scripts/lib/stats.py L30) and is bounded by 2/10000 = 2.00e-04. It is the primary inferential statement; no z-score is reported.
+
+--------------------------------------------------------------------------
+DECISION RULE (pre-registered, purely descriptive)
+--------------------------------------------------------------------------
+  Rule as fixed in the docstring before any run: CONSISTENT if the full-frame point
+  estimate 0.015350499380143039 lies inside a subset's 95% CI; DIFFERS if it lies
+  outside. Reported per cutoff, factually, either way.
+
+  non-interface@5A: CI [-0.019298, 0.044705] vs full-frame point 0.0153504994 -> INSIDE => CONSISTENT
+
+  non-interface@8A: CI [-0.011213, 0.052868] vs full-frame point 0.0153504994 -> INSIDE => CONSISTENT
+
+  What each outcome means, stated in advance and not altered by the result:
+   - DIFFERS does NOT retroactively invalidate L3 or the Phase 1 anchor.
+     Those are properties of the full frame and are unchanged by this split.
+   - CONSISTENT does NOT show the frozen-structure assumption is safe. This session
+     tests Kuhlman's FIRST condition only (are the residues near the oligomer
+     interface). His SECOND condition — whether larger conformational changes are tied
+     to the oligomerization-state change — is a literature question this
+     structure-only check CANNOT address, and is NOT claimed to be addressed here.
+     That condition remains OPEN.
+
+--------------------------------------------------------------------------
+INFORMATIONAL — is residue 222 itself interface-proximal?
+--------------------------------------------------------------------------
+  at 5 A: residue 222 is NOT interface-proximal (d_interface = 25.752 A)
+  at 8 A: residue 222 is NOT interface-proximal (d_interface = 25.752 A)
+  222 is not a target position in the frame and this changes nothing about its treatment.
+
+--------------------------------------------------------------------------
+LIMITATIONS (printed with results, AGENTS sec 6)
+--------------------------------------------------------------------------
+  1. REPRODUCTION IS NOT REPLICATION. I4-G1 matching to 0.0e+00 validates
+     that this script reads the same table and computes the same estimator as L3.
+     It is a unit test, not independent evidence for any claim.
+  2. Bootstrap percentile CIs on a Spearman coefficient. No multiplicity
+     correction, no null model. A CI including or excluding zero here is
+     descriptive, not a significance claim. p_boot is reported and is bounded by
+     2/10000.
+  3. The two subsets overlap heavily and are NOT independent — one nests inside the
+     other. No comparison between them is performed and none should be inferred.
+  4. Subsets differ from the full frame in composition AND size. A rho difference
+     can arise from the removed interface positions, from reduced power, or from the
+     dynamic-range effect reported under I4-G4. This script cannot attribute a
+     difference to any one cause and does not.
+  5. No model was run; both columns are cached ThermoMPNN outputs from earlier
+     sessions. Nothing was rescored.
+  6. d_interface comes from ONE static 2.50 A crystal structure (6FCX); script 126's
+     limitations carry over.
+  7. Dr. Kuhlman's SECOND condition (conformational-change magnitude) is NOT tested
+     here and is NOT claimed to be tested here. It remains open.
+
+
+SCRIPT 127 DONE (36.4s)  rho_full=0.015350499380143039  non5A=0.012549 [-0.0193,0.0447] CONSISTENT  non8A=0.020786 [-0.0112,0.0529] CONSISTENT

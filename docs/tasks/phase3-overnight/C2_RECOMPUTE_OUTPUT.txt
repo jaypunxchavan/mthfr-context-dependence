@@ -1,0 +1,530 @@
+C2 INDEPENDENT RECOMPUTE (session 3b)
+N_BOOT=10000 N_PERM=10000 SEED=0 (env defaults = the frozen values)
+No staged analysis script (153/155/157) is imported or run.
+
+============================================================================
+MODULE G -- GB1: rho_b from raw doubles/singles + bg scores,
+             4 covariate Spearmans x 4 thresholds, vs 155's
+             printed table in driver_stage_S3.log
+============================================================================
+  parsed staged table: thresholds ['t25', 't23', 't28', 'unfiltered']; covariates each: [4]
+  doubles 535,917 rows, singles 1,045, roster 1,045, roster_v2 400
+  partner table: 410,271 rows for the 400 backgrounds | same-position rows 0 (G-2 structural, must be 0) | missing W_v 0 / W_bg 0 (must be 0)
+  CHECK gb1 partner rows for the 400 backgrounds vs staged 155: mine=410271 staged=410271 -> OK
+  score files: wt_arm 1045 rows, completed 400/400 (roster order)
+  CHECK gb1 staged rho csv ids vs my completed ids: symmetric diff: mine=set() staged=set() -> OK
+
+  THRESHOLD t25 (PRIMARY): completed 400 | below 100-floor 0 | dropped for missing delta 0
+  CHECK gb1[t25] completed / floor-excluded / dropped vs staged 155: mine=(400, 0, 0) staged=(400, 0, 0) -> OK
+  CHECK gb1[t25] n completed vs staged n: mine=400 staged=400 -> OK
+  CHECK gb1[t25] dist mean: mine=np.float64(-0.009125049245666152) staged=-0.009125 |diff|=4.925e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist median: mine=np.float64(-0.004175240576028761) staged=-0.004175 |diff|=2.406e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist sd(ddof=0): mine=np.float64(0.09691148168559856) staged=0.096911 |diff|=4.817e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist lo: mine=np.float64(-0.3079146815751426) staged=-0.307915 |diff|=3.184e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist hi: mine=np.float64(0.22537647315905424) staged=0.225376 |diff|=4.732e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] dist frac<0: mine=0.505 staged=0.505 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK gb1[t25] centering lo: mine=-0.018632832733861536 staged=-0.018633 |diff|=1.673e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] centering hi: mine=0.0004019074159714506 staged=0.000402 |diff|=9.258e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] centering word: mine='CENTERED' staged='CENTERED' -> OK
+  CHECK gb1[t25] cov(a) spearman: mine=-0.07334880783272926 staged=-0.073349 |diff|=1.922e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(a) CI lo: mine=-0.1698417240675382 staged=-0.169842 |diff|=2.759e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(a) CI hi: mine=0.025741722060023273 staged=0.025742 |diff|=2.779e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(a) perm_p: mine=0.1414858514148585 staged=0.1415 |diff|=1.415e-05 tol=5.1e-05 -> OK
+  CHECK gb1[t25] cov(a) perm numerator k+1: mine=1415 staged=1415 -> OK
+  CHECK gb1[t25] cov(a) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t25] cov(a) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+      cov(a) rho=-0.073349 CI=[-0.169842,+0.025742] perm p=0.1415 (k=1414) -> NOT RESOLVED
+  CHECK gb1[t25] cov(b) spearman: mine=-0.3677256107850674 staged=-0.367726 |diff|=3.892e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(b) CI lo: mine=-0.45166715296348314 staged=-0.451667 |diff|=1.530e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(b) CI hi: mine=-0.278739359590082 staged=-0.278739 |diff|=3.596e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(b) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t25] cov(b) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t25] cov(b) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t25] cov(b) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+      cov(b) rho=-0.367726 CI=[-0.451667,-0.278739] perm p=0.0001 (k=0) -> ASSOCIATED
+  CHECK gb1[t25] cov(c) spearman: mine=0.0012939286692684382 staged=0.001294 |diff|=7.133e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(c) CI lo: mine=-0.09646395758874449 staged=-0.096464 |diff|=4.241e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(c) CI hi: mine=0.09960625230946202 staged=0.099606 |diff|=2.523e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(c) perm_p: mine=0.981001899810019 staged=0.981 |diff|=1.900e-06 tol=5.1e-05 -> OK
+  CHECK gb1[t25] cov(c) perm numerator k+1: mine=9811 staged=9811 -> OK
+  CHECK gb1[t25] cov(c) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t25] cov(c) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+      cov(c) rho=+0.001294 CI=[-0.096464,+0.099606] perm p=0.9810 (k=9810) -> NOT RESOLVED
+  CHECK gb1[t25] cov(d) spearman: mine=-0.34486771792323695 staged=-0.344868 |diff|=2.821e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(d) CI lo: mine=-0.4283547086545866 staged=-0.428355 |diff|=2.913e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(d) CI hi: mine=-0.2574769792844223 staged=-0.257477 |diff|=2.072e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t25] cov(d) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t25] cov(d) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t25] cov(d) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t25] cov(d) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+      cov(d) rho=-0.344868 CI=[-0.428355,-0.257477] perm p=0.0001 (k=0) -> ASSOCIATED
+  per-background compare (primary): 400 rows x (rho_b, n, mean_abs_dpos, fitness, sd_eb); max|diff| = rho 0.000e+00, n 0, mean_abs_dpos 0.000e+00, fit 0.000e+00, sd_eb 0.000e+00; rows outside 1e-12: 0
+  CHECK gb1 per-background rho_b (all 400) vs gb1_rho_b_full.csv: rows outside 1e-12: mine=0 staged=0 -> OK
+
+  THRESHOLD t23: completed 400 | below 100-floor 0 | dropped for missing delta 0
+  CHECK gb1[t23] completed / floor-excluded / dropped vs staged 155: mine=(400, 0, 0) staged=(400, 0, 0) -> OK
+  CHECK gb1[t23] n completed vs staged n: mine=400 staged=400 -> OK
+  CHECK gb1[t23] dist mean: mine=np.float64(-0.009105921677886802) staged=-0.009106 |diff|=7.832e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t23] dist median: mine=np.float64(-0.0024842310909926955) staged=-0.002484 |diff|=2.311e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] dist sd(ddof=0): mine=np.float64(0.09678425746338633) staged=0.096784 |diff|=2.575e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] dist lo: mine=np.float64(-0.30816163700067817) staged=-0.308162 |diff|=3.630e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] dist hi: mine=np.float64(0.21688601134923208) staged=0.216886 |diff|=1.135e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t23] dist frac<0: mine=0.505 staged=0.505 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK gb1[t23] centering lo: mine=-0.018591681853383214 staged=-0.018592 |diff|=3.181e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] centering hi: mine=0.0004011480578206943 staged=0.000401 |diff|=1.481e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] centering word: mine='CENTERED' staged='CENTERED' -> OK
+  CHECK gb1[t23] cov(a) spearman: mine=-0.07290321050402501 staged=-0.072903 |diff|=2.105e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(a) CI lo: mine=-0.16890380371509348 staged=-0.168904 |diff|=1.963e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(a) CI hi: mine=0.026036590141544948 staged=0.026037 |diff|=4.099e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(a) perm_p: mine=0.14388561143885611 staged=0.1439 |diff|=1.439e-05 tol=5.1e-05 -> OK
+  CHECK gb1[t23] cov(a) perm numerator k+1: mine=1439 staged=1439 -> OK
+  CHECK gb1[t23] cov(a) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t23] cov(a) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[t23] cov(b) spearman: mine=-0.3676701104381902 staged=-0.36767 |diff|=1.104e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(b) CI lo: mine=-0.45177492396527447 staged=-0.451775 |diff|=7.603e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(b) CI hi: mine=-0.27922122033129126 staged=-0.279221 |diff|=2.203e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(b) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t23] cov(b) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t23] cov(b) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t23] cov(b) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+  CHECK gb1[t23] cov(c) spearman: mine=0.013406202117163328 staged=0.013406 |diff|=2.021e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(c) CI lo: mine=-0.08477816355755455 staged=-0.084778 |diff|=1.636e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(c) CI hi: mine=0.11124594728046025 staged=0.111246 |diff|=5.272e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(c) perm_p: mine=0.7868213178682132 staged=0.7868 |diff|=2.132e-05 tol=5.1e-05 -> OK
+  CHECK gb1[t23] cov(c) perm numerator k+1: mine=7869 staged=7869 -> OK
+  CHECK gb1[t23] cov(c) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t23] cov(c) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[t23] cov(d) spearman: mine=-0.3446106538165863 staged=-0.344611 |diff|=3.462e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(d) CI lo: mine=-0.4280106426493468 staged=-0.428011 |diff|=3.574e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(d) CI hi: mine=-0.2575235275475863 staged=-0.257524 |diff|=4.725e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t23] cov(d) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t23] cov(d) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t23] cov(d) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t23] cov(d) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+
+  THRESHOLD t28: completed 400 | below 100-floor 0 | dropped for missing delta 0
+  CHECK gb1[t28] completed / floor-excluded / dropped vs staged 155: mine=(400, 0, 0) staged=(400, 0, 0) -> OK
+  CHECK gb1[t28] n completed vs staged n: mine=400 staged=400 -> OK
+  CHECK gb1[t28] dist mean: mine=np.float64(-0.009107391422013578) staged=-0.009107 |diff|=3.914e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] dist median: mine=np.float64(-0.002101820651287927) staged=-0.002102 |diff|=1.793e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] dist sd(ddof=0): mine=np.float64(0.0971952138076923) staged=0.097195 |diff|=2.138e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] dist lo: mine=np.float64(-0.30930544006422783) staged=-0.309305 |diff|=4.401e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] dist hi: mine=np.float64(0.23811944960606826) staged=0.238119 |diff|=4.496e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] dist frac<0: mine=0.51 staged=0.51 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK gb1[t28] centering lo: mine=-0.018621987521776188 staged=-0.018622 |diff|=1.248e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t28] centering hi: mine=0.0003920686060597574 staged=0.000392 |diff|=6.861e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t28] centering word: mine='CENTERED' staged='CENTERED' -> OK
+  CHECK gb1[t28] cov(a) spearman: mine=-0.07737132061353849 staged=-0.077371 |diff|=3.206e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(a) CI lo: mine=-0.1734489355446629 staged=-0.173449 |diff|=6.446e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(a) CI hi: mine=0.022759364172451155 staged=0.022759 |diff|=3.642e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(a) perm_p: mine=0.11948805119488051 staged=0.1195 |diff|=1.195e-05 tol=5.1e-05 -> OK
+  CHECK gb1[t28] cov(a) perm numerator k+1: mine=1195 staged=1195 -> OK
+  CHECK gb1[t28] cov(a) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t28] cov(a) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[t28] cov(b) spearman: mine=-0.3675127969549809 staged=-0.367513 |diff|=2.030e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(b) CI lo: mine=-0.4512408089852242 staged=-0.451241 |diff|=1.910e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(b) CI hi: mine=-0.2795894220287883 staged=-0.279589 |diff|=4.220e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(b) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t28] cov(b) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t28] cov(b) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t28] cov(b) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+  CHECK gb1[t28] cov(c) spearman: mine=0.004776018532593488 staged=0.004776 |diff|=1.853e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(c) CI lo: mine=-0.09282161867530071 staged=-0.092822 |diff|=3.813e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(c) CI hi: mine=0.10362036227936049 staged=0.10362 |diff|=3.623e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(c) perm_p: mine=0.9229077092290771 staged=0.9229 |diff|=7.709e-06 tol=5.1e-05 -> OK
+  CHECK gb1[t28] cov(c) perm numerator k+1: mine=9230 staged=9230 -> OK
+  CHECK gb1[t28] cov(c) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t28] cov(c) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[t28] cov(d) spearman: mine=-0.346359102244389 staged=-0.346359 |diff|=1.022e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(d) CI lo: mine=-0.42983490425341525 staged=-0.429835 |diff|=9.575e-08 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(d) CI hi: mine=-0.2590093613216471 staged=-0.259009 |diff|=3.613e-07 tol=5.1e-07 -> OK
+  CHECK gb1[t28] cov(d) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[t28] cov(d) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[t28] cov(d) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[t28] cov(d) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+
+  THRESHOLD unfiltered: completed 400 | below 100-floor 0 | dropped for missing delta 0
+  CHECK gb1[unfiltered] completed / floor-excluded / dropped vs staged 155: mine=(400, 0, 0) staged=(400, 0, 0) -> OK
+  CHECK gb1[unfiltered] n completed vs staged n: mine=400 staged=400 -> OK
+  CHECK gb1[unfiltered] dist mean: mine=np.float64(-0.00880934661132027) staged=-0.008809 |diff|=3.466e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] dist median: mine=np.float64(-0.002196162148111738) staged=-0.002196 |diff|=1.621e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] dist sd(ddof=0): mine=np.float64(0.09430543959693251) staged=0.094305 |diff|=4.396e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] dist lo: mine=np.float64(-0.30977559397897064) staged=-0.309776 |diff|=4.060e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] dist hi: mine=np.float64(0.2064679887510196) staged=0.206468 |diff|=1.125e-08 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] dist frac<0: mine=0.5025 staged=0.5025 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK gb1[unfiltered] centering lo: mine=-0.0181417494410755 staged=-0.018142 |diff|=2.506e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] centering hi: mine=0.0004212156498487582 staged=0.000421 |diff|=2.156e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] centering word: mine='CENTERED' staged='CENTERED' -> OK
+  CHECK gb1[unfiltered] cov(a) spearman: mine=-0.0648272968453784 staged=-0.064827 |diff|=2.968e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(a) CI lo: mine=-0.15977912760664545 staged=-0.159779 |diff|=1.276e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(a) CI hi: mine=0.033108285962721896 staged=0.033108 |diff|=2.860e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(a) perm_p: mine=0.19358064193580643 staged=0.1936 |diff|=1.936e-05 tol=5.1e-05 -> OK
+  CHECK gb1[unfiltered] cov(a) perm numerator k+1: mine=1936 staged=1936 -> OK
+  CHECK gb1[unfiltered] cov(a) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[unfiltered] cov(a) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[unfiltered] cov(b) spearman: mine=-0.3697219357620985 staged=-0.369722 |diff|=6.424e-08 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(b) CI lo: mine=-0.4542821936823994 staged=-0.454282 |diff|=1.937e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(b) CI hi: mine=-0.2801985828112191 staged=-0.280199 |diff|=4.172e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(b) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[unfiltered] cov(b) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[unfiltered] cov(b) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[unfiltered] cov(b) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+  CHECK gb1[unfiltered] cov(c) spearman: mine=0.06265185442445882 staged=0.062652 |diff|=1.456e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(c) CI lo: mine=-0.038205379268405955 staged=-0.038205 |diff|=3.793e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(c) CI hi: mine=0.1594033224953163 staged=0.159403 |diff|=3.225e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(c) perm_p: mine=0.20437956204379562 staged=0.2044 |diff|=2.044e-05 tol=5.1e-05 -> OK
+  CHECK gb1[unfiltered] cov(c) perm numerator k+1: mine=2044 staged=2044 -> OK
+  CHECK gb1[unfiltered] cov(c) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[unfiltered] cov(c) word: mine='NOT RESOLVED' staged='NOT RESOLVED' -> OK
+  CHECK gb1[unfiltered] cov(d) spearman: mine=-0.30730860817880107 staged=-0.307309 |diff|=3.918e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(d) CI lo: mine=-0.39256890958707125 staged=-0.392569 |diff|=9.041e-08 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(d) CI hi: mine=-0.21722589076665616 staged=-0.217226 |diff|=1.092e-07 tol=5.1e-07 -> OK
+  CHECK gb1[unfiltered] cov(d) perm_p: mine=9.999000099990002e-05 staged=0.0001 |diff|=9.999e-09 tol=5.1e-05 -> OK
+  CHECK gb1[unfiltered] cov(d) perm numerator k+1: mine=1 staged=1 -> OK
+  CHECK gb1[unfiltered] cov(d) perm denominator n+1: mine=10001 staged=10001 -> OK
+  CHECK gb1[unfiltered] cov(d) word: mine='ASSOCIATED' staged='ASSOCIATED' -> OK
+
+  module G wall 34.3s
+
+MODULE G (GB1, vs staged 155) RESULT: PASS (159 checks, all within tolerance)
+
+============================================================================
+MODULE R -- RBD: rho_b for all 100 backgrounds x 12
+             (target x phenotype x mask) frames from raw bg
+             files + e_T.csv, and p_spec for both targets,
+             vs analysis_results_full.json + rho_b_full.csv
+============================================================================
+  inputs: e_T 7,600 rows, roster 100, wt_arm 3,819 rows, bg files 100/100
+  CHECK rbd bg files vs roster ids: symmetric diff: mine=set() staged=set() -> OK
+  in_null flags: N501Y 57, E484K 45 (dtype bool)
+  target N501Y: bg_id TGT_N501Y, site 501, master rows 3800 (rows at own site: 0, must be 0)
+  target E484K: bg_id TGT_E484K, site 484, master rows 3800 (rows at own site: 0, must be 0)
+  per-background rho_b: 1200 rows compared (staged rho_b_full.csv), max|diff| = 0.000e+00, rows outside 1e-12 or n mismatch: 0
+  CHECK rbd per-background rho_b (1200 rows) outside tolerance: mine=0 staged=0 -> OK
+  CHECK rbd rho rows compared: mine=1200 staged=1200 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] rho_target: mine=-0.07737084440224973 staged=-0.07737084440224973 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_abs: mine=3 staged=3 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_abs: mine=0.06896551724137931 staged=0.06896551724137931 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_neg: mine=3 staged=3 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_neg: mine=0.06896551724137931 staged=0.06896551724137931 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] k_pos: mine=54 staged=54 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] p_pos: mine=0.9482758620689655 staged=0.9482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge1] outcome word: mine='RBD-INCONCLUSIVE' staged='RBD-INCONCLUSIVE' -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] rho_target: mine=-0.09049377121986184 staged=-0.09049377121986184 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_abs: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_abs: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_neg: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_neg: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] k_pos: mine=56 staged=56 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] p_pos: mine=0.9827586206896551 staged=0.9827586206896551 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge3] outcome word: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.outcomes_primary[N501Y]: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] rho_target: mine=-0.10076126100116566 staged=-0.10076126100116566 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_abs: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_abs: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_neg: mine=1 staged=1 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_neg: mine=0.034482758620689655 staged=0.034482758620689655 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] k_pos: mine=56 staged=56 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] p_pos: mine=0.9827586206896551 staged=0.9827586206896551 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/bind/ge5] outcome word: mine='RBD-REPRODUCES' staged='RBD-REPRODUCES' -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] rho_target: mine=-0.02542898714077923 staged=-0.02542898714077923 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_abs: mine=35 staged=35 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_abs: mine=0.6206896551724138 staged=0.6206896551724138 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_neg: mine=16 staged=16 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_neg: mine=0.29310344827586204 staged=0.29310344827586204 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] k_pos: mine=41 staged=41 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] p_pos: mine=0.7241379310344828 staged=0.7241379310344828 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] rho_target: mine=-0.02783368131048632 staged=-0.02783368131048632 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_abs: mine=32 staged=32 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_abs: mine=0.5689655172413793 staged=0.5689655172413793 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_neg: mine=14 staged=14 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_neg: mine=0.25862068965517243 staged=0.25862068965517243 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] k_pos: mine=43 staged=43 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] p_pos: mine=0.7586206896551724 staged=0.7586206896551724 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] rho_target: mine=-0.032926106807232784 staged=-0.032926106807232784 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] n_null: mine=57 staged=57 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_abs: mine=34 staged=34 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_abs: mine=0.603448275862069 staged=0.603448275862069 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_neg: mine=15 staged=15 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_neg: mine=0.27586206896551724 staged=0.27586206896551724 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] k_pos: mine=42 staged=42 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] p_pos: mine=0.7413793103448276 staged=0.7413793103448276 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[N501Y/expr/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge1] rho_target: mine=-0.019324887901774977 staged=-0.019324887901774977 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_abs: mine=25 staged=25 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_abs: mine=0.5652173913043478 staged=0.5652173913043478 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_neg: mine=11 staged=11 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_neg: mine=0.2608695652173913 staged=0.2608695652173913 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] k_pos: mine=34 staged=34 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] p_pos: mine=0.7608695652173914 staged=0.7608695652173914 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge3] rho_target: mine=-0.023931167920018745 staged=-0.023931167920018745 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_abs: mine=23 staged=23 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_abs: mine=0.5217391304347826 staged=0.5217391304347826 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_neg: mine=10 staged=10 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_neg: mine=0.2391304347826087 staged=0.2391304347826087 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] k_pos: mine=35 staged=35 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] p_pos: mine=0.782608695652174 staged=0.782608695652174 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.outcomes_primary[E484K]: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/bind/ge5] rho_target: mine=-0.03261767410351891 staged=-0.03261767410351891 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_abs: mine=19 staged=19 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_abs: mine=0.43478260869565216 staged=0.43478260869565216 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_neg: mine=10 staged=10 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_neg: mine=0.2391304347826087 staged=0.2391304347826087 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] k_pos: mine=35 staged=35 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] p_pos: mine=0.782608695652174 staged=0.782608695652174 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/bind/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge1] rho_target: mine=0.02679669181961617 staged=0.02679669181961617 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_abs: mine=12 staged=12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_abs: mine=0.2826086956521739 staged=0.2826086956521739 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_neg: mine=42 staged=42 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_neg: mine=0.9347826086956522 staged=0.9347826086956522 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] k_pos: mine=3 staged=3 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] p_pos: mine=0.08695652173913043 staged=0.08695652173913043 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge1] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge3] rho_target: mine=0.015646993892634974 staged=0.015646993892634974 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_abs: mine=28 staged=28 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_abs: mine=0.6304347826086957 staged=0.6304347826086957 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_neg: mine=37 staged=37 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_neg: mine=0.8260869565217391 staged=0.8260869565217391 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] k_pos: mine=8 staged=8 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] p_pos: mine=0.1956521739130435 staged=0.1956521739130435 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge3] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+  CHECK rbd.s5[E484K/expr/ge5] rho_target: mine=0.013253596306202084 staged=0.013253596306202084 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] n_null: mine=45 staged=45 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_abs: mine=31 staged=31 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_abs: mine=0.6956521739130435 staged=0.6956521739130435 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_neg: mine=38 staged=38 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_neg: mine=0.8478260869565217 staged=0.8478260869565217 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] k_pos: mine=7 staged=7 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] p_pos: mine=0.17391304347826086 staged=0.17391304347826086 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK rbd.s5[E484K/expr/ge5] outcome word: mine='RBD-DOES-NOT-REPRODUCE' staged='RBD-DOES-NOT-REPRODUCE' -> OK
+
+  module R wall 1.0s
+
+MODULE R (RBD, vs staged 157) RESULT: PASS (113 checks, all within tolerance)
+
+============================================================================
+MODULE M1 -- per-background rho_b^GE from Phase-2 bg files +
+             m1_own_e_b_ge.csv, then headline rows (a)-(f)
+             vs PHASE3_A3_FULL_OUTPUT.txt (the full-run record)
+============================================================================
+  parsed staged record: (a) 3, (b) 4, (c) 6, (d) 8, (e) 4, (f) 4, words 3
+  pdg.build() -- cached Phase-2 row construction ... 0.7s
+  frame 10,757 rows / 654 positions; bgs 96; |N| 78; |S| 18; H 455 positions
+  CHECK m1 GE-ISO maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 GE-SIG maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 GE-LIN-CF maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 OWN maps onto all frame rows (NaN count): mine=0 staged=0 -> OK
+  CHECK m1 identity own_e_b vs frame recorded own_e_b (max|diff|): mine=2.220446049250313e-16 staged=0.0 |diff|=2.220e-16 tol=1e-12 -> OK
+  CHECK m1 a222v delta vs frame.delta_esm (max|diff|): mine=0.0 staged=0.0 |diff|=0.000e+00 tol=1e-12 -> OK
+  CHECK m1 original A222V rho full vs staged repr: mine=-0.08811806424891734 staged=-0.08811806424891734 |diff|=0.000e+00 tol=1e-12 -> OK
+  row-construction cross-checks vs cached bg_rows: max |join count diff| = 0, position mismatches = 0, max|delta diff| = 0.000e+00
+  CHECK m1 join count vs cached bg_rows: max |diff| over 96 bgs: mine=0 staged=0 -> OK
+  CHECK m1 position alignment mismatches vs cached (total): mine=0 staged=0 -> OK
+  CHECK m1 delta (score - esm2) vs cached delta: max|diff|: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=1e-12 -> OK
+  per-background rho: 776 staged rows compared (96 bgs + A222V, 2 views x 4 constructions), max|diff| = 1.388e-17, rows outside 1e-12: 0
+  CHECK m1 per-background rho rows compared: mine=776 staged=776 -> OK
+  CHECK m1 per-background rho rows outside tolerance: mine=0 staged=0 -> OK
+
+  (a) Spearman(own_e.b^GE, own_e.b):
+  CHECK m1.(a) GE-ISO: mine=0.9498141962909014 staged=0.949814 |diff|=1.963e-07 tol=5.1e-07 -> OK
+  CHECK m1.(a) GE-SIG: mine=0.9515434415216675 staged=0.951543 |diff|=4.415e-07 tol=5.1e-07 -> OK
+  CHECK m1.(a) GE-LIN-CF: mine=0.9997398013890574 staged=0.99974 |diff|=1.986e-07 tol=5.1e-07 -> OK
+
+  (b) rho^GE + position-cluster CI (draws via the frozen shared bootstrap; wiring verified):
+  CHECK m1.(b) original CI lo: mine=-0.1173334458953319 staged=-0.117333 |diff|=4.459e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) original CI hi: mine=-0.05951138449511738 staged=-0.059511 |diff|=3.845e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) original shrinkage: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-ISO rho^GE: mine=-0.12247606353047415 staged=-0.122476 |diff|=6.353e-08 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-ISO CI lo: mine=-0.15264821222351016 staged=-0.152648 |diff|=2.122e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-ISO CI hi: mine=-0.09218916644891637 staged=-0.092189 |diff|=1.664e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-ISO p_boot: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK m1.(b) GE-ISO shrinkage: mine=-0.389908693233453 staged=-0.389909 |diff|=3.068e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-ISO finite draws: mine=10000 staged=10000 -> OK
+      GE-ISO: rho^GE=-0.122476 CI=[-0.152648,-0.092189] p_boot=0.0000 shrink=-0.389909
+  CHECK m1.(b) GE-SIG rho^GE: mine=-0.12277972344239124 staged=-0.12278 |diff|=2.766e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-SIG CI lo: mine=-0.15291422118215356 staged=-0.152914 |diff|=2.212e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-SIG CI hi: mine=-0.09260666711379842 staged=-0.092607 |diff|=3.329e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-SIG p_boot: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK m1.(b) GE-SIG shrinkage: mine=-0.39335475068495707 staged=-0.393355 |diff|=2.493e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-SIG finite draws: mine=10000 staged=10000 -> OK
+      GE-SIG: rho^GE=-0.122780 CI=[-0.152914,-0.092607] p_boot=0.0000 shrink=-0.393355
+  CHECK m1.(b) GE-LIN-CF rho^GE: mine=-0.08761800138800963 staged=-0.087618 |diff|=1.388e-09 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-LIN-CF CI lo: mine=-0.1169068540170335 staged=-0.116907 |diff|=1.460e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-LIN-CF CI hi: mine=-0.05904929648229503 staged=-0.059049 |diff|=2.965e-07 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-LIN-CF p_boot: mine=0.0 staged=0.0 |diff|=0.000e+00 tol=5.1e-05 -> OK
+  CHECK m1.(b) GE-LIN-CF shrinkage: mine=0.005674918816817476 staged=0.005675 |diff|=8.118e-08 tol=5.1e-07 -> OK
+  CHECK m1.(b) GE-LIN-CF finite draws: mine=10000 staged=10000 -> OK
+      GE-LIN-CF: rho^GE=-0.087618 CI=[-0.116907,-0.059049] p_boot=0.0000 shrink=+0.005675
+
+  (c) p_spec^GE -- computed against BOTH candidate null sets (original rho_b, and rho_b^GE as the frozen prereg formula states):
+      GE-ISO full: thr=-0.122476
+        vs ORIGINAL rho_b nulls:  p=(1+0)/(1+78)=0.012658 beaters=[]
+        vs rho_b^GE nulls (prereg formula): p=(1+2)/(1+78)=0.037975 beaters=['AV_195', 'G_P254F']
+        staged:                    p=(1+0)/(1+78)=0.012658 beaters=[]
+  CHECK m1.(c) GE-ISO/full rho^GE threshold: mine=-0.12247606353047415 staged=-0.122476 |diff|=6.353e-08 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-ISO/full staged-vs-my ORIGINAL-null k: mine=0 staged=0 -> OK
+  CHECK m1.(c) GE-ISO/full staged beaters == my ORIGINAL-null beaters: mine=set() staged=set() -> OK
+  CHECK m1.(c) GE-ISO/full staged-vs-my ORIGINAL-null p: mine=0.012658227848101266 staged=0.012658 |diff|=2.278e-07 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction DIFFERS from the staged numbers
+      GE-ISO H: thr=-0.122132
+        vs ORIGINAL rho_b nulls:  p=(1+0)/(1+78)=0.012658 beaters=[]
+        vs rho_b^GE nulls (prereg formula): p=(1+3)/(1+78)=0.050633 beaters=['AV_113', 'AV_195', 'G_P254F']
+        staged:                    p=(1+0)/(1+78)=0.012658 beaters=[]
+  CHECK m1.(c) GE-ISO/H rho^GE threshold: mine=-0.12213242397700864 staged=-0.122132 |diff|=4.240e-07 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-ISO/H staged-vs-my ORIGINAL-null k: mine=0 staged=0 -> OK
+  CHECK m1.(c) GE-ISO/H staged beaters == my ORIGINAL-null beaters: mine=set() staged=set() -> OK
+  CHECK m1.(c) GE-ISO/H staged-vs-my ORIGINAL-null p: mine=0.012658227848101266 staged=0.012658 |diff|=2.278e-07 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction DIFFERS from the staged numbers
+      GE-SIG full: thr=-0.122780
+        vs ORIGINAL rho_b nulls:  p=(1+0)/(1+78)=0.012658 beaters=[]
+        vs rho_b^GE nulls (prereg formula): p=(1+2)/(1+78)=0.037975 beaters=['AV_195', 'G_P254F']
+        staged:                    p=(1+0)/(1+78)=0.012658 beaters=[]
+  CHECK m1.(c) GE-SIG/full rho^GE threshold: mine=-0.12277972344239124 staged=-0.12278 |diff|=2.766e-07 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-SIG/full staged-vs-my ORIGINAL-null k: mine=0 staged=0 -> OK
+  CHECK m1.(c) GE-SIG/full staged beaters == my ORIGINAL-null beaters: mine=set() staged=set() -> OK
+  CHECK m1.(c) GE-SIG/full staged-vs-my ORIGINAL-null p: mine=0.012658227848101266 staged=0.012658 |diff|=2.278e-07 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction DIFFERS from the staged numbers
+      GE-SIG H: thr=-0.122888
+        vs ORIGINAL rho_b nulls:  p=(1+0)/(1+78)=0.012658 beaters=[]
+        vs rho_b^GE nulls (prereg formula): p=(1+3)/(1+78)=0.050633 beaters=['AV_113', 'AV_195', 'G_P254F']
+        staged:                    p=(1+0)/(1+78)=0.012658 beaters=[]
+  CHECK m1.(c) GE-SIG/H rho^GE threshold: mine=-0.12288763923808392 staged=-0.122888 |diff|=3.608e-07 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-SIG/H staged-vs-my ORIGINAL-null k: mine=0 staged=0 -> OK
+  CHECK m1.(c) GE-SIG/H staged beaters == my ORIGINAL-null beaters: mine=set() staged=set() -> OK
+  CHECK m1.(c) GE-SIG/H staged-vs-my ORIGINAL-null p: mine=0.012658227848101266 staged=0.012658 |diff|=2.278e-07 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction DIFFERS from the staged numbers
+      GE-LIN-CF full: thr=-0.087618
+        vs ORIGINAL rho_b nulls:  p=(1+1)/(1+78)=0.025316 beaters=['G_P254F']
+        vs rho_b^GE nulls (prereg formula): p=(1+1)/(1+78)=0.025316 beaters=['G_P254F']
+        staged:                    p=(1+1)/(1+78)=0.025316 beaters=['G_P254F']
+  CHECK m1.(c) GE-LIN-CF/full rho^GE threshold: mine=-0.08761800138800963 staged=-0.087618 |diff|=1.388e-09 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-LIN-CF/full staged-vs-my ORIGINAL-null k: mine=1 staged=1 -> OK
+  CHECK m1.(c) GE-LIN-CF/full staged beaters == my ORIGINAL-null beaters: mine={np.str_('G_P254F')} staged={'G_P254F'} -> OK
+  CHECK m1.(c) GE-LIN-CF/full staged-vs-my ORIGINAL-null p: mine=0.02531645569620253 staged=0.025316 |diff|=4.557e-07 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction ALSO matches the staged numbers
+      GE-LIN-CF H: thr=-0.089943
+        vs ORIGINAL rho_b nulls:  p=(1+3)/(1+78)=0.050633 beaters=['AV_195', 'AV_220', 'G_P254F']
+        vs rho_b^GE nulls (prereg formula): p=(1+3)/(1+78)=0.050633 beaters=['AV_195', 'AV_220', 'G_P254F']
+        staged:                    p=(1+3)/(1+78)=0.050633 beaters=['AV_195', 'AV_220', 'G_P254F']
+  CHECK m1.(c) GE-LIN-CF/H rho^GE threshold: mine=-0.08994348885519292 staged=-0.089943 |diff|=4.889e-07 tol=5.1e-07 -> OK
+  CHECK m1.(c) GE-LIN-CF/H staged-vs-my ORIGINAL-null k: mine=3 staged=3 -> OK
+  CHECK m1.(c) GE-LIN-CF/H staged beaters == my ORIGINAL-null beaters: mine={np.str_('AV_195'), np.str_('G_P254F'), np.str_('AV_220')} staged={'AV_195', 'G_P254F', 'AV_220'} -> OK
+  CHECK m1.(c) GE-LIN-CF/H staged-vs-my ORIGINAL-null p: mine=0.05063291139240506 staged=0.050633 |diff|=8.861e-08 tol=5.1e-07 -> OK
+        -> rho_b^GE-null construction ALSO matches the staged numbers
+  CHECK m1.(c) original full n (frozen G-M4 row): mine=78 staged=78 -> OK
+  CHECK m1.(c) original full k (frozen G-M4 row): mine=1 staged=1 -> OK
+  CHECK m1.(c) original full beaters (frozen): mine={np.str_('G_P254F')} staged={'G_P254F'} -> OK
+  CHECK m1.(c) original full p (frozen): mine=0.02531645569620253 staged=0.025316 |diff|=4.557e-07 tol=5.1e-07 -> OK
+  CHECK m1.(c) original H n (frozen): mine=78 staged=78 -> OK
+  CHECK m1.(c) original H k (frozen): mine=3 staged=3 -> OK
+  CHECK m1.(c) original H beaters (frozen): mine={np.str_('AV_195'), np.str_('G_P254F'), np.str_('AV_220')} staged={'AV_195', 'G_P254F', 'AV_220'} -> OK
+  CHECK m1.(c) original H p (frozen): mine=0.05063291139240506 staged=0.050633 |diff|=8.861e-08 tol=5.1e-07 -> OK
+
+  (d) p_spec_adj (LOO OLS on mean|delta_b|):
+  CHECK m1.(d) GE-ISO/full r_A: mine=-0.08590800249285215 staged=-0.085908 |diff|=2.493e-09 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-ISO/full k: mine=1 staged=1 -> OK
+  CHECK m1.(d) GE-ISO/full p_adj: mine=0.02531645569620253 staged=0.025316 |diff|=4.557e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-ISO/full beaters: mine={np.str_('AV_85')} staged={'AV_85'} -> OK
+  CHECK m1.(d) GE-ISO/H r_A: mine=-0.08658045559328684 staged=-0.08658 |diff|=4.556e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-ISO/H k: mine=2 staged=2 -> OK
+  CHECK m1.(d) GE-ISO/H p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-ISO/H beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) GE-SIG/full r_A: mine=-0.08568818856547569 staged=-0.085688 |diff|=1.886e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-SIG/full k: mine=2 staged=2 -> OK
+  CHECK m1.(d) GE-SIG/full p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-SIG/full beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) GE-SIG/H r_A: mine=-0.08695543435886718 staged=-0.086955 |diff|=4.344e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-SIG/H k: mine=2 staged=2 -> OK
+  CHECK m1.(d) GE-SIG/H p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-SIG/H beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) GE-LIN-CF/full r_A: mine=-0.06588264775971085 staged=-0.065883 |diff|=3.522e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-LIN-CF/full k: mine=2 staged=2 -> OK
+  CHECK m1.(d) GE-LIN-CF/full p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-LIN-CF/full beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) GE-LIN-CF/H r_A: mine=-0.06840539275303889 staged=-0.068405 |diff|=3.928e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-LIN-CF/H k: mine=2 staged=2 -> OK
+  CHECK m1.(d) GE-LIN-CF/H p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) GE-LIN-CF/H beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) original/full r_A: mine=-0.06642463255488769 staged=-0.066425 |diff|=3.674e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) original/full k: mine=2 staged=2 -> OK
+  CHECK m1.(d) original/full p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) original/full beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+  CHECK m1.(d) original/H r_A: mine=-0.06869193738426962 staged=-0.068692 |diff|=6.262e-08 tol=5.1e-07 -> OK
+  CHECK m1.(d) original/H k: mine=2 staged=2 -> OK
+  CHECK m1.(d) original/H p_adj: mine=0.0379746835443038 staged=0.037975 |diff|=3.165e-07 tol=5.1e-07 -> OK
+  CHECK m1.(d) original/H beaters: mine={np.str_('AV_85'), np.str_('AV_220')} staged={'AV_85', 'AV_220'} -> OK
+
+  (e) A222V rank within Arm S u {A222V}:
+  CHECK m1.(e) original k: mine=1 staged=1 -> OK
+  CHECK m1.(e) original frac: mine=0.10526315789473684 staged=0.105263 |diff|=1.579e-07 tol=5.1e-07 -> OK
+  CHECK m1.(e) GE-ISO k: mine=1 staged=1 -> OK
+  CHECK m1.(e) GE-ISO frac: mine=0.10526315789473684 staged=0.105263 |diff|=1.579e-07 tol=5.1e-07 -> OK
+  CHECK m1.(e) GE-SIG k: mine=1 staged=1 -> OK
+  CHECK m1.(e) GE-SIG frac: mine=0.10526315789473684 staged=0.105263 |diff|=1.579e-07 tol=5.1e-07 -> OK
+  CHECK m1.(e) GE-LIN-CF k: mine=1 staged=1 -> OK
+  CHECK m1.(e) GE-LIN-CF frac: mine=0.10526315789473684 staged=0.105263 |diff|=1.579e-07 tol=5.1e-07 -> OK
+
+  (f) Spearman(rho_b, d3_b) over the resolved nulls:
+  CHECK m1.(f) resolved-null count: mine=67 staged=67 -> OK
+  CHECK m1.(f) original gradient: mine=0.7315773721899428 staged=0.731577372 |diff|=1.899e-10 tol=5.1e-07 -> OK
+  CHECK m1.(f) original CI lo: mine=0.60033188917824 staged=0.600332 |diff|=1.108e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) original CI hi: mine=0.8176991380626943 staged=0.817699 |diff|=1.381e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-ISO gradient: mine=0.7293425123670895 staged=0.729343 |diff|=4.876e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-ISO CI lo: mine=0.6131807435890212 staged=0.613181 |diff|=2.564e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-ISO CI hi: mine=0.8039730447976688 staged=0.803973 |diff|=4.480e-08 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-ISO finite draws: mine=10000 staged=10000 -> OK
+      GE-ISO = +0.729343 CI [+0.613181, +0.803973]
+  CHECK m1.(f) GE-SIG gradient: mine=0.7305397587007609 staged=0.73054 |diff|=2.413e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-SIG CI lo: mine=0.6124559449953542 staged=0.612456 |diff|=5.500e-08 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-SIG CI hi: mine=0.8057750440714937 staged=0.805775 |diff|=4.407e-08 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-SIG finite draws: mine=10000 staged=10000 -> OK
+      GE-SIG = +0.730540 CI [+0.612456, +0.805775]
+  CHECK m1.(f) GE-LIN-CF gradient: mine=0.732634939784686 staged=0.732635 |diff|=6.022e-08 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-LIN-CF CI lo: mine=0.6023535845564212 staged=0.602354 |diff|=4.154e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-LIN-CF CI hi: mine=0.8173351220158975 staged=0.817335 |diff|=1.220e-07 tol=5.1e-07 -> OK
+  CHECK m1.(f) GE-LIN-CF finite draws: mine=10000 staged=10000 -> OK
+      GE-LIN-CF = +0.732635 CI [+0.602354, +0.817335]
+
+  outcome words (frozen rule, applied to MY numbers):
+  CHECK m1 outcome row GE-ISO: staged (c) full count k: mine=0 staged=0 -> OK
+  CHECK m1 outcome row GE-ISO: staged (c) H count k: mine=0 staged=0 -> OK
+  CHECK m1 outcome word GE-ISO (my CI, my p's): mine='GE-SURVIVES' staged='GE-SURVIVES' -> OK
+      GE-ISO: CI hi -0.092189 | p_full=0.012658 p_H=0.012658 -> GE-SURVIVES
+  CHECK m1 outcome row GE-SIG: staged (c) full count k: mine=0 staged=0 -> OK
+  CHECK m1 outcome row GE-SIG: staged (c) H count k: mine=0 staged=0 -> OK
+  CHECK m1 outcome word GE-SIG (my CI, my p's): mine='GE-SURVIVES' staged='GE-SURVIVES' -> OK
+      GE-SIG: CI hi -0.092607 | p_full=0.012658 p_H=0.012658 -> GE-SURVIVES
+  CHECK m1 outcome row GE-LIN-CF: staged (c) full count k: mine=1 staged=1 -> OK
+  CHECK m1 outcome row GE-LIN-CF: staged (c) H count k: mine=3 staged=3 -> OK
+  CHECK m1 outcome word GE-LIN-CF (my CI, my p's): mine='GE-SURVIVES' staged='GE-SURVIVES' -> OK
+      GE-LIN-CF: CI hi -0.059049 | p_full=0.025316 p_H=0.050633 -> GE-SURVIVES
+
+  module M1 wall 65.2s
+
+MODULE M1 (MTHFR GE, vs staged 153) RESULT: PASS (133 checks, all within tolerance)
+
+============================================================================
+C2 SUMMARY
+  module G  : PASS
+  module R  : PASS
+  module M1 : PASS
+  TOTAL: 3/3 modules PASS
+  wall 100.5s
+  RULE 1 check: torch/esm imported = NONE
+
+C2 PASS

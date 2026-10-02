@@ -1,0 +1,116 @@
+data/external/gb1_olson2014/gb1_olson2014_doubles.csv  bytes=8,973,371  sha256=89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769
+data/external/gb1_olson2014/gb1_olson2014_singles.csv  bytes=17,183  sha256=0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3
+NO MODEL LOADED. No torch, no esm, no weights. Enumeration only.
+
+doubles: 535,917 rows, columns ['pos1', 'mut1', 'pos2', 'mut2', 'input_count', 'sel_count']
+singles: 1,045 rows, columns ['pos', 'mut', 'input_count', 'sel_count']
+positions: n=55 range 2..56
+F_B,wt = 3041819/1759616 = 1.728683
+single-mutant W: min=0.0021 median=0.6551 max=5.0219
+
+============================================================================
+T4-G3 -- FROZEN-PREREG G-2: NO PARTNER AT A BACKGROUND'S OWN POSITION
+============================================================================
+double rows with pos1 == pos2: 0
+every double row in the matrix places its two mutations at two DISTINCT positions, so a single-mutant background at position p can never have a partner at p. G-2 holds STRUCTURALLY, by the data's own construction, not by a filter applied here.
+  >>> T4-G3 no partner at a background's own position: PASS   value = double rows with pos1==pos2 = 0 of 535,917   
+
+============================================================================
+T4 -- ROSTER: n_partners PER SINGLE-MUTANT BACKGROUND (no fitness used)
+============================================================================
+partner occurrences considered (both slots of every double): 1,071,834
+  = 2 x 535,917 = 1,071,834  (matches: True)
+
+distinct (pos, mut) partner keys enumerated: 1,045
+roster rows: 1,045  columns: ['background_id', 'pos', 'wt_aa', 'mut', 'background_single_fitness_W', 'n_partners_t23', 'n_partners_t24', 'n_partners_t25', 'n_partners_t26', 'n_partners_t27', 'n_partners_t28', 'n_partners_raw']
+
+first 5 roster rows, verbatim:
+background_id  pos wt_aa mut  background_single_fitness_W  n_partners_t23  n_partners_t24  n_partners_t25  n_partners_t26  n_partners_t27  n_partners_t28  n_partners_raw
+         G2QA    2     Q   A                     1.517930            1004            1002             998             995             992             990            1026
+         G2QC    2     Q   C                     1.024400             993             991             991             990             989             981            1025
+         G2QD    2     Q   D                     0.910665             995             991             988             980             976             973            1026
+         G2QE    2     Q   E                     0.951582             970             963             960             955             951             943            1026
+         G2QF    2     Q   F                     1.616819             845             830             825             816             798             785            1024
+
+last 5 roster rows, verbatim:
+background_id  pos wt_aa mut  background_single_fitness_W  n_partners_t23  n_partners_t24  n_partners_t25  n_partners_t26  n_partners_t27  n_partners_t28  n_partners_raw
+        G56ES   56     E   S                     0.356419            1024            1024            1024            1024            1024            1024            1026
+        G56ET   56     E   T                     0.410370            1023            1022            1022            1022            1020            1019            1026
+        G56EV   56     E   V                     0.248014            1023            1022            1022            1021            1021            1020            1026
+        G56EW   56     E   W                     0.300823            1011            1010            1006            1004            1001             999            1026
+        G56EY   56     E   Y                     0.189821            1008            1007            1005            1002             998             995            1026
+  >>> T4-G1 one row per single mutant, no duplicates: PASS   value = rows=1,045, unique ids=1,045, expected=1,045   
+  >>> T4-G2 WT residue and fitness agree with the data: PASS   value = rows where mut==wt_aa: 0; max|fitness diff|=0.000e+00   
+  WT residue per position, verbatim: QYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+  positions 2..56, contiguous: True
+  ceiling on n_partners_raw for any background = (n_positions-1) * 19 = 1,026 (one per other position x one per non-WT residue there)
+
+============================================================================
+T4 -- n_partners DISTRIBUTION (min, quartiles, max) FOR EVERY COLUMN
+============================================================================
+   NOTE: the six t-columns are alternatives, not a funnel. They are all
+         reported; none is selected. n_partners_raw is unfiltered.
+        column    n  min  p25  median  p75  max        mean  n_ge_50  n_ge_100  n_ge_200  n_ge_500
+n_partners_raw 1045  950 1026    1026 1026 1026 1025.678469     1045      1045      1045      1045
+n_partners_t23 1045  322  986    1013 1022 1026  988.394258     1045      1045      1045      1042
+n_partners_t24 1045  315  982    1012 1022 1026  985.873684     1045      1045      1045      1041
+n_partners_t25 1045  313  978    1010 1022 1026  983.364593     1045      1045      1045      1041
+n_partners_t26 1045  306  975    1009 1021 1026  980.759809     1045      1045      1045      1041
+n_partners_t27 1045  301  971    1008 1021 1026  978.267943     1045      1045      1045      1041
+n_partners_t28 1045  295  967    1007 1020 1026  975.605742     1045      1045      1045      1041
+
+============================================================================
+T4-G4 -- APPENDIX A QUALIFICATION (reported, NOT acted on)
+============================================================================
+Appendix A, verbatim: 'Every GB1 single mutant with at least 100
+high-confidence partners, capped at 400 backgrounds.'
+
+threshold column       n>=100   cap binds?  qualifying   after cap
+n_partners_raw           1045         True        1045         400
+n_partners_t23           1045         True        1045         400
+n_partners_t24           1045         True        1045         400
+n_partners_t25           1045         True        1045         400
+n_partners_t26           1045         True        1045         400
+n_partners_t27           1045         True        1045         400
+n_partners_t28           1045         True        1045         400
+  >>> T4-G4 Appendix A qualification reported for every threshold column: PASS   value = n_ge_100 range 1045..1045; cap binds for 7 of 7 columns   
+
+The 400 cap binds under EVERY threshold column considered (7/7), so Appendix A's seed-0 sample is REQUIRED, not optional.
+Appendix A's sampling recipe, verbatim, for Phase 3b to execute at scoring time:
+  numpy.random.default_rng(0).choice(sorted_ids, 400, replace=False)
+NO SAMPLE IS DRAWN AND NO SUBSET IS WRITTEN BY THIS SCRIPT. The only file written is the FULL 1,045-row enumeration above.
+sorted_ids is the sorted list of qualifying background_id strings; it is a function of the threshold column, which is still open, so it is not computable until that is resolved.
+
+wrote data/processed/gb1_background_roster.csv
+  rows   = 1,045
+  bytes  = 67,876
+  sha256 = ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4
+  column names verbatim: ['background_id', 'pos', 'wt_aa', 'mut', 'background_single_fitness_W', 'n_partners_t23', 'n_partners_t24', 'n_partners_t25', 'n_partners_t26', 'n_partners_t27', 'n_partners_t28', 'n_partners_raw']
+
+============================================================================
+GATE TABLE (Phase 3a, script 129)
+============================================================================
+                                                              gate verdict                                                   value note
+                   T4-G3 no partner at a background's own position    PASS              double rows with pos1==pos2 = 0 of 535,917     
+                    T4-G1 one row per single mutant, no duplicates    PASS            rows=1,045, unique ids=1,045, expected=1,045     
+                  T4-G2 WT residue and fitness agree with the data    PASS   rows where mut==wt_aa: 0; max|fitness diff|=0.000e+00     
+T4-G4 Appendix A qualification reported for every threshold column    PASS n_ge_100 range 1045..1045; cap binds for 7 of 7 columns     
+
+FAIL count: 0
+
+============================================================================
+LIMITATIONS (printed by this script, AGENTS §6)
+============================================================================
+  - 'High-confidence' does not exist as a concept in the source data.
+    Six read-depth proxy columns (t=23..28) are emitted and NONE is
+    selected. This is an open gap in the FROZEN Appendix A v1 and must
+    be resolved by a v2 pre-registration in Phase 3b, not by an edit to
+    v1 and not by a quiet choice made here.
+  - background_single_fitness_W is a REPORTED column. It was not used
+    to filter, rank, weight, cap or order anything. The roster's only
+    ordering is lexicographic on (pos, mut).
+  - This script produces no rho_b, no CI and no p-value. It is a roster,
+    not an analysis. It scores nothing and cannot.
+  - Settings: SEED=0 (recorded for convention; no RNG is consumed by this script, which draws no sample). N_BOOT=10000, N_PERM=10000 (read for convention; unused).
+
+Elapsed: 0.4s

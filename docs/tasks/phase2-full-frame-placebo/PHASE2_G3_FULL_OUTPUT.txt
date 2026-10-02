@@ -1,0 +1,192 @@
+
+==========================================================================
+PHASE 2 pre-registered analysis (script 125)  mode=cached-ae  N_BOOT=10000 N_PERM=10000 SEED=0
+==========================================================================
+PRE-REGISTERED: frozen PHASE2_PREREG.md sections 2/4/5/6/7 (quoted in this script's docstring); this run's mode 'cached-ae' selected BEFORE any output was seen.
+DISCLOSURE (frozen section 9): the AE1/AE2 split that motivates this test was observed in Phase 1 after F1 was run (POST-HOC); confirmatory weight rests on this frozen rule and on H.
+PIN-10 rng streams: SEED+0 primary full-frame draws; SEED+1 primary H draws; SEED+2 D_site permutation; SEED+3 secondary full-frame; SEED+4 secondary H (SEED=0).
+PIN-9: NAIVE spearmanr loop on explicit resampled indices (the pin's default); weighted mid-rank acceleration NOT used.
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+
+[G-A] A222V's full-frame rho vs the frozen anchor
+  rho = -0.08811806424891734; target -0.088118 |diff| = 6.425e-08 (gate < 1e-6)
+  G-A PASS
+
+--------------------------------------------------------------------------
+MODE cached-ae -- validation on task82_ae_raw.csv (VALIDATION ONLY; not the pre-registered result)
+--------------------------------------------------------------------------
+  S = 18 (expect 18); V = 38 (expect 38); A222_V relabelled __A222V__ (never a placebo)
+  paired frame: rows per background = 1932 (Phase 1 recorded 1932); identical sets across 57 backgrounds: True
+  A222V rho on this frame = -0.104321773 (execution doc validation threshold -0.104321773)
+  threshold gate: |diff| = 6.529e-11 < 1e-9 PASS
+  point-rho identity vs task109_placebo_rhos.csv over 56 backgrounds: max|diff| = 9.714e-17 (gate < 1e-9)
+  input gate PASS
+  arms: S=18 V=38 G=0 -> N (null set) = 38; A222V is neither S nor N (frozen section 3)
+  G-C PASS: 0 rows with target position == background position in any rho_b input (own-position rows pre-dropped: 0)
+
+[point rho_b] full analysis set (all backgrounds)
+      A222_C arm=S  rho=-0.098620412
+      A222_D arm=S  rho=-0.081138735
+      A222_E arm=S  rho=-0.070808815
+      A222_F arm=S  rho=-0.036052443
+      A222_G arm=S  rho=-0.013732276
+      A222_H arm=S  rho=-0.009998551
+      A222_I arm=S  rho=-0.074744224
+      A222_K arm=S  rho=-0.033997855
+      A222_L arm=S  rho=-0.060453465
+      A222_M arm=S  rho=-0.056981636
+      A222_N arm=S  rho=-0.060415888
+      A222_P arm=S  rho=-0.079329771
+      A222_Q arm=S  rho=-0.055907333
+      A222_R arm=S  rho=-0.041544813
+      A222_S arm=S  rho=-0.067244952
+      A222_T arm=S  rho=-0.103143738
+      A222_W arm=S  rho=-0.027606618
+      A222_Y arm=S  rho=-0.022036412
+      AV_113 arm=V  rho=-0.063906747
+      AV_116 arm=V  rho=-0.094598010
+      AV_145 arm=V  rho=-0.085021752
+      AV_155 arm=V  rho=-0.053030728
+      AV_175 arm=V  rho=+0.012427113
+       AV_19 arm=V  rho=-0.004646082
+      AV_195 arm=V  rho=-0.041439532
+      AV_204 arm=V  rho=-0.022838443
+      AV_209 arm=V  rho=-0.002886124
+      AV_220 arm=V  rho=-0.089606867
+      AV_233 arm=V  rho=-0.046017451
+      AV_242 arm=V  rho=-0.042101286
+      AV_292 arm=V  rho=-0.003113451
+      AV_293 arm=V  rho=-0.052776040
+      AV_302 arm=V  rho=-0.049088003
+      AV_311 arm=V  rho=-0.026822806
+      AV_328 arm=V  rho=-0.033620854
+      AV_350 arm=V  rho=-0.045964566
+      AV_353 arm=V  rho=-0.010858794
+      AV_368 arm=V  rho=-0.012216034
+      AV_396 arm=V  rho=+0.001787450
+      AV_461 arm=V  rho=+0.031391820
+      AV_462 arm=V  rho=-0.022555458
+        AV_5 arm=V  rho=-0.034587360
+      AV_511 arm=V  rho=+0.055669069
+      AV_522 arm=V  rho=+0.012989248
+      AV_524 arm=V  rho=+0.071355743
+      AV_551 arm=V  rho=+0.014146977
+      AV_558 arm=V  rho=+0.058743654
+      AV_587 arm=V  rho=+0.116091440
+      AV_589 arm=V  rho=+0.082901834
+      AV_650 arm=V  rho=+0.086801413
+      AV_655 arm=V  rho=+0.055548399
+       AV_70 arm=V  rho=-0.036344576
+       AV_73 arm=V  rho=-0.039599949
+       AV_84 arm=V  rho=-0.027039667
+       AV_85 arm=V  rho=-0.023827915
+       AV_98 arm=V  rho=-0.020592244
+  __A222V__  rho=-0.104321773 (AE grid rows)
+  G-D: identity draw (every cluster once) vs point rho: max|diff| = 0.000e+00 (gate < 1e-12)
+  G-D PASS
+
+[G-E] background position coverage
+  min positions covered by any background = 120 (denominator 120; gate >= 114.0)
+  G-E PASS
+
+--------------------------------------------------------------------------
+VALIDATION TARGETS (execution doc G3; deterministic quantities, gate 1e-9)
+--------------------------------------------------------------------------
+  n(V) == 38: got 38.0 want 38.0 -> PASS
+  mean rho_b(V): computed -0.01013806778206523 vs target -0.010138068 |diff| = 2.179e-10 -> PASS (gate < 1e-9)
+  p_spec: computed 0.02564102564102564 vs target 0.025641026 |diff| = 3.590e-10 -> PASS (gate < 1e-9)
+  #(rho_b <= rho_A222V) == 0: got 0.0 want 0.0 -> PASS
+  D = mean(S) - mean(V): computed -0.04507070645463121 vs target -0.045070706 |diff| = 4.546e-10 -> PASS (gate < 1e-9)
+  ALL VALIDATION TARGETS PASS (reproduction of Phase 1b P4/P2 deterministic quantities; REPRODUCTION IS NOT REPLICATION, AGENTS 6)
+
+--------------------------------------------------------------------------
+PRIMARY ANALYSIS (frozen sections 2 + 4)
+--------------------------------------------------------------------------
+    [SEED+0 full frame] 2000/10000 draws, 29s
+    [SEED+0 full frame] 4000/10000 draws, 59s
+    [SEED+0 full frame] 6000/10000 draws, 88s
+    [SEED+0 full frame] 8000/10000 draws, 118s
+    [SEED+0 full frame] 10000/10000 draws, 148s
+    [SEED+0 full frame] 10000 draws x 56+A222V rho in 147.9s (14.8 ms/draw); draws with any NaN = 0 (dropped from CIs)
+
+  p_spec(ANALYSIS SET (AE grid rows)): threshold = A222V's rho on the same rows = -0.104321773
+    #{b in N : rho_b <= rho_A222V} = 0 of |N| = 38
+    p_spec(full) = (1 + 0) / (1 + 38) = 0.025641026
+
+  p_spec(H): NOT COMPUTED in --mode cached-ae (H excludes the AE frame by construction -> 0 grid rows in H); the frozen section 5 outcome word requires p_spec(H) and N = V u G and is therefore computed only in --mode phase2.
+
+--------------------------------------------------------------------------
+FROZEN SECTION 5 DECISION RULE
+--------------------------------------------------------------------------
+  GENERIC iff p_spec(full) > 0.10;  "A222V BEATS NON-SITE BACKGROUNDS" iff p_spec(full) <= 0.05 AND p_spec(H) <= 0.10; INDETERMINATE otherwise.
+  Wording rule: only "A222V BEATS NON-SITE BACKGROUNDS" may be written up as supporting background-specificity; GENERIC and INDETERMINATE get equal prominence.
+  OUTCOME WORD: not computed (validation mode -- see above). This run is NOT the pre-registered result.
+
+--------------------------------------------------------------------------
+D_site (frozen section 5, reported irrespective)
+--------------------------------------------------------------------------
+  mean rho_b(S, n=18) = -0.055208774; mean rho_b(N, n=38) = -0.010138068
+  D_site = mean(S) - mean(N) = -0.045070706
+  position-cluster bootstrap 95% CI (SEED+0, 10000 draws) = [-0.107025598, +0.017286053] (valid 10000)
+  label permutation (10000 shuffles over 56 arm backgrounds, n(S)=18 kept fixed, TWO-SIDED on |D| per script 121's precedent -- sidedness not stated in frozen section 5, logged as an ambiguity resolution, SEED+2): p = (1 + 8) / (1 + 10000) = 0.000900
+  Interpretation (frozen): D_site < 0 means a shared site tracks A222V's e.b beyond arbitrary backgrounds; that is compatible with a real site-specific effect and is not evidence of substitution-specificity.
+
+--------------------------------------------------------------------------
+WITHIN-SITE GRANTHAM GRADIENT T (frozen section 5)
+--------------------------------------------------------------------------
+  d_b = Grantham(X, V) via scripts.lib.features.grantham (P1's Grantham gate source); 18 finite values, range [21.5, 191.2]
+  T = Spearman(rho_b, d_b) over Arm S (n=18) = -0.182662539
+  bootstrap T 95% CI (SEED+0) = [-0.605779154, +0.364293086] (valid 10000/10000)
+  bootstrap SE(T) = 0.256865386 -> minimum detectable |T| approx 2.8 x SE = 0.719223081
+  leave-one-out range = [-0.284313725, -0.056372549] (T > 0 in 0/18)
+  T RULE: CI lower > 0 (False) AND T > 0 in all leave-one-out fits (False); CI upper < 0 (False) -> NOT RESOLVED
+  REQUIRED WORDING for NOT RESOLVED: "n = 18 cannot resolve this," never "flat" / "the gradient is flat".
+
+--------------------------------------------------------------------------
+PER-ARM SUMMARY TABLES (frozen section 6)
+--------------------------------------------------------------------------
+  primary, full frame:
+    arm S: n=18 mean=-0.055208774 median=-0.058698762 range=[-0.103143738, -0.009998551]
+    arm V: n=38 mean=-0.010138068 median=-0.022696950 range=[-0.094598010, +0.116091440]
+    null set N (V u G): n=38 mean=-0.010138068 median=-0.022696950 range=[-0.094598010, +0.116091440]
+    A222V rho = -0.104321773; signed rank within N u {A222V} = 1/39 (rank 1 = most negative; reported, not tested)
+  p_spec(full) = 0.025641026 (0/38 at or below A222V); p_spec(H) = n/a (validation mode)
+
+--------------------------------------------------------------------------
+SECONDARY: REGION-DEMEANED (frozen section 6; NON-DECISION)
+--------------------------------------------------------------------------
+  residualization = within-region demeaning of delta_b and own_e_b over the SAME rows as each rho_b (implementation choice, printed); regions = PIN-8, gated above against task32.region.
+    [SEED+3 secondary full frame] 2000/10000 draws, 30s
+    [SEED+3 secondary full frame] 4000/10000 draws, 59s
+    [SEED+3 secondary full frame] 6000/10000 draws, 89s
+    [SEED+3 secondary full frame] 8000/10000 draws, 119s
+    [SEED+3 secondary full frame] 10000/10000 draws, 148s
+    [SEED+3 secondary full frame] 10000 draws x 56+A222V rho in 148.4s (14.8 ms/draw); draws with any NaN = 0 (dropped from CIs)
+  [SEED+3 secondary full frame] on full frame (NON-DECISION):
+    secondary p_spec(full frame) = (1 + 2) / (1 + 38) = 0.076923077  (threshold A222V resid rho = -0.059098442)
+    secondary D_site = -0.028909791, CI [-0.089172533, +0.031215248] (valid 10000)
+  secondary per-arm table (full frame, region-demeaned, NON-DECISION):
+    arm S: n=18 mean=-0.036463930 median=-0.040933567 range=[-0.070460620, +0.001656471]
+    arm V: n=38 mean=-0.007554139 median=-0.009189105 range=[-0.076318302, +0.065670986]
+    null set N (V u G): n=38 mean=-0.007554139 median=-0.009189105 range=[-0.076318302, +0.065670986]
+    A222V rho = -0.059098442; signed rank within N u {A222V} = 3/39 (rank 1 = most negative; reported, not tested)
+  secondary outcome word: n/a (validation mode; the frozen section 5 word is computed only in --mode phase2)
+
+--------------------------------------------------------------------------
+RUNTIME / PROJECTION
+--------------------------------------------------------------------------
+  measured: 147.9s for 10000 primary full-frame draws -> projection for N_BOOT=10000: 148s (2.5 min) for this pass
+  naive loop (PIN-9 default); session 2b runs the full N_BOOT=10000 phase2 mode DETACHED per frozen section 8.
+
+--------------------------------------------------------------------------
+SCRIPT 125 SUMMARY
+--------------------------------------------------------------------------
+  mode = cached-ae; G-A PASS; G-C PASS; G-D PASS; G-E PASS; input gates PASS
+  p_spec(full) = 0.025641026; p_spec(H) = n/a (validation mode)
+  D_site = -0.045070706, CI [-0.107025598, +0.017286053], perm p = 0.000900
+  T = -0.182662539, CI [-0.605779154, +0.364293086], LOO [-0.284313725, -0.056372549], min detectable |T| = 0.719223081 -> NOT RESOLVED
+
+LIMITATIONS (AGENTS 6): shared y (own_e_b) across backgrounds -> rho_b mutually correlated; position-cluster bootstrap recomputes rhos from raw scores and propagates this. p_spec is bounded below by 1/(1+|N|) -- an empirical rank count, not a tail model. Reproduction of Phase 1b numbers in cached-ae is REPRODUCTION, NOT REPLICATION. Secondary analyses are NON-DECISION (frozen section 6). cached-ae output must never be quoted as the pre-registered result.
+Elapsed 298.0s
