@@ -1,0 +1,35 @@
+started_utc 2026-10-01T21:10:08+00:00
+== MTHFR atlas (data the project uses: results/folate_response_model5.csv) ==
+rows 13,134  type counts {'substitution': 11902, 'nonsense': 624, 'synonymous': 608}
+rows by number of 'p.' entries in hgvs: {1: 13134}
+rows with >1 'p.' entry: 0  samples: []
+substitution rows with complete single (start, ancestral, variant) triple: True of 11,902
+substitution rows whose 'start' field itself encodes >1 position: 0
+map_data/*.csv total rows 98,243, rows with >1 'p.' in hgvs: 0
+FROZEN RULE: attempt multidms on MTHFR only if >= 5,000 variants carry >= 2 substitutions
+  multi-substitution rows found: 0  ->  RULE NOT MET -> multidms is NOT attempted on MTHFR (expected per A6a)
+
+== RBD per-variant tables (bc_binding, bc_expression) ==
+
+bc_binding.csv: 520,339 rows, columns ['library', 'barcode', 'target', 'variant_class', 'aa_substitutions', 'n_aa_substitutions', 'TiteSeq_avgcount', 'log10Ka']
+  targets (variants per background): {'N501Y': 147131, 'Wuhan_Hu_1': 135308, 'B1351': 127118, 'E484K': 110782}
+  variants with >=2 aa substitutions: 68,789 (13.2%)
+  n_aa_substitutions distribution: {0: 134261, 1: 317289, 2: 62711, 3: 5693, 4: 366, 5: 19}
+  multi-mutants PER background: {'N501Y': 19985, 'Wuhan_Hu_1': 16824, 'B1351': 16765, 'E484K': 15215}
+  unique aa_substitutions strings: 47,253
+  sample multi strings: ['R73H G172S A192T', 'V37N L111H', 'S36C I72G']
+  dedup (target,library,barcode): 520,339 variants, 68,789 multi-mutant; per bg {'N501Y': 19985, 'Wuhan_Hu_1': 16824, 'B1351': 16765, 'E484K': 15215}
+  measurement column log10Ka: non-null 431,304
+
+bc_expression.csv: 337,629 rows, columns ['library', 'barcode', 'target', 'variant_class', 'aa_substitutions', 'n_aa_substitutions', 'expr_count', 'expression']
+  targets (variants per background): {'N501Y': 98807, 'Wuhan_Hu_1': 88746, 'B1351': 83008, 'E484K': 67068}
+  variants with >=2 aa substitutions: 44,755 (13.3%)
+  n_aa_substitutions distribution: {0: 87485, 1: 205389, 2: 40769, 3: 3729, 4: 244, 5: 13}
+  multi-mutants PER background: {'N501Y': 13444, 'Wuhan_Hu_1': 11162, 'B1351': 10955, 'E484K': 9194}
+  unique aa_substitutions strings: 47,253
+  sample multi strings: ['R73H G172S A192T', 'V37N L111H', 'S36C I72G']
+  dedup (target,library,barcode): 337,629 variants, 44,755 multi-mutant; per bg {'N501Y': 13444, 'Wuhan_Hu_1': 11162, 'B1351': 10955, 'E484K': 9194}
+  measurement column expression: non-null 294,318
+
+label mapping note: bc tables use Wuhan_Hu_1/N501Y/E484K/B1351; final_variant_scores uses Wuhan-Hu-1/N501Y/E484K/Beta/Delta. Frozen block: Alpha == N501Y library, Eta == E484K library.
+finished_utc 2026-10-01T21:10:10+00:00

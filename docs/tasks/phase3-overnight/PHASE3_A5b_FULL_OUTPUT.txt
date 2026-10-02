@@ -1,0 +1,187 @@
+PHASE 3a Task A5b -- RBD data dictionary + HARD gates G-R1, G-R2 (frozen RBD_REPLICATION_PREREG_v1.md)
+No torch/esm, no network, no files written; all 20,100 rows checked (nothing sampled).
+
+============================================================================
+INPUT INTEGRITY -- files on disk vs A5a acquisition_log.json
+============================================================================
+  ok  final_variant_scores.csv         bytes=2,024,017 sha256=c0678e8560e74547...
+  ok  bc_binding.csv                   bytes=41,563,586 sha256=048942a35ae187b8...
+  ok  bc_expression.csv                bytes=26,789,764 sha256=0499e8be98505e34...
+  ok  wildtype_sequence.fasta          bytes=      626 sha256=2a49a444e9d002c8...
+  ok  RBD_sites.csv                    bytes=    6,624 sha256=a35adf4dc5e6bff7...
+  ok  PacBio_amplicon_Wuhan_Hu_1.gb    bytes=    3,578 sha256=798f7af051e2a323...
+  ok  PacBio_amplicon_N501Y.gb         bytes=    3,562 sha256=635d70ca6bf4c93b...
+  ok  PacBio_amplicon_E484K.gb         bytes=    3,562 sha256=d90fdfec1ad79de9...
+  ok  PacBio_amplicon_B1351.gb         bytes=    3,560 sha256=1d11e2d5b4b1efb2...
+  ok  README.md                        bytes=    7,252 sha256=c05dbf0cb98b3bb7...
+  >>> G-162-1 input files match acquisition log: PASS   value = 10/10 files match   expected sha/bytes from acquisition_log.json
+
+============================================================================
+DATA DICTIONARY -- headers quoted verbatim (repr, first line)
+============================================================================
+  final_variant_scores.csv:
+    'target,wildtype,position,mutant,mutation,bind,delta_bind,n_bc_bind,n_libs_bind,bind_rep1,bind_rep2,bind_rep3,expr,delta_expr,n_bc_expr,n_libs_expr,expr_rep1,expr_rep2'
+  bc_binding.csv:
+    '"library","barcode","target","variant_class","aa_substitutions","n_aa_substitutions","TiteSeq_avgcount","log10Ka"'
+  bc_expression.csv:
+    '"library","barcode","target","variant_class","aa_substitutions","n_aa_substitutions","expr_count","expression"'
+  RBD_sites.csv:
+    'site,amino_acid,site_SARS1,amino_acid_SARS1,RBM,sse,SARS2_ACE2_contact,SARS1_ACE2_contact'
+
+  final_variant_scores.csv: 20100 rows x 18 columns
+  columns: ['target', 'wildtype', 'position', 'mutant', 'mutation', 'bind', 'delta_bind', 'n_bc_bind', 'n_libs_bind', 'bind_rep1', 'bind_rep2', 'bind_rep3', 'expr', 'delta_expr', 'n_bc_expr', 'n_libs_expr', 'expr_rep1', 'expr_rep2']
+
+============================================================================
+BACKGROUNDS PRESENT -- labels, counts, Alpha/Eta mapping
+============================================================================
+  target labels in the data (verbatim):
+    Beta             4020 rows
+    Delta            4020 rows
+    E484K            4020 rows
+    N501Y            4020 rows
+    Wuhan-Hu-1       4020 rows
+  >>> G-162-2 target label set is the expected five: PASS   value = ['Beta', 'Delta', 'E484K', 'N501Y', 'Wuhan-Hu-1']   expected ['Beta', 'Delta', 'E484K', 'N501Y', 'Wuhan-Hu-1']
+  >>> G-162-3 Wuhan-Hu-1, Alpha and Eta are present: PASS   value = Wuhan-Hu-1=True, Alpha==N501Y=True, Eta==E484K=True   frozen block line 8: Alpha = N501Y, Eta = E484K; the repository never uses those words (README says B.1.1.7 / E484K)
+
+============================================================================
+REFERENCE CHAIN R1-R4 (independent of the wildtype column)
+============================================================================
+  >>> R1 site table contiguous 331..531: PASS   value = 201 sites, 331..531   
+  >>> R2 wildtype_sequence.fasta translation == site table: PASS   value = 603 nt -> 201 aa, equal=True   independent second copy of the reference
+  R3 Wuhan amplicon: 1079 bp -> protein, site-table reference found exactly once at 0-based index J=11
+      numbering: site = (0-based protein index) + 320 (check: 11 + 320 = 331 == first site 331; 1-based form: site = index + 319)
+      window[Wuhan-Hu-1  ] len 201, X-residues 0, diffs vs Wuhan reference: []
+      window[N501Y       ] len 201, X-residues 0, diffs vs Wuhan reference: [(501, 'N', 'Y')]
+      window[E484K       ] len 201, X-residues 0, diffs vs Wuhan reference: [(484, 'E', 'K')]
+      window[Beta        ] len 201, X-residues 0, diffs vs Wuhan reference: [(417, 'K', 'N'), (484, 'E', 'K'), (501, 'N', 'Y')]
+      window[Delta         ] built from R1 + README {452: ('L', 'R'), 478: ('T', 'K')} (no amplicon in this repository)
+
+============================================================================
+G-R1 (hard) -- Alpha = N501Y and Eta = E484K differ from Wuhan-Hu-1 by EXACTLY that one substitution, in the repository's own reference sequences
+============================================================================
+  N501Y: differences vs Wuhan-Hu-1 = [(501, 'N', 'Y')]
+    frozen expectation                = [(501, 'N', 'Y')]
+  >>> G-R1 N501Y window differs by exactly N501Y: PASS   value = diffs = [(501, 'N', 'Y')]   required exactly [(501, 'N', 'Y')]
+  E484K: differences vs Wuhan-Hu-1 = [(484, 'E', 'K')]
+    frozen expectation                = [(484, 'E', 'K')]
+  >>> G-R1 E484K window differs by exactly E484K: PASS   value = diffs = [(484, 'E', 'K')]   required exactly [(484, 'E', 'K')]
+  >>> G-R1 overall: PASS   value = one substitution each, at 501 (N->Y) and 484 (E->K)   frozen prereg section 7, G-R1
+
+============================================================================
+REPORT ONLY (never gated) -- Beta / Delta consistency with the repository's own README
+============================================================================
+  README quote present: 'Delta background (L452R+T478K)' = True
+  Beta: window diffs vs Wuhan reference = [(417, 'K', 'N'), (484, 'E', 'K'), (501, 'N', 'Y')]
+    README states K417N-E484K-N501Y        = [(417, 'K', 'N'), (484, 'E', 'K'), (501, 'N', 'Y')]  agrees: True
+  Delta: no amplicon in this repository; window built from the README sentence (see R4). Expected data-side difference vs Wuhan reference: [(452, 'L', 'R'), (478, 'T', 'K')]
+  Delta DATA wildtype vs Wuhan reference = [(452, 'L', 'R'), (478, 'T', 'K')]
+    equals the README pair L452R+T478K : True
+
+============================================================================
+G-R2 (hard) -- every data row's wild-type residue equals the sequence residue at its site (all rows, no filtering)
+============================================================================
+  rows checked            : 20,100 (0 dropped)
+  rows outside 331..531   : 0
+  wildtype != reference   : 0
+  >>> G-162-4 table structure: 5 targets x 201 sites x 20 rows: PASS   value = per-target rows {'Beta': np.int64(4020), 'Delta': np.int64(4020), 'E484K': np.int64(4020), 'N501Y': np.int64(4020), 'Wuhan-Hu-1': np.int64(4020)}, sites {'Beta': np.int64(201), 'Delta': np.int64(201), 'E484K': np.int64(201), 'N501Y': np.int64(201), 'Wuhan-Hu-1': np.int64(201)}, cells all == 20: True   nothing dropped; 201 wild-type rows per target = 1,005 total
+  >>> G-162-5 mutation == wildtype + position + mutant: PASS   value = holds for 20,100 rows   internal consistency of the label column
+  >>> G-R2 every row's wildtype equals its target's sequence residue: PASS   value = mismatches 0 / 20,100 rows, out-of-range 0   frozen prereg section 7, G-R2; per-target references (the five positions 417/452/478/484/501 legitimately carry two residues, one per background)
+
+============================================================================
+DICTIONARY -- per-background mutation counts
+============================================================================
+  Beta           rows  4020 | distinct sites 201 | wild-type rows 201 | non-wild-type rows  3819
+  Delta          rows  4020 | distinct sites 201 | wild-type rows 201 | non-wild-type rows  3819
+  E484K          rows  4020 | distinct sites 201 | wild-type rows 201 | non-wild-type rows  3819
+  N501Y          rows  4020 | distinct sites 201 | wild-type rows 201 | non-wild-type rows  3819
+  Wuhan-Hu-1     rows  4020 | distinct sites 201 | wild-type rows 201 | non-wild-type rows  3819
+
+============================================================================
+DICTIONARY -- barcode-count columns (n_bc_bind / n_bc_expr); the frozen filter is n_bc >= 3 in BOTH backgrounds, sensitivities >= 1 and >= 5 (counts only; nothing selected here)
+============================================================================
+
+  n_bc_bind:
+            count  min    p25  median    p75    max   ge1   ge3   ge5
+target                                                               
+Beta         4020    0 12.000  17.000 22.000  27320 0.996 0.982 0.962
+Delta        4020    0 26.000  32.000 39.000  36189 1.000 0.998 0.996
+E484K        4020    0  8.000  14.000 22.000  26917 0.981 0.942 0.877
+N501Y        4020    0  7.000  15.000 30.000  23788 0.979 0.923 0.855
+Wuhan-Hu-1   4020    0  8.000  16.000 30.000  28256 0.988 0.950 0.884
+
+  n_bc_expr:
+            count  min    p25  median    p75    max   ge1   ge3   ge5
+target                                                               
+Beta         4020    0  8.000  12.000 15.000  17655 0.996 0.972 0.933
+Delta        4020    0 28.000  34.000 41.000  37693 1.000 0.998 0.996
+E484K        4020    0  5.000   9.000 14.000  16451 0.982 0.902 0.778
+N501Y        4020    0  5.000  11.000 22.000  21054 0.978 0.888 0.792
+Wuhan-Hu-1   4020    0  4.000  10.000 21.000  18635 0.972 0.871 0.732
+
+  rows with n_bc_bind >= 3 AND n_bc_expr >= 3: 18,564 / 20,100 (92.4%)  [A5c will apply this per target T against Wuhan-Hu-1; this line is dictionary context only]
+
+============================================================================
+DICTIONARY -- n_libs ranges, per-library columns, barcode-level tables
+============================================================================
+             n_libs_bind     n_libs_expr    
+                     min max         min max
+  target                                    
+  Beta                 0   3           0   2
+  Delta                0   2           0   2
+  E484K                0   3           0   2
+  N501Y                0   3           0   2
+  Wuhan-Hu-1           0   3           0   2
+  per-library columns present in final_variant_scores.csv: ['bind_rep1', 'bind_rep2', 'bind_rep3', 'expr_rep1', 'expr_rep2']
+  non-null counts per target for the per-library columns (A5c reliability input):
+              bind_rep1  bind_rep2  bind_rep3  expr_rep1  expr_rep2
+target                                                           
+Beta             3944       3916       3944       3948       3929
+Delta            4014       4015          0       4015       4015
+E484K            3858       3532       3853       3870       3546
+N501Y            3693       3658       3741       3736       3736
+Wuhan-Hu-1       3662       3676       3821       3682       3696
+
+  bc_binding.csv    : 520,339 rows; targets ['B1351', 'E484K', 'N501Y', 'Wuhan_Hu_1']
+  bc_expression.csv : 337,629 rows; targets ['B1351', 'E484K', 'N501Y', 'Wuhan_Hu_1']
+  n_aa_substitutions distribution in bc_binding.csv (context for task A6a's multi-mutant audit):
+  n_aa_substitutions      0      1      2     3    4  5
+target                                               
+B1351               32963  77390  15229  1458   77  1
+E484K               30610  64957  13880  1226  102  7
+N501Y               37691  89455  18310  1571  102  2
+Wuhan_Hu_1          32997  85487  15292  1438   85  9
+  variant_class values (verbatim, top 6):
+  variant_class
+1 nonsynonymous     316566
+wildtype            132518
+>1 nonsynonymous     68198
+synonymous            1743
+stop                  1314
+
+============================================================================
+SUMMARY -- A5b / G-R1 / G-R2
+============================================================================
+  [PASS] G-162-1 input files match acquisition log: 10/10 files match  expected sha/bytes from acquisition_log.json
+  [PASS] G-162-2 target label set is the expected five: ['Beta', 'Delta', 'E484K', 'N501Y', 'Wuhan-Hu-1']  expected ['Beta', 'Delta', 'E484K', 'N501Y', 'Wuhan-Hu-1']
+  [PASS] G-162-3 Wuhan-Hu-1, Alpha and Eta are present: Wuhan-Hu-1=True, Alpha==N501Y=True, Eta==E484K=True  frozen block line 8: Alpha = N501Y, Eta = E484K; the repository never uses those words (README says B.1.1.7 / E484K)
+  [PASS] R1 site table contiguous 331..531: 201 sites, 331..531  
+  [PASS] R2 wildtype_sequence.fasta translation == site table: 603 nt -> 201 aa, equal=True  independent second copy of the reference
+  [PASS] G-R1 N501Y window differs by exactly N501Y: diffs = [(501, 'N', 'Y')]  required exactly [(501, 'N', 'Y')]
+  [PASS] G-R1 E484K window differs by exactly E484K: diffs = [(484, 'E', 'K')]  required exactly [(484, 'E', 'K')]
+  [PASS] G-R1 overall: one substitution each, at 501 (N->Y) and 484 (E->K)  frozen prereg section 7, G-R1
+  [PASS] G-162-4 table structure: 5 targets x 201 sites x 20 rows: per-target rows {'Beta': np.int64(4020), 'Delta': np.int64(4020), 'E484K': np.int64(4020), 'N501Y': np.int64(4020), 'Wuhan-Hu-1': np.int64(4020)}, sites {'Beta': np.int64(201), 'Delta': np.int64(201), 'E484K': np.int64(201), 'N501Y': np.int64(201), 'Wuhan-Hu-1': np.int64(201)}, cells all == 20: True  nothing dropped; 201 wild-type rows per target = 1,005 total
+  [PASS] G-162-5 mutation == wildtype + position + mutant: holds for 20,100 rows  internal consistency of the label column
+  [PASS] G-R2 every row's wildtype equals its target's sequence residue: mismatches 0 / 20,100 rows, out-of-range 0  frozen prereg section 7, G-R2; per-target references (the five positions 417/452/478/484/501 legitimately carry two residues, one per background)
+
+  GATES: 11/11 PASS -> A5b PASSES; G-R1 and G-R2 are green
+
+  LIMITATIONS (AGENTS 6):
+    * reference/numbering integrity only -- no rho, no e_T, no outcome word is computed here;
+      no outcome word of any frozen block appears in this output.
+    * G-R2 checks the wild-type label against sequences derived from the repository's own files;
+      for Delta that chain ends at the repository's README (no Delta amplicon exists here),
+      which is disclosed rather than treated as independent sequence evidence.
+    * the two targets T of the frozen block are two looks with no multiplicity adjustment
+      (frozen section 5) -- stated here; no test is run in this script.
+
+  elapsed 0.5s

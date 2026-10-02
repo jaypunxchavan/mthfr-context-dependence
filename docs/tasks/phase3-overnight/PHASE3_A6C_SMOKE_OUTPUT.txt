@@ -1,0 +1,72 @@
+============================================================================
+A6c/A6d -- MULTIDMS FIT (scripts/158) -- mode 'smoke', internal cap 45 min
+============================================================================
+  pre-registered: scripts/158 docstring D1-D14 / G-A6-1..4 (written before first run); frozen s6b/s6h
+  env knobs: SEED=0 SEED_SUB=1 HELD_FRAC=0.2 SUB_FRAC=0.05 MAXITER=500 TOL=1e-06 TIMING_ITERS=20 CRIT_R=0.5
+  fit kwargs: maxiter=500, tol=1e-06, warn_unconverged=False; all others multidms defaults
+  python 3.14.5 at /Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/bin/python
+  >>> G-A6-1 env: running under venv_multidms with the stack importable: PASS   value = multidms 1.2.0, jax 0.11.2, numpy 2.5.3, pandas 2.3.3, scipy 1.18.1, sklearn 1.9.1
+  jax devices: ['cpu']  (no GPU required; CPU fits are expected)
+  bc_binding.csv (bind): 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6 == A5a log 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6
+  bc_expression.csv (expr): 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32 == A5a log 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32
+  >>> G-A6-2 pins: bc_binding + bc_expression sha256 == A5a log: PASS   value = 2/2 match
+
+============================================================================
+PHENOTYPE bind (log10Ka) -- mode 'smoke', elapsed 2s / cap 2700s
+============================================================================
+
+[bind] bc_binding.csv: 520,339 raw rows
+  dropped: outside 3 conditions 127,118; null log10Ka 68,009; stop variants 0
+  after filters 325,212 rows -> aggregated 40,044 unique (condition, aa_substitutions) (collapsed 285,168 duplicates by mean)
+  per condition: {'E484K': 11911, 'N501Y': 14683, 'Wuhan_Hu_1': 13450}
+  split [bind]: held-out 8,009 / train 32,035 (frac 0.2, seed 0); per-condition held-out {'E484K': 2382, 'N501Y': 2937, 'Wuhan_Hu_1': 2690}
+  smoke subset: 2,002 rows (~5.0% of full table; per condition {'Wuhan_Hu_1': 672, 'N501Y': 734, 'E484K': 596})
+  Data built in 3.8s: 1,820 variants, 2021 mutations, conditions ('E484K', 'N501Y', 'Wuhan_Hu_1')
+  [bind subset] warm-up fit(maxiter=2): 1.44s (jit compile); timed fit(maxiter=20): 1.12s -> 0.0560 s/iter (1,820 variants, 2021 mutations)
+  full-pool Data built in 12.6s: 32,035 variants, 3818 mutations
+  [bind full-pool] warm-up fit(maxiter=2): 0.99s (jit compile); timed fit(maxiter=20): 1.27s -> 0.0634 s/iter (32,035 variants, 3818 mutations)
+  [bind smoke-converge] convergence fit(maxiter=500, tol=1e-06): 15.6s, converged=False, final loss=0.00793521, trajectory rows=51
+  [bind smoke] Wuhan_Hu_1: r = 0.4504 on 1,016/2,690 held-out rows (unencodable excluded, counted, never imputed)
+  [bind smoke] N501Y: r = 0.4712 on 1,167/2,937 held-out rows (unencodable excluded, counted, never imputed)
+  [bind smoke] E484K: r = 0.4564 on 877/2,382 held-out rows (unencodable excluded, counted, never imputed)
+  [bind smoke]: held-out r >= 0.5 for EACH of Wuhan/Alpha(N501Y)/Eta(E484K) -> CRITERION-NOT-MET  [smoke signal only; the deciding value comes from the full fit (D9)]
+  >>> G-A6-4 held-out r computable for all three conditions: PASS   value = Wuhan_Hu_1 0.4504, N501Y 0.4712, E484K 0.4564
+
+  PROJECTION [bind]: n_iter = 500 from the subset convergence fit (maxiter) (LOWER BOUND: subset fit hit maxiter)
+    primary  s/iter(full-pool 0.0634) x 500 = 32s = 0.5 min -> WITHIN the 120-min S4 budget
+    cross-chk s/iter(subset 0.0560) x 500 x (N_train/N_subset 16.0) = 448s = 7.5 min -> WITHIN the 120-min S4 budget
+    (both projections assume full-data iterations match the subset fit's; a measurement against the S4 budget, not a gate)
+
+============================================================================
+PHENOTYPE expr (expression) -- mode 'smoke', elapsed 40s / cap 2700s
+============================================================================
+
+[expr] bc_expression.csv: 337,629 raw rows
+  dropped: outside 3 conditions 83,008; null expression 32,210; stop variants 606
+  after filters 221,805 rows -> aggregated 41,038 unique (condition, aa_substitutions) (collapsed 180,767 duplicates by mean)
+  per condition: {'E484K': 12048, 'N501Y': 15378, 'Wuhan_Hu_1': 13612}
+  split [expr]: held-out 8,208 / train 32,830 (frac 0.2, seed 0); per-condition held-out {'E484K': 2410, 'N501Y': 3076, 'Wuhan_Hu_1': 2722}
+  smoke subset: 2,052 rows (~5.0% of full table; per condition {'Wuhan_Hu_1': 681, 'N501Y': 769, 'E484K': 602})
+  Data built in 1.5s: 1,853 variants, 2062 mutations, conditions ('E484K', 'N501Y', 'Wuhan_Hu_1')
+  [expr subset] warm-up fit(maxiter=2): 0.98s (jit compile); timed fit(maxiter=20): 1.09s -> 0.0547 s/iter (1,853 variants, 2062 mutations)
+  full-pool Data built in 13.2s: 32,830 variants, 3819 mutations
+  [expr full-pool] warm-up fit(maxiter=2): 1.00s (jit compile); timed fit(maxiter=20): 1.30s -> 0.0648 s/iter (32,830 variants, 3819 mutations)
+  [expr smoke-converge] convergence fit(maxiter=500, tol=1e-06): 15.6s, converged=False, final loss=0.00416988, trajectory rows=51
+  [expr smoke] Wuhan_Hu_1: r = 0.5124 on 1,101/2,722 held-out rows (unencodable excluded, counted, never imputed)
+  [expr smoke] N501Y: r = 0.4622 on 1,250/3,076 held-out rows (unencodable excluded, counted, never imputed)
+  [expr smoke] E484K: r = 0.5065 on 978/2,410 held-out rows (unencodable excluded, counted, never imputed)
+  [expr smoke]: held-out r >= 0.5 for EACH of Wuhan/Alpha(N501Y)/Eta(E484K) -> CRITERION-NOT-MET  [smoke signal only; the deciding value comes from the full fit (D9)]
+  >>> G-A6-4 held-out r computable for all three conditions: PASS   value = Wuhan_Hu_1 0.5124, N501Y 0.4622, E484K 0.5065
+
+  PROJECTION [expr]: n_iter = 500 from the subset convergence fit (maxiter) (LOWER BOUND: subset fit hit maxiter)
+    primary  s/iter(full-pool 0.0648) x 500 = 32s = 0.5 min -> WITHIN the 120-min S4 budget
+    cross-chk s/iter(subset 0.0547) x 500 x (N_train/N_subset 16.0) = 437s = 7.3 min -> WITHIN the 120-min S4 budget
+    (both projections assume full-data iterations match the subset fit's; a measurement against the S4 budget, not a gate)
+
+----------------------------------------------------------------------------
+SMOKE SUMMARY (A6c) -- nothing written (D11)
+  bind: s/iter subset 0.0560 / pool 0.0634; n_iter 500; projections pool 0.5 min, subset-scaled 7.5 min; held-out r Wuhan_Hu_1 0.4504, N501Y 0.4712, E484K 0.4564
+  expr: s/iter subset 0.0547 / pool 0.0648; n_iter 500; projections pool 0.5 min, subset-scaled 7.3 min; held-out r Wuhan_Hu_1 0.5124, N501Y 0.4622, E484K 0.5065
+  >>> G-A6-3 phases completed within the cap: PASS   value = 75s of 2700s
+  GATES: 5/5 PASS -> A6 smoke complete (exit 0 per D14)
+  elapsed 74.9s

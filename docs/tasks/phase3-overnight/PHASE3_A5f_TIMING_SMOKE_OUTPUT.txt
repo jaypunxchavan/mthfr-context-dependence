@@ -1,0 +1,106 @@
+PHASE 3a Task A5e -- RBD background scorer (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6, 7)
+One unbatched masked-marginal pass per (background, position) via scripts/lib/esm_scoring.py; no batching, no reimplementation.
+  wildtype_sequence.fasta    sha256 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb  MATCH
+  RBD_sites.csv              sha256 a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3  MATCH
+  final_variant_scores.csv   sha256 c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97  MATCH
+  fasta: 603 nt -> 201 codons, in-frame stops 0; RBD_sites rows 201; data Wuhan sites 201
+  three-way mismatches: RBD_sites vs data 0, translated fasta vs RBD_sites 0, sites lacking the 20-letter mutant set 0
+  >>> G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: PASS   value = hashes True, codons 201, stops 0, mismatches 0/0/0   S1: the 201-aa construct is the scored sequence
+  roster_v1.csv sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+    sha256 pin                 True
+    100 rows                   True
+    unique ids                 True
+    site range                 True
+    wt_aa == reference         True
+    mut != wt                  True
+    in data                    True
+    n_scored_positions == 200  True
+  >>> G-156-2 roster: pinned hash, structure, residues, data membership: PASS   value = 100 rows, 100 unique ids, all checks True   roster hashed in A5d, before any score
+  checkpoint /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes)
+  >>> G-156-3 local ESM-2 650M checkpoint present (never downloads): PASS   value = 2,604,537,549 bytes   weights come from the local cache
+  >>> G-156-6 out-dir consistency (no foreign background, manifest header): PASS   value = stray bg files [], manifest header ok True   one roster, one out-dir (S5)
+
+  model esm2_t33_650M_UR50D loaded, device mps
+
+============================================================================
+SCORING 3 job(s) -> data/processed/phase3/rbd_smoke
+============================================================================
+  TGT_N501Y     200 pos,  3800 rows, 160.4 ms/pass, 32.3s -> bg_TGT_N501Y.csv (jobs left 2, ETA 64s)
+  S501A         200 pos,  3800 rows, 162.4 ms/pass, 32.6s -> bg_S501A.csv (jobs left 1, ETA 32s)
+  TGT_E484K     200 pos,  3800 rows, 165.2 ms/pass, 33.0s -> bg_TGT_E484K.csv (jobs left 0, ETA 0s)
+  >>> G-156-4 per-file integrity before atomic rename: PASS   value = 3 file(s) written, 0 skipped, all asserts held (rows, uniqueness, position set, own site absent, background residue == reference at scored positions)   S2/PIN-6
+  >>> G-156-5 G-R4 echo: coverage of the construct's sites: PASS   value = min coverage 0.9950 = 200.0/201 vs frozen floor 95%   200/201 when own site excluded
+
+============================================================================
+SUMMARY -- A5e
+============================================================================
+  [PASS] G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: hashes True, codons 201, stops 0, mismatches 0/0/0  S1: the 201-aa construct is the scored sequence
+  [PASS] G-156-2 roster: pinned hash, structure, residues, data membership: 100 rows, 100 unique ids, all checks True  roster hashed in A5d, before any score
+  [PASS] G-156-3 local ESM-2 650M checkpoint present (never downloads): 2,604,537,549 bytes  weights come from the local cache
+  [PASS] G-156-6 out-dir consistency (no foreign background, manifest header): stray bg files [], manifest header ok True  one roster, one out-dir (S5)
+  [PASS] G-156-4 per-file integrity before atomic rename: 3 file(s) written, 0 skipped, all asserts held (rows, uniqueness, position set, own site absent, background residue == reference at scored positions)  S2/PIN-6
+  [PASS] G-156-5 G-R4 echo: coverage of the construct's sites: min coverage 0.9950 = 200.0/201 vs frozen floor 95%  200/201 when own site excluded
+
+  GATES: 6/6 PASS -> A5e PASSES
+  written 3, skipped 0, out-dir data/processed/phase3/rbd_smoke
+
+  LIMITATIONS (AGENTS 6):
+    * scores only: no statistic, no p-value and no outcome word of any frozen block is computed here
+    * delta_b(v) = S(v|b) - S(v|Wuhan) is script 157's join, not this script's
+    * G-R5 checks both sequence contexts on one background; the property is a property of the scoring code path, and the wild-type zero is an arithmetic identity verified against an independent re-derivation (S3)
+    * files written under --limit-positions are incomplete by design and are re-scored by a later full run
+
+  elapsed 101.5s
+PHASE 3a Task A5e -- RBD background scorer (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6, 7)
+One unbatched masked-marginal pass per (background, position) via scripts/lib/esm_scoring.py; no batching, no reimplementation.
+  wildtype_sequence.fasta    sha256 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb  MATCH
+  RBD_sites.csv              sha256 a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3  MATCH
+  final_variant_scores.csv   sha256 c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97  MATCH
+  fasta: 603 nt -> 201 codons, in-frame stops 0; RBD_sites rows 201; data Wuhan sites 201
+  three-way mismatches: RBD_sites vs data 0, translated fasta vs RBD_sites 0, sites lacking the 20-letter mutant set 0
+  >>> G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: PASS   value = hashes True, codons 201, stops 0, mismatches 0/0/0   S1: the 201-aa construct is the scored sequence
+  roster_v1.csv sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+    sha256 pin                 True
+    100 rows                   True
+    unique ids                 True
+    site range                 True
+    wt_aa == reference         True
+    mut != wt                  True
+    in data                    True
+    n_scored_positions == 200  True
+  >>> G-156-2 roster: pinned hash, structure, residues, data membership: PASS   value = 100 rows, 100 unique ids, all checks True   roster hashed in A5d, before any score
+  checkpoint /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes)
+  >>> G-156-3 local ESM-2 650M checkpoint present (never downloads): PASS   value = 2,604,537,549 bytes   weights come from the local cache
+  >>> G-156-6 out-dir consistency (no foreign background, manifest header): PASS   value = stray bg files [], manifest header ok True   one roster, one out-dir (S5)
+
+  model esm2_t33_650M_UR50D loaded, device mps
+
+============================================================================
+SCORING 3 job(s) -> data/processed/phase3/rbd_smoke
+============================================================================
+  SKIP TGT_N501Y (complete)
+  SKIP S501A (complete)
+  SKIP TGT_E484K (complete)
+  >>> G-156-4 per-file integrity before atomic rename: PASS   value = 0 file(s) written, 3 skipped, all asserts held (rows, uniqueness, position set, own site absent, background residue == reference at scored positions)   S2/PIN-6
+  >>> G-156-5 G-R4 echo: coverage of the construct's sites: PASS   value = min coverage 0.9950 = 200.0/201 vs frozen floor 95%   200/201 when own site excluded
+
+============================================================================
+SUMMARY -- A5e
+============================================================================
+  [PASS] G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: hashes True, codons 201, stops 0, mismatches 0/0/0  S1: the 201-aa construct is the scored sequence
+  [PASS] G-156-2 roster: pinned hash, structure, residues, data membership: 100 rows, 100 unique ids, all checks True  roster hashed in A5d, before any score
+  [PASS] G-156-3 local ESM-2 650M checkpoint present (never downloads): 2,604,537,549 bytes  weights come from the local cache
+  [PASS] G-156-6 out-dir consistency (no foreign background, manifest header): stray bg files [], manifest header ok True  one roster, one out-dir (S5)
+  [PASS] G-156-4 per-file integrity before atomic rename: 0 file(s) written, 3 skipped, all asserts held (rows, uniqueness, position set, own site absent, background residue == reference at scored positions)  S2/PIN-6
+  [PASS] G-156-5 G-R4 echo: coverage of the construct's sites: min coverage 0.9950 = 200.0/201 vs frozen floor 95%  200/201 when own site excluded
+
+  GATES: 6/6 PASS -> A5e PASSES
+  written 0, skipped 3, out-dir data/processed/phase3/rbd_smoke
+
+  LIMITATIONS (AGENTS 6):
+    * scores only: no statistic, no p-value and no outcome word of any frozen block is computed here
+    * delta_b(v) = S(v|b) - S(v|Wuhan) is script 157's join, not this script's
+    * G-R5 checks both sequence contexts on one background; the property is a property of the scoring code path, and the wild-type zero is an arithmetic identity verified against an independent re-derivation (S3)
+    * files written under --limit-positions are incomplete by design and are re-scored by a later full run
+
+  elapsed 4.4s

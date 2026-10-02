@@ -1,0 +1,67 @@
+============================================================================
+A6c/A6d -- MULTIDMS FIT (scripts/158) -- mode 'full', internal cap 120 min
+============================================================================
+  pre-registered: scripts/158 docstring D1-D14 / G-A6-1..4 (written before first run); frozen s6b/s6h
+  env knobs: SEED=0 SEED_SUB=1 HELD_FRAC=0.2 SUB_FRAC=0.05 MAXITER=500 TOL=1e-06 TIMING_ITERS=20 CRIT_R=0.5
+  fit kwargs: maxiter=500, tol=1e-06, warn_unconverged=False; all others multidms defaults
+  python 3.14.5 at /Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/bin/python
+  >>> G-A6-1 env: running under venv_multidms with the stack importable: PASS   value = multidms 1.2.0, jax 0.11.2, numpy 2.5.3, pandas 2.3.3, scipy 1.18.1, sklearn 1.9.1
+  jax devices: ['cpu']  (no GPU required; CPU fits are expected)
+  bc_binding.csv (bind): 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6 == A5a log 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6
+  bc_expression.csv (expr): 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32 == A5a log 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32
+  >>> G-A6-2 pins: bc_binding + bc_expression sha256 == A5a log: PASS   value = 2/2 match
+
+============================================================================
+PHENOTYPE bind (log10Ka) -- mode 'full', elapsed 2s / cap 7200s
+============================================================================
+
+[bind] bc_binding.csv: 520,339 raw rows
+  dropped: outside 3 conditions 127,118; null log10Ka 68,009; stop variants 0
+  after filters 325,212 rows -> aggregated 40,044 unique (condition, aa_substitutions) (collapsed 285,168 duplicates by mean)
+  per condition: {'E484K': 11911, 'N501Y': 14683, 'Wuhan_Hu_1': 13450}
+  split [bind]: held-out 8,009 / train 32,035 (frac 0.2, seed 0); per-condition held-out {'E484K': 2382, 'N501Y': 2937, 'Wuhan_Hu_1': 2690}
+  full fit uses the whole training pool: 32,035 rows
+  Data built in 13.5s: 32,035 variants, 3818 mutations, conditions ('E484K', 'N501Y', 'Wuhan_Hu_1')
+  [bind full-scale timing] warm-up fit(maxiter=2): 1.51s (jit compile); timed fit(maxiter=20): 1.29s -> 0.0646 s/iter (32,035 variants, 3818 mutations)
+  [bind full] convergence fit(maxiter=500, tol=1e-06): 18.4s, converged=False, final loss=0.139129, trajectory rows=51
+  [bind full] Wuhan_Hu_1: r = 0.8324 on 2,689/2,690 held-out rows (unencodable excluded, counted, never imputed)
+  [bind full] N501Y: r = 0.8550 on 2,936/2,937 held-out rows (unencodable excluded, counted, never imputed)
+  [bind full] E484K: r = 0.8289 on 2,382/2,382 held-out rows
+  [bind full]: held-out r >= 0.5 for EACH of Wuhan/Alpha(N501Y)/Eta(E484K) -> CRITERION-MET
+  >>> G-A6-4 held-out r computable for all three conditions: PASS   value = Wuhan_Hu_1 0.8324, N501Y 0.8550, E484K 0.8289
+  [bind] CRITERION-MET (each condition r >= 0.5) -> writes bind rows to e_T_MD.csv
+  profile [bind]: numbering offset -330 (site_map 1..201 vs e_T 331-531); wildtype letters verified 7600/7600 (mismatches 0)
+  profile [bind]: grid 7,600 rows -> wrote-ready 7,598 (skipped unseen site 0, mutant==wt 0, mutation not in fit 2, effect NaN 0)
+
+============================================================================
+PHENOTYPE expr (expression) -- mode 'full', elapsed 40s / cap 7200s
+============================================================================
+
+[expr] bc_expression.csv: 337,629 raw rows
+  dropped: outside 3 conditions 83,008; null expression 32,210; stop variants 606
+  after filters 221,805 rows -> aggregated 41,038 unique (condition, aa_substitutions) (collapsed 180,767 duplicates by mean)
+  per condition: {'E484K': 12048, 'N501Y': 15378, 'Wuhan_Hu_1': 13612}
+  split [expr]: held-out 8,208 / train 32,830 (frac 0.2, seed 0); per-condition held-out {'E484K': 2410, 'N501Y': 3076, 'Wuhan_Hu_1': 2722}
+  full fit uses the whole training pool: 32,830 rows
+  Data built in 13.4s: 32,830 variants, 3819 mutations, conditions ('E484K', 'N501Y', 'Wuhan_Hu_1')
+  [expr full-scale timing] warm-up fit(maxiter=2): 1.00s (jit compile); timed fit(maxiter=20): 1.29s -> 0.0644 s/iter (32,830 variants, 3819 mutations)
+  [expr full] convergence fit(maxiter=500, tol=1e-06): 18.3s, converged=False, final loss=0.081072, trajectory rows=51
+  [expr full] Wuhan_Hu_1: r = 0.8913 on 2,722/2,722 held-out rows
+  [expr full] N501Y: r = 0.8795 on 3,076/3,076 held-out rows
+  [expr full] E484K: r = 0.8584 on 2,410/2,410 held-out rows
+  [expr full]: held-out r >= 0.5 for EACH of Wuhan/Alpha(N501Y)/Eta(E484K) -> CRITERION-MET
+  >>> G-A6-4 held-out r computable for all three conditions: PASS   value = Wuhan_Hu_1 0.8913, N501Y 0.8795, E484K 0.8584
+  [expr] CRITERION-MET (each condition r >= 0.5) -> writes expr rows to e_T_MD.csv
+  profile [expr]: numbering offset -330 (site_map 1..201 vs e_T 331-531); wildtype letters verified 7600/7600 (mismatches 0)
+  profile [expr]: grid 7,600 rows -> wrote-ready 7,600 (skipped unseen site 0, mutant==wt 0, mutation not in fit 0, effect NaN 0)
+
+----------------------------------------------------------------------------
+FULL-MODE SUMMARY (A6d)
+  bind: criterion MET; Wuhan_Hu_1 0.8324, N501Y 0.8550, E484K 0.8289
+  expr: criterion MET; Wuhan_Hu_1 0.8913, N501Y 0.8795, E484K 0.8584
+  >>> G-A6-3 phases completed within the cap: PASS   value = 78s of 7200s
+  wrote data/processed/phase3/multidms/e_T_MD.csv (15,198 rows x 8 cols)
+  6h contract: 157 joins this on (site, mutant) per (target, phenotype) at the primary mask; existence encodes the frozen criterion (D10)
+  wrote data/processed/phase3/multidms/multidms_report.json
+  GATES: 5/5 PASS -> A6 full run complete
+  elapsed 78.5s

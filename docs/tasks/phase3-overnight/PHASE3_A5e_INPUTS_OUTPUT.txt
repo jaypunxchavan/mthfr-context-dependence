@@ -1,0 +1,33 @@
+PHASE 3a Task A5e -- RBD background scorer (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6, 7)
+One unbatched masked-marginal pass per (background, position) via scripts/lib/esm_scoring.py; no batching, no reimplementation.
+  wildtype_sequence.fasta    sha256 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb  MATCH
+  RBD_sites.csv              sha256 a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3  MATCH
+  final_variant_scores.csv   sha256 c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97  MATCH
+  fasta: 603 nt -> 201 codons, in-frame stops 0; RBD_sites rows 201; data Wuhan sites 201
+  three-way mismatches: RBD_sites vs data 0, translated fasta vs RBD_sites 0, sites lacking the 20-letter mutant set 0
+  >>> G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: PASS   value = hashes True, codons 201, stops 0, mismatches 0/0/0   S1: the 201-aa construct is the scored sequence
+  roster_v1.csv sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+    sha256 pin                 True
+    100 rows                   True
+    unique ids                 True
+    site range                 True
+    wt_aa == reference         True
+    mut != wt                  True
+    in data                    True
+    n_scored_positions == 200  True
+  >>> G-156-2 roster: pinned hash, structure, residues, data membership: PASS   value = 100 rows, 100 unique ids, all checks True   roster hashed in A5d, before any score
+  checkpoint /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes)
+  >>> G-156-3 local ESM-2 650M checkpoint present (never downloads): PASS   value = 2,604,537,549 bytes   weights come from the local cache
+  >>> G-156-6 out-dir consistency (no foreign background, manifest header): PASS   value = stray bg files [], manifest header ok True   one roster, one out-dir (S5)
+
+============================================================================
+SUMMARY -- A5e input pre-flight (--inputs-only)
+============================================================================
+  [PASS] G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: hashes True, codons 201, stops 0, mismatches 0/0/0  S1: the 201-aa construct is the scored sequence
+  [PASS] G-156-2 roster: pinned hash, structure, residues, data membership: 100 rows, 100 unique ids, all checks True  roster hashed in A5d, before any score
+  [PASS] G-156-3 local ESM-2 650M checkpoint present (never downloads): 2,604,537,549 bytes  weights come from the local cache
+  [PASS] G-156-6 out-dir consistency (no foreign background, manifest header): stray bg files [], manifest header ok True  one roster, one out-dir (S5)
+
+  GATES: 4/4 PASS -> input pre-flight PASSES
+
+  elapsed 0.0s

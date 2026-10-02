@@ -1,0 +1,160 @@
+================================================================================
+PHASE3 A7 TEST OUTPUT -- orchestration: guards, driver, launcher (task A7)
+================================================================================
+Spec: docs/tasks/phase3-overnight/PHASE3_OVERNIGHT.md lines 219-242
+      (Task A7), esp. line 239 "Tests (all hard)".
+Record: this file is tee'd verbatim from the harness run.
+
+WHAT IS BEING TESTED (T01-T22, harness docstring has the full list):
+  lock/refusal semantics (double start, stale lock, conflicting process),
+  signal forwarding (TERM -> child process group -> lock removed), stage
+  timeout kills the child, retry policy (3 attempts on crash, NEVER on
+  exit 3), all five guards with simulated bad readings (PHASE3_FAKE_*),
+  --force override (logged), missing-tool UNGUARDED path, --dry-run prints
+  the full plan and runs nothing, resume skips completed stages, S3
+  dependency and coverage-rule skip/run, state + heartbeat writes, the S5
+  integrity pass with STATE_FOR_LAUNCH.md absent, and the launcher's
+  memory-floor refusal (with its quit list) and --dry-run.
+
+RULES ENFORCED BY THE HARNESS:
+  * run with venv/bin/python3 only; an isolated temp dir (mktemp -d via
+    tempfile.mkdtemp) per test; stub stages only -- the real stages
+    scripts/154..158 are NEVER executed; driver --home redirected in every
+    test; no git commands; no network; a sentinel check proves the real
+    data/processed/phase3 gained no driver artifacts.
+  * production thresholds are never overridden -- only readings (fakes),
+    wait windows and delays (see "TEST-ONLY OVERRIDES" in the docstring).
+
+interpreter: /Users/arnavchavan/Desktop/mthfr-context-dependence/venv/bin/python3
+python:      3.14.3 (v3.14.3:323c59a5e34, Feb  3 2026, 11:41:37) [Clang 16.0.0 (clang-1600.0.26.6)]
+================================================================================
+
+[PASS] test_double_start_second_refuses (0.6s)
+[PASS] test_stale_lock_cleared_with_message (0.3s)
+[PASS] test_term_forwards_to_child_and_removes_lock (0.5s)
+[PASS] test_stage_timeout_kills_child (3.0s)
+[PASS] test_retry_on_crash_three_attempts (0.9s)
+[PASS] test_no_retry_on_exit_3 (0.3s)
+[PASS] test_guard_ac_off_skips_stage (0.9s)
+[PASS] test_guard_low_battery_skips_stage (0.1s)
+[PASS] test_guard_high_swap_skips_stage (0.1s)
+[PASS] test_guard_low_memory_skips_stage (0.1s)
+[PASS] test_guard_low_disk_skips_stage (0.1s)
+[PASS] test_force_overrides_guard_and_logs (0.3s)
+[PASS] test_missing_tools_run_unguarded (0.3s)
+[PASS] test_dry_run_prints_plan_runs_nothing (0.1s)
+[PASS] test_resume_skips_completed_stage (1.4s)
+[PASS] test_dependency_skip_then_run_on_relaunch (0.4s)
+[PASS] test_coverage_rule_fail_then_pass (0.4s)
+[PASS] test_state_and_heartbeat (1.8s)
+[PASS] test_conflicting_process_refuses (0.1s)
+[PASS] test_integrity_absent_state_for_launch (0.2s)
+[PASS] test_launcher_refuses_below_memory_floor (0.1s)
+[PASS] test_launcher_dry_run_creates_nothing (0.1s)
+
+sentinel check (real data/processed/phase3 must gain no driver artifacts): OK
+
+SUMMARY: 22 tests, 22 passed, 0 failed, wall time 11.7 s
+
+================================================================================
+DEVIATIONS / INTERPRETATIONS / LIMITATIONS (verbatim; every one of these is
+also written into the driver's or guards' own docstring/output)
+================================================================================
+D01  Guard fake env vars: the spec names PHASE3_FAKE_BATT / PHASE3_FAKE_SWAP /
+     PHASE3_FAKE_MEM ("such as"); PHASE3_FAKE_AC and PHASE3_FAKE_DISK_GIB were
+     added so all five guard readings can be simulated.
+D02  Wait-window overrides: production windows (AC/battery 600 s, swap/mem
+     1800 s in 300 s steps) are reachable by flag (--guard-ac-wait,
+     --guard-ac-poll, --guard-mem-wait, --guard-mem-step) and env
+     (PHASE3_AC_WAIT_S, PHASE3_AC_POLL_S, PHASE3_MEM_WAIT_S,
+     PHASE3_MEM_STEP_S) so tests run in seconds. Thresholds (30%, 3.0 GB,
+     25%, 5 GiB, launcher 35%) are NOT overridable at runtime.
+D03  The spec gives the 5-minute step only for swap/mem; AC/battery is
+     polled every 60 s inside its 10-minute window (interpretation;
+     --guard-ac-poll/PHASE3_AC_POLL_S).
+D04  The spec gives disk no wait window: disk free is checked once, failure
+     skips the stage immediately.
+D05  The launcher runs the guards ONCE with no wait windows and refuses
+     immediately (the 10/30-minute waits are per-stage in the driver, per
+     spec line 225); its memory floor is the spec's 35%.
+D06  A4/A5/A6 gates (the spec does not define predicates): interpreted as
+     artifact prechecks -- S1: gb1/sequences.csv + roster_v2.csv exist;
+     S2: rbd/e_T.csv + roster_v1.csv exist AND the G-R5 mode is re-run as a
+     non-retried gate step (`156 --g-r5`) before scoring, because 156's own
+     docstring says G-R5 is "re-run by the A7 driver before the stage"; S4:
+     venv_multidms/bin/python exists. The scripts' own sha/gate checks
+     (exit 3) remain the authoritative gates and are not duplicated.
+D07  S3 coverage rule (spec: "each runs only if its scoring reached the
+     coverage rule"): concrete artifact checks using the floors the scripts
+     themselves define -- GB1: wt_arm.csv present AND every roster_v2
+     background file present with >= 95% of its 54 eligible positions
+     (155's frozen G-4); RBD: wt_arm.csv present AND every roster_v1
+     background file present with >= 95% of 201 construct sites (156's
+     frozen G-R4). All roster backgrounds must be present. No threshold was
+     invented; both are quoted from the scripts.
+D08  Retry granularity: the spec says "per-stage retry"; implemented per
+     step, which is identical for single-step stages (S2's scoring, S4, S5)
+     and for multi-step stages reduces to retrying only the failed step
+     (safe: 154/156 skip already-complete files on rerun). A timeout is NOT
+     retried (the spec lists timeout and crash as separate outcomes); gate
+     steps are never retried on any nonzero exit; exit 3 never retried.
+D09  Budget accounting: the stage timer starts after guards and the precheck;
+     stage budgets cover all attempts and retry sleeps. The global cap
+     (--total-cap-min, default 450 min = 7.5 h, the spec's "about 7.5 h") is
+     checked at stage start. Guard wait windows sit outside both timers.
+D10  Output files beyond the spec's two: each stage's child stdout/stderr is
+     captured to {home}/driver_stage_<ID>.log (otherwise scorer output would
+     be lost), and the launcher mirrors the driver's stdout to
+     {home}/driver_nohup.log (required by nohup redirection). driver.log and
+     driver_state.json remain the spec's record; the spec's monitor command
+     `tail -n 5 .../driver.log` shows transitions, guard readings and
+     heartbeats.
+D11  Resume granularity: steps are individually marked completed; on relaunch
+     completed steps are skipped, so a stage whose steps are all completed is
+     skipped entirely ("stages already completed are skipped"), while failed,
+     guard-skipped, timeout and dependency-skipped stages are re-evaluated
+     (interpretation; the spec only pins the completed-skip case).
+D12  Stage status vocabulary beyond the spec's prose: completed, failed,
+     gate_failed, timeout, skipped_guard, skipped_dependency, skipped_cap,
+     interrupted, terminated. Exit code 0 from the driver = "run finished",
+     not "all stages succeeded".
+D13  S5 runs as a child of the driver (self --integrity) so timeout/signal/
+     retry apply uniformly; sha256 MISMATCH vs STATE_FOR_LAUNCH.md exits 3
+     (prominent FLAG, gate, no retry) while file-count/manifest discrepancies
+     are findings, not failures; ABSENT STATE_FOR_LAUNCH.md is logged and
+     skipped (it does not exist yet). The sha parser accepts any line with a
+     64-hex digest and a scripts/*.py path because the file's format does not
+     exist yet -- session 3b (task C0) re-verifies, this is not a substitute.
+D14  Kill semantics: on timeout or driver TERM the driver sends TERM to the
+     child PROCESS GROUP (children are started with start_new_session),
+     waits --kill-grace (default 5 s), then SIGKILLs the group.
+D15  The conflict check ('phase3_driver|124_phase2') excludes the driver's own
+     PID and its ancestor chain; without that exclusion the check would be
+     circular (the test harness and the launcher both legitimately match the
+     pattern). pgrep missing -> logged UNGUARDED and skipped (spec's
+     missing-tool rule).
+D16  Redirectability: --home / PHASE3_HOME (and --plan / PHASE3_PLAN) exist
+     so tests never touch data/processed/phase3; the production plan embeds
+     {home} in every --out-dir, so a redirected home would redirect the
+     scorers too. Production defaults are the real paths.
+D17  The two-sequence subset in S1 is `154 --sequence project --out-dir
+     data/processed/phase3/gb1_project --limit-roster 20` (154's decision S1
+     pins the separate project out-dir; roster order = draw order, so
+     --limit-roster 20 = the first 20 of the draw recorded in the A4b log).
+D18  Launcher additions for testability: --dry-run (runs the driver's dry-run
+     in the foreground) and --force passthrough; both are disclosed in the
+     launcher header. The launcher also refuses live locks and conflicting
+     processes itself, per spec line 224.
+D19  Tests use tempfile.mkdtemp (Python's `mktemp -d`), 22 tests, and the
+     disclosed test-only overrides listed in the harness docstring; no real
+     stage, git command, or network access is involved. Production values
+     (retry 30 s, heartbeats 60 s, windows 600/1800 s, grace 5 s) are NOT
+     exercised at full length -- only their overridden equivalents (a
+     10-minute-window test would take 10 minutes); the override path is the
+     same code path.
+D20  Out of scope for this deliverable (not implemented here, per the
+     session brief): writing STATE_FOR_LAUNCH.md, appending [A7] and the 3a
+     SUMMARY to PHASE3A_BUILD_LOG.md, and the known pending 157 6h-mode fix
+     mentioned in STATE.md -- another owner/process handles those; this
+     harness created none of them.
+================================================================================

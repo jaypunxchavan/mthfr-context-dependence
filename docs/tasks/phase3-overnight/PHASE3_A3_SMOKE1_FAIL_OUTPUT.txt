@@ -1,0 +1,168 @@
+
+==============================================================================
+A3 / M1 -- MTHFR monotone global-epistasis target (script 153)
+==============================================================================
+N_BOOT = 300   SEED = 0   N_REF = 500
+RESAMPLING UNITS: (b) and G-M3 = POSITION clusters (654 positions of the 10,757-row anchor frame); (f) = BACKGROUNDS (values held fixed).  Bootstrap p reported as primary (Phase 1 formula); no z-score anywhere.
+DECISION RULE (pre-registered): any hard gate FAIL -> exit 3; thresholds are never loosened and N is never raised to pass a gate.  Smoke (N_BOOT != 10000) SKIPS G-M3(iii), so G-M3 cannot be called PASS on a smoke run.
+*** SMOKE RUN: N_BOOT != 10000 -- G-M3(iii) CI reproduction is SKIPPED ***
+
+------------------------------------------------------------------------------
+G-M0 -- INPUT INTEGRITY (frozen block, read-only)
+------------------------------------------------------------------------------
+  [PASS] G-M0 prereg sha256: 73faaa6d6b28b144f7562864a325b37225a0048085618282aebb7f22afeb542c (target 73faaa6d6b28b144f7562864a325b37225a0048085618282aebb7f22afeb542c)
+  [PASS] G-M0 prereg line count: got 47 target 47
+  [PASS] G-M0 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [PASS] G-M0 3d-distance table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (target 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de)
+
+  Frozen block sections 3-5, verbatim from disk (the rules this script applies):
+   21| 
+   22| (a) Spearman(own_e.b^GE, own_e.b) over the 10,757 rows.
+   23| (b) rho^GE = Spearman(delta_ESM, own_e.b^GE) with a corrected position-cluster bootstrap CI (clusters = positions; 10,000 draws; seed 0), next to -0.088118, and the shrinkage 1 - rho^GE / rho.
+   24| (c) All 96 Phase 2 backgrounds' rho_b^GE (cached delta_b; the same row construction and own-position exclusion as script 125) and the frozen-construction p_spec^GE = (1 + #{b in N : rho_b^GE <= rho^GE}) / (1 + |N|), N = Arm V u Arm G (78), on the full frame and on the held-out set H (455 positions), with the at-or-below nulls named.
+   25| (d) The shift-adjusted p_spec_adj^GE (leave-one-out OLS on mean|delta_b|, as Diagnostics II D9).
+   26| (e) A222V's rank within Arm S u {A222V} on rho_b^GE (a rank fraction, n = 19, not a test).
+   27| (f) Spearman(rho_b^GE, d3_b) across the 67 resolved nulls with a background-level bootstrap CI, next to +0.7316.
+   28| 
+   29| ## 4. Outcome words (numeric, fixed now; none is a frozen Phase 2 verdict word)
+   30| 
+   31| GE-SURVIVES: the CI of rho^GE (GE-ISO) excludes zero in the negative direction AND p_spec^GE(full) <= 0.05 AND p_spec^GE(H) <= 0.10.
+   32| GE-WEAKENS: the CI excludes zero in the negative direction but at least one p_spec^GE condition fails.
+   33| GE-DOES-NOT-SURVIVE: the CI includes zero or the sign reverses.
+   34| The primary governs; the two sensitivities are reported with the same words, and any disagreement is stated plainly.
+   35| 
+   36| ## 5. Gates (hard)
+   37| 
+   38| G-M1 identity (2.2). G-M2 each fitted monotone expectation is non-decreasing in w on a grid. G-M3 the bootstrap passes the identity, draw-by-draw reference and Phase 1 CI reproduction gates. G-M4 the Phase 2 reproduction rows: A222V rho -0.088118064 (full) / -0.090021683 (H); frozen p_spec 2/79 and 4/79; the rho table sha256 e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796.
+   39| G-M5 fold integrity: every position in exactly one fold, every variant predicted by a fit that excluded its position.
+   40| 
+
+------------------------------------------------------------------------------
+QUOTED SOURCES (verbatim from disk; the one pluggable component is E_c)
+------------------------------------------------------------------------------
+
+  --- rebuild_interaction_fit: scripts/lib/stats_ext.py lines 63-88 (verbatim from disk) ---
+    63| def rebuild_interaction_fit(raw):
+    64|     """Two-pass own-context fit, exactly as scripts 17/20/21/24/26/28 do it.
+    65| 
+    66|     Returns a dict with the pieces every downstream null needs: the WT-arm
+    67|     fit, the corrected interaction fit, the per-point residual/se/valid
+    68|     matrices, and the row index of the A222V reference line.
+    69|     """
+    70|     W = raw[WT_SCORE_COLS].to_numpy(float)
+    71|     Wse = raw[WT_SE_COLS].to_numpy(float)
+    72|     M = raw[MT_SCORE_COLS].to_numpy(float)
+    73|     Mse = raw[MT_SE_COLS].to_numpy(float)
+    74| 
+    75|     w = fit_single_arm(W, Wse)
+    76|     w_mean = np.nanmean(W, axis=1)
+    77|     i222 = int(np.where(raw["hgvs"].to_numpy() == "p.Ala222Val")[0][0])
+    78| 
+    79|     e1 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+    80|                          w_mean, w["fitness"][i222], w["remediation"][i222])
+    81|     keep = (w["logl"] > LOGL_CUTOFF) & (e1["logl"] > LOGL_CUTOFF)
+    82|     cb = interpolate_correction(w["fitness"][keep], e1["e_b"][keep])
+    83|     cr = interpolate_correction(w["fitness"][keep], e1["e_r"][keep])
+    84|     e2 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+    85|                          w_mean, w["fitness"][i222], w["remediation"][i222],
+    86|                          correction=(cb, cr))
+    87|     return {"w": w, "e2": e2, "M_se": Mse, "resid": e2["resid"],
+    88|             "valid": e2["valid"], "i222": i222, "correction": (cb, cr)}
+
+  --- wls_line -- the weighted aggregation: scripts/lib/own_context.py lines 48-66 (verbatim from disk) ---
+    48| def wls_line(y, se, x, valid):
+    49|     """Vectorized weighted least squares of y ~ 1 + x, weights 1/se^2.
+    50| 
+    51|     Exact maximum likelihood for Gaussian error with known se, which is what
+    52|     fitModels.R optimizes numerically. Returns (intercept, slope, df).
+    53|     """
+    54|     w = np.where(valid, 1.0 / np.where(valid, se, 1.0) ** 2, 0.0)
+    55|     yy = np.where(valid, y, 0.0)
+    56|     xx = np.broadcast_to(x, y.shape)
+    57|     S0 = w.sum(axis=1)
+    58|     S1 = (w * xx).sum(axis=1)
+    59|     S2 = (w * xx**2).sum(axis=1)
+    60|     T0 = (w * yy).sum(axis=1)
+    61|     T1 = (w * xx * yy).sum(axis=1)
+    62|     det = S0 * S2 - S1**2
+    63|     with np.errstate(divide="ignore", invalid="ignore"):
+    64|         base = np.where(det != 0, (S2 * T0 - S1 * T1) / det, np.nan)
+    65|         slope = np.where(det != 0, (S0 * T1 - S1 * T0) / det, np.nan)
+    66|     return base, slope, valid.sum(axis=1) - 2
+
+  --- fit_interaction -- expected / resid / valid / aggregation at line 165, NaN rule at 179-181: scripts/lib/own_context.py lines 143-187 (verbatim from disk) ---
+   143| def fit_interaction(m_score, m_se, w_fitness, w_remediation, w_post, w_mean_score,
+   144|                     a222v_fitness, a222v_remediation, concs=CONCS, correction=None):
+   145|     """Fit e.b / e.r: the deviation of the A222V-background arm from the
+   146|     multiplicative no-interaction expectation.
+   147| 
+   148|     expected(c) = single_mutant_term(c) * (b_A222V + c*r_A222V) [+ correction]
+   149|     where single_mutant_term is the fitted line when w.post > 0.5, otherwise
+   150|     the variant's mean WT-background score (per fitModels.R).
+   151|     """
+   152|     a222v_line = a222v_fitness + concs[None, :] * a222v_remediation
+   153|     use_line = (w_post > 0.5) & np.isfinite(w_fitness)
+   154|     sm = np.where(use_line[:, None],
+   155|                   w_fitness[:, None] + concs[None, :] * w_remediation[:, None],
+   156|                   w_mean_score[:, None])
+   157|     expected = sm * a222v_line
+   158|     if correction is not None:
+   159|         cb, cr = correction
+   160|         expected = expected + cb(w_fitness)[:, None] + cr(w_fitness)[:, None] * concs[None, :]
+   161| 
+   162|     valid = np.isfinite(m_score) & np.isfinite(m_se) & (m_se > 0) & np.isfinite(expected)
+   163|     resid = np.where(valid, m_score - expected, np.nan)
+   164| 
+   165|     e_b, e_r, df = wls_line(resid, m_se, concs, valid)
+   166| 
+   167|     safe_se = np.where(valid, m_se, 1.0)
+   168|     obs = np.where(valid, resid, 0.0)
+   169|     logl = _gauss_logl(e_b[:, None] + concs[None, :] * e_r[:, None], obs, safe_se, valid)
+   170| 
+   171|     # static model: constant offset only (weighted mean residual), r fixed at 0
+   172|     w = np.where(valid, 1.0 / safe_se**2, 0.0)
+   173|     with np.errstate(invalid="ignore", divide="ignore"):
+   174|         e_b_static = np.where(w.sum(axis=1) > 0, (w * obs).sum(axis=1) / w.sum(axis=1), np.nan)
+   175|     logl_static = _gauss_logl(np.broadcast_to(e_b_static[:, None], resid.shape),
+   176|                               obs, safe_se, valid)
+   177|     logl_null = _gauss_logl(np.zeros_like(resid), obs, safe_se, valid)
+   178| 
+   179|     bad = (~valid).sum(axis=1) > 2
+   180|     for arr in (e_b, e_r, e_b_static, logl, logl_static, logl_null):
+   181|         arr[bad] = np.nan
+   182| 
+   183|     return {"e_b": e_b, "e_r": e_r, "e_b_static": e_b_static,
+   184|             "logl": logl, "logl_static": logl_static, "logl_null": logl_null,
+   185|             "lod_r": logl - logl_static + PRIOR_LOG_ODDS,
+   186|             "lod_b": logl_static - logl_null + PRIOR_LOG_ODDS,
+   187|             "df": df, "expected": expected, "resid": resid, "valid": valid}
+
+------------------------------------------------------------------------------
+CONSTRUCTION -- data, folds, the four expectations
+------------------------------------------------------------------------------
+  raw rows = 13134 (types: {'substitution': 11902, 'nonsense': 624, 'synonymous': 608}); task32 rows = 11344
+  [PASS] D8 position: raw start == task32 position (all task32 rows): mismatches = 0, task32 rows absent from raw = 0 (both must be 0)
+  [rebuild_interaction_fit] 0.0s
+  rows with any valid cell = 12096, all four valid = 11317; finite w = 12620
+  [PASS] G-M1(a) my e1+keep reproduce rebuild's correction curves: cb max|diff| = 0.000e+00, cr max|diff| = 0.000e+00 on a 501-point w-grid (gate < 1e-12)
+  folds: 655 positions -> per-fold position counts [131, 131, 131, 131, 131]; per-fold row counts [2637, 2625, 2612, 2602, 2658]
+  [GE-ISO/GE-SIG fits: 4 conditions x 5 folds x 2] 0.3s; GE-SIG retries used: none
+
+------------------------------------------------------------------------------
+G-M1 -- IDENTITY (frozen 2.2, HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M1(b) aggregate(e2.expected) == e2 e_b: NaN-pattern disagreements = 0, max|diff| over 11865 finite rows = 0.000e+00 (gate < 1e-12)
+  [FAIL] G-M1(c) aggregate(identity) == RECORDED own_e_b: compared 10757 finite recorded rows (task32 finite = 10757), max|diff| = 2.220e-16, rows > 1e-12 = 0, finite/NaN disagreements = 1108 (frozen target: 1e-12)
+
+GATE TABLE (up to the failure):
+  [PASS] G-M0 prereg sha256: 73faaa6d6b28b144f7562864a325b37225a0048085618282aebb7f22afeb542c (target 73faaa6d6b28b144f7562864a325b37225a0048085618282aebb7f22afeb542c)
+  [PASS] G-M0 prereg line count: got 47 target 47
+  [PASS] G-M0 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [PASS] G-M0 3d-distance table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (target 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de)
+  [PASS] D8 position: raw start == task32 position (all task32 rows): mismatches = 0, task32 rows absent from raw = 0 (both must be 0)
+  [PASS] G-M1(a) my e1+keep reproduce rebuild's correction curves: cb max|diff| = 0.000e+00, cr max|diff| = 0.000e+00 on a 501-point w-grid (gate < 1e-12)
+  [PASS] G-M1(b) aggregate(e2.expected) == e2 e_b: NaN-pattern disagreements = 0, max|diff| over 11865 finite rows = 0.000e+00 (gate < 1e-12)
+  [FAIL] G-M1(c) aggregate(identity) == RECORDED own_e_b: compared 10757 finite recorded rows (task32 finite = 10757), max|diff| = 2.220e-16, rows > 1e-12 = 0, finite/NaN disagreements = 1108 (frozen target: 1e-12)
+
+GATE FAIL: G-M1(c) aggregate(identity) == RECORDED own_e_b -- A3 stops here (exit 3).  Do not raise N, do not adjust a threshold.
+Elapsed 0.5s

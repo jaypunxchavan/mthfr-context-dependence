@@ -1,0 +1,26 @@
+PHASE 3a Task A5e -- RBD background scorer (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6, 7)
+One unbatched masked-marginal pass per (background, position) via scripts/lib/esm_scoring.py; no batching, no reimplementation.
+  wildtype_sequence.fasta    sha256 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb  MATCH
+  RBD_sites.csv              sha256 a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3  MATCH
+  final_variant_scores.csv   sha256 c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97  MATCH
+  fasta: 603 nt -> 201 codons, in-frame stops 0; RBD_sites rows 201; data Wuhan sites 201
+  three-way mismatches: RBD_sites vs data 0, translated fasta vs RBD_sites 0, sites lacking the 20-letter mutant set 0
+  >>> G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: PASS   value = hashes True, codons 201, stops 0, mismatches 0/0/0   S1: the 201-aa construct is the scored sequence
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/156_rbd_score_backgrounds.py", line 661, in <module>
+    main()
+    ~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/156_rbd_score_backgrounds.py", line 481, in main
+    roster = load_roster(ref, data_pairs)
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/156_rbd_score_backgrounds.py", line 276, in load_roster
+    h = sha(ROSTER_PATH)
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/156_rbd_score_backgrounds.py", line 214, in sha
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+                          ~~~~~~~~~~~~~~~~~~~~~^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Library/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/phase3/roster_v1.csv'

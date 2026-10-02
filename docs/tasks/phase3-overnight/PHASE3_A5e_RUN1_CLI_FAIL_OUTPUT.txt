@@ -1,0 +1,6 @@
+usage: 156_rbd_score_backgrounds.py [-h] [--only ONLY]
+                                    [--limit-positions LIMIT_POSITIONS]
+                                    [--out-dir OUT_DIR]
+                                    [--limit-roster LIMIT_ROSTER]
+                                    [--wt-arm-only] [--g-r5 [G_R5]]
+156_rbd_score_backgrounds.py: error: unrecognized arguments: --inputs-only

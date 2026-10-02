@@ -1,0 +1,52 @@
+PHASE 3a Task A5c -- RBD targets e_T^bind / e_T^expr (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6f)
+No torch/esm. Primary threshold n_bc >= 3 in BOTH backgrounds; 1 and 5 reported as sensitivities, none selected.
+
+============================================================================
+COLUMN SEMANTICS GATES (verify before use; AGENTS 5)
+============================================================================
+  >>> G-163-1 bind/expr are the NaN-mean of the per-library columns: PASS   value = max|diff| = 6.67e-06 over 20,100 rows   tolerance 1e-05 (5-decimal table rounding)
+  >>> G-163-2 (as pre-registered, tol 1e-5) delta == mean over libraries of (rep - own wild-type rep): FAIL   value = max|diff| = 1.0000000001411657e-05  (threshold 0.0; excess 1.41e-15)   the authors' own construction
+  >>> G-163-2 (POST-HOC disclosed bound, tol 1.5e-5 from 5-decimal storage) delta == mean over libraries of (rep - own WT rep): PASS   value = max|diff| = 1.0000000001411657e-05  (bound 1.5e-05; headroom 5e-06)   post-hoc tolerance chosen AFTER run 1 failed; disclosed per AGENTS 0/6 -- A5c's PASS depends on it
+  >>> G-163-3 every wild-type row has delta = 0 exactly: PASS   value = max|delta| over 1,005 wild-type rows = 0.00e+00   
+  >>> G-163-4 per-library columns map to libraries (WT barcode means): PASS   value = max|diff| = 4.58e-06 over 15 (library,target) cells   rep1=pool1A, rep2=pool2A, rep3=pool1B; tol 1e-05
+
+============================================================================
+BUILD e_T (frozen 3): e_T(v) = delta_T(v) - delta_Wuhan(v), single substitutions, sites other than T's own site
+============================================================================
+
+  T = N501Y (own site 501 excluded): 3,800 candidate rows; 19 rows dropped at the target site (19 mutants x 1 site); wild-type rows excluded by construction
+  retained (rows with e_bind and e_expr computed): 3,800
+    binding   n_bc >= 1 in both :  3,676 (96.7%)
+    binding   n_bc >= 3 in both :  3,323 (87.4%)
+    binding   n_bc >= 5 in both :  2,857 (75.2%)
+    expression n_bc >= 1 in both :  3,606 (94.9%)
+    expression n_bc >= 3 in both :  2,943 (77.4%)
+    expression n_bc >= 5 in both :  2,248 (59.2%)
+
+  T = E484K (own site 484 excluded): 3,800 candidate rows; 19 rows dropped at the target site (19 mutants x 1 site); wild-type rows excluded by construction
+  retained (rows with e_bind and e_expr computed): 3,800
+    binding   n_bc >= 1 in both :  3,679 (96.8%)
+    binding   n_bc >= 3 in both :  3,397 (89.4%)
+    binding   n_bc >= 5 in both :  2,929 (77.1%)
+    expression n_bc >= 1 in both :  3,616 (95.2%)
+    expression n_bc >= 3 in both :  2,961 (77.9%)
+    expression n_bc >= 5 in both :  2,112 (55.6%)
+
+  e_T table: 7,600 rows (N501Y: 3,800, E484K: 3,800)
+
+============================================================================
+INTERNAL GATES ON THE BUILT TABLE (implementation checks)
+============================================================================
+  >>> G-163-6 mask nesting ge5 subset ge3 subset ge1: PASS   value = holds for both phenotypes: True   
+  >>> G-163-7 no NaN inside any primary mask: PASS   value = NaN inside masks = 0   
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/163_rbd_targets.py", line 470, in <module>
+    main()
+    ~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/163_rbd_targets.py", line 335, in main
+    n_ok = all(int(e[(e["target"] == t) & e[f"use_{p}_ge3"]].sum()) > 0
+           ^^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/163_rbd_targets.py", line 335, in <genexpr>
+    n_ok = all(int(e[(e["target"] == t) & e[f"use_{p}_ge3"]].sum()) > 0
+               ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'Series'

@@ -1,0 +1,116 @@
+=== TEST (a) [rerun after sequence-column fix] --only G4KV --limit-positions 3 (scratch) ===
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=assayed  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the assayed residue at its position (G-5 echo)
+G-154-4 out-dir gb1_scratch: belongs to sequence 'assayed' (no conflicting file)
+  pre-scan: WT arm TO SCORE, 0 backgrounds complete, 1 to score; 58 passes planned
+Using device: mps
+G-154-5 checkpoint present: /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes); loading from local cache (never downloads)...
+  scored WT arm: 55 positions, 1045 rows in 3.0s scoring (52 ms/pass median) | file 1/2
+  scored G4KV: 3 positions, 57 rows in 0.2s (53 ms/pass) | file 2/2, elapsed 0.1m, ETA 0.0m
+
+==========================================================================
+154 SUMMARY
+==========================================================================
+passes timed this run: 58 | median 0.0518 s/pass | mean 0.0537 s/pass
+A4e stage projection (informational): (400 x 54 + 55) = 21655 passes x 0.0518 s/pass x 1.25 = 23.4 min vs the 100-min stage budget (within budget; a projection over budget never shrinks the roster -- frozen A8)
+files: 2 published/skipped-this-run; manifest -> data/processed/phase3/gb1_scratch/manifest.csv; out_dir=data/processed/phase3/gb1_scratch; sequence=assayed
+LIMITATIONS: masked-marginal log-odds on one model (650M) on one device; determinism across devices not claimed.
+  This script creates no statistic: it produces the two score tables script 155 joins.
+wall 7.2s
+EXIT=0 WALL=7s
+
+=== TEST (b) repeat (a) -> both skipped ===
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=assayed  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the assayed residue at its position (G-5 echo)
+G-154-4 out-dir gb1_scratch: belongs to sequence 'assayed' (no conflicting file)
+  SKIP wt_arm.csv: complete (55 x 19 = 1045 rows)
+  SKIP G4KV: complete file (57 rows expected)
+  pre-scan: WT arm skip, 1 backgrounds complete, 0 to score; 0 passes planned
+Nothing to do.
+EXIT=0
+
+=== TEST (c1) fake .tmp present, final complete -> skip ignores tmp ===
+e8956deeeef5ac52e2b11f6a4cfb718b
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=assayed  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the assayed residue at its position (G-5 echo)
+G-154-4 out-dir gb1_scratch: belongs to sequence 'assayed' (no conflicting file)
+  SKIP wt_arm.csv: complete (55 x 19 = 1045 rows)
+  SKIP G4KV: complete file (57 rows expected)
+  pre-scan: WT arm skip, 1 backgrounds complete, 0 to score; 0 passes planned
+Nothing to do.
+EXIT=0
+e8956deeeef5ac52e2b11f6a4cfb718b
+-rw-r--r--@ 1 arnavchavan  staff      8 Oct  1 01:19 .bg_G4KV.csv.tmp
+
+=== TEST (c2) final removed + fake tmp -> re-scored, tmp overwritten ===
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=assayed  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the assayed residue at its position (G-5 echo)
+G-154-4 out-dir gb1_scratch: belongs to sequence 'assayed' (no conflicting file)
+  SKIP wt_arm.csv: complete (55 x 19 = 1045 rows)
+  pre-scan: WT arm skip, 0 backgrounds complete, 1 to score; 3 passes planned
+Using device: mps
+G-154-5 checkpoint present: /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes); loading from local cache (never downloads)...
+  scored G4KV: 3 positions, 57 rows in 0.3s (101 ms/pass) | file 1/1, elapsed 0.0m, ETA 0.0m
+
+==========================================================================
+154 SUMMARY
+==========================================================================
+passes timed this run: 3 | median 0.0619 s/pass | mean 0.0989 s/pass
+A4e stage projection (informational): (400 x 54 + 55) = 21655 passes x 0.0619 s/pass x 1.25 = 27.9 min vs the 100-min stage budget (within budget; a projection over budget never shrinks the roster -- frozen A8)
+files: 1 published/skipped-this-run; manifest -> data/processed/phase3/gb1_scratch/manifest.csv; out_dir=data/processed/phase3/gb1_scratch; sequence=assayed
+LIMITATIONS: masked-marginal log-odds on one model (650M) on one device; determinism across devices not claimed.
+  This script creates no statistic: it produces the two score tables script 155 joins.
+wall 3.6s
+EXIT=0
+e8956deeeef5ac52e2b11f6a4cfb718b
+(no tmp left)
+
+=== TEST (d) --sequence project into the assayed scratch dir -> gate ===
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=project  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+GATE FAILED: G-154-2 roster vs project sequence: 10 bad rows, first ['G2QE', 'G2QP', 'G2QI', 'G2QM', 'G2QL']
+EXIT=3 (expect 3)
+
+=== TEST (d retry after decision S2) --sequence project into assayed scratch -> expect G-154-4 exit 3 ===
+
+==========================================================================
+154 -- GB1 background scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)
+sequence=project  out_dir=data/processed/phase3/gb1_scratch
+==========================================================================
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the project residue at its position (G-5 echo); decision-S2 documented position-2 exception exercised for 10 row(s)
+GATE FAILED: G-154-4 manifest.csv in /Users/arnavchavan/Desktop/mthfr-context-dependence/data/processed/phase3/gb1_scratch contains sequence(s) ['assayed'] but --sequence project: one out-dir per sequence (decision S1)
+EXIT=3 (expect 3)
+
+=== TEST (e) input gates on corrupted scratch copies (real files untouched) ===
+GATE FAILED: G-154-1 sequences.csv sha256 b1c41cda288a210dcb9be89f8cd94d48ff0574456c9cd002672545bc8cc3fd5c != f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f
+G-154-1 sequences sha: SystemExit=3 (expect 3) -> gate fired
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+GATE FAILED: G-154-2 roster_v2.csv sha256 b932402b5d76ee89b6206e91af2ec6ff1ae1feb86980d95d0f5f99a78a3404fa != edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e
+G-154-2 roster sha: SystemExit=3 (expect 3) -> gate fired
+real files untouched: True True
+EXIT=0 (expect 0 for the harness itself)

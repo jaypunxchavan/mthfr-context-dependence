@@ -1,0 +1,52 @@
+============================================================================
+A6c/A6d -- MULTIDMS FIT (scripts/158) -- mode 'smoke', internal cap 45 min
+============================================================================
+  pre-registered: scripts/158 docstring D1-D14 / G-A6-1..4 (written before first run); frozen s6b/s6h
+  env knobs: SEED=0 SEED_SUB=1 HELD_FRAC=0.2 SUB_FRAC=0.05 MAXITER=500 TOL=1e-06 TIMING_ITERS=20 CRIT_R=0.5
+  fit kwargs: maxiter=500, tol=1e-06, warn_unconverged=False; all others multidms defaults
+  python 3.14.5 at /Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/bin/python
+  >>> G-A6-1 env: running under venv_multidms with the stack importable: PASS   value = multidms 1.2.0, jax 0.11.2, numpy 2.5.3, pandas 3.0.6, scipy 1.18.1, sklearn 1.9.1
+  jax devices: ['cpu']  (no GPU required; CPU fits are expected)
+  bc_binding.csv (bind): 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6 == A5a log 048942a35ae187b8e65e91492b95c62254e65175f65e688ff62f5bbfa95436a6
+  bc_expression.csv (expr): 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32 == A5a log 0499e8be98505e349530809bac3974d6cf53fc5d9b2b59f8d553643cd810ae32
+  >>> G-A6-2 pins: bc_binding + bc_expression sha256 == A5a log: PASS   value = 2/2 match
+
+============================================================================
+PHENOTYPE bind (log10Ka) -- mode 'smoke', elapsed 3s / cap 2700s
+============================================================================
+
+[bind] bc_binding.csv: 520,339 raw rows
+  dropped: outside 3 conditions 127,118; null log10Ka 68,009; stop variants 0
+  after filters 325,212 rows -> aggregated 40,044 unique (condition, aa_substitutions) (collapsed 285,168 duplicates by mean)
+  per condition: {'E484K': 11911, 'N501Y': 14683, 'Wuhan_Hu_1': 13450}
+  split [bind]: held-out 8,009 / train 32,035 (frac 0.2, seed 0); per-condition held-out {'E484K': 2382, 'N501Y': 2937, 'Wuhan_Hu_1': 2690}
+  smoke subset: 2,002 rows (~5.0% of full table; per condition {'Wuhan_Hu_1': 672, 'N501Y': 734, 'E484K': 596})
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/lib/python3.14/site-packages/pandas/core/indexes/base.py", line 3641, in get_loc
+    return self._engine.get_loc(casted_key)
+           ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "pandas/_libs/index.pyx", line 168, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/index.pyx", line 197, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7668, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7676, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'condition'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/158_multidms_rbd.py", line 673, in <module>
+    main()
+    ~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/158_multidms_rbd.py", line 579, in main
+    r = run_pheno(ph, mode, multidms, cap, et)
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/158_multidms_rbd.py", line 426, in run_pheno
+    data = multidms.Data(fit_df, reference=REF, assert_site_integrity=True,
+                         name=f"{ph}_{mode}")
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/lib/python3.14/site-packages/multidms/data.py", line 204, in __init__
+    if pd.isnull(variants_df["condition"]).any():
+                 ~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/lib/python3.14/site-packages/pandas/core/frame.py", line 4378, in __getitem__
+    indexer = self.columns.get_loc(key)
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv_multidms/lib/python3.14/site-packages/pandas/core/indexes/base.py", line 3648, in get_loc
+    raise KeyError(key) from err
+KeyError: 'condition'

@@ -1,0 +1,154 @@
+PHASE 3a Task A4a + A4b -- GB1 inputs, gate G-5, frozen roster draw (no model, no scoring)
+numpy 2.5.3 | pandas 3.0.5 | python 3.14.3
+NO MODEL LOADED. torch/esm are not imported by this script.
+
+============================================================================
+A4a -- INPUT VERIFICATION (independently recomputed, targets printed beside)
+============================================================================
+  data/external/gb1_olson2014/gb1_olson2014_doubles.csv
+    sha256 got 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769
+          target 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769   MATCH
+    rows got 535,917   target 535,917   MATCH
+  data/external/gb1_olson2014/gb1_olson2014_singles.csv
+    sha256 got 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3
+          target 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3   MATCH
+    rows got 1,045   target 1,045   MATCH
+  data/external/GB1_fitness_landscape.txt
+    sha256 got 7c9aedcf44416ba8c3a442f041d0b53f8981f8a0bcaaf86afd8ebb8088ec0ad2
+          target 7c9aedcf44416ba8c3a442f041d0b53f8981f8a0bcaaf86afd8ebb8088ec0ad2   MATCH
+  data/processed/gb1_background_roster.csv
+    sha256 got ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4
+          target ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4   MATCH
+  >>> G-A4a-1 four sha256 match their targets: PASS   value = 4/4   doubles, singles, landscape, Phase 3a roster
+  >>> G-A4a-2 row counts match: PASS   value = doubles 535,917; singles 1,045   targets 535,917 / 1,045
+
+  roster sha256 provenance: the target string ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4
+    appears in PHASE3A_LOG.md: True (required True)
+  DISCLOSURE (R4-style, AGENTS 6): the planning doc names the roster file without a hash;
+    the target above is Phase 3a's own recorded value.
+
+  landscape: 160,000 rows, columns ['sequence', 'fitness'], unique sequences 160,000
+
+============================================================================
+A4a -- SEQUENCES: ASSAYED vs PROJECT, AND G-5
+============================================================================
+  quoted at run time from scripts/73_gb1_estimator_transplant.py line 135:
+    GB1_SEQ = "MTYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE"
+    MATCHES the constant used here
+  project  (T at pos 2): MTYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+  assayed  (Q at pos 2): MQYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+  differences project vs assayed: [(2, 'T', 'Q')] (must be exactly [(2, 'T', 'Q')])
+  >>> G-A4a-4 sequence construction: PASS   value = [(2, 'T', 'Q')]   56 aa each; differ at exactly position 2 (T vs Q)
+
+  derivation (i) singles complement: 55 positions 2..56, contiguous True
+    positions without exactly one unused letter: []
+  derivation (ii) workbook WT columns (script 128 T2-G4): 55 positions, conflicts 0 []
+
+  G-5 -- the assayed sequence vs the sequence the fitness data implies (positions 2..56):
+    derivation (i) vs (ii) mismatches: 0 []
+    assayed vs data-derived mismatches: 0 []
+    project vs data-derived mismatches: 1 [(2, 'T', 'Q')]
+    data-derived WT sequence, positions 2..56 (55 aa): QYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+  >>> G-5 assayed matches the fitness-data sequence at 2..56: PASS   value = 0 mismatches over 55 positions; two independent derivations agree   project differs only at position 2 (T vs Q)
+
+============================================================================
+A4a -- PHASE 3a ROSTER FILE STRUCTURE (1,045 single mutants)
+============================================================================
+  rows 1,045, columns ['background_id', 'pos', 'wt_aa', 'mut', 'background_single_fitness_W', 'n_partners_t23', 'n_partners_t24', 'n_partners_t25', 'n_partners_t26', 'n_partners_t27', 'n_partners_t28', 'n_partners_raw']
+  unique ids 1,045 (target 1,045) | positions 2..56 contiguous True | rows mut==wt_aa 0 | wt_aa vs derivation (i) mismatches 0
+  >>> G-A4a-3 roster input structure: PASS   value = 1,045 rows / 1,045 unique ids / positions 2..56 / no mut==wt / all required columns   wt_aa matches assayed at every row's position
+  >>> G-5 roster wt_aa vs assayed residues: PASS   value = 0 mismatches over 1,045 rows   third read-out agrees
+
+============================================================================
+A4b -- FROZEN ROSTER DRAW (400 of 1,045, fitness-blind)
+============================================================================
+  decision R1 (pre-registered in this script's docstring): 'sorted lexicographically by (position, mutant)'
+    = tuple sort (position as integer, mutant as string), which is the roster file's own order.
+  sorted_ids: n=1045; first 5 ['G2QA', 'G2QC', 'G2QD', 'G2QE', 'G2QF']; last 5 ['G56ES', 'G56ET', 'G56EV', 'G56EW', 'G56EY']
+  draw (decision R2, literal frozen call): n=400; first 10 ['G4KV', 'G19EL', 'G55TL', 'G6IY', 'G10KT', 'G6IM', 'G2QE', 'G3YA', 'G10KH', 'G33YC']
+  draw reproduces on a second independent call: True
+  >>> G-A4b-1 draw: 400 unique ids, reproducible: PASS   value = n=400, unique 400, subset of 1,045 yes, second call identical   default_rng(0).choice(sorted_ids, 400, replace=False)
+
+  first 20 of the draw order = the two-sequence subset (frozen A7):
+     1. G4KV
+     2. G19EL
+     3. G55TL
+     4. G6IY
+     5. G10KT
+     6. G6IM
+     7. G2QE
+     8. G3YA
+     9. G10KH
+    10. G33YC
+    11. G30FA
+    12. G41GT
+    13. G27ER
+    14. G41GC
+    15. G50KQ
+    16. G32QI
+    17. G10KM
+    18. G12LS
+    19. G40DI
+    20. G14GE
+
+  R3 -- n_partners recomputed independently from the doubles file (both slots, groupby (pos, mut)):
+    double rows with pos1 == pos2: 0 (Phase 3a T4-G3 = 0; a background can never count a partner at its own position)
+    n_partners_t23     max|stored - recomputed| = 0.0   NaN rows = 0
+    n_partners_t25     max|stored - recomputed| = 0.0   NaN rows = 0
+    n_partners_t28     max|stored - recomputed| = 0.0   NaN rows = 0
+    n_partners_raw     max|stored - recomputed| = 0.0   NaN rows = 0
+  >>> G-A4b-2 n_partners recomputation: PASS   value = max|stored - recomputed| = 0 for t23, t25, t28, unfiltered over all 1,045 singles   
+
+  n_partners over the 400 drawn backgrounds (frozen A1 floor 100; primary t=25):
+    n_partners_t23     min 322  median 1,013  max 1,026  (all >= 100: True)
+    n_partners_t25     min 313  median 1,010  max 1,026  (all >= 100: True)
+    n_partners_t28     min 295  median 1,007  max 1,026  (all >= 100: True)
+    n_partners_raw     min 991  median 1,026  max 1,026  (all >= 100: True)
+  >>> G-A4b-2 floor: all 400 clear the 100-partner floor: PASS   value = min over t23/t25/t28/unfiltered = 295 >= 100   floor stated inert by frozen A1; still verified
+
+============================================================================
+A4b -- WRITE data/processed/phase3/gb1/roster_v2.csv AND HASH IT
+============================================================================
+  rows written: 400 (target 400)
+  first 3 rows verbatim:
+ draw_order background_id  pos wt_aa mut  background_single_fitness_W  n_partners_t23  n_partners_t25  n_partners_t28  n_partners_raw
+          1          G4KV    4     K   V                     0.965917            1013            1012            1007            1026
+          2         G19EL   19     E   L                     1.545177            1012            1011            1006            1026
+          3         G55TL   55     T   L                     0.586555            1023            1022            1020            1026
+  last 1 row verbatim:
+ draw_order background_id  pos wt_aa mut  background_single_fitness_W  n_partners_t23  n_partners_t25  n_partners_t28  n_partners_raw
+        400         G18TP   18     T   P                     0.039894            1021            1020            1019            1026
+  sha256 of roster_v2.csv on disk: edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e
+  sha256 recomputed after re-read : edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e
+  >>> G-A4b-3 roster_v2 written, hashed, re-read: PASS   value = 400 rows, sha256 edc259d4... stable across re-read   written before any scoring; nothing has been scored
+
+  sequences.csv written: data/processed/phase3/gb1/sequences.csv sha256 f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f
+    assayed MQYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+    project MTYKLILNGKTLKGETTTEAVDAATAEKVFKQYANDNGVDGEWTYDDATKTFTVTE
+
+============================================================================
+SUMMARY -- A4a + A4b
+============================================================================
+  [PASS] G-A4a-1 four sha256 match their targets: 4/4  doubles, singles, landscape, Phase 3a roster
+  [PASS] G-A4a-2 row counts match: doubles 535,917; singles 1,045  targets 535,917 / 1,045
+  [PASS] G-A4a-4 sequence construction: [(2, 'T', 'Q')]  56 aa each; differ at exactly position 2 (T vs Q)
+  [PASS] G-5 assayed matches the fitness-data sequence at 2..56: 0 mismatches over 55 positions; two independent derivations agree  project differs only at position 2 (T vs Q)
+  [PASS] G-A4a-3 roster input structure: 1,045 rows / 1,045 unique ids / positions 2..56 / no mut==wt / all required columns  wt_aa matches assayed at every row's position
+  [PASS] G-5 roster wt_aa vs assayed residues: 0 mismatches over 1,045 rows  third read-out agrees
+  [PASS] G-A4b-1 draw: 400 unique ids, reproducible: n=400, unique 400, subset of 1,045 yes, second call identical  default_rng(0).choice(sorted_ids, 400, replace=False)
+  [PASS] G-A4b-2 n_partners recomputation: max|stored - recomputed| = 0 for t23, t25, t28, unfiltered over all 1,045 singles  
+  [PASS] G-A4b-2 floor: all 400 clear the 100-partner floor: min over t23/t25/t28/unfiltered = 295 >= 100  floor stated inert by frozen A1; still verified
+  [PASS] G-A4b-3 roster_v2 written, hashed, re-read: 400 rows, sha256 edc259d4... stable across re-read  written before any scoring; nothing has been scored
+
+  GATES: 10/10 PASS, 0 FAIL, exit 0
+
+  LIMITATIONS (AGENTS 6, printed by the script itself):
+    * Roster membership/order depends on decision R1, an interpretation of an ambiguous frozen phrase,
+      fixed before any score exists; both readings are fitness-blind.
+    * The workbook WT derivation shares the publisher's file with the compact CSVs (independent
+      COLUMN derivation, not an independent experiment).
+    * n_partners are read-depth-qualified counts under the disclosed proxy of frozen A1, reported
+      at every threshold; none is selected.
+    * This script creates no statistical result: it fixes the analysis set.
+
+  elapsed 8.4s

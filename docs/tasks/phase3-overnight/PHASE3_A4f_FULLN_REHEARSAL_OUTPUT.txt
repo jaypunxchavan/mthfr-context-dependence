@@ -1,0 +1,232 @@
+
+============================================================================
+155 -- GB1 REGIME-MAP ANALYSIS  mode=smoke  out_dir=data/processed/phase3/gb1_smoke
+============================================================================
+N_BOOT=10000 (across-background), N_BOOT_RB=2000 (per-background CI), N_PERM=10000, SEED=0
+NO TORCH, NO ESM: this script imports neither (gate G-155-99 checks sys.modules at the end).
+
+============================================================================
+G-155-1 -- INPUT SHA256 (targets printed beside)
+============================================================================
+  data/external/gb1_olson2014/gb1_olson2014_doubles.csv
+    got    89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769
+    target 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769   MATCH
+  data/external/gb1_olson2014/gb1_olson2014_singles.csv
+    got    0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3
+    target 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3   MATCH
+  data/processed/gb1_background_roster.csv
+    got    ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4
+    target ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4   MATCH
+  data/processed/phase3/gb1/roster_v2.csv
+    got    edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e
+    target edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e   MATCH
+  data/processed/phase3/gb1/sequences.csv
+    got    f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f
+    target f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f   MATCH
+  >>> G-155-1 input sha256: PASS   value = 5/5   doubles, singles, Phase 3a roster, roster_v2, sequences
+
+============================================================================
+QUOTED SOURCES -- e_b construction and F_B,wt (frozen section 2)
+============================================================================
+  QUOTED SOURCE: script 73 e_b construction (f_v/f_vb/expct/e_b) (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/73_gb1_estimator_transplant.py, lines 196-231):
+     196|     f_wt = F(gkey(WT_COLS))
+     197|     bg_cols = list(WT_COLS)
+     198|     bg_cols[BG_SITE_IDX] = BG_LETTER
+     199|     f_bg = F(gkey(bg_cols))
+     200|     # FIRST read of the background fitness (fixed before this line was
+     201|     # ever executed -- see docstring): report, never re-select.
+     202|     print(f"\nf(WT) = {f_wt:.6f} | f(V54A background) = {f_bg:.6f}  "
+     203|           f"[first read of this value; A222V-parallel caveat below]")
+     204|     if f_bg <= 0:
+     205|         print("  *** LIMITATION: background fitness is non-positive. The "
+     206|               "multiplicative expectation collapses; this control is NOT a "
+     207|               "faithful A222V analog. Reported, not re-run (a different "
+     208|               "letter would be a data-dependent user decision). ***")
+     209| 
+     210|     rows = []
+     211|     n_nonpos_single = n_nonpos_double = n_nonpos_exp = 0
+     212|     for focal in FOCAL_SITES:
+     213|         idx = FOCAL_SITES.index(focal)
+     214|         for v in AA:
+     215|             if v == WT_COLS[idx]:
+     216|                 continue
+     217|             sc = list(WT_COLS)
+     218|             sc[idx] = v
+     219|             dc = list(WT_COLS)
+     220|             dc[idx] = v
+     221|             dc[BG_SITE_IDX] = BG_LETTER
+     222|             f_v, f_vb = F(gkey(sc)), F(gkey(dc))
+     223|             expct = f_v * f_bg / f_wt
+     224|             e_b = f_vb - expct
+     225|             n_nonpos_single += f_v <= 0
+     226|             n_nonpos_double += f_vb <= 0
+     227|             n_nonpos_exp += expct <= 0
+     228|             rows.append({"site": focal, "variant": v,
+     229|                          "f_single": f_v, "f_double": f_vb,
+     230|                          "f_wt": f_wt, "f_bg": f_bg,
+     231|                          "expected_multiplicative": expct, "e_b": e_b})
+  QUOTED SOURCE: Phase 3a T3's verbatim reimplementation (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/128_gb1_olson_verify_and_transplant_repro.py, lines 131-136):
+     131|   Construction reimplemented verbatim from scripts/73_gb1_estimator_transplant.py
+     132|   lines 188-231:  f_v      = fitness(WT with v at focal site)
+     133|                   f_vb     = fitness(WT with v at focal site AND 'A' at site 54)
+     134|                   expct    = f_v * f_bg / f_wt
+     135|                   e_b      = f_vb - expct
+     136|   and lines 272-280 for the delta side (values read from cache, not recomputed).
+  QUOTED SOURCE: F_B,wt constants (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/129_gb1_background_roster.py, lines 116-119):
+     116| 
+     117| # Reference values established by script 128 and reused, not re-derived.
+     118| WT_IN, WT_SEL = 1759616, 3041819
+     119| N_DOUBLES, N_SINGLES, N_POS = 535917, 1045, 55
+  QUOTED SOURCE: single-mutant W formula (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/129_gb1_background_roster.py, lines 172-174):
+     172|     F_wt = float(WT_SEL) / float(WT_IN)
+     173|     sgl = sgl.copy()
+     174|     sgl["fitness_W"] = (sgl["sel_count"] / sgl["input_count"]) / F_wt
+
+  doubles 535,917 rows, singles 1,045 rows, roster 1,045, roster_v2 400
+  >>> G-155-2 F_B,wt pin (recomputed singles W == roster column): PASS   value = max|diff| = 4.441e-16 over 1,045 singles   tolerance 1e-12; F_B,wt = 3041819/1759616 = 1.728683417
+  single W: min 0.0021  median 0.6551  max 5.0219; singles with W <= 0: 0
+
+============================================================================
+PARTNER TABLE -- every double row as (background, partner), e_b by script 73's construction
+============================================================================
+  partner occurrences: 1,071,834 = 2 x 535,917 | rows with v_pos == pos: 0 (frozen G-2 structural: must be 0)
+  e_b = W_double - W_v * W_bg (f_wt = 1 by W construction)
+  partner singles missing W_v: 0 | backgrounds missing W_bg: 0 | double rows with W <= 0: 82,860 (kept, never filtered)
+  partner rows whose v_mut equals the WT residue at v_pos: 0 (expected 0; such rows would drop from rho_b with a printed count)
+  >>> partner-table structure: PASS   value = same-position 0, missing W_v 0, missing W_bg 0   all must be 0
+  partner rows for the 400 roster backgrounds: 410,271
+
+============================================================================
+SCORES -- wt_arm + completed background files (script 154's output, joined on (position, mut_aa))
+============================================================================
+  note: stray bg files ignored: 0
+  completed backgrounds (roster order): 3 of 400
+  >>> G-4 every completed background >= 95% of its 54 eligible positions: PASS   value = completed 3, coverage failures 0   all complete
+
+============================================================================
+G-3(iii) -- PHASE 1 CI REPRODUCTION ON THE MTHFR ANCHOR ROWS (fixed N=10000)
+============================================================================
+  frozen prereg line target: [-0.1173334458953319, -0.0595113844951173]
+  anchor rows 10,757 / 654 positions; 10000 draws in 15.6s (10000 finite)
+  lo got -0.1173334458953319 target -0.1173334458953319 |diff| = 0.000e+00
+  hi got -0.05951138449511738 target -0.05951138449511738 |diff| = 0.000e+00
+  >>> G-3(iii) Phase 1 CI reproduces (each endpoint < 1e-9): PASS   value = |diff| lo = 0.000e+00, hi = 0.000e+00   tolerance 1e-09
+
+============================================================================
+THRESHOLD t25 (PRIMARY) -- rho_b distribution and covariates
+============================================================================
+  completed 3 | excluded by 100-floor: 0 | partner rows dropped for missing delta: 0 (roster-order partner sets; rho_b over the rows with both delta and e_b)
+  distribution: n=3  mean=-0.021826  median=+0.032491  sd(ddof=0)=0.082518  range=[-0.138434, +0.040465]  frac<0=0.3333
+  centering: background-level CI of mean rho_b = [-0.138434, +0.040465] (10000 finite of 10000) -> CENTERED
+  A8: n = 3 < 200 -- distribution reported; covariate tests labelled UNDERPOWERED and not interpreted
+  covariate (a) mean |pos(b)-pos(v)|: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (b) background single fitness W: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (c) n_partners: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (d) SD of e_b: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  per-background position-cluster CIs (N_BOOT_RB=2000, seed 0, primary only):
+    G4KV: rho_b=+0.040465 CI=[-0.092768, +0.172231] n=1012
+    G19EL: rho_b=-0.138434 CI=[-0.257624, +0.001665] n=1011
+    G55TL: rho_b=+0.032491 CI=[-0.137354, +0.190078] n=1022
+
+============================================================================
+THRESHOLD t23 -- rho_b distribution and covariates
+============================================================================
+  completed 3 | excluded by 100-floor: 0 | partner rows dropped for missing delta: 0 (roster-order partner sets; rho_b over the rows with both delta and e_b)
+  distribution: n=3  mean=-0.021054  median=+0.034130  sd(ddof=0)=0.082311  range=[-0.137407, +0.040116]  frac<0=0.3333
+  centering: background-level CI of mean rho_b = [-0.137407, +0.040116] (10000 finite of 10000) -> CENTERED
+  A8: n = 3 < 200 -- distribution reported; covariate tests labelled UNDERPOWERED and not interpreted
+  covariate (a) mean |pos(b)-pos(v)|: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (b) background single fitness W: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (c) n_partners: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (d) SD of e_b: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+
+============================================================================
+THRESHOLD t28 -- rho_b distribution and covariates
+============================================================================
+  completed 3 | excluded by 100-floor: 0 | partner rows dropped for missing delta: 0 (roster-order partner sets; rho_b over the rows with both delta and e_b)
+  distribution: n=3  mean=-0.021471  median=+0.031523  sd(ddof=0)=0.082102  range=[-0.137438, +0.041502]  frac<0=0.3333
+  centering: background-level CI of mean rho_b = [-0.137438, +0.041502] (10000 finite of 10000) -> CENTERED
+  A8: n = 3 < 200 -- distribution reported; covariate tests labelled UNDERPOWERED and not interpreted
+  covariate (a) mean |pos(b)-pos(v)|: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (b) background single fitness W: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (c) n_partners: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (d) SD of e_b: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+
+============================================================================
+THRESHOLD unfiltered -- rho_b distribution and covariates
+============================================================================
+  completed 3 | excluded by 100-floor: 0 | partner rows dropped for missing delta: 0 (roster-order partner sets; rho_b over the rows with both delta and e_b)
+  distribution: n=3  mean=-0.018517  median=+0.032732  sd(ddof=0)=0.078179  range=[-0.128982, +0.040700]  frac<0=0.3333
+  centering: background-level CI of mean rho_b = [-0.128982, +0.040700] (10000 finite of 10000) -> CENTERED
+  A8: n = 3 < 200 -- distribution reported; covariate tests labelled UNDERPOWERED and not interpreted
+  covariate (a) mean |pos(b)-pos(v)|: rho=+0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (b) background single fitness W: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+  covariate (c) n_partners: rho=+nan  CI=[+nan, +nan]  perm_p=0.0001 (1/10001) -> UNDERPOWERED
+  covariate (d) SD of e_b: rho=-0.500000  CI=[-1.000000, +1.000000]  perm_p=1.0000 (10001/10001) -> UNDERPOWERED
+
+============================================================================
+G-3(i)/(ii) -- BOOTSTRAP GATES ON REAL GB1 BACKGROUNDS
+============================================================================
+  >>> G-3(i) every-cluster-once reproduces rho_b (all completed): PASS   value = max|diff| = 0.000e+00 over 3 backgrounds   tolerance 1e-12
+  G4KV: 2000 draws, max|corrected - reference| = 0.000e+00
+  G19EL: 2000 draws, max|corrected - reference| = 0.000e+00
+  G55TL: 2000 draws, max|corrected - reference| = 0.000e+00
+  >>> G-3(ii) draw-by-draw vs slow reference (3 real backgrounds): PASS   value = max|diff| = 0.000e+00   tolerance 1e-12 (frozen A6)
+
+============================================================================
+TWO-SEQUENCE COMPARISON (frozen A7) -- first 20 in roster order
+============================================================================
+  pairs present on both sequences: 0 of 20 []
+  comparison UNAVAILABLE: the project-sequence scores are produced by the stage (first 20 on both sequences); 0 of 20 pairs on disk now.  Not gated; the stage's analysis run will report the two numbers.
+
+============================================================================
+G-SYN -- PLANTED SIGNAL AND PLANTED NULL ON SYNTHETIC SCORES (all 400 roster backgrounds; frozen G-SYN)
+============================================================================
+  synthetic sets built from the REAL partner sets (primary t=25) and REAL e_b --
+  no scores involved (decision F7).  per-background position-cluster CIs are not recomputed on synthetic arms (disclosed).
+  backgrounds with >= 100 qualifying partners: 400 of 400
+  sd==0 fallbacks: 0
+  arm (i) delta = e_b + noise: n=400  mean=+0.545801
+    background-level CI of mean = [+0.534812, +0.557099] -> OFF-CENTER
+    [G-SYN synthetic] covariate (a) mean |Δpos|: rho=+0.166671 CI=[+0.073065, +0.258158] perm_p=0.0009 (computed)
+    [G-SYN synthetic] covariate (b) single fitness W: rho=+0.293088 CI=[+0.186696, +0.396485] perm_p=0.0001 (computed)
+    [G-SYN synthetic] covariate (c) n_partners: rho=+0.072056 CI=[-0.023381, +0.167523] perm_p=0.1491 (computed)
+    [G-SYN synthetic] covariate (d) SD of e_b: rho=+0.031800 CI=[-0.065951, +0.132008] perm_p=0.5258 (computed)
+  >>> G-SYN(i) planted signal: positive mean AND CI excludes 0 (OFF-CENTER), covariates computed: PASS   value = mean = +0.545801, CI = [+0.534812, +0.557099] -> OFF-CENTER   delta = e_b + within-background noise
+  arm (ii) permuted delta: n=400  mean=+0.001355
+    background-level CI of mean = [-0.001743, +0.004452] -> CENTERED
+  >>> G-SYN(ii) planted null: CI includes 0 (CENTERED): PASS   value = mean = +0.001355, CI = [-0.001743, +0.004452] -> CENTERED   fixed within-background permutation, default_rng(2)
+
+  per-background results written: data/processed/phase3/gb1/gb1_rho_b_smoke.csv (3 rows)
+
+============================================================================
+SUMMARY -- mode=smoke
+============================================================================
+  [PASS] G-155-1 input sha256: 5/5  doubles, singles, Phase 3a roster, roster_v2, sequences
+  [PASS] G-155-2 F_B,wt pin (recomputed singles W == roster column): max|diff| = 4.441e-16 over 1,045 singles  tolerance 1e-12; F_B,wt = 3041819/1759616 = 1.728683417
+  [PASS] partner-table structure: same-position 0, missing W_v 0, missing W_bg 0  all must be 0
+  [PASS] G-4 every completed background >= 95% of its 54 eligible positions: completed 3, coverage failures 0  all complete
+  [PASS] G-3(iii) Phase 1 CI reproduces (each endpoint < 1e-9): |diff| lo = 0.000e+00, hi = 0.000e+00  tolerance 1e-09
+  [PASS] G-3(i) every-cluster-once reproduces rho_b (all completed): max|diff| = 0.000e+00 over 3 backgrounds  tolerance 1e-12
+  [PASS] G-3(ii) draw-by-draw vs slow reference (3 real backgrounds): max|diff| = 0.000e+00  tolerance 1e-12 (frozen A6)
+  [PASS] G-SYN(i) planted signal: positive mean AND CI excludes 0 (OFF-CENTER), covariates computed: mean = +0.545801, CI = [+0.534812, +0.557099] -> OFF-CENTER  delta = e_b + within-background noise
+  [PASS] G-SYN(ii) planted null: CI includes 0 (CENTERED): mean = +0.001355, CI = [-0.001743, +0.004452] -> CENTERED  fixed within-background permutation, default_rng(2)
+
+  outcome words printed above (frozen section 5): CENTERED/OFF-CENTER for the distribution; ASSOCIATED / NOT RESOLVED / UNDERPOWERED per covariate (A8 floor 200: this run has 3 completed backgrounds).
+  torch in sys.modules: False; esm: False
+  >>> G-155-99 analysis runs without torch/esm: PASS   value = torch=False, esm=False   A4f must be model-free
+
+  GATES: 10/10 PASS, 0 FAIL -> exit 0
+
+  LIMITATIONS (AGENTS 3/4/6, printed by the script itself):
+    * the permutation p is an association null, not a re-derivation null; the frozen
+      decision uses the background-level CI.
+    * background_boot treats backgrounds as independent draws; all rho_b within one
+      threshold share the same WT arm (disclosed, not modelled).
+    * W values are read-depth-derived (disclosed proxy, frozen A1); zero-count
+      doubles are kept, never filtered (counts printed above).
+    * rho_b's per-background CI is descriptive (frozen A5), not a test.
+    * no result here may be described as confirming, supporting or undermining any
+      MTHFR result (frozen section 5): the systems, backgrounds and platforms differ.
+
+  elapsed 84.9s

@@ -1,0 +1,53 @@
+PHASE 3a Task A5e -- RBD background scorer (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6, 7)
+One unbatched masked-marginal pass per (background, position) via scripts/lib/esm_scoring.py; no batching, no reimplementation.
+  wildtype_sequence.fasta    sha256 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb  MATCH
+  RBD_sites.csv              sha256 a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3  MATCH
+  final_variant_scores.csv   sha256 c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97  MATCH
+  fasta: 603 nt -> 201 codons, in-frame stops 0; RBD_sites rows 201; data Wuhan sites 201
+  three-way mismatches: RBD_sites vs data 0, translated fasta vs RBD_sites 0, sites lacking the 20-letter mutant set 0
+  >>> G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: PASS   value = hashes True, codons 201, stops 0, mismatches 0/0/0   S1: the 201-aa construct is the scored sequence
+  roster_v1.csv sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+    sha256 pin                 True
+    100 rows                   True
+    unique ids                 True
+    site range                 True
+    wt_aa == reference         True
+    mut != wt                  True
+    in data                    True
+    n_scored_positions == 200  True
+  >>> G-156-2 roster: pinned hash, structure, residues, data membership: PASS   value = 100 rows, 100 unique ids, all checks True   roster hashed in A5d, before any score
+  checkpoint /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t33_650M_UR50D.pt (2,604,537,549 bytes)
+  >>> G-156-3 local ESM-2 650M checkpoint present (never downloads): PASS   value = 2,604,537,549 bytes   weights come from the local cache
+  >>> G-156-6 out-dir consistency (no foreign background, manifest header): PASS   value = stray bg files [], manifest header ok True   one roster, one out-dir (S5)
+
+============================================================================
+G-R5 (HARD, model) -- determinism and wild-type log-odds == 0
+============================================================================
+  gate background: TGT_N501Y (roster order 1), 200 positions; reference 201 positions; device mps
+  >>> G-R5a scoring the same background twice gives identical values: PASS   value = max|diff| = 0.000e+00 over 3800 values (frozen tolerance 1e-06); keys equal True; 0.160 s/pass   frozen 6, tolerance never widened
+  >>> G-R5b wild-type residue log-odds == 0 at every scored position: PASS   value = |score_wt| max 0.000e+00 over 401 positions (reference 201 + TGT_N501Y 200); independent re-derivation vs library max|diff| 2.086e-07   S3: the zero is an identity once the cross-check holds; the library source line is quoted below
+  quoted from scripts/lib/esm_scoring.py at run time:
+    wt_score = log_probs[alphabet.get_idx(wt_aa)].item()
+    aa: log_probs[alphabet.get_idx(aa)].item() - wt_score
+  scored positions where background residue != reference residue (must be 0; own site excluded, S2/S3): 0
+  total G-R5 passes: 1202 (determinism 2 x 200; G-R5b library + independent 2 x 401) in 197.6s
+
+============================================================================
+SUMMARY -- A5e / G-R5
+============================================================================
+  [PASS] G-156-1 reference: pinned hashes + 201 codons + three-way residue agreement: hashes True, codons 201, stops 0, mismatches 0/0/0  S1: the 201-aa construct is the scored sequence
+  [PASS] G-156-2 roster: pinned hash, structure, residues, data membership: 100 rows, 100 unique ids, all checks True  roster hashed in A5d, before any score
+  [PASS] G-156-3 local ESM-2 650M checkpoint present (never downloads): 2,604,537,549 bytes  weights come from the local cache
+  [PASS] G-156-6 out-dir consistency (no foreign background, manifest header): stray bg files [], manifest header ok True  one roster, one out-dir (S5)
+  [PASS] G-R5a scoring the same background twice gives identical values: max|diff| = 0.000e+00 over 3800 values (frozen tolerance 1e-06); keys equal True; 0.160 s/pass  frozen 6, tolerance never widened
+  [PASS] G-R5b wild-type residue log-odds == 0 at every scored position: |score_wt| max 0.000e+00 over 401 positions (reference 201 + TGT_N501Y 200); independent re-derivation vs library max|diff| 2.086e-07  S3: the zero is an identity once the cross-check holds; the library source line is quoted below
+
+  GATES: 6/6 PASS -> G-R5 PASSES
+
+  LIMITATIONS (AGENTS 6):
+    * scores only: no statistic, no p-value and no outcome word of any frozen block is computed here
+    * delta_b(v) = S(v|b) - S(v|Wuhan) is script 157's join, not this script's
+    * G-R5 checks both sequence contexts on one background; the property is a property of the scoring code path, and the wild-type zero is an arithmetic identity verified against an independent re-derivation (S3)
+    * files written under --limit-positions are incomplete by design and are re-scored by a later full run
+
+  elapsed 201.5s

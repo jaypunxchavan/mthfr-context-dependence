@@ -1,0 +1,123 @@
+
+============================================================================
+155 -- GB1 REGIME-MAP ANALYSIS  mode=smoke  out_dir=data/processed/phase3/gb1_smoke
+============================================================================
+N_BOOT=300 (across-background), N_BOOT_RB=300 (per-background CI), N_PERM=300, SEED=0
+NO TORCH, NO ESM: this script imports neither (gate G-155-99 checks sys.modules at the end).
+
+============================================================================
+G-155-1 -- INPUT SHA256 (targets printed beside)
+============================================================================
+  data/external/gb1_olson2014/gb1_olson2014_doubles.csv
+    got    89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769
+    target 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769   MATCH
+  data/external/gb1_olson2014/gb1_olson2014_singles.csv
+    got    0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3
+    target 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3   MATCH
+  data/processed/gb1_background_roster.csv
+    got    ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4
+    target ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4   MATCH
+  data/processed/phase3/gb1/roster_v2.csv
+    got    edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e
+    target edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e   MATCH
+  data/processed/phase3/gb1/sequences.csv
+    got    f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f
+    target f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f   MATCH
+  >>> G-155-1 input sha256: PASS   value = 5/5   doubles, singles, Phase 3a roster, roster_v2, sequences
+
+============================================================================
+QUOTED SOURCES -- e_b construction and F_B,wt (frozen section 2)
+============================================================================
+  QUOTED SOURCE: script 73 e_b construction (f_v/f_vb/expct/e_b) (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/73_gb1_estimator_transplant.py, lines 196-231):
+     196|     f_wt = F(gkey(WT_COLS))
+     197|     bg_cols = list(WT_COLS)
+     198|     bg_cols[BG_SITE_IDX] = BG_LETTER
+     199|     f_bg = F(gkey(bg_cols))
+     200|     # FIRST read of the background fitness (fixed before this line was
+     201|     # ever executed -- see docstring): report, never re-select.
+     202|     print(f"\nf(WT) = {f_wt:.6f} | f(V54A background) = {f_bg:.6f}  "
+     203|           f"[first read of this value; A222V-parallel caveat below]")
+     204|     if f_bg <= 0:
+     205|         print("  *** LIMITATION: background fitness is non-positive. The "
+     206|               "multiplicative expectation collapses; this control is NOT a "
+     207|               "faithful A222V analog. Reported, not re-run (a different "
+     208|               "letter would be a data-dependent user decision). ***")
+     209| 
+     210|     rows = []
+     211|     n_nonpos_single = n_nonpos_double = n_nonpos_exp = 0
+     212|     for focal in FOCAL_SITES:
+     213|         idx = FOCAL_SITES.index(focal)
+     214|         for v in AA:
+     215|             if v == WT_COLS[idx]:
+     216|                 continue
+     217|             sc = list(WT_COLS)
+     218|             sc[idx] = v
+     219|             dc = list(WT_COLS)
+     220|             dc[idx] = v
+     221|             dc[BG_SITE_IDX] = BG_LETTER
+     222|             f_v, f_vb = F(gkey(sc)), F(gkey(dc))
+     223|             expct = f_v * f_bg / f_wt
+     224|             e_b = f_vb - expct
+     225|             n_nonpos_single += f_v <= 0
+     226|             n_nonpos_double += f_vb <= 0
+     227|             n_nonpos_exp += expct <= 0
+     228|             rows.append({"site": focal, "variant": v,
+     229|                          "f_single": f_v, "f_double": f_vb,
+     230|                          "f_wt": f_wt, "f_bg": f_bg,
+     231|                          "expected_multiplicative": expct, "e_b": e_b})
+  QUOTED SOURCE: Phase 3a T3's verbatim reimplementation (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/128_gb1_olson_verify_and_transplant_repro.py, lines 131-136):
+     131|   Construction reimplemented verbatim from scripts/73_gb1_estimator_transplant.py
+     132|   lines 188-231:  f_v      = fitness(WT with v at focal site)
+     133|                   f_vb     = fitness(WT with v at focal site AND 'A' at site 54)
+     134|                   expct    = f_v * f_bg / f_wt
+     135|                   e_b      = f_vb - expct
+     136|   and lines 272-280 for the delta side (values read from cache, not recomputed).
+  QUOTED SOURCE: F_B,wt constants (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/129_gb1_background_roster.py, lines 116-119):
+     116| 
+     117| # Reference values established by script 128 and reused, not re-derived.
+     118| WT_IN, WT_SEL = 1759616, 3041819
+     119| N_DOUBLES, N_SINGLES, N_POS = 535917, 1045, 55
+  QUOTED SOURCE: single-mutant W formula (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/129_gb1_background_roster.py, lines 172-174):
+     172|     F_wt = float(WT_SEL) / float(WT_IN)
+     173|     sgl = sgl.copy()
+     174|     sgl["fitness_W"] = (sgl["sel_count"] / sgl["input_count"]) / F_wt
+
+  doubles 535,917 rows, singles 1,045 rows, roster 1,045, roster_v2 400
+  >>> G-155-2 F_B,wt pin (recomputed singles W == roster column): PASS   value = max|diff| = 4.441e-16 over 1,045 singles   tolerance 1e-12; F_B,wt = 3041819/1759616 = 1.728683417
+  single W: min 0.0021  median 0.6551  max 5.0219; singles with W <= 0: 0
+
+============================================================================
+PARTNER TABLE -- every double row as (background, partner), e_b by script 73's construction
+============================================================================
+  partner occurrences: 1,071,834 = 2 x 535,917 | rows with v_pos == pos: 0 (frozen G-2 structural: must be 0)
+  e_b = W_double - W_v * W_bg (f_wt = 1 by W construction)
+  partner singles missing W_v: 0 | backgrounds missing W_bg: 0 | double rows with W <= 0: 82,860 (kept, never filtered)
+  partner rows whose v_mut equals the WT residue at v_pos: 0 (expected 0; such rows would drop from rho_b with a printed count)
+  >>> partner-table structure: PASS   value = same-position 0, missing W_v 0, missing W_bg 0   all must be 0
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/155_gb1_regime_analysis.py", line 871, in <module>
+    main()
+    ~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/155_gb1_regime_analysis.py", line 416, in main
+    long = long.merge(r4, on=["pos", "mut"], how="inner")
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/frame.py", line 12902, in merge
+    return merge(
+        self,
+    ...<10 lines>...
+        validate=validate,
+    )
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/reshape/merge.py", line 385, in merge
+    op = _MergeOperation(
+        left_df,
+    ...<10 lines>...
+        validate=validate,
+    )
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/reshape/merge.py", line 1018, in __init__
+    ) = self._get_merge_keys()
+        ~~~~~~~~~~~~~~~~~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/reshape/merge.py", line 1620, in _get_merge_keys
+    right_keys.append(right._get_label_or_level_values(rk))
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/generic.py", line 1764, in _get_label_or_level_values
+    raise KeyError(key)
+KeyError: 'pos'

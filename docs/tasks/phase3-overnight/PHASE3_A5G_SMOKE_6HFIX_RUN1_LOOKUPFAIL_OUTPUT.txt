@@ -1,0 +1,209 @@
+
+============================================================================
+A5g -- RBD REGIME ANALYSIS (scripts/157) -- mode 'smoke', out-dir data/processed/phase3/rbd_smoke_6hfix
+============================================================================
+  env: N_BOOT=10000 N_REF=2000 N_SYN_NULL=100 SEED=0  (defaults)
+  NO torch, NO esm by construction; G-157-2 proves it at exit
+
+============================================================================
+G-157-1 -- INPUT PINS (sha256 re-derived on this machine)
+============================================================================
+    data/processed/phase3/rbd/e_T.csv: 14f76c83714e74b757509403560685071d61bccf920f97d71f686cd772e257fd == pinned 14f76c83714e74b757509403560685071d61bccf920f97d71f686cd772e257fd
+    data/processed/phase3/rbd/roster_v1.csv: 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb == pinned 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+    data/external/rbd_starr2022/wildtype_sequence.fasta: 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb == pinned 2a49a444e9d002c82c40d3b5e4a3bc5e4a152c00f5817428803b4368c21c15fb
+    data/external/rbd_starr2022/RBD_sites.csv: a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3 == pinned a35adf4dc5e6bff78ed64dc9daca12580cfe6f891e52c6016e0ffaf6702c5ca3
+    data/external/rbd_starr2022/final_variant_scores.csv: c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97 == pinned c0678e8560e745479a896bc56c4744b75e64f1cfd8666fe0715f0855d652ef97
+    data/external/rbd_structures/6M0J.pdb (optional 6c input): 51f27a495c0c12fa87f459a2510a9268d4d48a34b63ba3e5db5ae7c672a26af5 == pinned 51f27a495c0c12fa87f459a2510a9268d4d48a34b63ba3e5db5ae7c672a26af5
+  >>> G-157-1 input pins: PASS   value = 5 required (+1 optional structure) checked, 0 mismatches   all match their pinned sha256
+  reference: 201 sites 331-531 from RBD_sites.csv; fasta 603 nt (content three-way gated in A5b/G-156-1 this session; here its sha256 is pinned)
+  e_T: 7600 rows x 19 cols; roster: 100 backgrounds, arms {'G': 40, 'S_N501Y': 18, 'S_E484K': 18, 'V_N501Y': 17, 'V_E484K': 5, 'TARGET': 2}
+  target N501Y: 3800 master rows (sites 331-531), rows at T's own site 0 (must be 0)
+    frame N501Y/bind/ge1: mask 3676 rows, non-missing e -> 3676 rows (dropped 0)
+    frame N501Y/bind/ge3: mask 3323 rows, non-missing e -> 3323 rows (dropped 0)
+    frame N501Y/bind/ge5: mask 2857 rows, non-missing e -> 2857 rows (dropped 0)
+    frame N501Y/expr/ge1: mask 3606 rows, non-missing e -> 3606 rows (dropped 0)
+    frame N501Y/expr/ge3: mask 2943 rows, non-missing e -> 2943 rows (dropped 0)
+    frame N501Y/expr/ge5: mask 2248 rows, non-missing e -> 2248 rows (dropped 0)
+  target E484K: 3800 master rows (sites 331-531), rows at T's own site 0 (must be 0)
+    frame E484K/bind/ge1: mask 3679 rows, non-missing e -> 3679 rows (dropped 0)
+    frame E484K/bind/ge3: mask 3397 rows, non-missing e -> 3397 rows (dropped 0)
+    frame E484K/bind/ge5: mask 2929 rows, non-missing e -> 2929 rows (dropped 0)
+    frame E484K/expr/ge1: mask 3616 rows, non-missing e -> 3616 rows (dropped 0)
+    frame E484K/expr/ge3: mask 2961 rows, non-missing e -> 2961 rows (dropped 0)
+    frame E484K/expr/ge5: mask 2112 rows, non-missing e -> 2112 rows (dropped 0)
+  >>> G-157-5 e_T excludes T's own site (frozen s2): PASS   value = N501Y: 0 rows at site 501; E484K: 0 rows at site 484   re-derived here (R2)
+  G-R1 per-target reference differences vs Wuhan-Hu-1:
+  N501Y: [(501, 'N', 'Y')] vs frozen [(501, 'N', 'Y')] -> True
+  E484K: [(484, 'E', 'K')] vs frozen [(484, 'E', 'K')] -> True
+  rows whose wildtype differs from the WUHAN sequence: 140 (expected: the background-substitution sites of the non-Wuhan labels)
+  >>> G-R1 N501Y and E484K references differ from Wuhan-Hu-1 by exactly N501Y / E484K (frozen s7): PASS   value = computed from the data's own wildtype column over 20100 rows   constants frozen in the block
+  >>> G-R2 every data row's wildtype == its label's own reference (frozen s7): PASS   value = 20100 rows, 0 mismatches; 140 rows differ from the WUHAN sequence (expected: the labels' background-substitution sites)   per-target references from scripts/162 docstring R4 (A5b)
+
+============================================================================
+G-R4 -- SCORE FILES IN THIS MODE'S OUT-DIR (frozen s7)
+============================================================================
+  >>> G-R4 every scored file >= 95% of 201 sites, digest/bg_id/shape clean, WT arm present: PASS   value = 3/100 roster files, wt_arm present (3819 rows), min coverage 0.9950   all scored files clean
+  >>> G-157-4 delta join: zero gaps outside b's own site: PASS   value = 6 (background, target) delta arrays, 0 with gaps   score side and WT side both present for every frame row
+
+============================================================================
+G-R3 -- BOOTSTRAP GATES ON REAL RBD ROWS (frozen s7)
+============================================================================
+  >>> G-R3(i) every-cluster-once reproduces rho (all scored backgrounds x 2 targets): PASS   value = max|diff| = 6.939e-18 over 6 rho computations   tolerance 1e-12
+    TGT_N501Y/N501Y: 2000 draws, max|corrected - reference| = 0.000e+00
+    TGT_N501Y/E484K: 2000 draws, max|corrected - reference| = 0.000e+00
+    S501A/N501Y: 2000 draws, max|corrected - reference| = 0.000e+00
+    S501A/E484K: 2000 draws, max|corrected - reference| = 0.000e+00
+    TGT_E484K/N501Y: 2000 draws, max|corrected - reference| = 0.000e+00
+    TGT_E484K/E484K: 2000 draws, max|corrected - reference| = 0.000e+00
+  >>> G-R3(ii) draw-by-draw vs slow reference (3 real backgrounds x 2 targets): PASS   value = max|diff| = 0.000e+00   tolerance 1e-12
+
+============================================================================
+G-R3(iii) -- PHASE 1 CI REPRODUCTION ON THE MTHFR ANCHOR ROWS (fixed N=10000)
+============================================================================
+  QUOTED SOURCE: frozen Phase 1 CI endpoints (scripts/159) (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/159_phase3_common_gate.py, lines 140-145):
+     140| T_CI_LO = -0.1173334458953319
+     141| T_CI_HI = -0.0595113844951173
+     142| T_ROWS, T_POS, T_HPOS = 10757, 654, 455
+     143| T_NBGS, T_NN = 96, 78
+     144| 
+     145| TOL_9DP = 1e-9
+    anchor rows 10,757 / 654 positions; CI [-0.117333445895, -0.059511384495] vs frozen [-0.1173334458953319, -0.05951138449511738]
+  >>> G-R3(iii) Phase 1 CI reproduces (each endpoint < 1e-9, all 10000 draws finite): PASS   value = |diff| lo 0.000e+00, hi 0.000e+00 (10000 finite of 10000 draws)   tolerance 1e-09; the routine under test is the same p3c.pos_cluster_boot used for 6a
+
+============================================================================
+SECTION 5 -- rho_b, p_abs/p_neg/p_pos AND THE OUTCOME WORD (frozen s5)
+============================================================================
+  QUOTED SOURCE: phase3_common.p_spec -- the frozen formula as actually executed (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/lib/phase3_common.py, lines 292-312):
+     292| def p_spec(rho_target, rho_nulls, mode="neg"):
+     293|     """(p, k, n) with p = (1 + k) / (1 + n).
+     294| 
+     295|     "neg": k = #{rho_b <= rho_T}   (the frozen one-sided signed form)
+     296|     "pos": k = #{rho_b >= rho_T}
+     297|     "abs": k = #{|rho_b| >= |rho_T|}
+     298|     """
+     299|     if mode not in ("neg", "pos", "abs"):
+     300|         raise ValueError(f"mode must be neg/pos/abs, got {mode!r}")
+     301|     nulls = np.asarray(rho_nulls, dtype=float)
+     302|     n = int(nulls.size)
+     303|     if mode == "neg":
+     304|         k = int(np.sum(nulls <= float(rho_target)))
+     305|     elif mode == "pos":
+     306|         k = int(np.sum(nulls >= float(rho_target)))
+     307|     else:
+     308|         k = int(np.sum(np.abs(nulls) >= abs(float(rho_target))))
+     309|     return (1 + k) / (1 + n), k, n
+     310| 
+     311| 
+     312| # ==========================================================================
+    N501Y bind/ge1: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K bind/ge1: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+    N501Y bind/ge3: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K bind/ge3: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+    N501Y bind/ge5: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K bind/ge5: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+    N501Y expr/ge1: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K expr/ge1: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+    N501Y expr/ge3: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K expr/ge3: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+    N501Y expr/ge5: STAGE INCOMPLETE (0/57 null members scored) -> NO outcome word (R5)
+    E484K expr/ge5: STAGE INCOMPLETE (0/45 null members scored) -> NO outcome word (R5)
+
+============================================================================
+SECONDARIES (frozen s6) -- 6a..6e at the primary mask, both phenotypes; 6f/6h pointers
+============================================================================
+  structure: chain E: 194/201 sites with CA, 0 mismatches vs the Wuhan reference (numbering verified)
+    6a N501Y/bind: rho_T = -0.0905, position-cluster CI [-0.1577, -0.0222] (excludes 0) over 3323 rows in 200 site clusters, 10000 draws (10000 finite)
+    6b N501Y/bind: Spearman(rho_b, mean|delta_b|) = -0.5000, background-level CI [-1.0000, 1.0000] (includes 0), n = 3 backgrounds (resampling unit = background)
+    6b N501Y/bind p_spec_adj: withheld -- stage incomplete (R5)
+    6c N501Y/bind: only 1 of 75 (N_T U S_T) members scored in this mode -> not computed
+    6d N501Y/bind: |rho_T| rank 1 within S_T U {T} (n = 2; 1/18 S members scored in this mode), fraction 0.500 -- a rank fraction, not a test; signed rank 2
+    6e N501Y/bind: withheld -- stage incomplete (R5)
+    6a E484K/bind: rho_T = -0.0239, position-cluster CI [-0.0790, 0.0302] (includes 0) over 3397 rows in 200 site clusters, 10000 draws (10000 finite)
+    6b E484K/bind: Spearman(rho_b, mean|delta_b|) = 0.5000, background-level CI [-1.0000, 1.0000] (includes 0), n = 3 backgrounds (resampling unit = background)
+    6b E484K/bind p_spec_adj: withheld -- stage incomplete (R5)
+    6c E484K/bind: only 0 of 63 (N_T U S_T) members scored in this mode -> not computed
+    6d E484K/bind: only 1 of S_T U {T} members scored in this mode -> rank not computed
+    6e E484K/bind: withheld -- stage incomplete (R5)
+    6a N501Y/expr: rho_T = -0.0278, position-cluster CI [-0.0917, 0.0365] (includes 0) over 2943 rows in 197 site clusters, 10000 draws (10000 finite)
+    6b N501Y/expr: Spearman(rho_b, mean|delta_b|) = 0.5000, background-level CI [-1.0000, 1.0000] (includes 0), n = 3 backgrounds (resampling unit = background)
+    6b N501Y/expr p_spec_adj: withheld -- stage incomplete (R5)
+    6c N501Y/expr: only 1 of 75 (N_T U S_T) members scored in this mode -> not computed
+    6d N501Y/expr: |rho_T| rank 2 within S_T U {T} (n = 2; 1/18 S members scored in this mode), fraction 1.000 -- a rank fraction, not a test; signed rank 1
+    6e N501Y/expr: withheld -- stage incomplete (R5)
+    6a E484K/expr: rho_T = 0.0156, position-cluster CI [-0.0298, 0.0610] (includes 0) over 2961 rows in 198 site clusters, 10000 draws (10000 finite)
+    6b E484K/expr: Spearman(rho_b, mean|delta_b|) = 0.5000, background-level CI [-1.0000, 1.0000] (includes 0), n = 3 backgrounds (resampling unit = background)
+    6b E484K/expr p_spec_adj: withheld -- stage incomplete (R5)
+    6c E484K/expr: only 0 of 63 (N_T U S_T) members scored in this mode -> not computed
+    6d E484K/expr: only 1 of S_T U {T} members scored in this mode -> rank not computed
+    6e E484K/expr: withheld -- stage incomplete (R5)
+    6f: A5c's record PHASE3_A5c_FULL_OUTPUT.txt present (pointer only, R13)
+    6h: multidms product present: (15198, 8) at data/processed/phase3/multidms/e_T_MD.csv -- printed next to the primary (never replacing it)
+    6h implementation note: post-hoc code fix after the A5g runs (R14 extension) -- coverage / rho_T^MD / profile Spearman on matched PRIMARY-mask rows, both phenotypes, secondary only, NO outcome word, no rule/threshold/seed change
+    6h N501Y/bind: coverage 3323/3323, delta_T unavailable (T's own score file missing) -> rho_T^MD not computed (secondary; never replaces the primary)
+    6h E484K/bind: coverage 3397/3397, delta_T unavailable (T's own score file missing) -> rho_T^MD not computed (secondary; never replaces the primary)
+    6h N501Y/expr: coverage 2943/2943, delta_T unavailable (T's own score file missing) -> rho_T^MD not computed (secondary; never replaces the primary)
+    6h E484K/expr: coverage 2961/2961, delta_T unavailable (T's own score file missing) -> rho_T^MD not computed (secondary; never replaces the primary)
+
+============================================================================
+G-SYN -- PLANTED SIGNAL AND PLANTED NULL ON SYNTHETIC SCORES BUILT FROM THE REAL e_T (frozen s7)
+============================================================================
+  primary frame only (bind, ge3); rng seed 0 (signal), 1000+i (null draws); N_SYN_NULL=100; the same subtract_scores/rho/p_spec/outcome_word path as the real data
+    N501Y signal: rho_T = 0.9704 vs max|rho_null| = 0.0544 over 57 nulls
+    N501Y signal: p_abs = 0.0172 (= k 0 + 1 / 58; mathematical floor 0.0172), word = RBD-REPRODUCES
+    N501Y null: 100 draws, p_abs min/median/max = 0.0172/0.5517/0.9828, draws with p_abs <= 0.05: 3 (0.030)
+    E484K signal: rho_T = 0.9871 vs max|rho_null| = 0.0318 over 45 nulls
+    E484K signal: p_abs = 0.0217 (= k 0 + 1 / 46; mathematical floor 0.0217), word = RBD-REPRODUCES
+    E484K null: 100 draws, p_abs min/median/max = 0.0217/0.5109/1.0000, draws with p_abs <= 0.05: 5 (0.050)
+  >>> G-SYN(i) planted signal recovered for N501Y (p_abs <= 0.05 and the frozen word): PASS   value = p_abs = 0.0172, word = RBD-REPRODUCES, rho_T = 0.9704 vs max|rho_null| = 0.0544, floor 0.0172   seed 0; 57 null members
+  >>> G-SYN(ii) planted null not claimed for N501Y (<= 15% of draws <= 0.05, median > 0.05, no NaN): PASS   value = 3/100 draws <= 0.05 (frac 0.030), median p_abs 0.5517, NaN 0   seeds 1000+i; a FAIL is never re-rolled (R15)
+  >>> G-SYN(i) planted signal recovered for E484K (p_abs <= 0.05 and the frozen word): PASS   value = p_abs = 0.0217, word = RBD-REPRODUCES, rho_T = 0.9871 vs max|rho_null| = 0.0318, floor 0.0217   seed 0; 45 null members
+  >>> G-SYN(ii) planted null not claimed for E484K (<= 15% of draws <= 0.05, median > 0.05, no NaN): PASS   value = 5/100 draws <= 0.05 (frac 0.050), median p_abs 0.5109, NaN 0   seeds 1000+i; a FAIL is never re-rolled (R15)
+  wrote data/processed/phase3/rbd_smoke_6hfix/rho_b_smoke.csv (36 rows: target x frame x scored background)
+
+============================================================================
+G-157-2 -- THIS SCRIPT NEVER TOUCHES TORCH OR ESM
+============================================================================
+  >>> G-157-2 torch/esm not in sys.modules: PASS   value = imported: none   A5g is analysis-only; the model ran in A5e
+    G-157-3 not applicable in smoke mode: its out-dir holds a subset by construction; full mode gates stage completeness
+  wrote data/processed/phase3/rbd_smoke_6hfix/analysis_results_smoke.json
+
+============================================================================
+SUMMARY -- A5g / RBD analysis (mode smoke)
+============================================================================
+  [PASS] G-157-1 input pins: 5 required (+1 optional structure) checked, 0 mismatches  all match their pinned sha256
+  [PASS] G-157-5 e_T excludes T's own site (frozen s2): N501Y: 0 rows at site 501; E484K: 0 rows at site 484  re-derived here (R2)
+  [PASS] G-R1 N501Y and E484K references differ from Wuhan-Hu-1 by exactly N501Y / E484K (frozen s7): computed from the data's own wildtype column over 20100 rows  constants frozen in the block
+  [PASS] G-R2 every data row's wildtype == its label's own reference (frozen s7): 20100 rows, 0 mismatches; 140 rows differ from the WUHAN sequence (expected: the labels' background-substitution sites)  per-target references from scripts/162 docstring R4 (A5b)
+  [PASS] G-R4 every scored file >= 95% of 201 sites, digest/bg_id/shape clean, WT arm present: 3/100 roster files, wt_arm present (3819 rows), min coverage 0.9950  all scored files clean
+  [PASS] G-157-4 delta join: zero gaps outside b's own site: 6 (background, target) delta arrays, 0 with gaps  score side and WT side both present for every frame row
+  [PASS] G-R3(i) every-cluster-once reproduces rho (all scored backgrounds x 2 targets): max|diff| = 6.939e-18 over 6 rho computations  tolerance 1e-12
+  [PASS] G-R3(ii) draw-by-draw vs slow reference (3 real backgrounds x 2 targets): max|diff| = 0.000e+00  tolerance 1e-12
+  [PASS] G-R3(iii) Phase 1 CI reproduces (each endpoint < 1e-9, all 10000 draws finite): |diff| lo 0.000e+00, hi 0.000e+00 (10000 finite of 10000 draws)  tolerance 1e-09; the routine under test is the same p3c.pos_cluster_boot used for 6a
+  [PASS] G-SYN(i) planted signal recovered for N501Y (p_abs <= 0.05 and the frozen word): p_abs = 0.0172, word = RBD-REPRODUCES, rho_T = 0.9704 vs max|rho_null| = 0.0544, floor 0.0172  seed 0; 57 null members
+  [PASS] G-SYN(ii) planted null not claimed for N501Y (<= 15% of draws <= 0.05, median > 0.05, no NaN): 3/100 draws <= 0.05 (frac 0.030), median p_abs 0.5517, NaN 0  seeds 1000+i; a FAIL is never re-rolled (R15)
+  [PASS] G-SYN(i) planted signal recovered for E484K (p_abs <= 0.05 and the frozen word): p_abs = 0.0217, word = RBD-REPRODUCES, rho_T = 0.9871 vs max|rho_null| = 0.0318, floor 0.0217  seed 0; 45 null members
+  [PASS] G-SYN(ii) planted null not claimed for E484K (<= 15% of draws <= 0.05, median > 0.05, no NaN): 5/100 draws <= 0.05 (frac 0.050), median p_abs 0.5109, NaN 0  seeds 1000+i; a FAIL is never re-rolled (R15)
+  [PASS] G-157-2 torch/esm not in sys.modules: imported: none  A5g is analysis-only; the model ran in A5e
+
+  GATES: 14/14 PASS -> A5g PASSES
+
+============================================================================
+PRIMARY OUTCOME (frozen s5: binding, n_bc >= 3, both targets, NO multiplicity adjustment)
+============================================================================
+    N501Y   stage incomplete (0/57 nulls scored) ->  no outcome word exists for this run
+    E484K   stage incomplete (0/45 nulls scored) ->  no outcome word exists for this run
+    sensitivities (n_bc >= 1 / >= 5) and the expression phenotype were printed above; none of them decides (R2/R7)
+    the two targets are two looks with no multiplicity adjustment, by the frozen block's own instruction
+
+LIMITATIONS (printed, not only written down):
+  - two targets, two looks, NO multiplicity adjustment (frozen s5 says so explicitly)
+  - an outcome word is emitted only when the target's whole null set N_T and T's own file are scored and G-R4-clean; otherwise the status is 'stage incomplete' and no word exists (R5)
+  - rho_b is a rank correlation over ~3.3k variant rows nested in ~200 site clusters; resampling is by site (6a) and by background (6b/6c), never by variant row
+  - G-SYN validates the MECHANICS of the pipeline on planted data; it says nothing about this dataset's power
+  - 6b/6c/6d/6e are descriptive: none of them carries an outcome word and none can change the s5 decision
+  - 6f is A5c's record (pointer printed, not recomputed - e_T has no per-library columns)
+  - 6h awaits A6's multidms product; when absent it prints 'unavailable (A6 pending)' and never substitutes anything
+  - smoke mode withholds real-data outcome words BY DESIGN because its out-dir does not contain the full roster
+  - sensitivity masks (n_bc >= 1, >= 5) are computed and printed but are never selected among and never decide (frozen s2)
+
+  elapsed 51.1s

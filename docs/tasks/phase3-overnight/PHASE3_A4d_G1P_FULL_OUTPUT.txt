@@ -1,0 +1,140 @@
+PHASE 3a Task A4d -- HARD gate G-1' (V54A control, 57 variants, project + assayed sequences)
+Scratch only; no roster file touched; no roster background scored.
+
+imported scripts/154 score_positions: score_positions (m154.score_positions.__code__.co_firstlineno=310)
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the project residue at its position (G-5 echo); decision-S2 documented position-2 exception exercised for 10 row(s)
+G-154-1 sequences: sha256 ok; assayed/project match constants; script 73 quote ok
+G-154-2 roster: sha256 ok; 400 rows; every wt_aa equals the assayed residue at its position (G-5 echo)
+
+============================================================================
+G-1' -- CACHED TARGET TABLE (script 73's own output)
+============================================================================
+  data/processed/task_AA1_gb1_eb_analog.csv  sha256 0ca45ba329441f1de3af9086c95947c8fadeb8ebb39de41dcec12501f888213c  rows 57 (decision P1: pinned semantically by the 1e-12 e_b check)
+  >>> internal cached-table structure: PASS   value = rows 57, sites [np.int64(39), np.int64(40), np.int64(41)]   57 rows, 19 per site
+
+============================================================================
+G-1' -- FITNESS SIDE RE-DERIVED (script 73 lines 188-231, quoted)
+============================================================================
+    f_v    = fitness(WT with v at focal site)
+    f_vb   = fitness(WT with v at focal site AND 'A' at site 54)
+    expct  = f_v * f_bg / f_wt
+    e_b    = f_vb - expct
+  >>> internal e_b re-derivation vs cached: PASS   value = max|diff| = 2.220e-16   tolerance 1e-12
+  f_wt = 1.000000 (VDGV), f_bg = 1.372949 (VDAV), n = 57
+
+============================================================================
+G-1' -- SCORE V54A + WT ARM AT 39/40/41, BOTH SEQUENCES (154's own score_positions)
+============================================================================
+device mps | checkpoint esm2_t33_650M_UR50D.pt present
+
+  statistic (imported, script 73's own; source at run time):
+    def _spearman(a, b):
+        """Spearman rho via ranks + Pearson. Matches scipy.stats.spearmanr exactly."""
+        return float(np.corrcoef(rankdata(a), rankdata(b))[0, 1])
+
+  project : 6 passes (3 WT + 3 V54A), 114 rows; assayed : 6 passes, 114 rows
+  totals  : 12 passes / 228 rows (57 delta values per sequence)
+
+============================================================================
+G-1'(a) -- 57 DELTAS vs script 73's CACHED delta_esm (tol 1e-6)
+============================================================================
+ site variant   delta_proj    delta_esm      d_delta       e_b_re  delta_assayed
+   39       A +0.120493889 +0.120493889 +0.000000000 +0.035597847   +0.096938133
+   39       C +0.017895460 +0.017895460 +0.000000000 -0.134812792   -0.002246618
+   39       D +0.058266878 +0.058266878 +0.000000000 +0.001141588   -0.020655870
+   39       E +0.081272364 +0.081272364 +0.000000000 +0.018093958   +0.020399332
+   39       F +0.301661253 +0.301661253 +0.000000000 +1.215173794   +0.349626422
+   39       G -0.002266645 -0.002266645 +0.000000000 -0.007155567   -0.060973883
+   39       H +0.250863791 +0.250863791 +0.000000000 +0.062088998   +0.256275415
+   39       I +0.006936073 +0.006936073 +0.000000000 -0.473507036   +0.007470369
+   39       K +0.001830339 +0.001830339 +0.000000000 -0.010198162   -0.012990952
+   39       L +0.178304434 +0.178304434 +0.000000000 -1.104337437   +0.169367671
+   39       M +0.121175528 +0.121175528 +0.000000000 -0.978671749   +0.117233515
+   39       N +0.166250467 +0.166250467 +0.000000000 -0.007948147   +0.109882593
+   39       P +0.134649515 +0.134649515 +0.000000000 -0.006469121   +0.088109255
+   39       Q +0.188404322 +0.188404322 +0.000000000 -0.051949966   +0.157878637
+   39       R +0.061383009 +0.061383009 +0.000000000 -0.006056724   +0.029449224
+   39       S +0.056313276 +0.056313276 +0.000000000 -0.010513866   +0.019917727
+   39       T -0.015473127 -0.015473127 +0.000000000 -0.149571763   -0.057296991
+   39       W +0.099789381 +0.099789381 +0.000000000 +0.306355494   +0.085934401
+   39       Y +0.272033334 +0.272033334 +0.000000000 +0.992613313   +0.296283484
+   40       A +0.075894833 +0.075894833 +0.000000000 -1.545253105   +0.102415323
+   40       C -0.086640358 -0.086640358 +0.000000000 -1.071265379   -0.088857412
+   40       E +0.149017334 +0.149017334 +0.000000000 -0.723422232   +0.157403231
+   40       F -0.077948570 -0.077948570 +0.000000000 -2.485665854   -0.088626623
+   40       G +0.022381783 +0.022381783 +0.000000000 -1.021172581   +0.034601927
+   40       H -0.103303432 -0.103303432 +0.000000000 -1.441409620   -0.104873419
+   40       I -0.136234283 -0.136234283 +0.000000000 -0.530125721   -0.119508982
+   40       K -0.078287005 -0.078287005 +0.000000000 +0.125152376   -0.040745735
+   40       L -0.091639519 -0.091639519 +0.000000000 -0.539482754   -0.084598303
+   40       M -0.023671150 -0.023671150 +0.000000000 -0.561392289   -0.004276514
+   40       N -0.135526896 -0.135526896 +0.000000000 +0.222758670   -0.119810343
+   40       P -0.055335045 -0.055335045 +0.000000000 +0.246956247   -0.049204111
+   40       Q -0.033599138 -0.033599138 +0.000000000 -0.585032419   -0.012479544
+   40       R -0.123780251 -0.123780251 +0.000000000 -0.070134651   -0.121553183
+   40       S -0.005052567 -0.005052567 +0.000000000 -0.883234654   +0.021098852
+   40       T -0.005708575 -0.005708575 +0.000000000 -0.963510075   +0.030611515
+   40       V -0.042434216 -0.042434216 +0.000000000 -0.912614124   -0.020345688
+   40       W -0.132303238 -0.132303238 +0.000000000 -3.342986096   -0.168440104
+   40       Y -0.092955589 -0.092955589 +0.000000000 -2.936781380   -0.098537207
+   41       A -0.194982052 -0.194982052 +0.000000000 +3.992438213   -0.225629628
+   41       C -0.190017343 -0.190017343 +0.000000000 +3.603786775   -0.215403616
+   41       D +0.029160380 +0.029160380 +0.000000000 -0.004660359   -0.003641903
+   41       E +0.038559556 +0.038559556 +0.000000000 -0.002149374   -0.006827176
+   41       F -0.006324887 -0.006324887 +0.000000000 +1.407522440   -0.061515152
+   41       H -0.283553958 -0.283553958 +0.000000000 +0.015958444   -0.310610116
+   41       I +0.475995421 +0.475995421 +0.000000000 -0.004701055   +0.438804805
+   41       K +0.104044557 +0.104044557 +0.000000000 -0.005595300   +0.067467868
+   41       L +0.377420306 +0.377420306 +0.000000000 +0.859084818   +0.351138055
+   41       M +0.201505303 +0.201505303 +0.000000000 +1.180657985   +0.166045845
+   41       N +0.006395459 +0.006395459 +0.000000000 +0.251511047   -0.023682415
+   41       P -0.123055339 -0.123055339 +0.000000000 +0.003172700   -0.143390000
+   41       Q +0.089883924 +0.089883924 +0.000000000 +0.008687368   +0.068070114
+   41       R -0.030083060 -0.030083060 +0.000000000 +0.001007340   -0.045971692
+   41       S -0.023656249 -0.023656249 +0.000000000 +1.273354232   -0.057189047
+   41       T +0.237343669 +0.237343669 +0.000000000 +0.026057943   +0.180149257
+   41       V +0.344677567 +0.344677567 +0.000000000 +0.006748252   +0.307623804
+   41       W -0.164080024 -0.164080024 +0.000000000 +0.017082055   -0.226877511
+   41       Y -0.210650086 -0.210650086 +0.000000000 +0.247744924   -0.268754780
+  variants compared: 57 / 57 | max|delta_proj - delta_cached| = 9.714e-17 (site/variant 40/Q) | over 1e-6: 0
+  >>> G-1'(a) 57 deltas reproduce cached delta_esm to 1e-6: PASS   value = max|diff| = 9.714e-17, over-tolerance 0/57   frozen tolerance 1e-06
+
+============================================================================
+G-1'(b) -- CONTROL RHO RE-DERIVES (frozen target, tol 1e-9)
+============================================================================
+  rho (rescored project deltas vs re-derived e_b) = 0.12218045112781956
+  frozen target                          = 0.12218045112781956
+  |diff| = 0.000e+00   (frozen tolerance 1e-09)
+  (same statistic on CACHED deltas: 0.12218045112781956; |diff to target| = 0.000e+00)
+  >>> G-1'(b) control rho re-derives to 1e-9: PASS   value = got 0.12218045112781956, |diff| = 0.000e+00   frozen target 0.12218045112781956
+
+============================================================================
+REPORT ONLY (frozen A3, NOT a gate) -- V54A ON THE ASSAYED SEQUENCE
+============================================================================
+  rho (project / control) = 0.12218045112781956
+  rho (assayed)           = 0.03895514648690692
+  difference (assayed - control) = -0.083225304641
+  Frozen A3: reported, not gated. The two sequences differ only at position 2, which
+  is not a focal site here; the difference above is context-only.
+
+  table written: data/processed/phase3/gb1_scratch/g1p_v54a_table.csv (57 rows)
+
+============================================================================
+SUMMARY -- A4d / G-1'
+============================================================================
+  [PASS] internal cached-table structure: rows 57, sites [np.int64(39), np.int64(40), np.int64(41)]  57 rows, 19 per site
+  [PASS] internal e_b re-derivation vs cached: max|diff| = 2.220e-16  tolerance 1e-12
+  [PASS] G-1'(a) 57 deltas reproduce cached delta_esm to 1e-6: max|diff| = 9.714e-17, over-tolerance 0/57  frozen tolerance 1e-06
+  [PASS] G-1'(b) control rho re-derives to 1e-9: got 0.12218045112781956, |diff| = 0.000e+00  frozen target 0.12218045112781956
+
+  GATES: 4/4 PASS -> G-1' PASSES
+
+  LIMITATIONS (AGENTS 6):
+    * same-device reproduction: script 73's cached deltas were made on this machine/model;
+      cross-device determinism is not claimed.
+    * 57 variants at 3 sites of ONE control background: G-1' validates machinery,
+      it is not evidence about any statistic's value.
+    * the assayed-sequence rho is reported, not gated (frozen A3).
+
+  elapsed 4.3s

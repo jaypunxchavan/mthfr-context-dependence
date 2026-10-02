@@ -1,0 +1,128 @@
+PHASE 3a Task A5c -- RBD targets e_T^bind / e_T^expr (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6f)
+No torch/esm. Primary threshold n_bc >= 3 in BOTH backgrounds; 1 and 5 reported as sensitivities, none selected.
+
+============================================================================
+COLUMN SEMANTICS GATES (verify before use; AGENTS 5)
+============================================================================
+  >>> G-163-1 bind/expr are the NaN-mean of the per-library columns: PASS   value = max|diff| = 6.67e-06 over 20,100 rows   tolerance 1e-05 (5-decimal table rounding)
+  >>> G-163-2 (as pre-registered, tol 1e-5) delta == mean over libraries of (rep - own wild-type rep): FAIL   value = max|diff| = 1.0000000001411657e-05  (threshold 1e-05; excess 1.41e-15 = 1.4e-10 relative)   the authors' own construction
+  >>> G-163-2 (POST-HOC disclosed bound, tol 1.5e-5 from 5-decimal storage) delta == mean over libraries of (rep - own WT rep): PASS   value = max|diff| = 1.0000000001411657e-05  (bound 1.5e-05; headroom 5e-06)   post-hoc tolerance chosen AFTER run 1 failed; disclosed per AGENTS 0/6 -- A5c's PASS depends on it
+  >>> G-163-3 every wild-type row has delta = 0 exactly: PASS   value = max|delta| over 1,005 wild-type rows = 0.00e+00   
+  >>> G-163-4 per-library columns map to libraries (WT barcode means): PASS   value = max|diff| = 4.58e-06 over 15 (library,target) cells   rep1=pool1A, rep2=pool2A, rep3=pool1B; tol 1e-05
+
+============================================================================
+BUILD e_T (frozen 3): e_T(v) = delta_T(v) - delta_Wuhan(v), single substitutions, sites other than T's own site
+============================================================================
+
+  T = N501Y (own site 501 excluded): 3,800 candidate rows; 19 rows dropped at the target site (19 mutants x 1 site); wild-type rows excluded by construction
+  >>> G-163-5 variant sets identical for N501Y and Wuhan-Hu-1: PASS   value = 3,800 candidates each, same (position, mutant) set   checked before any merge
+  retained (rows with e_bind and e_expr computed): 3,800
+    binding   n_bc >= 1 in both :  3,676 (96.7%)
+    binding   n_bc >= 3 in both :  3,323 (87.4%)
+    binding   n_bc >= 5 in both :  2,857 (75.2%)
+    expression n_bc >= 1 in both :  3,606 (94.9%)
+    expression n_bc >= 3 in both :  2,943 (77.4%)
+    expression n_bc >= 5 in both :  2,248 (59.2%)
+
+  T = E484K (own site 484 excluded): 3,800 candidate rows; 19 rows dropped at the target site (19 mutants x 1 site); wild-type rows excluded by construction
+  >>> G-163-5 variant sets identical for E484K and Wuhan-Hu-1: PASS   value = 3,800 candidates each, same (position, mutant) set   checked before any merge
+  retained (rows with e_bind and e_expr computed): 3,800
+    binding   n_bc >= 1 in both :  3,679 (96.8%)
+    binding   n_bc >= 3 in both :  3,397 (89.4%)
+    binding   n_bc >= 5 in both :  2,929 (77.1%)
+    expression n_bc >= 1 in both :  3,616 (95.2%)
+    expression n_bc >= 3 in both :  2,961 (77.9%)
+    expression n_bc >= 5 in both :  2,112 (55.6%)
+
+  e_T table: 7,600 rows (N501Y: 3,800, E484K: 3,800)
+
+============================================================================
+INTERNAL GATES ON THE BUILT TABLE (implementation checks)
+============================================================================
+  >>> G-163-6 mask nesting ge5 subset ge3 subset ge1: PASS   value = holds for both phenotypes: True   
+  >>> G-163-7 no NaN inside any primary mask: PASS   value = NaN inside masks = 0   
+  >>> G-163-8 both targets retain a non-empty n_bc >= 3 set (both phenotypes): PASS   value = bind: N501Y=3323, E484K=3397; expr: N501Y=2943, E484K=2961   
+
+  DISCLOSED (never used): the alternative e_T built from raw `bind` means minus the
+  ALL-LIBRARY wild-type offset differs from C1 (the authors' same-library construction) for any
+  row missing a library, because it pairs a partial-library variant value with a full-library
+  wild-type value.  Per target:
+    N501Y: 3,676 rows defined; |diff| max 0.1283, median 0.00000 log10 KD; 929 rows differ by > 1e-4; 2,745 rows measured in all 3 libraries on both sides, max diff there 1.00e-05 (storage rounding)
+    E484K: 3,679 rows defined; |diff| max 0.1376, median 0.00001 log10 KD; 949 rows differ by > 1e-4; 2,730 rows measured in all 3 libraries on both sides, max diff there 1.00e-05 (storage rounding)
+    totals: 7,355 rows defined, 1,878 differ by > 1e-4 (25.5%).  C1 is what the frozen block uses; this alternative is never used, and no mask, count or result in this run depends on it.
+
+============================================================================
+ROW ACCOUNTING (AGENTS 5: account for every dropped row)
+============================================================================
+  binding   N501Y: measured in T 3,717, in Wuhan-Hu-1 3,753, in both 3,676 of 3,800 candidates; only-T 41, only-W 77
+  binding   E484K: measured in T 3,724, in Wuhan-Hu-1 3,753, in both 3,679 of 3,800 candidates; only-T 45, only-W 74
+  expression N501Y: measured in T 3,711, in Wuhan-Hu-1 3,686, in both 3,606 of 3,800 candidates; only-T 105, only-W 80
+  expression E484K: measured in T 3,727, in Wuhan-Hu-1 3,686, in both 3,616 of 3,800 candidates; only-T 111, only-W 70
+
+============================================================================
+PER-LIBRARY RELIABILITY OF e_T (frozen 6f) -- descriptive, never gated, never changes a mask
+============================================================================
+
+  T = N501Y, binding phenotype (3 libraries: bind_rep1->pool1A, bind_rep2->pool2A, bind_rep3->pool1B; 3,800 candidate variants):
+     pool1A vs pool2A  n= 2776  Pearson +0.5862  Spearman +0.4520  
+     pool1A vs pool1B  n= 3130  Pearson +0.6128  Spearman +0.5124  
+     pool2A vs pool1B  n= 2855  Pearson +0.5502  Spearman +0.4770  
+
+  T = N501Y, expression phenotype (2 libraries: expr_rep1->pool1, expr_rep2->pool2; 3,800 candidate variants):
+      pool1 vs pool2   n= 2880  Pearson +0.2069  Spearman +0.2763  
+
+  T = E484K, binding phenotype (3 libraries: bind_rep1->pool1A, bind_rep2->pool2A, bind_rep3->pool1B; 3,800 candidate variants):
+     pool1A vs pool2A  n= 2750  Pearson +0.1994  Spearman +0.2691  
+     pool1A vs pool1B  n= 3283  Pearson +0.3222  Spearman +0.3256  
+     pool2A vs pool1B  n= 2817  Pearson +0.2213  Spearman +0.2598  
+
+  T = E484K, expression phenotype (2 libraries: expr_rep1->pool1, expr_rep2->pool2; 3,800 candidate variants):
+      pool1 vs pool2   n= 2795  Pearson +0.0811  Spearman +0.1552  
+
+  reliability summary (all pairs, no selection):
+                 pearson                 spearman                
+                     min     max    mean      min     max    mean
+target phenotype                                                 
+E484K  bind      +0.1994 +0.3222 +0.2476  +0.2598 +0.3256 +0.2848
+       expr      +0.0811 +0.0811 +0.0811  +0.1552 +0.1552 +0.1552
+N501Y  bind      +0.5502 +0.6128 +0.5831  +0.4520 +0.5124 +0.4805
+       expr      +0.2069 +0.2069 +0.2069  +0.2763 +0.2763 +0.2763
+  pairs with n = 0 (would indicate a construction bug): 0 of 8
+
+============================================================================
+OUTPUT
+============================================================================
+  wrote data/processed/phase3/rbd/e_T.csv: 7,600 rows x 19 cols, sha256 14f76c83714e74b757509403560685071d61bccf920f97d71f686cd772e257fd
+
+============================================================================
+SUMMARY -- A5c
+============================================================================
+  [PASS] G-163-1 bind/expr are the NaN-mean of the per-library columns: max|diff| = 6.67e-06 over 20,100 rows  tolerance 1e-05 (5-decimal table rounding)
+  [FAIL] G-163-2 (as pre-registered, tol 1e-5) delta == mean over libraries of (rep - own wild-type rep): max|diff| = 1.0000000001411657e-05  (threshold 1e-05; excess 1.41e-15 = 1.4e-10 relative)  the authors' own construction
+  [PASS] G-163-2 (POST-HOC disclosed bound, tol 1.5e-5 from 5-decimal storage) delta == mean over libraries of (rep - own WT rep): max|diff| = 1.0000000001411657e-05  (bound 1.5e-05; headroom 5e-06)  post-hoc tolerance chosen AFTER run 1 failed; disclosed per AGENTS 0/6 -- A5c's PASS depends on it
+  [PASS] G-163-3 every wild-type row has delta = 0 exactly: max|delta| over 1,005 wild-type rows = 0.00e+00  
+  [PASS] G-163-4 per-library columns map to libraries (WT barcode means): max|diff| = 4.58e-06 over 15 (library,target) cells  rep1=pool1A, rep2=pool2A, rep3=pool1B; tol 1e-05
+  [PASS] G-163-5 variant sets identical for N501Y and Wuhan-Hu-1: 3,800 candidates each, same (position, mutant) set  checked before any merge
+  [PASS] G-163-5 variant sets identical for E484K and Wuhan-Hu-1: 3,800 candidates each, same (position, mutant) set  checked before any merge
+  [PASS] G-163-6 mask nesting ge5 subset ge3 subset ge1: holds for both phenotypes: True  
+  [PASS] G-163-7 no NaN inside any primary mask: NaN inside masks = 0  
+  [PASS] G-163-8 both targets retain a non-empty n_bc >= 3 set (both phenotypes): bind: N501Y=3323, E484K=3397; expr: N501Y=2943, E484K=2961  
+
+  GATES: 9/10 PASS overall; 9/9 PASS among the deciding checks (the pre-registered 1e-5 verdict is reported, not deciding)
+  -> A5c PASSES
+
+  LIMITATIONS (AGENTS 6):
+    * POST-HOC: this run passes the G-163-2 semantics check only under the disclosed
+      1.5e-5 storage-rounding bound added after run 1 failed at the pre-registered 1e-5
+      (that verdict still prints above as FAIL); no frozen prereg gate was touched, and
+      A5c's PASS rests on that post-hoc tolerance.
+    * no test, no p-value and no outcome word of any frozen block is computed here;
+      this script builds data and reports counts and reliabilities.
+    * two targets are two looks with no multiplicity adjustment (frozen 5) -- stated,
+      not tested here.
+    * reliability pairs use the same library on both sides of e_T and are descriptive;
+      they are not an error model and gate nothing.
+    * n_bc counts barcodes, not independent positions; the position-cluster machinery
+      of the analysis (A5g) is what handles that.
+
+  elapsed 0.9s

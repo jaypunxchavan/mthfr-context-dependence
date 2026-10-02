@@ -1,0 +1,12 @@
+PHASE 3a Task A5c -- RBD targets e_T^bind / e_T^expr (frozen RBD_REPLICATION_PREREG_v1.md sections 2, 3, 6f)
+No torch/esm. Primary threshold n_bc >= 3 in BOTH backgrounds; 1 and 5 reported as sensitivities, none selected.
+
+============================================================================
+COLUMN SEMANTICS GATES (verify before use; AGENTS 5)
+============================================================================
+  >>> G-163-1 bind/expr are the NaN-mean of the per-library columns: PASS   value = max|diff| = 6.67e-06 over 20,100 rows   tolerance 1e-05 (5-decimal table rounding)
+  >>> G-163-2 delta == mean over libraries of (rep - own wild-type rep): FAIL   value = max|diff| = 1.00e-05   the authors' own construction
+  >>> G-163-3 every wild-type row has delta = 0 exactly: PASS   value = max|delta| over 1,005 wild-type rows = 0.00e+00   
+  >>> G-163-4 per-library columns map to libraries (WT barcode means): PASS   value = max|diff| = 4.58e-06 over 15 (library,target) cells   rep1=pool1A, rep2=pool2A, rep3=pool1B; tol 1e-05
+
+GATE FAILED: column semantics differ from what this script assumes; stopping before anything is built.

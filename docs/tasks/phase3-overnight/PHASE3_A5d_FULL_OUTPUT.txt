@@ -1,0 +1,106 @@
+PHASE 3a Task A5d -- RBD roster (frozen RBD_REPLICATION_PREREG_v1.md section 4)
+No torch/esm/no model.  Nothing is scored: the roster is written and hashed before any score exists (frozen 4).
+
+============================================================================
+REFERENCE CHAIN -- the construct's sites and residues (D1)
+============================================================================
+  RBD_sites.csv: 201 rows, sites 331..531, contiguous True
+  wildtype_sequence.fasta: 201 aa (603 nt / 3), in-frame stops 0
+  data Wuhan wildtype: 201 sites
+  derivation (i) RBD_sites vs data: 0 mismatches
+  derivation (ii) fasta translation vs RBD_sites: 0 mismatches
+  derivation (iii) sites lacking the full 20-letter mutant set: 0
+  >>> G-164-1 reference chain: three derivations of the construct agree: PASS   value = 201 sites 331..531, mismatches 0/0, sites missing an alphabet 0   RBD_sites == data == translated fasta
+
+============================================================================
+ARMS (frozen 4) -- drawn, never chosen; counts printed
+============================================================================
+  TARGET      drawn   2
+  S_N501Y     drawn  18
+  S_E484K     drawn  18
+  V_N501Y     drawn  17
+  V_E484K     drawn   5
+  G           drawn  40
+  V_N501Y branch: candidates 17 <= 60 -> keep-all (the seed-0 sampling branch of D2 was NOT taken)
+  V_E484K branch: candidates 5 <= 60 -> keep-all (the seed-0 sampling branch of D2 was NOT taken)
+  G candidate sites: 199 (201 - 484 - 501)
+  >>> G-164-2 arm S_T = the 18 other substitutions at T's site: PASS   value = N501Y: n=18 site=501 all_valid=True; E484K: n=18 site=484 all_valid=True   frozen: not the wild type, not T's own substitution
+  >>> G-164-3 arm V_T = T's substitution at other same-WT-residue sites: PASS   value = N501Y: 17/17 valid=True; E484K: 5/5 valid=True   candidates are counted, not sampled, below the frozen threshold of 60; branch printed above
+  >>> G-164-4 arm G: 40 backgrounds, distinct sites, seed-0 reproducible: PASS   value = 40 entries, 40 distinct sites, excluded sites present [], second fresh default_rng(0) draw identical = True   site uniform over 199, mutant uniform over 19 (D3)
+
+============================================================================
+NULL SETS N_T = V_T u G (frozen 4) and roster unification (D5)
+============================================================================
+  N_N501Y: |V_N501Y| = 17, |G| = 40, |V_T & G| = 0 -> |N_N501Y| = 57 (set union, never a sum of arm sizes)
+      other target's background (E484K at 484K) in N_N501Y: False
+  N_E484K: |V_E484K| = 5, |G| = 40, |V_T & G| = 0 -> |N_E484K| = 45 (set union, never a sum of arm sizes)
+      other target's background (N501Y at 501Y) in N_E484K: False
+  >>> G-164-5 null sets: N_T == V_T u G, targets and S arms excluded, other target's background excluded: PASS   value = |N_N501Y|=57; |N_E484K|=45   checked as set identities, not assumed
+
+============================================================================
+ROSTER (written at the end of this run, D9) -- first 12 rows
+============================================================================
+ roster_order background_id     arm    arms  site wt_aa mutant target_assoc  is_target  in_null_N501Y  in_null_E484K  n_scored_positions
+            1     TGT_N501Y  TARGET  TARGET   501     N      Y        N501Y       True          False          False                 200
+            2         S501A S_N501Y S_N501Y   501     N      A        N501Y      False          False          False                 200
+            3         S484A S_E484K S_E484K   484     E      A        E484K      False          False          False                 200
+            4         V331Y V_N501Y V_N501Y   331     N      Y        N501Y      False           True          False                 200
+            5         V340K V_E484K V_E484K   340     E      K        E484K      False          False           True                 200
+            6         G492H       G       G   492     L      H       shared      False           True           True                 200
+            7     TGT_E484K  TARGET  TARGET   484     E      K        E484K       True          False          False                 200
+            8         S501C S_N501Y S_N501Y   501     N      C        N501Y      False          False          False                 200
+            9         S484C S_E484K S_E484K   484     E      C        E484K      False          False          False                 200
+           10         V334Y V_N501Y V_N501Y   334     N      Y        N501Y      False           True          False                 200
+           11         V406K V_E484K V_E484K   406     E      K        E484K      False          False           True                 200
+           12         G426Q       G       G   426     P      Q       shared      False           True           True                 200
+  >>> G-164-6 roster integrity (unique rows/ids, residues, data membership, rebuild): PASS   value = 100 rows, 100 unique (site, mutant), 100 unique ids, wt_aa mismatches 0, pairs absent from the data 0, columns ok True, rebuild identical True   one row per physical background (D5)
+  >>> G-164-7 balanced prefix: counts of not-yet-exhausted arms differ by <= 1 at every prefix: PASS   value = max spread observed 1 over 100 positions (first violation at prefix None)   round-robin over the fixed cycle TARGET > S_N501Y > S_E484K > V_N501Y > V_E484K > G
+
+============================================================================
+COUNTS PER ARM AND EXPECTED PASSES (A5d report)
+============================================================================
+  arm          drawn  roster rows
+  TARGET           2            2
+  S_N501Y         18           18
+  S_E484K         18           18
+  V_N501Y         17           17
+  V_E484K          5            5
+  G               40           40
+  TOTAL          100          100   (memberships 100 - unified duplicates 0)
+  |N_N501Y| = 57 (V 17 u G 40; overlap 0)
+  |N_E484K| = 45 (V 5 u G 40; overlap 0)
+  WT arm passes: 201 (all construct sites, D8)
+  background passes: 100 backgrounds x 200 (201 sites - own site) = 20000
+  EXPECTED PASSES for the stage: 20201
+  expected site coverage per background: 200/201 = 99.50% vs G-R4 floor 95%
+
+============================================================================
+WRITE + HASH BEFORE ANY SCORING (frozen 4, D9)
+============================================================================
+  wrote data/processed/phase3/rbd/roster_v1.csv: 100 rows, sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+  re-read: 100 rows, sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb (stable = True); pre-existing score files: []
+  expected passes written into the record: 20201
+  >>> G-164-8 roster written, hashed, re-read; nothing scored yet: PASS   value = sha256 stable True, stray score files 0, rows in == rows out True, frame identical True   hashed strictly before any scoring exists
+
+============================================================================
+SUMMARY -- A5d
+============================================================================
+  [PASS] G-164-1 reference chain: three derivations of the construct agree: 201 sites 331..531, mismatches 0/0, sites missing an alphabet 0  RBD_sites == data == translated fasta
+  [PASS] G-164-2 arm S_T = the 18 other substitutions at T's site: N501Y: n=18 site=501 all_valid=True; E484K: n=18 site=484 all_valid=True  frozen: not the wild type, not T's own substitution
+  [PASS] G-164-3 arm V_T = T's substitution at other same-WT-residue sites: N501Y: 17/17 valid=True; E484K: 5/5 valid=True  candidates are counted, not sampled, below the frozen threshold of 60; branch printed above
+  [PASS] G-164-4 arm G: 40 backgrounds, distinct sites, seed-0 reproducible: 40 entries, 40 distinct sites, excluded sites present [], second fresh default_rng(0) draw identical = True  site uniform over 199, mutant uniform over 19 (D3)
+  [PASS] G-164-5 null sets: N_T == V_T u G, targets and S arms excluded, other target's background excluded: |N_N501Y|=57; |N_E484K|=45  checked as set identities, not assumed
+  [PASS] G-164-6 roster integrity (unique rows/ids, residues, data membership, rebuild): 100 rows, 100 unique (site, mutant), 100 unique ids, wt_aa mismatches 0, pairs absent from the data 0, columns ok True, rebuild identical True  one row per physical background (D5)
+  [PASS] G-164-7 balanced prefix: counts of not-yet-exhausted arms differ by <= 1 at every prefix: max spread observed 1 over 100 positions (first violation at prefix None)  round-robin over the fixed cycle TARGET > S_N501Y > S_E484K > V_N501Y > V_E484K > G
+  [PASS] G-164-8 roster written, hashed, re-read; nothing scored yet: sha256 stable True, stray score files 0, rows in == rows out True, frame identical True  hashed strictly before any scoring exists
+
+  GATES: 8/8 PASS -> A5d PASSES
+  roster_v1.csv sha256 70a6305d24b753655e92f10f413115381a84721998300440b5d48f8eec87b2fb
+
+  LIMITATIONS (AGENTS 6):
+    * draws and hashes only: no statistic, no p-value and no outcome word of any frozen block
+    * roster order is a fairness device for a budgeted stage, not a statistical property
+    * rows are backgrounds, not independent positions; position clustering is A5g's
+    * arm sizes come from the frozen block and the reference sequence; no score existed when they were fixed
+
+  elapsed 0.0s
