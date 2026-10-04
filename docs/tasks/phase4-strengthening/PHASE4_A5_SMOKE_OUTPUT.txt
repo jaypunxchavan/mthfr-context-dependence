@@ -1,0 +1,181 @@
+
+==============================================================================
+A5 -- MODULE U: predictive utility (UTILITY_PREREG_v1.md, implemented exactly)
+==============================================================================
+N_BOOT = 300   SEED = 0   N_REF = 500
+RESAMPLING UNIT: position clusters, drawn once per subset and shared by both predictors (paired Delta).  Backgrounds are never resampled (one background).
+DECISION RULE (pre-registered, full text in the docstring): G-U0 or G-U3 FAIL -> exit 3.  G-U1 FAIL -> U-2 STOPPED, U-1 stands, exit 0.  G-U2 FAIL -> U-2 UNVERIFIED-LABELS (no word), exit 0.  Acquisition failure -> U-2 BLOCKED, U-1 stands.  Thresholds are never loosened; N is never raised to pass a gate.
+*** SMOKE RUN: N_BOOT=300 != 10000 -- every CI and every word is PROVISIONAL; the Phase 1 CI sub-gate is SKIPPED and G-U3 cannot be PASS on this run ***
+DISCLOSURES (pre-registered in the docstring): (1) cached-data analysis, not out-of-sample wrt the project's history (prereg S0); (2) U-DEC5 -- G-U1's canonical-column value was seen during recon (~0.685; exact recon row set not recorded, recomputations span 0.681-0.693, all < 0.90) BEFORE the experimental-column choice was fixed; both are printed at G-U1 (POST-RUN TEXT FIX of this note only, no decision changed); (3) label derivation was prototyped against the paper's stated 30/40 set sizes; no metric was computed before the first run.
+
+------------------------------------------------------------------------------
+G-U0 -- INFRASTRUCTURE (HARD; guards U-1 and U-2)
+------------------------------------------------------------------------------
+  [PASS] G-U0(a) prereg sha256: 744e68ce3b565b1b2060d662f322d7d3f53923d9bb6ff45de5156f3f445f9531  (target 744e68ce3b565b1b2060d662f322d7d3f53923d9bb6ff45de5156f3f445f9531; 32 lines)
+  [PASS] G-U0(b) frame rows / positions: got 10757 rows / 654 positions; target 10757 / 654 (task32 has 11344 rows; 587 dropped by the filter, y finite on all of them: 10757)
+  [PASS] G-U0(c) Spearman(own_e_b, S_W) at 4 dp: got 0.0854 target 0.0854 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] G-U0(g) y == f_bar_a222v (AGENTS 5 column identity, ADDED): max|diff| = 2.220e-16 over 10757 rows (gate < 1e-15), finiteness identical: True
+  [PASS] G-U0(g) delta_esm == S_A - S_W (AGENTS 5, ADDED): max|diff| = 2.220e-16 (gate < 1e-12)
+  [pdg.build] 0.7s -- script 125's cached construction, imported (AGENTS 2)
+  [PASS] G-U0(e) H subset = 455 positions / 7,526 rows (ADDED): got 455 positions / 7526 rows; target 455 / 7526
+
+------------------------------------------------------------------------------
+ACQUISITION (U-DEC11) -- manifest re-verification, < 200 MB
+------------------------------------------------------------------------------
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-1/scores  status=200  bytes=1287238  sha256=02c3125053e5324ecf4224695c42c36a3e0e5a1c8840e36d7976f667026d3265
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-2/scores  status=200  bytes=1281230  sha256=ec123c0713a5bd2317c2a7833f3a4e50a0c160e725e41c075cf6fe2fefc6aabc
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-3/scores  status=200  bytes=1281031  sha256=76fd5d7fd2ecb4791888cf73b3cbc9c491a682969721b9aac9d530ed5cf341dc
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-4/scores  status=200  bytes=1287131  sha256=42885269f1c222a37451bc0880010c33f54f42ce70e731b09cbfdfe557488561
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-5/scores  status=200  bytes=1281248  sha256=c6d12071dfabc75a170ca9becd105d3bc140ec4f7e3148d030f6642cbabc183a
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-6/scores  status=200  bytes=1289258  sha256=a035e194177e178b2e919969697ab70aa7fa5ace0197abb1a0745409a75ea153
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-7/scores  status=200  bytes=1280258  sha256=b3d67fad1c45ce17202939cac4e67bf8ac052019477bea74481bd5c213041f76
+  OK  https://api.mavedb.org/api/v1/score-sets/urn:mavedb:00000049-a-8/scores  status=200  bytes=1239003  sha256=ea84643abc03a4885d03f119f17681d63c09b06335d8d6f580a40d41d0efa463
+  OK  https://www.ebi.ac.uk/europepmc/webservices/rest/PMC8322931/supplementaryFiles  status=200  bytes=38784725  sha256=941fe85477d6c73f7dc06316c8bbe3f6e5444ddb0c40cad588c24499cc5b6187
+  [PASS] G-U0(f) manifests re-verify, all 200, total < 200 MB (ADDED): 9 records, total 49011122 bytes = 49.0 MB (abort at 210 MB)
+
+------------------------------------------------------------------------------
+LABEL SETS (U-DEC6/U-DEC7) from Supplemental Table S3 -- class sizes printed BEFORE any metric
+------------------------------------------------------------------------------
+  [PASS] G-U0(d) paper-stated set sizes 30 positive / 40 late (ADDED): derived 30 early-onset positive (target 30), 40 late-onset (target 40), 39 1000-Genomes random (no paper anchor; methods D describe the rule, not the count)
+  variants in BOTH sets: 0  -> excluded from both (U-DEC7)
+  ATTRITION: 30 positive + 39 negative = 69 labelled -> 68 present in task32 (missing: ['p.Trp339Gly']) -> 68 with finite S_W and S_A (U-DEC10)
+  CLASS SIZES (printed before any metric, prereg S3): pathogenic = 29, random/benign = 39 (min class 29; UNDERPOWERED if < 15)
+
+------------------------------------------------------------------------------
+G-U1 -- MaveDB a-2 (A222V, 25 ug/mL) vs the project's m25.score (HARD; guards U-2)
+------------------------------------------------------------------------------
+  [PASS] G-U1 Spearman(MaveDB a-2 experimental, m25) >= 0.9: rho = 0.952371770556546 over 10819 shared variants (gate >= 0.9)
+  [U-DEC5 disclosed context] same check on the CANONICAL `score` column: rho = 0.6919167110350621 over 10891 rows (below the threshold -- NOT the gate; `score` for a-2 is a shrunken exp/pred blend, not the experimental map)
+  [evidence i] project m25 == paper Supplemental Table S2 A222V-25: 10891/10891 exact, rho 1.0
+  [evidence ii] a-2 rho(score, exp.score) = 0.737104307 (score == pred.score on 1,037 rows): the canonical column is a blend
+  [evidence iii] a-8 (no exp/pred columns) score vs project m200: rho = 0.9999999999819985 (rank-identical)
+
+------------------------------------------------------------------------------
+G-U3(i) -- AUROC and balanced-PR vs scikit-learn on toys (HARD)
+------------------------------------------------------------------------------
+  [PASS] G-U3 auroc == sklearn (with ties): library 0.75 sklearn 0.75 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 auroc == sklearn (perfect): library 1.0 sklearn 1.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 auroc == sklearn (inverted): library 0.0 sklearn 0.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_curve == sklearn weighted precision_recall_curve (recall 1..end): max|diff| recall 0.000e+00, balanced precision 1.110e-16 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_auc == sklearn.metrics.auc (same coords): library 0.8722222222222222 sklearn-path 0.8722222222222222 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr == sklearn roc_curve path (2nd path): max|diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_auc of a chance toy near 0.5: got 0.45406558360717164, finite and within 0.1 of 0.5
+
+------------------------------------------------------------------------------
+G-U3(ii) -- BOOTSTRAP REFERENCE GATE on the U-1 frame (identity, draw-by-draw, Phase 1 CI)
+------------------------------------------------------------------------------
+  [PASS] G-U3(ii) identity: every position once reproduces both rhos and Delta: rho_A 0.3650234295486086 vs 0.36502342954860856, rho_W 0.3684212256227523 vs 0.3684212256227523, max|diff| 5.551e-17 (gate < 1e-12)
+  [PASS] G-U3(ii) draw-by-draw paired bootstrap vs reference (500 draws): max|corrected - reference| rho_A 0.000e+00, rho_W 0.000e+00, Delta 0.000e+00 (gate < 1e-12) in 3.1s
+  [FAIL(not hard)] G-U3(ii) Phase 1 CI reproduction: SKIPPED (smoke): N_BOOT=300 != 10000 -- G-U3 cannot be called PASS on this run; decided on the N_BOOT=10000 run
+
+------------------------------------------------------------------------------
+U-1 -- Delta = Spearman(S_A, y) - Spearman(S_W, y) (frozen section 2)
+------------------------------------------------------------------------------
+  CONTEXT: Spearman(S_W, base functionality) = 0.32803277256740376; Spearman(S_A, y) = 0.36502342954860856 (the PRIMARY Delta's first component)
+  CONTEXT: y (A222V fitness) median = 0.4879575377022883, finite 10757/10757
+
+  [PRIMARY (all frame rows)] n = 10757 rows / 654 positions
+    rho(S_A, y) = 0.36502342954860856   rho(S_W, y) = 0.3684212256227523
+    Delta = -0.003397796074143755   CI95 = [-0.00448031562218504, -0.0023425764070378143] (300/300 finite draws, SEED 0) PROVISIONAL (smoke) word margin 0.02
+    OUTCOME WORD PROVISIONAL (smoke) : CONDITIONING-HURTS -- PROVISIONAL; decided on N_BOOT=10000
+
+  [H subset (descriptive)] n = 7526 rows / 455 positions
+    rho(S_A, y) = 0.37945576995005503   rho(S_W, y) = 0.3828772389733765
+    Delta = -0.003421469023321466   CI95 = [-0.004900901746823968, -0.002201079832838089] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+  TOPDECILE cut: |own_e_b| >= quantile 0.90 = 0.4040203526705994 -> 1076 rows (ties kept, U-DEC3)
+
+  [TOP |own_e_b| decile (descriptive)] n = 1076 rows / 422 positions
+    rho(S_A, y) = 0.12901700437386804   rho(S_W, y) = 0.13053965165906053
+    Delta = -0.0015226472851924966   CI95 = [-0.003043149577020462, -7.223311827149676e-05] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+  PER-CONDITION DESCRIPTIVE REPEATS (U-DEC4; no word, no multiplicity correction)
+
+  [y = m12.score] n = 10586 rows / 654 positions
+    rho(S_A, y) = 0.3648350519363518   rho(S_W, y) = 0.3682318623753815
+    Delta = -0.0033968104390297293   CI95 = [-0.004502478240724153, -0.002299106161868501] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+  [y = m25.score] n = 10590 rows / 654 positions
+    rho(S_A, y) = 0.36417265998017867   rho(S_W, y) = 0.3675597877034758
+    Delta = -0.003387127723297134   CI95 = [-0.004467882223977752, -0.0023327627229725186] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+  [y = m100.score] n = 10619 rows / 654 positions
+    rho(S_A, y) = 0.36318840471238273   rho(S_W, y) = 0.36658372110523785
+    Delta = -0.003395316392855119   CI95 = [-0.0044806761737049335, -0.0023444246687928903] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+  [y = m200.score] n = 10588 rows / 654 positions
+    rho(S_A, y) = 0.3671244541596426   rho(S_W, y) = 0.3705554276735057
+    Delta = -0.003430973513863067   CI95 = [-0.004530201075756001, -0.002357124261643363] (300/300 finite draws, SEED 0) DESCRIPTIVE, no word -- PROVISIONAL (smoke) word margin 0.02
+
+------------------------------------------------------------------------------
+U-2 -- pathogenic vs reference separation (frozen section 3)
+------------------------------------------------------------------------------
+  analysis set n = 68 (pathogenic 29, benign 39) -- CLASS SIZES ABOVE, printed before any metric; S_A/S_W identity AUROC(y, -s) = 1 - AUROC(y, s) (U-DEC8)
+
+  METRICS (oriented, U-DEC8; n = finite rows for that predictor)
+    S_W (ESM-2 WT bg)                  n= 68  AUROC=0.823165  balPR=0.777803
+    S_A (ESM-2 A222V bg)               n= 68  AUROC=0.816976  balPR=0.765473
+    a-1 100ug/ml folate in WT background n= 67  AUROC=0.757326  balPR=0.783300
+    a-2 25ug/ml folate in A222V background n= 63  AUROC=0.737006  balPR=0.664526
+    a-3 100ug/ml folate in A222V background n= 63  AUROC=0.743243  balPR=0.745610
+    a-4 12ug/ml folate in WT background n= 67  AUROC=0.749084  balPR=0.764180
+    a-5 12ug/ml folate in A222V background n= 63  AUROC=0.726611  balPR=0.672925
+    a-6 25ug/ml folate in WT background n= 67  AUROC=0.776557  balPR=0.796892
+    a-7 200ug/ml folate in WT background n= 68  AUROC=0.710875  balPR=0.755345
+    a-8 200ug/ml folate in A222V background n= 67  AUROC=0.695554  balPR=0.675309
+
+  G-U2 ranking of the eight experimental maps by balanced-PR area (U-DEC9 exp-where-available cols):
+    a-6 25ug/ml folate in WT background  0.796892
+    a-1 100ug/ml folate in WT background 0.783300
+    a-4 12ug/ml folate in WT background  0.764180
+    a-7 200ug/ml folate in WT background 0.755345
+    a-3 100ug/ml folate in A222V background 0.745610
+    a-8 200ug/ml folate in A222V background 0.675309
+    a-5 12ug/ml folate in A222V background 0.672925
+    a-2 25ug/ml folate in A222V background 0.664526   <- a-2 (AV25, target best)
+  [FAIL] G-U2 a-2 (A222V, 25 ug/mL) attains the highest balanced-PR area among the eight maps: a-2 area 0.6645257581748936 vs best of the others 0.7968920548030036; ordering Weile et al. report (Fig 6A)
+  [SENSITIVITY, non-gated, U-DEC9] canonical `score` columns: best = a-6 (0.760203); a-2 = 0.612497
+
+  Delta AUROC = AUROC(S_A) - AUROC(S_W), paired position-cluster bootstrap:
+    AUROC(S_A) = 0.8169761273209549   AUROC(S_W) = 0.8231653404067197   (oriented y=1 pathogenic, -score)
+    Delta AUROC = -0.006189213085764811   CI95 = [-0.020677419354838744, 0.0045601915673599645] (300/300 finite draws, 0 single-class draws dropped, SEED 0)  PROVISIONAL (smoke)
+  [PASS] G-U3(ii) U-2 AUROC bootstrap draw-by-draw vs sklearn (500 draws): max|diff| S_A 1.110e-16, S_W 1.110e-16 (gate < 1e-12)
+  [PASS] G-U3(ii) U-2 identity: every position once reproduces both AUROCs: every-once S_A np.float64(0.8169761273209549) vs 0.8169761273209549, S_W np.float64(0.8231653404067197) vs 0.8231653404067197 (gate < 1e-12)
+  OUTCOME WORD (frozen): none -- G-U2 failed, U-2 is reported UNVERIFIED-LABELS with no word (prereg S4)
+
+------------------------------------------------------------------------------
+A5 GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] G-U0(a) prereg sha256: 744e68ce3b565b1b2060d662f322d7d3f53923d9bb6ff45de5156f3f445f9531  (target 744e68ce3b565b1b2060d662f322d7d3f53923d9bb6ff45de5156f3f445f9531; 32 lines)
+  [PASS] G-U0(b) frame rows / positions: got 10757 rows / 654 positions; target 10757 / 654 (task32 has 11344 rows; 587 dropped by the filter, y finite on all of them: 10757)
+  [PASS] G-U0(c) Spearman(own_e_b, S_W) at 4 dp: got 0.0854 target 0.0854 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] G-U0(g) y == f_bar_a222v (AGENTS 5 column identity, ADDED): max|diff| = 2.220e-16 over 10757 rows (gate < 1e-15), finiteness identical: True
+  [PASS] G-U0(g) delta_esm == S_A - S_W (AGENTS 5, ADDED): max|diff| = 2.220e-16 (gate < 1e-12)
+  [PASS] G-U0(e) H subset = 455 positions / 7,526 rows (ADDED): got 455 positions / 7526 rows; target 455 / 7526
+  [PASS] G-U0(f) manifests re-verify, all 200, total < 200 MB (ADDED): 9 records, total 49011122 bytes = 49.0 MB (abort at 210 MB)
+  [PASS] G-U0(d) paper-stated set sizes 30 positive / 40 late (ADDED): derived 30 early-onset positive (target 30), 40 late-onset (target 40), 39 1000-Genomes random (no paper anchor; methods D describe the rule, not the count)
+  [PASS] G-U1 Spearman(MaveDB a-2 experimental, m25) >= 0.9: rho = 0.952371770556546 over 10819 shared variants (gate >= 0.9)
+  [PASS] G-U3 auroc == sklearn (with ties): library 0.75 sklearn 0.75 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 auroc == sklearn (perfect): library 1.0 sklearn 1.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 auroc == sklearn (inverted): library 0.0 sklearn 0.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_curve == sklearn weighted precision_recall_curve (recall 1..end): max|diff| recall 0.000e+00, balanced precision 1.110e-16 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_auc == sklearn.metrics.auc (same coords): library 0.8722222222222222 sklearn-path 0.8722222222222222 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr == sklearn roc_curve path (2nd path): max|diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-U3 balanced_pr_auc of a chance toy near 0.5: got 0.45406558360717164, finite and within 0.1 of 0.5
+  [PASS] G-U3(ii) identity: every position once reproduces both rhos and Delta: rho_A 0.3650234295486086 vs 0.36502342954860856, rho_W 0.3684212256227523 vs 0.3684212256227523, max|diff| 5.551e-17 (gate < 1e-12)
+  [PASS] G-U3(ii) draw-by-draw paired bootstrap vs reference (500 draws): max|corrected - reference| rho_A 0.000e+00, rho_W 0.000e+00, Delta 0.000e+00 (gate < 1e-12) in 3.1s
+  [FAIL] G-U3(ii) Phase 1 CI reproduction: SKIPPED (smoke): N_BOOT=300 != 10000 -- G-U3 cannot be called PASS on this run; decided on the N_BOOT=10000 run
+  [FAIL] G-U2 a-2 (A222V, 25 ug/mL) attains the highest balanced-PR area among the eight maps: a-2 area 0.6645257581748936 vs best of the others 0.7968920548030036; ordering Weile et al. report (Fig 6A)
+  [PASS] G-U3(ii) U-2 AUROC bootstrap draw-by-draw vs sklearn (500 draws): max|diff| S_A 1.110e-16, S_W 1.110e-16 (gate < 1e-12)
+  [PASS] G-U3(ii) U-2 identity: every position once reproduces both AUROCs: every-once S_A np.float64(0.8169761273209549) vs 0.8169761273209549, S_W np.float64(0.8231653404067197) vs 0.8231653404067197 (gate < 1e-12)
+
+  20/22 checks PASS, 2 FAIL (1 of the FAILs are smoke SKIPS).
+
+  U-1 PRIMARY outcome word: CONDITIONING-HURTS  [PROVISIONAL SMOKE]
+  U-2 status: ALIVE, n=68 (29/39), G-U2 FAIL
+  U-2 outcome word: UNVERIFIED-LABELS  [PROVISIONAL SMOKE]
+
+LIMITATIONS (printed per AGENTS 6): one gene, one ESM-2 model; U-1 is a cached-data analysis that is not out-of-sample with respect to the project's history (prereg S0) and its numbers REPRODUCE cached columns -- reproduction is not replication (AGENTS 6); the bootstrap resamples positions within this frame only; percentile CIs; per-condition repeats are descriptive and uncorrected for multiplicity; U-2's label set is small (see class sizes) so CI width, not the point estimate, is the binding constraint; Weile's own AUBPRC used monotonisation and prior-balanced posteriors we do not re-implement -- G-U2 asks only that their reported ordering (AV25 best) reproduces on our label set; U-DEC8's orientation fixes the direction of the frozen words; the supplemental methods also describe a gnomAD random set (used for their LLR calibration) that is outside this project's authorised network and NOT used here; no claim about clinical use (prereg S5).
+Elapsed 10.8s
+
+A5 RESULT: SMOKE complete -- CI gates SKIPPED, all words PROVISIONAL; the full run decides.

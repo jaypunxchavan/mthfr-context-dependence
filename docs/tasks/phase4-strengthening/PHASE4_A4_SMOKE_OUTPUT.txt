@@ -1,0 +1,1170 @@
+
+==============================================================================
+A4 / M -- MECHANISM-MATCHED ANALYSES (script 167)
+==============================================================================
+N_BOOT = 300   SEED = 0   N_REF = 100   N_SIM = 100   N_PLANT = 100   N_PERM = 100   N_STAB = 100   (whole-placebo reference capped at 50 draws)
+RESAMPLING UNITS: everything inside one background resamples POSITION clusters (654 frame positions / 455 on H -- effective n is positions, never rows); M-6 resamples positions and re-derives every background's rho_b each draw; no background-level resampling happens in this module.  S1/S2 and M-3/M-4 are simulation / re-labelling loops, not bootstraps.
+DECISION RULE (pre-registered): any hard gate FAIL -> exit 3; thresholds are never loosened and N is never raised to pass a gate.  Extra gates G-XFOLD and G-ALIGN are stricter than the frozen text, never looser.
+NO torch / esm / thermompnn is imported and no model is scored (PHASE4 rule 1).
+*** SMOKE RUN (N_BOOT=300, N_SIM=100, N_PLANT=100, N_PERM=100, N_STAB=100): every frozen word computed on this run is PROVISIONAL, G-M3's Phase 1 CI sub-gate is SKIPPED, and this run cannot call G-M3 PASS.  The record is the full run ***
+
+------------------------------------------------------------------------------
+G-M0 -- INPUT INTEGRITY (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M0 prereg sha256: 8d27467542f4620572cf382b6f01d693d8734b7345bddd039fdbb083be1cf39b (target 8d27467542f4620572cf382b6f01d693d8734b7345bddd039fdbb083be1cf39b)
+  [PASS] G-M0 prereg line count: got 56 target 56
+  [PASS] G-M0 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [PASS] G-M0 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (target 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de)
+  [PASS] G-M0 6FCX.pdb sha256: 95133130645cead0252d05b6ce9ddd578164cbc856ac1c82d1a6bb15e4148fbf (target 95133130645cead0252d05b6ce9ddd578164cbc856ac1c82d1a6bb15e4148fbf)
+  [PASS] G-M0 script 153 sha256: e9fd90aff973be1c03dcfa15c80298f5cd54df4dbf5775a41de1839adf0b5133 (target e9fd90aff973be1c03dcfa15c80298f5cd54df4dbf5775a41de1839adf0b5133)
+  [PASS] G-M0 m1_own_e_b_ge.csv sha256: 0dd63b4acfabee2e299b5c184ff649d4b27c2c914978acd1f15b0e0550e44523 (target 0dd63b4acfabee2e299b5c184ff649d4b27c2c914978acd1f15b0e0550e44523)
+  [PASS] G-M0 m1_fitted_expectations.csv sha256: e353330dd4541d672517238ac148160431e6aa7d4a2b20ddd44f15f6252d9915 (target e353330dd4541d672517238ac148160431e6aa7d4a2b20ddd44f15f6252d9915)
+
+  FROZEN BLOCK, verbatim from disk (the rules this script applies):
+    1| # MTHFR anchor: mechanism-matched analyses - pre-registration v1
+    2| 
+    3| Frozen 2026-10-02, before any quantity below is computed. Authors: Arnav (PI), Claude (planning).
+    4| 
+    5| ## 0. What this is, and what it is not
+    6| 
+    7| These analyses use cached data and quantities already seen in earlier exploratory work (the anchor, the shift-magnitude confound, the Phase 1 partial correlations). The constructions and outcome words below are fixed before the specific new quantities are computed, but the analyses are NOT
+    8| independent of what was already seen; the out-of-sample evidence in this programme comes only from the neighbour-arm and model-ladder pre-registrations. Nothing here changes the frozen Phase 2 verdict.
+    9| 
+   10| ## 1. Convention and question
+   11| 
+   12| own_e.b is positive when a variant is fitter in the A222V background than the project's expectation from the WT-background map. delta = S_A - S_W (S_A: the ESM-2 score with A222V present; S_W: the WT-background ESM-2 score) is positive when ESM-2 scores a variant as more tolerated with A222V present.
+   13| The anchor rho = Spearman(delta, own_e.b) = -0.088118 (n = 10,757 variants, 654 positions) is negative: the model's shift runs OPPOSITE to the measured shift. Phase 1 measured rho(delta, S_W) = -0.3238 and rho(own_e.b, S_W) = +0.0854 and a linear partial correlation controlling S_W of -0.0641
+   14| (72.8% retained). This pre-registration asks (i) how much of the anchor and of its placebo separation survives removal of the channels through S_W and the base functionality, (ii) how much a zero-epistasis world with the same measurement noise and the same data pipeline would produce,
+   15| (iii) what true correlation the pipeline could detect, (iv) whether the anchor lives between positions or within them, and (v) how stable the frozen placebo test is to resampling positions.
+   16| 
+   17| ## 2. Common definitions
+   18| 
+   19| Rows, frames and views are exactly script 125's construction (frame: 10,757 rows / 654 positions; held-out view H: 455 positions / 7,526 rows; each background's rows exclude its own position). Backgrounds: A222V and the 96 Phase 2 backgrounds (Arm V 38, Arm G 40, Arm S 18); the null set N = V u G (78).
+   20| rho_b = Spearman(delta_b, own_e.b) over a background's rows. p_spec(neg) = (1 + #{b in N: stat_b <= stat_A222V}) / (1 + 78); p_spec(abs) uses |stat|. Position-cluster bootstrap for statistics computed inside one background; background-level bootstrap across backgrounds; N_BOOT 10,000 and SEED 0 unless stated.
+   21| Every bootstrap routine passes identity, draw-by-draw reference (1e-12) and Phase 1 CI reproduction gates.
+   22| 
+   23| ## 3. Analyses
+   24| 
+   25| M-1 Partial-correlation placebo test. PRIMARY control: S_W. SECONDARY control: S_W and the base functionality (the second covariate of Phase 1's R1 and L2). The partial Spearman is the Pearson correlation of the OLS residuals of the average ranks of delta_b and own_e.b on the average ranks of the controls, over a background's rows.
+   26| Report, for A222V and every background, the partial rho_b; the A222V partial with a position-cluster bootstrap CI; p_spec(neg) and p_spec(abs) on the full frame and on H; the shift-adjusted p_spec_adj on the partial rho_b (leave-one-out OLS on mean|delta_b|, as Diagnostics II D9); and the retained fraction (partial / raw).
+   27| Outcome words (primary control, A222V partial): PARTIAL-SURVIVES iff the CI excludes zero in the negative direction AND p_spec(neg) <= 0.05 (full) AND <= 0.10 (H). PARTIAL-WEAKENS iff the CI excludes zero in the negative direction but a p_spec condition fails. PARTIAL-DOES-NOT-SURVIVE iff the CI includes zero or the sign reverses.
+   28| 
+   29| M-2 Stratified correlation (sensitivity; no word). Rows are cut into deciles of S_W (equal-count over the frame); the stratified rho is the weighted mean (weights = rows in the decile) of the within-decile Spearman. Report for A222V (position-cluster bootstrap CI) and p_spec(neg) on the full frame and on H using the stratified rho_b.
+   30| 
+   31| M-3 Zero-epistasis simulation null (A222V only). Per draw r = 1..1000 (SEED 0): w*_i = w_i (the WT-background fitness exactly as script 153 defines it, used as the proxy truth); w^sim_i = w_i + N(0, sw_i^2), where sw_i is the per-variant WT-background standard error if the project's data carries one; if it does not, sw_i = 0 (PRIMARY) and a sensitivity uses
+   32| sw_i = the median m_se over the frame; m^sim_ic = E_c^iso(w*_i) + N(0, m_se_ic^2), with E_c^iso the cross-fitted isotonic expectation of script 153 (GE-ISO). By construction there is no background-specific epistasis, only a monotone nonlinear relation plus noise. The project's own unmodified pipeline (linear expectation, weighted aggregation across conditions) rebuilds
+   33| own_e.b^sim from (w^sim, m^sim); rho^sim_r = Spearman(delta_real, own_e.b^sim_r) over the frame rows. Sensitivity: the generating relation linear (E_c^lin). Report the mean, SD, 2.5th and 97.5th percentiles of rho^sim, the fraction of draws at or below -0.088118, and mean(rho^sim) / (-0.088118).
+   34| Outcome words: EXCESS-OVER-ARTIFACT iff -0.088118 is at or below the 2.5th percentile of the primary simulation; CONSISTENT-WITH-ARTIFACT otherwise. The sensitivities are reported with no word.
+   35| 
+   36| M-4 Detection limit by planting. As M-3 (primary generating relation) plus a planted term e_plant_i = s_e (r0 z_i + sqrt(1 - r0^2) u_i) added to m^sim_ic for every condition, where s_e = the SD of the recorded own_e.b, z_i = the standardised rank-normal score of delta_real(i), u_i ~ N(0,1) independent, and r0 in {-0.30, -0.20, -0.10, -0.05, 0, +0.05, +0.10, +0.20, +0.30} is the planted true correlation; 200 draws per r0.
+   37| Report the mean observed rho and power(r0) = the fraction of draws beyond the 2.5th / 97.5th percentile of the r0 = 0 simulation (lower tail for r0 < 0, upper for r0 > 0); the minimum detectable |r0| at 80% power (linear interpolation; "above the grid" if none reaches it); and the attenuation slope (mean observed rho against r0 over the grid). No word.
+   38| 
+   39| M-5 Between- and within-position decomposition. Positions with at least 5 rows in the view qualify. rho_between = Spearman across qualifying positions of the mean delta against the mean own_e.b. rho_within = the mean over qualifying positions of the within-position Spearman, weights = rows in the position, undefined positions skipped.
+   40| Report both for A222V (position-cluster bootstrap CI, both components recomputed per resample) and for every background; p_spec(neg) per component on the full frame and on H. Surrogate nulls (1,000 draws each, SEED 0): S1 permutes own_e.b among rows within each position (keeps position-level structure); S2 permutes own_e.b among rows within each of 10 equal-count bins of 3D distance to residue 222 over the resolved positions, unresolved positions forming an eleventh bin
+   41| (keeps only the regional profile). Report the anchor under S1 and S2 as mean, 95% range and as a fraction of -0.088118.
+   42| Outcome words (full frame, A222V): WITHIN-CARRIED iff rho_within's CI excludes zero in the negative direction AND its p_spec(neg) <= 0.05 AND the between component does not meet both conditions. BETWEEN-CARRIED iff the reverse. BOTH-CARRY iff both meet both conditions. NEITHER-CARRIES otherwise.
+   43| 
+   44| M-6 Stability of the frozen placebo test. Position-cluster bootstrap of the whole test: per draw resample positions with replacement (frame: 654; H: 455), recompute rho_A222V and all 78 null rho_b on the resampled rows, and p_spec(neg) and k = #{b in N: rho_b <= rho_A222V}; 2,000 draws (SEED 0) per view. Report the distribution of k, P(p_spec <= 0.05) on the full frame, P(p_spec <= 0.10) on H,
+   45| and the standardised effect z = (rho_A222V - mean rho_N) / SD rho_N with its bootstrap CI.
+   46| Outcome words, per view: STABLE iff the probability is >= 0.80; FRAGILE iff it is < 0.50; MODERATE otherwise.
+   47| 
+   48| ## 4. Gates (hard; a failed gate stops that analysis and nothing is loosened)
+   49| 
+   50| G-M0 the prereg hash, the rho table sha256 e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 and the 3D table sha256 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de. G-M1 A222V rho -0.088118064 (full) / -0.090021683 (H); p_spec 2/79 and 4/79 with the named beaters.
+   51| G-M2 the Phase 1 partials reproduce: the linear S_W-only partial -0.06414804421216103 (1e-12) and the two-covariate linear partial -0.0829 (4 dp). G-M3 bootstrap identity, draw-by-draw reference and Phase 1 CI reproduction. G-M4 simulation identity: with every noise term zero and E_c replaced by the observed m, the pipeline returns the recorded own_e.b (1e-12).
+   52| G-M5 planting response: the mean observed rho is non-decreasing in r0 across the grid up to Monte-Carlo error (a more negative planted correlation must produce a more negative observed rho; under the convention in section 1 an agreeing model would give a positive rho). G-M6 toy gates for the stratified statistic and the decomposition. G-M7 the stability bootstrap with every position exactly once returns the observed p_spec and k.
+   53| 
+   54| ## 5. Wording and disclosure
+   55| 
+   56| The negative anchor is described only as the model's shift running opposite to the measured shift, never as agreement. No result here may be described as confirming or undermining a GB1, RBD, neighbour-arm or model-ladder result. Any deviation is disclosed and, if it changes a rule or constant, requires a new versioned pre-registration, never an edit to v1.
+
+------------------------------------------------------------------------------
+QUOTED SOURCES (verbatim from disk)
+------------------------------------------------------------------------------
+
+  --- rebuild_interaction_fit -- the project's own pipeline, unmodified: scripts/lib/stats_ext.py lines 63-88 (verbatim from disk) ---
+    63| def rebuild_interaction_fit(raw):
+    64|     """Two-pass own-context fit, exactly as scripts 17/20/21/24/26/28 do it.
+    65| 
+    66|     Returns a dict with the pieces every downstream null needs: the WT-arm
+    67|     fit, the corrected interaction fit, the per-point residual/se/valid
+    68|     matrices, and the row index of the A222V reference line.
+    69|     """
+    70|     W = raw[WT_SCORE_COLS].to_numpy(float)
+    71|     Wse = raw[WT_SE_COLS].to_numpy(float)
+    72|     M = raw[MT_SCORE_COLS].to_numpy(float)
+    73|     Mse = raw[MT_SE_COLS].to_numpy(float)
+    74| 
+    75|     w = fit_single_arm(W, Wse)
+    76|     w_mean = np.nanmean(W, axis=1)
+    77|     i222 = int(np.where(raw["hgvs"].to_numpy() == "p.Ala222Val")[0][0])
+    78| 
+    79|     e1 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+    80|                          w_mean, w["fitness"][i222], w["remediation"][i222])
+    81|     keep = (w["logl"] > LOGL_CUTOFF) & (e1["logl"] > LOGL_CUTOFF)
+    82|     cb = interpolate_correction(w["fitness"][keep], e1["e_b"][keep])
+    83|     cr = interpolate_correction(w["fitness"][keep], e1["e_r"][keep])
+    84|     e2 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+    85|                          w_mean, w["fitness"][i222], w["remediation"][i222],
+    86|                          correction=(cb, cr))
+    87|     return {"w": w, "e2": e2, "M_se": Mse, "resid": e2["resid"],
+    88|             "valid": e2["valid"], "i222": i222, "correction": (cb, cr)}
+
+  --- wls_line -- the weighted aggregation: scripts/lib/own_context.py lines 48-66 (verbatim from disk) ---
+    48| def wls_line(y, se, x, valid):
+    49|     """Vectorized weighted least squares of y ~ 1 + x, weights 1/se^2.
+    50| 
+    51|     Exact maximum likelihood for Gaussian error with known se, which is what
+    52|     fitModels.R optimizes numerically. Returns (intercept, slope, df).
+    53|     """
+    54|     w = np.where(valid, 1.0 / np.where(valid, se, 1.0) ** 2, 0.0)
+    55|     yy = np.where(valid, y, 0.0)
+    56|     xx = np.broadcast_to(x, y.shape)
+    57|     S0 = w.sum(axis=1)
+    58|     S1 = (w * xx).sum(axis=1)
+    59|     S2 = (w * xx**2).sum(axis=1)
+    60|     T0 = (w * yy).sum(axis=1)
+    61|     T1 = (w * xx * yy).sum(axis=1)
+    62|     det = S0 * S2 - S1**2
+    63|     with np.errstate(divide="ignore", invalid="ignore"):
+    64|         base = np.where(det != 0, (S2 * T0 - S1 * T1) / det, np.nan)
+    65|         slope = np.where(det != 0, (S0 * T1 - S1 * T0) / det, np.nan)
+    66|     return base, slope, valid.sum(axis=1) - 2
+
+  --- fit_interaction -- expected / resid / valid, the aggregation at line 165, the >2-missing NaN rule at 179-181: scripts/lib/own_context.py lines 143-187 (verbatim from disk) ---
+   143| def fit_interaction(m_score, m_se, w_fitness, w_remediation, w_post, w_mean_score,
+   144|                     a222v_fitness, a222v_remediation, concs=CONCS, correction=None):
+   145|     """Fit e.b / e.r: the deviation of the A222V-background arm from the
+   146|     multiplicative no-interaction expectation.
+   147| 
+   148|     expected(c) = single_mutant_term(c) * (b_A222V + c*r_A222V) [+ correction]
+   149|     where single_mutant_term is the fitted line when w.post > 0.5, otherwise
+   150|     the variant's mean WT-background score (per fitModels.R).
+   151|     """
+   152|     a222v_line = a222v_fitness + concs[None, :] * a222v_remediation
+   153|     use_line = (w_post > 0.5) & np.isfinite(w_fitness)
+   154|     sm = np.where(use_line[:, None],
+   155|                   w_fitness[:, None] + concs[None, :] * w_remediation[:, None],
+   156|                   w_mean_score[:, None])
+   157|     expected = sm * a222v_line
+   158|     if correction is not None:
+   159|         cb, cr = correction
+   160|         expected = expected + cb(w_fitness)[:, None] + cr(w_fitness)[:, None] * concs[None, :]
+   161| 
+   162|     valid = np.isfinite(m_score) & np.isfinite(m_se) & (m_se > 0) & np.isfinite(expected)
+   163|     resid = np.where(valid, m_score - expected, np.nan)
+   164| 
+   165|     e_b, e_r, df = wls_line(resid, m_se, concs, valid)
+   166| 
+   167|     safe_se = np.where(valid, m_se, 1.0)
+   168|     obs = np.where(valid, resid, 0.0)
+   169|     logl = _gauss_logl(e_b[:, None] + concs[None, :] * e_r[:, None], obs, safe_se, valid)
+   170| 
+   171|     # static model: constant offset only (weighted mean residual), r fixed at 0
+   172|     w = np.where(valid, 1.0 / safe_se**2, 0.0)
+   173|     with np.errstate(invalid="ignore", divide="ignore"):
+   174|         e_b_static = np.where(w.sum(axis=1) > 0, (w * obs).sum(axis=1) / w.sum(axis=1), np.nan)
+   175|     logl_static = _gauss_logl(np.broadcast_to(e_b_static[:, None], resid.shape),
+   176|                               obs, safe_se, valid)
+   177|     logl_null = _gauss_logl(np.zeros_like(resid), obs, safe_se, valid)
+   178| 
+   179|     bad = (~valid).sum(axis=1) > 2
+   180|     for arr in (e_b, e_r, e_b_static, logl, logl_static, logl_null):
+   181|         arr[bad] = np.nan
+   182| 
+   183|     return {"e_b": e_b, "e_r": e_r, "e_b_static": e_b_static,
+   184|             "logl": logl, "logl_static": logl_static, "logl_null": logl_null,
+   185|             "lod_r": logl - logl_static + PRIOR_LOG_ODDS,
+   186|             "lod_b": logl_static - logl_null + PRIOR_LOG_ODDS,
+   187|             "df": df, "expected": expected, "resid": resid, "valid": valid}
+
+  --- SIGN SENTENCE (PHASE4 line 241: state it wherever a rho is discussed): docs/tasks/phase4-strengthening/SIGN_CONVENTION.md lines 6-15 (verbatim from disk) ---
+     6| SIGN SENTENCE (quote verbatim wherever a rho is discussed):
+     7|   delta = S(v|A222V) - S(v|WT): positive delta means the model scores the substitution
+     8|   as MORE favourable in the A222V background than in the wild-type background.
+     9|   own_e_b = observed A222V-arm score minus the multiplicative no-interaction expectation,
+    10|   taken as its concentration-weighted intercept: positive own_e_b means observed BETTER
+    11|   than the expectation, negative own_e_b means observed WORSE than the expectation.
+    12|   A NEGATIVE rho means the model's background shift runs OPPOSITE to the measured shift:
+    13|   substitutions the model makes look better under A222V are, on average, the ones whose
+    14|   measured interaction residual is lower -- direction only; no magnitude, mechanism or
+    15|   causal claim follows from the sign.
+
+------------------------------------------------------------------------------
+PRE-REGISTERED DECISIONS -- printed BEFORE any M draw exists
+------------------------------------------------------------------------------
+  M-DEC1 (frozen M-3, sw_i): the raw file carries only PER-CONDITION
+    WT SEs (w12.se..w200.se), no SE of the fitted scalar w_i =
+    fit["w"]["fitness"] that M-3 perturbs -> PRIMARY sw_i = 0 (the frozen
+    fallback); SENSITIVITY sw_i = the median m_se over the frame, applied
+    as per-condition noise by phase4_common.zero_epistasis_draw (one
+    independent N(0,1) per condition cell; the frozen text writes one
+    scalar draw per variant -- differs only where sw_i > 0, i.e. only in
+    the sensitivity).
+  M-DEC2 (frozen M-3, linear sensitivity): E_c^lin = e2["expected"], the
+    project's own linear expectation (script 153's identity plug-in).
+    Script 153's GE-LIN-CF is named as the alternative NOT run (it would
+    change cross-fitting and shape at once).
+  M-DEC3 (draw loop): phase4_common.simulate_rho cannot run on real data
+    (delta is NaN off-frame and p3c.spearman does not drop NaNs; a
+    frame+reference-only rebuild misses recorded own_e.b by up to 3.3e-1;
+    p.Ala222Val is absent from task32).  This script runs simulate_rho's
+    OWN loop in its exact rng order (u first when r0 is given, then the
+    w-noise draw, then the m-noise draw), calling zero_epistasis_draw and
+    own_eb_from_arrays UNMODIFIED, masking to rows where both delta_real
+    and own_e.b^sim are finite.  Wrapper-level deviation; no frozen
+    constant changed.
+  M-DEC4 (planting): z = rank_normal_z over the 10,757 frame rows, z = 0
+    on the 2,377 off-frame raw rows; u ~ N(0,1) drawn for EVERY raw row
+    (keeps the rng stream); s_e = SD of the recorded own_e.b over frame
+    rows (ddof = 0); an off-frame plant reaches frame rows only through the
+    shared correction curves (disclosed); at r0 = 0 the plant is s_e*u --
+    pure independent noise, implemented literally as frozen.
+  M-DEC5 (deciles): the 10 deciles of S_W are cut ONCE over the full
+    frame; backgrounds and the H view inherit those labels.
+  M-DEC6 (G-M5 rule): over the 9 grid means sorted by r0, all 8 adjacent
+    pairs must satisfy mean[j] >= mean[i] - 2*sqrt(SE_i^2 + SE_j^2), SE =
+    sd/sqrt(n) (ddof = 1); any failing pair -> G-M5 FAIL -> exit 3.
+  M-DEC7 (M-5 S2 groups): d3 is position-level, so the 10 equal-count bins
+    are cut over the DISTINCT resolved frame positions; unresolved
+    positions form the eleventh bin; rows inherit their position's bin.
+    Extra hard gates beyond the frozen block: G-XFOLD and G-ALIGN
+    (stricter only) and the whole-placebo reference capped at
+    min(N_REF, 50) draws.
+  M-DEC8 (thresholds): the M-3 fraction, ratio and word use the frozen
+    literal -0.088118 exactly; the full-precision anchor
+    -0.08811806424891734 is printed beside every use.
+  M-DEC9 (streams): each simulation run (one per M-3 variant, one per r0)
+    and each surrogate null (S1, S2) gets its OWN default_rng(SEED);
+    bootstrap ids come from the imported p4c.draw_ids.
+  REPORT-SET NOTE: this is a SMOKE run -- every frozen word below is PROVISIONAL until the full run.
+
+------------------------------------------------------------------------------
+CONSTRUCTION -- script 125's cached frame, script 153's folds and GE-ISO
+------------------------------------------------------------------------------
+  raw rows = 13134; [rebuild_interaction_fit] 0.1s (the project's own pipeline, imported)
+  [pdg.build] 0.8s -- script 125's cached construction, imported (AGENTS 2), not reimplemented
+  [PASS] G-M0 structure: 96 backgrounds, |N| = 78, arms G40/V38/S18: got 96 bgs, |N| = 78, arms {'G': 40, 'V': 38, 'S': 18} target {'G': 40, 'V': 38, 'S': 18}
+  [PASS] G-M0 structure: frame 10,757 rows / 654 positions, H = 455 positions / 7,526 rows: got (10757, 654), H = 455 positions / 7526 rows; target (10757, 654) / 455 / 7526
+  [PASS] G-M0 structure: 67 resolved nulls: got 67 target 67
+  [PASS] G-M0 D3 loader reproduces the stored d3_CA for all 67 resolved nulls: max|d3_of - stored d3_CA| = 4.965e-07 (gate < 1e-6)
+  [GE-ISO fits: 4 conditions x 5 folds] 0.1s (transcribed from script 153 under QUOTED SOURCE, gated in G-XFOLD)
+  [PASS] alignment: every frame row maps to exactly one raw row: 0 frame hgvs absent from raw (must be 0)
+  analysis set accounting: raw 13134 rows -> frame 10757 rows / 654 positions (finite delta_real), 2377 off-frame raw rows (target 2,377); H = 7526 rows / 455 positions
+
+------------------------------------------------------------------------------
+G-XFOLD -- transcribed 5-fold isotonic vs script 153's saved output (EXTRA, stricter; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-XFOLD fold vector equals script 153's saved fold column: 13134 rows: fold identical True, position identical True, hgvs identical True
+  [PASS] G-XFOLD aggregate(E_iso) == script 153's saved own_e_b_ge_iso: max|diff| = 2.220e-16 over 11865 finite rows, NaN-pattern disagreements = 0 (gates < 1e-12 / 0)
+  [PASS] G-XFOLD all 20 isotonic transition lists equal script 153's saved m1_fitted_expectations.csv: 20 fits compared, max|diff| = 2.220e-16 (gate < 1e-12)
+
+------------------------------------------------------------------------------
+G-ALIGN -- script 125's row join re-run, and the 97 x n delta matrix M-6 uses (EXTRA, AGENTS 5; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-ALIGN 96 backgrounds reproduce 125's rows and cached rhos exactly: position mismatches = 0, max|own_e_b diff| = 0.000e+00, max|delta diff| = 0.000e+00, max|rho_full diff| = 1.388e-17, max|rho_H diff| = 1.388e-17 (gates 0 / 0 / <1e-12 / <1e-12 / <1e-12) in 0.5s
+  [PASS] G-ALIGN delta matrix row 0 equals the frame's delta: exact = True over 10757 rows
+  [PASS] G-ALIGN delta matrix reproduces every cached rho_b (full and H): max|diff| rho_full = 1.388e-17, rho_H = 1.388e-17 over 96 backgrounds (gate < 1e-12)
+
+------------------------------------------------------------------------------
+G-M1 -- ANCHOR REPRODUCTION (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M1 A222V rho full (frame columns): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M1 A222V rho full (script 125's a222v_rows): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M1 the two sources agree with each other: |diff| = 0.000e+00 (AGENTS 5 column identity)
+  [PASS] G-M1 A222V rho H (frame columns): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M1 A222V rho H (pdg.rho_table cross-check): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M1 p_spec(neg) full = 2/79 with the named beaters: p = (1+1)/(1+78) = 0.02531645569620253 target 0.02531645569620253 (2/79); beaters ['G_P254F'] target ['G_P254F']
+  [PASS] G-M1 p_spec(neg) H = 4/79 with the named beaters: p = (1+3)/(1+78) = 0.05063291139240506 target 0.05063291139240506 (4/79); beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  anchor (recomputed) = -0.08811806424891734 = -0.08811806424891734; frozen literal for M-3/M-5 fractions and words = -0.088118 (M-DEC8)
+
+------------------------------------------------------------------------------
+G-M2 -- PHASE 1 PARTIALS REPRODUCE (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M2 linear rank partial controlling S_W: got -0.06414804421216103 target -0.06414804421216103 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] G-M2 two-covariate linear rank partial (4 dp): got -0.0829 target -0.0829 |diff| = 0.000e+00 (gate < 1e-15)
+       two-covariate full precision = -0.08289332817238883 (Phase 1 L2 printed -0.0829)
+       retained fraction |partial|/|raw| = 0.7279783635618071 (rounds to 0.728)
+
+------------------------------------------------------------------------------
+G-M6 -- TOY GATES for the stratified statistic and the decomposition (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M6 stratified: two perfectly monotone strata -> 1.0: got 1.0 target 1.0
+  [PASS] G-M6 stratified: weighted mean of (1.0, 0.0) at weights 4/4, and the scipy reference agrees: library 0.5 target 0.5, reference 0.5, |diff| 0.000e+00
+  [PASS] G-M6 stratified: undefined stratum dropped and weights renormalised (decision I1), reference agrees: library 0.5 reference 0.5 target 0.5
+  [PASS] G-M6 decomposition PLANTED PURE-BETWEEN (and scipy reference): rho_between 1.0 target 1.0, rho_within 0.0 target 0.0, reference [np.float64(1.0), np.float64(0.0)]
+  [PASS] G-M6 decomposition PLANTED PURE-WITHIN (and scipy reference): rho_within 1.0 target 1.0, rho_between 0.0 target 0.0, reference [np.float64(0.0), np.float64(1.0)]
+  [PASS] G-M6 decomposition excludes a position below min_rows (I2): n_qualifying 6 target 6; n_positions 7 target 7
+
+------------------------------------------------------------------------------
+G-M3 -- BOOTSTRAP IDENTITY, DRAW-BY-DRAW REFERENCES, PHASE 1 CI (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M3(i) identity: anchor rho, every position once: every-once -0.08811806424891734 point -0.08811806424891734 |diff| 0.000e+00 (gate < 1e-12)
+  deciles of S_W cut ONCE over the frame (M-DEC5); row counts per decile [1076, 1076, 1076, 1076, 1076, 1076, 1076, 1075, 1075, 1075] (sum 10757)
+  [PASS] G-M3(i) identity: A222V partial (primary), every position once: every-once -0.06414804421216108 point -0.06414804421216103 (gate < 1e-12)
+  [PASS] G-M3(i) identity: stratified rho, every position once: every-once -0.05995619167856015 point -0.05995619167856015 (gate < 1e-12)
+  [PASS] G-M3(i) identity: both decomposition components, every position once: every-once [-0.17745812566623154, -0.028237315834513804] point [-0.17745812566623154, -0.028237315834513804] (gate < 1e-12 each)
+  [PASS] G-M3(ii) partial draw-by-draw vs closed-form reference (100 draws): max|fast - reference| = 1.249e-16 (gate < 1e-12) in 0.9s
+  [PASS] G-M3(ii) two-covariate partial draw-by-draw vs reference (100 draws): max|fast - reference| = 1.943e-16 (gate < 1e-12) in 1.4s
+  [PASS] G-M3(ii) stratified draw-by-draw vs scipy reference (100 draws): max|fast - reference| = 2.776e-17 (gate < 1e-12) in 0.7s
+  [PASS] G-M3(ii) decomposition draw-by-draw vs scipy reference (100 draws): max|fast - reference| = 1.388e-17 (gate < 1e-12) in 7.2s
+  [PASS] G-M3(ii) imported corrected routine vs reference_boot (100 draws): max|corrected - reference| = 0.000e+00 (gate < 1e-12) in 0.3s
+  [FAIL] G-M3(iii) Phase 1 CI reproduction: SKIPPED (smoke): N_BOOT=300 != 10000 -- G-M3 cannot be called PASS on this run; decided on the N_BOOT=10000 run
+
+------------------------------------------------------------------------------
+G-M4 -- SIMULATION IDENTITY: zero noise, E = the observed m (frozen; HARD)
+------------------------------------------------------------------------------
+  [PASS] G-M4 zero-noise pipeline returns the recorded own_e.b: compared 10757 recorded rows (target 10,757), max|diff| = 2.220e-16, rows > 1e-12 = 0, recorded but not rebuildable = 0 (gates < 1e-12 / 0 / 0)
+  [informational] rows rebuilt finite but with NO recorded own_e_b = 1108 (the raw file's 1232 nonsense/synonymous rows plus unassigned substitutions -- the frozen comparison set is the recorded rows)
+
+------------------------------------------------------------------------------
+M-1 -- PARTIAL-CORRELATION PLACEBO TEST (frozen; PRIMARY control S_W)
+------------------------------------------------------------------------------
+  SIGN SENTENCE (frozen wherever a rho is discussed): a NEGATIVE rho means the model's background shift runs OPPOSITE to the measured shift -- direction only (SIGN_CONVENTION.md lines 6-15, quoted above).
+  [PRIMARY (S_W)]
+      full: partial rho = -0.064148044  CI [-0.092350, -0.038192] (300 finite draws of 300, position-cluster)   raw rho = -0.088118064   retained = 0.727978
+      H   : partial rho = -0.067208910  CI [-0.099434, -0.034591] (300 finite draws of 300, position-cluster)   raw rho = -0.090021683   retained = 0.746586
+  [SECONDARY (S_W + base functionality)]
+      full: partial rho = -0.082893328  CI [-0.112489, -0.052490] (300 finite draws of 300, position-cluster)   raw rho = -0.088118064   retained = 0.940708
+      H   : partial rho = -0.088353409  CI [-0.126508, -0.050688] (300 finite draws of 300, position-cluster)   raw rho = -0.090021683   retained = 0.981468
+  [per-background partial rho_b, both controls x both views (raw rho_b beside each): 3.0s]
+      bg_id      arm  view          raw  partial_S_W partial_2cov
+      A222_C     S    full    -0.093530    -0.070633    -0.086986
+      A222_C     S    H       -0.090964    -0.066489    -0.082891
+      A222_D     S    full    -0.081657    -0.064923    -0.067045
+      A222_D     S    H       -0.086809    -0.069280    -0.073667
+      A222_E     S    full    -0.072119    -0.052509    -0.052644
+      A222_E     S    H       -0.076476    -0.056379    -0.058577
+      A222_F     S    full    -0.076109    -0.062600    -0.075209
+      A222_F     S    H       -0.086085    -0.075152    -0.090478
+      A222_G     S    full    -0.047519    -0.028811    -0.022171
+      A222_G     S    H       -0.054063    -0.034082    -0.030664
+      A222_H     S    full    -0.053982    -0.041177    -0.044543
+      A222_H     S    H       -0.066670    -0.053517    -0.058177
+      A222_I     S    full    -0.069323    -0.047167    -0.058797
+      A222_I     S    H       -0.073832    -0.053923    -0.068445
+      A222_K     S    full    -0.045641    -0.031110    -0.026777
+      A222_K     S    H       -0.051972    -0.037205    -0.033981
+      A222_L     S    full    -0.053895    -0.036256    -0.043515
+      A222_L     S    H       -0.056760    -0.041388    -0.050951
+      A222_M     S    full    -0.045990    -0.036437    -0.039336
+      A222_M     S    H       -0.048930    -0.041307    -0.046425
+      A222_N     S    full    -0.076712    -0.065236    -0.068229
+      A222_N     S    H       -0.080241    -0.067652    -0.072231
+      A222_P     S    full    -0.064489    -0.044353    -0.050443
+      A222_P     S    H       -0.070548    -0.049915    -0.059264
+      A222_Q     S    full    -0.061576    -0.044392    -0.044823
+      A222_Q     S    H       -0.065190    -0.047017    -0.048324
+      A222_R     S    full    -0.053242    -0.037189    -0.035579
+      A222_R     S    H       -0.060413    -0.044364    -0.044368
+      A222_S     S    full    -0.068300    -0.043572    -0.043722
+      A222_S     S    H       -0.067112    -0.039608    -0.040293
+      A222_T     S    full    -0.085890    -0.056931    -0.065731
+      A222_T     S    H       -0.081680    -0.050604    -0.060089
+      A222_W     S    full    -0.057926    -0.045138    -0.042996
+      A222_W     S    H       -0.067435    -0.055735    -0.055867
+      A222_Y     S    full    -0.064968    -0.053558    -0.060702
+      A222_Y     S    H       -0.078084    -0.069117    -0.079153
+      AV_113     V    full    -0.077808    -0.037234    -0.064036
+      AV_113     V    H       -0.086932    -0.045274    -0.070967
+      AV_116     V    full    -0.068926    -0.039029    -0.050848
+      AV_116     V    H       -0.056757    -0.023046    -0.033688
+      AV_145     V    full    -0.055803    -0.028116    -0.039492
+      AV_145     V    H       -0.052044    -0.022629    -0.034675
+      AV_155     V    full    -0.070396    -0.038390    -0.053141
+      AV_155     V    H       -0.088806    -0.058726    -0.076463
+      AV_175     V    full    -0.047162    -0.000993    -0.007663
+      AV_175     V    H       -0.061863    -0.015746    -0.025313
+      AV_19      V    full    +0.003329    +0.001353    +0.001454
+      AV_19      V    H       +0.002979    +0.001465    +0.002342
+      AV_195     V    full    -0.084162    -0.047897    -0.065308
+      AV_195     V    H       -0.093421    -0.057101    -0.075079
+      AV_204     V    full    -0.002578    +0.003250    +0.000952
+      AV_204     V    H       +0.002257    +0.009004    +0.007272
+      AV_209     V    full    -0.018056    -0.006566    -0.005804
+      AV_209     V    H       -0.022231    -0.011357    -0.011123
+      AV_220     V    full    -0.084598    -0.062652    -0.087864
+      AV_220     V    H       -0.094480    -0.070894    -0.095430
+      AV_233     V    full    -0.028766    -0.004579    -0.011694
+      AV_233     V    H       -0.037195    -0.012759    -0.018718
+      AV_242     V    full    -0.062924    -0.032534    -0.040267
+      AV_242     V    H       -0.067521    -0.035183    -0.046567
+      AV_292     V    full    -0.013826    +0.018208    +0.023743
+      AV_292     V    H       -0.007557    +0.027915    +0.033502
+      AV_293     V    full    -0.062145    -0.034142    -0.033096
+      AV_293     V    H       -0.058014    -0.029679    -0.025058
+      AV_302     V    full    -0.034024    -0.000109    -0.005547
+      AV_302     V    H       -0.032979    +0.003053    -0.003140
+      AV_311     V    full    -0.039952    -0.022924    -0.014133
+      AV_311     V    H       -0.041197    -0.024416    -0.013888
+      AV_328     V    full    -0.040293    -0.011622    -0.013200
+      AV_328     V    H       -0.051857    -0.021278    -0.026221
+      AV_350     V    full    -0.033384    +0.007652    +0.022792
+      AV_350     V    H       -0.023886    +0.021135    +0.041195
+      AV_353     V    full    +0.009727    +0.057138    +0.093557
+      AV_353     V    H       +0.011019    +0.058272    +0.096248
+      AV_368     V    full    +0.004594    +0.065562    +0.112044
+      AV_368     V    H       +0.015369    +0.080059    +0.128722
+      AV_396     V    full    +0.028472    +0.072477    +0.124656
+      AV_396     V    H       +0.032804    +0.075920    +0.130022
+      AV_461     V    full    +0.041108    +0.055526    +0.084381
+      AV_461     V    H       +0.040589    +0.056254    +0.086914
+      AV_462     V    full    -0.002825    +0.001378    +0.000574
+      AV_462     V    H       -0.002534    +0.001863    +0.003275
+      AV_5       V    full    +0.003038    -0.005590    +0.010260
+      AV_5       V    H       +0.013532    +0.002744    +0.021874
+      AV_511     V    full    +0.019290    +0.050278    +0.101551
+      AV_511     V    H       +0.015587    +0.048528    +0.103907
+      AV_522     V    full    +0.011067    +0.023938    +0.046729
+      AV_522     V    H       +0.001918    +0.015857    +0.039112
+      AV_524     V    full    +0.028768    +0.031883    +0.056156
+      AV_524     V    H       +0.025942    +0.028257    +0.057540
+      AV_551     V    full    +0.002578    +0.003789    -0.010501
+      AV_551     V    H       -0.000839    +0.000033    -0.013363
+      AV_558     V    full    +0.040456    +0.084512    +0.135699
+      AV_558     V    H       +0.035295    +0.077571    +0.128063
+      AV_587     V    full    +0.047573    +0.089263    +0.142718
+      AV_587     V    H       +0.035058    +0.075806    +0.126407
+      AV_589     V    full    +0.043480    +0.075160    +0.134620
+      AV_589     V    H       +0.035902    +0.066445    +0.124019
+      AV_650     V    full    +0.021887    +0.023755    +0.037016
+      AV_650     V    H       +0.005934    +0.007822    +0.017815
+      AV_655     V    full    +0.008158    +0.017270    +0.024237
+      AV_655     V    H       -0.003478    +0.006044    +0.011169
+      AV_70      V    full    -0.045707    -0.005522    +0.009011
+      AV_70      V    H       -0.044558    -0.001708    +0.014295
+      AV_73      V    full    -0.041006    -0.010487    -0.029016
+      AV_73      V    H       -0.053321    -0.020671    -0.039451
+      AV_84      V    full    -0.038993    -0.004824    -0.009354
+      AV_84      V    H       -0.044302    -0.009097    -0.012805
+      AV_85      V    full    -0.071229    -0.049988    -0.054264
+      AV_85      V    H       -0.081935    -0.059794    -0.065115
+      AV_98      V    full    -0.031183    +0.007845    +0.013673
+      AV_98      V    H       -0.023026    +0.020079    +0.027193
+      G_A462S    G    full    +0.006938    +0.023624    +0.038740
+      G_A462S    G    H       -0.005709    +0.010678    +0.024731
+      G_A551K    G    full    +0.034997    +0.058816    +0.093285
+      G_A551K    G    H       +0.038173    +0.061023    +0.099256
+      G_D629C    G    full    -0.031212    -0.031339    -0.062344
+      G_D629C    G    H       -0.028485    -0.028270    -0.062826
+      G_E168S    G    full    -0.023468    -0.009554    -0.004375
+      G_E168S    G    H       -0.031987    -0.017485    -0.010884
+      G_E16V     G    full    +0.012708    +0.003569    +0.011363
+      G_E16V     G    H       +0.013044    +0.003545    +0.014855
+      G_E279K    G    full    +0.007841    +0.001320    +0.019229
+      G_E279K    G    H       +0.005548    -0.003129    +0.015525
+      G_E383T    G    full    -0.020286    -0.009589    +0.010777
+      G_E383T    G    H       -0.011306    +0.001174    +0.026355
+      G_E54R     G    full    -0.041779    -0.034478    -0.040572
+      G_E54R     G    H       -0.044466    -0.036576    -0.042823
+      G_G317Q    G    full    -0.041897    -0.022738    -0.024691
+      G_G317Q    G    H       -0.051686    -0.031879    -0.036725
+      G_G562M    G    full    +0.026202    +0.037612    +0.068663
+      G_G562M    G    H       +0.019066    +0.029767    +0.061610
+      G_H354F    G    full    +0.013581    +0.067164    +0.102398
+      G_H354F    G    H       +0.015994    +0.070174    +0.109891
+      G_H613R    G    full    +0.032873    +0.042811    +0.084969
+      G_H613R    G    H       +0.030397    +0.039091    +0.080393
+      G_I192T    G    full    -0.032948    -0.013648    -0.009328
+      G_I192T    G    H       -0.029689    -0.010450    -0.008864
+      G_K27I     G    full    +0.015592    +0.011595    +0.022438
+      G_K27I     G    H       +0.020019    +0.016139    +0.029067
+      G_K401S    G    full    +0.050708    +0.075268    +0.130951
+      G_K401S    G    H       +0.057378    +0.080062    +0.139160
+      G_K48P     G    full    -0.050903    -0.017941    -0.030405
+      G_K48P     G    H       -0.050518    -0.015862    -0.026597
+      G_K510H    G    full    +0.062861    +0.095887    +0.161409
+      G_K510H    G    H       +0.068247    +0.100080    +0.167527
+      G_L178T    G    full    -0.070331    -0.034726    -0.047387
+      G_L178T    G    H       -0.074356    -0.036537    -0.052946
+      G_L318F    G    full    -0.056842    -0.042634    -0.057235
+      G_L318F    G    H       -0.062754    -0.048195    -0.061636
+      G_L408H    G    full    +0.051669    +0.079638    +0.132642
+      G_L408H    G    H       +0.052618    +0.079948    +0.133574
+      G_L472H    G    full    +0.017473    +0.035220    +0.067057
+      G_L472H    G    H       +0.019854    +0.037682    +0.072974
+      G_L526R    G    full    +0.052743    +0.039633    +0.063186
+      G_L526R    G    H       +0.060720    +0.047346    +0.070589
+      G_M111N    G    full    -0.060641    -0.028336    -0.033842
+      G_M111N    G    H       -0.056757    -0.021970    -0.026782
+      G_N12P     G    full    -0.033116    -0.035792    -0.043705
+      G_N12P     G    H       -0.030966    -0.034220    -0.042753
+      G_N3K      G    full    -0.028768    -0.022522    -0.033867
+      G_N3K      G    H       -0.030396    -0.024654    -0.041559
+      G_P254F    G    full    -0.096244    -0.066013    -0.076202
+      G_P254F    G    H       -0.101954    -0.070671    -0.079496
+      G_P346V    G    full    -0.011819    +0.031788    +0.056237
+      G_P346V    G    H       -0.008554    +0.035929    +0.067244
+      G_P395F    G    full    +0.038434    +0.082950    +0.134003
+      G_P395F    G    H       +0.046986    +0.091214    +0.146527
+      G_R357M    G    full    +0.018424    +0.073904    +0.125350
+      G_R357M    G    H       +0.024620    +0.080266    +0.138116
+      G_R358V    G    full    +0.045471    +0.077887    +0.131226
+      G_R358V    G    H       +0.053832    +0.086339    +0.143809
+      G_S23A     G    full    +0.051354    +0.057781    +0.084259
+      G_S23A     G    H       +0.051743    +0.057286    +0.082309
+      G_S430P    G    full    +0.012313    +0.033604    +0.064375
+      G_S430P    G    H       +0.020189    +0.042164    +0.078436
+      G_S494H    G    full    +0.043038    +0.049256    +0.105882
+      G_S494H    G    H       +0.053832    +0.057791    +0.117962
+      G_T115G    G    full    -0.021532    +0.009392    -0.005310
+      G_T115G    G    H       -0.023371    +0.009739    -0.007141
+      G_T521D    G    full    +0.001653    -0.000105    -0.000175
+      G_T521D    G    H       -0.014266    -0.017739    -0.014764
+      G_T549H    G    full    +0.023820    +0.014670    +0.047308
+      G_T549H    G    H       +0.035875    +0.023944    +0.058162
+      G_V574C    G    full    +0.047332    +0.055579    +0.088490
+      G_V574C    G    H       +0.056302    +0.063017    +0.097674
+      G_W595H    G    full    +0.063116    +0.086682    +0.149329
+      G_W595H    G    H       +0.067669    +0.086877    +0.146718
+      G_W59C     G    full    -0.041685    -0.016392    -0.022600
+      G_W59C     G    H       -0.047607    -0.020610    -0.028123
+      G_Y197V    G    full    -0.076880    -0.036730    -0.044506
+      G_Y197V    G    H       -0.072498    -0.029970    -0.038046
+
+  p_spec on the partial rho_b (N = 78 nulls):
+      PRIMARY (S_W)                            p_spec(neg) full: rho_partial = -0.064148, p = (1+1)/(1+78) = 0.025316, at-or-below/magnitude nulls = ['G_P254F']
+      PRIMARY (S_W)                            p_spec(neg) H   : rho_partial = -0.067209, p = (1+2)/(1+78) = 0.037975, at-or-below/magnitude nulls = ['AV_220', 'G_P254F']
+      PRIMARY (S_W)                            p_spec(abs) full: rho_partial = -0.064148, p = (1+14)/(1+78) = 0.189873, at-or-below/magnitude nulls = ['AV_368', 'AV_396', 'AV_558', 'AV_587', 'AV_589', 'G_H354F', 'G_K401S', 'G_K510H', 'G_L408H', 'G_P254F', 'G_P395F', 'G_R357M', 'G_R358V', 'G_W595H']
+      PRIMARY (S_W)                            p_spec(abs) H   : rho_partial = -0.067209, p = (1+14)/(1+78) = 0.189873, at-or-below/magnitude nulls = ['AV_220', 'AV_368', 'AV_396', 'AV_558', 'AV_587', 'G_H354F', 'G_K401S', 'G_K510H', 'G_L408H', 'G_P254F', 'G_P395F', 'G_R357M', 'G_R358V', 'G_W595H']
+      SECONDARY (S_W + base functionality)     p_spec(neg) full: rho_partial = -0.082893, p = (1+1)/(1+78) = 0.025316, at-or-below/magnitude nulls = ['AV_220']
+      SECONDARY (S_W + base functionality)     p_spec(neg) H   : rho_partial = -0.088353, p = (1+1)/(1+78) = 0.025316, at-or-below/magnitude nulls = ['AV_220']
+      SECONDARY (S_W + base functionality)     p_spec(abs) full: rho_partial = -0.082893, p = (1+22)/(1+78) = 0.291139, at-or-below/magnitude nulls = ['AV_220', 'AV_353', 'AV_368', 'AV_396', 'AV_461', 'AV_511', 'AV_558', 'AV_587', 'AV_589', 'G_A551K', 'G_H354F', 'G_H613R', 'G_K401S', 'G_K510H', 'G_L408H', 'G_P395F', 'G_R357M', 'G_R358V', 'G_S23A', 'G_S494H', 'G_V574C', 'G_W595H']
+      SECONDARY (S_W + base functionality)     p_spec(abs) H   : rho_partial = -0.088353, p = (1+19)/(1+78) = 0.253165, at-or-below/magnitude nulls = ['AV_220', 'AV_353', 'AV_368', 'AV_396', 'AV_511', 'AV_558', 'AV_587', 'AV_589', 'G_A551K', 'G_H354F', 'G_K401S', 'G_K510H', 'G_L408H', 'G_P395F', 'G_R357M', 'G_R358V', 'G_S494H', 'G_V574C', 'G_W595H']
+
+  p_spec_adj: leave-one-out OLS of the partial rho_b on mean|delta_b| (Diagnostics II D9):
+      PRIMARY (S_W)                            full: r_A = -0.068717, k = 2/78, p_spec_adj = (1+2)/(1+78) = 0.037975, beaters = ['AV_220', 'AV_85']
+      PRIMARY (S_W)                            H   : r_A = -0.072183, k = 2/78, p_spec_adj = (1+2)/(1+78) = 0.037975, beaters = ['AV_220', 'AV_85']
+      SECONDARY (S_W + base functionality)     full: r_A = -0.098231, k = 1/78, p_spec_adj = (1+1)/(1+78) = 0.025316, beaters = ['AV_220']
+      SECONDARY (S_W + base functionality)     H   : r_A = -0.104878, k = 1/78, p_spec_adj = (1+1)/(1+78) = 0.025316, beaters = ['AV_220']
+
+  FROZEN M-1 WORD (primary control, A222V partial): CI [-0.092350, -0.038192], p_spec(neg) full = 0.025316 (target condition <= 0.05), H = 0.037975 (target condition <= 0.10)  ->  PARTIAL-SURVIVES  [PROVISIONAL: smoke run]
+  (the secondary control and p_spec(abs) are reported above with no word: the frozen block defines the word on the primary control only)
+
+------------------------------------------------------------------------------
+M-2 -- STRATIFIED CORRELATION (frozen; sensitivity, NO WORD)
+------------------------------------------------------------------------------
+  deciles of S_W are the frame-level labels cut above (M-DEC5); every background and the H view inherit them.
+      full: stratified rho (A222V) = -0.059956192  CI [-0.087607, -0.034649] (300 finite draws of 300, position-cluster)
+      H   : stratified rho (A222V) = -0.064594698  CI [-0.095034, -0.031508] (300 finite draws of 300, position-cluster)
+
+      bg_id      arm  view    strat_rho
+      A222_C     S    full    -0.072035
+      A222_C     S    H       -0.068831
+      A222_D     S    full    -0.060071
+      A222_D     S    H       -0.064726
+      A222_E     S    full    -0.047850
+      A222_E     S    H       -0.052159
+      A222_F     S    full    -0.059251
+      A222_F     S    H       -0.072219
+      A222_G     S    full    -0.029957
+      A222_G     S    H       -0.035282
+      A222_H     S    full    -0.039185
+      A222_H     S    H       -0.050871
+      A222_I     S    full    -0.042355
+      A222_I     S    H       -0.051038
+      A222_K     S    full    -0.028522
+      A222_K     S    H       -0.034008
+      A222_L     S    full    -0.032954
+      A222_L     S    H       -0.037661
+      A222_M     S    full    -0.033109
+      A222_M     S    H       -0.037882
+      A222_N     S    full    -0.060531
+      A222_N     S    H       -0.062307
+      A222_P     S    full    -0.040761
+      A222_P     S    H       -0.046002
+      A222_Q     S    full    -0.042023
+      A222_Q     S    H       -0.045107
+      A222_R     S    full    -0.035057
+      A222_R     S    H       -0.042534
+      A222_S     S    full    -0.042693
+      A222_S     S    H       -0.041540
+      A222_T     S    full    -0.054891
+      A222_T     S    H       -0.052252
+      A222_W     S    full    -0.041634
+      A222_W     S    H       -0.051643
+      A222_Y     S    full    -0.048907
+      A222_Y     S    H       -0.063614
+      AV_113     V    full    -0.038861
+      AV_113     V    H       -0.049693
+      AV_116     V    full    -0.042448
+      AV_116     V    H       -0.029545
+      AV_145     V    full    -0.033797
+      AV_145     V    H       -0.029784
+      AV_155     V    full    -0.043043
+      AV_155     V    H       -0.064929
+      AV_175     V    full    -0.007062
+      AV_175     V    H       -0.027772
+      AV_19      V    full    +0.004655
+      AV_19      V    H       +0.006702
+      AV_195     V    full    -0.048193
+      AV_195     V    H       -0.061579
+      AV_204     V    full    +0.000167
+      AV_204     V    H       +0.004152
+      AV_209     V    full    -0.008118
+      AV_209     V    H       -0.014179
+      AV_220     V    full    -0.059300
+      AV_220     V    H       -0.068644
+      AV_233     V    full    -0.004564
+      AV_233     V    H       -0.014136
+      AV_242     V    full    -0.024256
+      AV_242     V    H       -0.027185
+      AV_292     V    full    +0.019371
+      AV_292     V    H       +0.027551
+      AV_293     V    full    -0.034024
+      AV_293     V    H       -0.033406
+      AV_302     V    full    +0.001304
+      AV_302     V    H       +0.001630
+      AV_311     V    full    -0.018007
+      AV_311     V    H       -0.022281
+      AV_328     V    full    -0.013993
+      AV_328     V    H       -0.026560
+      AV_350     V    full    +0.009347
+      AV_350     V    H       +0.018769
+      AV_353     V    full    +0.064128
+      AV_353     V    H       +0.063367
+      AV_368     V    full    +0.071992
+      AV_368     V    H       +0.082155
+      AV_396     V    full    +0.077281
+      AV_396     V    H       +0.074577
+      AV_461     V    full    +0.065334
+      AV_461     V    H       +0.065381
+      AV_462     V    full    +0.005797
+      AV_462     V    H       +0.009104
+      AV_5       V    full    -0.002396
+      AV_5       V    H       +0.004484
+      AV_511     V    full    +0.057309
+      AV_511     V    H       +0.050490
+      AV_522     V    full    +0.026757
+      AV_522     V    H       +0.017345
+      AV_524     V    full    +0.036445
+      AV_524     V    H       +0.030949
+      AV_551     V    full    +0.001689
+      AV_551     V    H       -0.001047
+      AV_558     V    full    +0.084457
+      AV_558     V    H       +0.075001
+      AV_587     V    full    +0.093021
+      AV_587     V    H       +0.078206
+      AV_589     V    full    +0.084890
+      AV_589     V    H       +0.072670
+      AV_650     V    full    +0.026449
+      AV_650     V    H       +0.011091
+      AV_655     V    full    +0.021371
+      AV_655     V    H       +0.009862
+      AV_70      V    full    -0.010847
+      AV_70      V    H       -0.010154
+      AV_73      V    full    -0.015491
+      AV_73      V    H       -0.027366
+      AV_84      V    full    -0.009491
+      AV_84      V    H       -0.015796
+      AV_85      V    full    -0.051236
+      AV_85      V    H       -0.061021
+      AV_98      V    full    -0.002471
+      AV_98      V    H       +0.008833
+      G_A462S    G    full    +0.031488
+      G_A462S    G    H       +0.018528
+      G_A551K    G    full    +0.062974
+      G_A551K    G    H       +0.061429
+      G_D629C    G    full    -0.035359
+      G_D629C    G    H       -0.030947
+      G_E168S    G    full    -0.008780
+      G_E168S    G    H       -0.020392
+      G_E16V     G    full    +0.006343
+      G_E16V     G    H       +0.007025
+      G_E279K    G    full    -0.000285
+      G_E279K    G    H       -0.006700
+      G_E383T    G    full    -0.004134
+      G_E383T    G    H       +0.005456
+      G_E54R     G    full    -0.035814
+      G_E54R     G    H       -0.037573
+      G_G317Q    G    full    -0.020013
+      G_G317Q    G    H       -0.029977
+      G_G562M    G    full    +0.042265
+      G_G562M    G    H       +0.033498
+      G_H354F    G    full    +0.063663
+      G_H354F    G    H       +0.067392
+      G_H613R    G    full    +0.048472
+      G_H613R    G    H       +0.043633
+      G_I192T    G    full    -0.016731
+      G_I192T    G    H       -0.014662
+      G_K27I     G    full    +0.016216
+      G_K27I     G    H       +0.020879
+      G_K401S    G    full    +0.091246
+      G_K401S    G    H       +0.090627
+      G_K48P     G    full    -0.025112
+      G_K48P     G    H       -0.022342
+      G_K510H    G    full    +0.097663
+      G_K510H    G    H       +0.099450
+      G_L178T    G    full    -0.035522
+      G_L178T    G    H       -0.039899
+      G_L318F    G    full    -0.037909
+      G_L318F    G    H       -0.044876
+      G_L408H    G    full    +0.084533
+      G_L408H    G    H       +0.079473
+      G_L472H    G    full    +0.040363
+      G_L472H    G    H       +0.041368
+      G_L526R    G    full    +0.042250
+      G_L526R    G    H       +0.047797
+      G_M111N    G    full    -0.032451
+      G_M111N    G    H       -0.027700
+      G_N12P     G    full    -0.034877
+      G_N12P     G    H       -0.034175
+      G_N3K      G    full    -0.024607
+      G_N3K      G    H       -0.026957
+      G_P254F    G    full    -0.059095
+      G_P254F    G    H       -0.063578
+      G_P346V    G    full    +0.032381
+      G_P346V    G    H       +0.035873
+      G_P395F    G    full    +0.090976
+      G_P395F    G    H       +0.096113
+      G_R357M    G    full    +0.083708
+      G_R357M    G    H       +0.086995
+      G_R358V    G    full    +0.087261
+      G_R358V    G    H       +0.092012
+      G_S23A     G    full    +0.059808
+      G_S23A     G    H       +0.058203
+      G_S430P    G    full    +0.036463
+      G_S430P    G    H       +0.042440
+      G_S494H    G    full    +0.060180
+      G_S494H    G    H       +0.062377
+      G_T115G    G    full    +0.003348
+      G_T115G    G    H       +0.002843
+      G_T521D    G    full    -0.001593
+      G_T521D    G    H       -0.017013
+      G_T549H    G    full    +0.020594
+      G_T549H    G    H       +0.025006
+      G_V574C    G    full    +0.056675
+      G_V574C    G    H       +0.061126
+      G_W595H    G    full    +0.091762
+      G_W595H    G    H       +0.088654
+      G_W59C     G    full    -0.018634
+      G_W59C     G    H       -0.022670
+      G_Y197V    G    full    -0.037291
+      G_Y197V    G    H       -0.031821
+
+  p_spec(neg) on the stratified rho_b (N = 78):
+      full: stratified rho = -0.059956, p = (1+0)/(1+78) = 0.012658, at-or-below nulls = []
+      H   : stratified rho = -0.064595, p = (1+2)/(1+78) = 0.037975, at-or-below nulls = ['AV_155', 'AV_220']
+      [per-background table 1.6s]  M-2 carries NO word (frozen block).
+
+------------------------------------------------------------------------------
+M-3 -- ZERO-EPISTASIS SIMULATION NULL (frozen; A222V only)
+------------------------------------------------------------------------------
+  DECISIONS IN FORCE (stated before the first draw):
+    M-DEC1  PRIMARY sw_i = 0 (the data carries no SE of the fitted scalar w_i; the per-condition w12.se..w200.se are NOT that quantity); SENSITIVITY sw_i = the median m_se over the frame = computed below.
+    M-DEC2  the linear sensitivity plugs E_c^lin = e2["expected"] (the project's own linear expectation); GE-LIN-CF is named and NOT run.
+    M-DEC3  simulate_rho's own draw loop, unmodified library calls, its exact rng order; rho masked to rows where both delta_real and own_e.b^sim are finite.
+    median m_se over the frame rows x 4 conditions = 0.0809333031092933 (the frozen sensitivity's sw_i)
+  frozen M-3 report set: mean, SD, 2.5th and 97.5th percentiles, fraction <= -0.088118, mean/(-0.088118); word EXCESS-OVER-ARTIFACT iff -0.088118 <= p2.5 (PRIMARY only; sensitivities wordless).
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- PRIMARY  (E = GE-ISO cross-f: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+
+  PRIMARY  (E = GE-ISO cross-fitted isotonic, sw_i = 0)
+      n = 100, mean = +0.027112, SD = 0.006850, p2.5 = +0.015188, p97.5 = +0.041349, fraction <= -0.088118 = 0.0000, mean/(-0.088118) = -0.3077   (100 draws, 2.0s)
+      null-versus-observed placement: observed -0.088118 (recomputed -0.08811806424891734) vs the band [+0.015188, +0.041349] -> observed is BELOW the 2.5th percentile
+      draw mean vs 0 (AGENTS 4: does the null centre on zero?): mean = +0.027112, sd/sqrt(n) = 0.000685
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- SENSITIVITY A (E = E_c^lin =: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+
+  SENSITIVITY A (E = E_c^lin = e2.expected, sw_i = 0)
+      n = 100, mean = +0.000219, SD = 0.008159, p2.5 = -0.014450, p97.5 = +0.015255, fraction <= -0.088118 = 0.0000, mean/(-0.088118) = -0.0025   (100 draws, 2.0s)
+      null-versus-observed placement: observed -0.088118 (recomputed -0.08811806424891734) vs the band [-0.014450, +0.015255] -> observed is BELOW the 2.5th percentile
+      draw mean vs 0 (AGENTS 4: does the null centre on zero?): mean = +0.000219, sd/sqrt(n) = 0.000816
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- SENSITIVITY B (E = GE-ISO, s: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+
+  SENSITIVITY B (E = GE-ISO, sw_i = median m_se)
+      n = 100, mean = +0.021485, SD = 0.007799, p2.5 = +0.007912, p97.5 = +0.035298, fraction <= -0.088118 = 0.0000, mean/(-0.088118) = -0.2438   (100 draws, 2.0s)
+      null-versus-observed placement: observed -0.088118 (recomputed -0.08811806424891734) vs the band [+0.007912, +0.035298] -> observed is BELOW the 2.5th percentile
+      draw mean vs 0 (AGENTS 4: does the null centre on zero?): mean = +0.021485, sd/sqrt(n) = 0.000780
+
+  FROZEN M-3 WORD (primary only): -0.088118 vs p2.5 = +0.015188  ->  EXCESS-OVER-ARTIFACT  [PROVISIONAL: smoke run]
+  (both sensitivities are reported above with numbers and NO word, frozen M-3)
+
+------------------------------------------------------------------------------
+M-4 -- DETECTION LIMIT BY PLANTING (frozen; NO WORD)
+------------------------------------------------------------------------------
+  M-DEC4 in force: z = rank_normal_z of delta over the frame, 0 off-frame; u ~ N(0,1) for every raw row (u first, keeping simulate_rho's rng order); s_e = SD of the recorded own_e.b (ddof = 0); at r0 = 0 the plant is s_e*u -- pure independent noise, literal.
+  s_e = 0.24089615433524797 (SD of the recorded own_e.b over 10757 frame rows, ddof = 0); z: mean 2.114e-17, sd np.float64(1.0); off-frame z = 0 on 2377 raw rows
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.30: kept rows: min 10757, max 10757 over 100 draws
+      r0 = -0.30: n = 100, mean observed rho = -0.237987, sd = 0.008670  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.20: kept rows: min 10757, max 10757 over 100 draws
+      r0 = -0.20: n = 100, mean observed rho = -0.154046, sd = 0.009073  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.10: kept rows: min 10757, max 10757 over 100 draws
+      r0 = -0.10: n = 100, mean observed rho = -0.070743, sd = 0.009309  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.05: kept rows: min 10757, max 10757 over 100 draws
+      r0 = -0.05: n = 100, mean observed rho = -0.029239, sd = 0.009386  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.00: kept rows: min 10757, max 10757 over 100 draws
+      r0 = +0.00: n = 100, mean observed rho = +0.012266, sd = 0.009433  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.05: kept rows: min 10757, max 10757 over 100 draws
+      r0 = +0.05: n = 100, mean observed rho = +0.053717, sd = 0.009446  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.10: kept rows: min 10757, max 10757 over 100 draws
+      r0 = +0.10: n = 100, mean observed rho = +0.095221, sd = 0.009490  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.20: kept rows: min 10757, max 10757 over 100 draws
+      r0 = +0.20: n = 100, mean observed rho = +0.178429, sd = 0.009451  (2.0s)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.30: kept rows: min 10757, max 10757 over 100 draws
+      r0 = +0.30: n = 100, mean observed rho = +0.261927, sd = 0.009222  (2.0s)
+
+  r0 = 0 band percentiles that define the tails: q_lo = -0.005387, q_hi = +0.028864
+           r0  mean observed rho        sd    power
+        -0.30          -0.237987  0.008670   1.0000
+        -0.20          -0.154046  0.009073   1.0000
+        -0.10          -0.070743  0.009309   1.0000
+        -0.05          -0.029239  0.009386   0.9900
+        +0.00          +0.012266  0.009433   0.0300
+        +0.05          +0.053717  0.009446   1.0000
+        +0.10          +0.095221  0.009490   1.0000
+        +0.20          +0.178429  0.009451   1.0000
+        +0.30          +0.261927  0.009222   1.0000
+  minimum detectable |r0| at 80% power (decision I5, both sides shown): negative side = 0.040155440414507776, positive side = 0.03974358974358975, headline (smaller of the two) = 0.03974358974358975
+  attenuation slope of mean observed rho against r0 = +0.832327 (intercept +0.012172) over the 9-point grid
+  G-M5 pair -0.30 -> -0.20: mean -0.237987 -> -0.154046; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = -0.240497 (SE_i = 0.000867, SE_j = 0.000907) -> OK
+  G-M5 pair -0.20 -> -0.10: mean -0.154046 -> -0.070743; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = -0.156646 (SE_i = 0.000907, SE_j = 0.000931) -> OK
+  G-M5 pair -0.10 -> -0.05: mean -0.070743 -> -0.029239; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = -0.073387 (SE_i = 0.000931, SE_j = 0.000939) -> OK
+  G-M5 pair -0.05 -> +0.00: mean -0.029239 -> +0.012266; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = -0.031900 (SE_i = 0.000939, SE_j = 0.000943) -> OK
+  G-M5 pair +0.00 -> +0.05: mean +0.012266 -> +0.053717; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = +0.009597 (SE_i = 0.000943, SE_j = 0.000945) -> OK
+  G-M5 pair +0.05 -> +0.10: mean +0.053717 -> +0.095221; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = +0.051039 (SE_i = 0.000945, SE_j = 0.000949) -> OK
+  G-M5 pair +0.10 -> +0.20: mean +0.095221 -> +0.178429; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = +0.092543 (SE_i = 0.000949, SE_j = 0.000945) -> OK
+  G-M5 pair +0.20 -> +0.30: mean +0.178429 -> +0.261927; required mean[j] >= mean[i] - 2*sqrt(SE_i^2+SE_j^2) = +0.175788 (SE_i = 0.000945, SE_j = 0.000922) -> OK
+  [PASS] G-M5 planting response: all 8 adjacent pairs non-decreasing within Monte-Carlo error (M-DEC6): 8/8 pairs pass; a failing pair is not tolerated, N is not raised and the tolerance is not widened
+
+------------------------------------------------------------------------------
+M-5 -- BETWEEN- / WITHIN-POSITION DECOMPOSITION (frozen)
+------------------------------------------------------------------------------
+  M-DEC7 in force: d3 is position-level; 10 equal-count bins over the DISTINCT resolved frame positions, unresolved positions in the eleventh bin; rows inherit their position's bin.  Positions with >= 5 finite rows qualify (frozen).
+
+      full: A222V components (qualifying positions 652 of 654):
+          rho_between = -0.177458126  CI [-0.228255, -0.125131]  (300 finite draws, position-cluster, both components recomputed per resample)
+          rho_within   = -0.028237316  CI [-0.048321, -0.007490]  (300 finite draws)
+
+      H   : A222V components (qualifying positions 453 of 455):
+          rho_between = -0.169522069  CI [-0.229463, -0.094564]  (300 finite draws, position-cluster, both components recomputed per resample)
+          rho_within   = -0.035545269  CI [-0.062580, -0.011771]  (300 finite draws)
+
+      bg_id      arm  view      between       within qualifying
+      A222_C     S    full    -0.218126    -0.003740        652
+      A222_C     S    H       -0.206986    -0.007155        453
+      A222_D     S    full    -0.173088    -0.013647        652
+      A222_D     S    H       -0.186155    -0.010627        453
+      A222_E     S    full    -0.144684    -0.023155        652
+      A222_E     S    H       -0.146940    -0.023450        453
+      A222_F     S    full    -0.155634    -0.028246        652
+      A222_F     S    H       -0.186085    -0.026683        453
+      A222_G     S    full    -0.127971    +0.002934        652
+      A222_G     S    H       -0.133807    +0.004994        453
+      A222_H     S    full    -0.088265    -0.022294        652
+      A222_H     S    H       -0.109140    -0.026251        453
+      A222_I     S    full    -0.136331    -0.032260        652
+      A222_I     S    H       -0.132073    -0.041453        453
+      A222_K     S    full    -0.088506    -0.018518        652
+      A222_K     S    H       -0.095633    -0.020189        453
+      A222_L     S    full    -0.096558    -0.030208        652
+      A222_L     S    H       -0.085954    -0.032908        453
+      A222_M     S    full    -0.093624    -0.018361        652
+      A222_M     S    H       -0.071537    -0.017766        453
+      A222_N     S    full    -0.169584    -0.008765        652
+      A222_N     S    H       -0.184124    -0.002542        453
+      A222_P     S    full    -0.130237    -0.015742        652
+      A222_P     S    H       -0.130373    -0.012018        453
+      A222_Q     S    full    -0.108107    -0.019469        652
+      A222_Q     S    H       -0.112511    -0.017955        453
+      A222_R     S    full    -0.103931    -0.014292        652
+      A222_R     S    H       -0.110184    -0.015532        453
+      A222_S     S    full    -0.153198    -0.006155        652
+      A222_S     S    H       -0.142775    -0.004495        453
+      A222_T     S    full    -0.173361    -0.026307        652
+      A222_T     S    H       -0.145956    -0.026606        453
+      A222_W     S    full    -0.129181    -0.022903        652
+      A222_W     S    H       -0.152938    -0.025937        453
+      A222_Y     S    full    -0.130238    -0.022815        652
+      A222_Y     S    H       -0.165513    -0.023566        453
+      AV_113     V    full    -0.155712    -0.028185        651
+      AV_113     V    H       -0.154243    -0.044043        452
+      AV_116     V    full    -0.155965    -0.019873        651
+      AV_116     V    H       -0.123458    -0.016055        452
+      AV_145     V    full    -0.122436    -0.011976        651
+      AV_145     V    H       -0.126372    -0.007293        452
+      AV_155     V    full    -0.180254    +0.010007        651
+      AV_155     V    H       -0.215938    +0.005583        453
+      AV_175     V    full    -0.114772    -0.007238        651
+      AV_175     V    H       -0.153419    -0.019446        452
+      AV_19      V    full    +0.047469    -0.011452        651
+      AV_19      V    H       +0.059983    -0.014637        452
+      AV_195     V    full    -0.176610    -0.006628        651
+      AV_195     V    H       -0.191942    -0.019976        452
+      AV_204     V    full    +0.007361    +0.001402        651
+      AV_204     V    H       +0.002596    +0.001094        453
+      AV_209     V    full    -0.045916    -0.006943        651
+      AV_209     V    H       -0.051985    -0.013815        452
+      AV_220     V    full    -0.189287    -0.010207        651
+      AV_220     V    H       -0.208208    -0.012797        452
+      AV_233     V    full    -0.080522    -0.008703        651
+      AV_233     V    H       -0.083747    -0.017571        452
+      AV_242     V    full    -0.126895    -0.028962        651
+      AV_242     V    H       -0.126405    -0.028139        453
+      AV_292     V    full    +0.002804    -0.018179        651
+      AV_292     V    H       +0.034064    -0.025779        452
+      AV_293     V    full    -0.125333    -0.012039        651
+      AV_293     V    H       -0.106508    -0.027575        452
+      AV_302     V    full    -0.065097    -0.005656        651
+      AV_302     V    H       -0.045952    -0.006277        453
+      AV_311     V    full    -0.091200    -0.011459        651
+      AV_311     V    H       -0.077407    -0.020648        453
+      AV_328     V    full    -0.100205    -0.007520        651
+      AV_328     V    H       -0.116930    -0.010153        452
+      AV_350     V    full    -0.051699    -0.010266        651
+      AV_350     V    H       -0.038317    -0.013247        452
+      AV_353     V    full    +0.014217    -0.008099        651
+      AV_353     V    H       +0.007691    -0.016987        452
+      AV_368     V    full    +0.006913    -0.009643        651
+      AV_368     V    H       +0.017826    -0.018836        452
+      AV_396     V    full    +0.061742    -0.003030        651
+      AV_396     V    H       +0.083087    -0.014067        453
+      AV_461     V    full    +0.098731    +0.000340        651
+      AV_461     V    H       +0.115161    -0.004093        452
+      AV_462     V    full    -0.021667    -0.006016        651
+      AV_462     V    H       -0.008885    -0.013798        453
+      AV_5       V    full    -0.032349    -0.002962        651
+      AV_5       V    H       -0.037895    +0.011900        453
+      AV_511     V    full    +0.026288    -0.003983        651
+      AV_511     V    H       +0.029222    -0.014423        452
+      AV_522     V    full    +0.014691    -0.000708        651
+      AV_522     V    H       -0.000324    -0.006574        452
+      AV_524     V    full    +0.062120    +0.014086        651
+      AV_524     V    H       +0.064273    +0.006531        452
+      AV_551     V    full    +0.015607    +0.016205        651
+      AV_551     V    H       +0.016522    +0.007552        452
+      AV_558     V    full    +0.107984    -0.016584        651
+      AV_558     V    H       +0.095838    -0.024341        452
+      AV_587     V    full    +0.103823    +0.007086        651
+      AV_587     V    H       +0.084911    -0.010692        452
+      AV_589     V    full    +0.095736    -0.000480        651
+      AV_589     V    H       +0.092509    -0.015558        452
+      AV_650     V    full    +0.035181    +0.004212        651
+      AV_650     V    H       -0.014372    +0.006008        452
+      AV_655     V    full    +0.050706    -0.001853        651
+      AV_655     V    H       +0.043589    -0.015440        453
+      AV_70      V    full    -0.076076    -0.008556        651
+      AV_70      V    H       -0.061404    -0.024492        452
+      AV_73      V    full    -0.122982    +0.009152        651
+      AV_73      V    H       -0.149869    +0.010242        453
+      AV_84      V    full    -0.071472    -0.009581        651
+      AV_84      V    H       -0.089224    -0.006049        452
+      AV_85      V    full    -0.145056    -0.005611        651
+      AV_85      V    H       -0.164476    -0.012872        452
+      AV_98      V    full    -0.077092    +0.012897        651
+      AV_98      V    H       -0.048971    +0.002082        453
+      G_A462S    G    full    +0.051054    -0.015331        651
+      G_A462S    G    H       +0.028608    -0.025111        453
+      G_A551K    G    full    +0.110208    -0.006539        651
+      G_A551K    G    H       +0.125212    -0.011297        452
+      G_D629C    G    full    -0.050428    -0.004197        651
+      G_D629C    G    H       -0.024006    -0.013547        453
+      G_E168S    G    full    -0.066127    +0.005131        651
+      G_E168S    G    H       -0.083926    +0.008779        453
+      G_E16V     G    full    +0.021092    +0.010534        651
+      G_E16V     G    H       +0.002488    +0.017537        452
+      G_E279K    G    full    +0.000868    +0.018616        651
+      G_E279K    G    H       -0.025317    +0.021333        452
+      G_E383T    G    full    -0.049032    -0.013126        651
+      G_E383T    G    H       -0.017848    -0.004860        452
+      G_E54R     G    full    -0.067967    +0.017297        651
+      G_E54R     G    H       -0.047800    +0.001874        452
+      G_G317Q    G    full    -0.084000    -0.006225        651
+      G_G317Q    G    H       -0.083399    -0.025378        452
+      G_G562M    G    full    +0.098485    -0.004445        651
+      G_G562M    G    H       +0.079083    -0.015218        452
+      G_H354F    G    full    +0.069532    -0.025760        651
+      G_H354F    G    H       +0.079486    -0.036853        452
+      G_H613R    G    full    +0.091700    -0.008011        651
+      G_H613R    G    H       +0.086903    -0.000052        452
+      G_I192T    G    full    -0.089195    -0.010314        651
+      G_I192T    G    H       -0.069477    -0.007795        452
+      G_K27I     G    full    +0.014263    +0.002749        651
+      G_K27I     G    H       +0.021987    +0.017650        452
+      G_K401S    G    full    +0.078018    +0.004323        651
+      G_K401S    G    H       +0.090956    +0.002200        452
+      G_K48P     G    full    -0.109875    -0.022840        651
+      G_K48P     G    H       -0.102247    -0.016593        453
+      G_K510H    G    full    +0.148787    -0.010356        651
+      G_K510H    G    H       +0.164276    -0.013375        452
+      G_L178T    G    full    -0.172666    -0.017678        651
+      G_L178T    G    H       -0.182069    -0.013192        452
+      G_L318F    G    full    -0.130194    +0.008730        651
+      G_L318F    G    H       -0.146303    +0.011800        452
+      G_L408H    G    full    +0.118390    -0.001475        651
+      G_L408H    G    H       +0.121349    -0.006123        452
+      G_L472H    G    full    +0.028931    -0.008567        651
+      G_L472H    G    H       +0.015885    -0.008628        452
+      G_L526R    G    full    +0.076630    +0.005775        651
+      G_L526R    G    H       +0.093462    +0.017115        452
+      G_M111N    G    full    -0.144602    -0.005003        651
+      G_M111N    G    H       -0.134040    -0.010512        452
+      G_N12P     G    full    -0.080666    +0.004237        651
+      G_N12P     G    H       -0.043791    -0.004209        452
+      G_N3K      G    full    -0.046629    +0.001890        651
+      G_N3K      G    H       -0.031357    -0.012236        453
+      G_P254F    G    full    -0.218827    -0.018386        651
+      G_P254F    G    H       -0.224342    -0.020938        452
+      G_P346V    G    full    -0.010910    -0.017291        651
+      G_P346V    G    H       +0.007102    -0.024995        452
+      G_P395F    G    full    +0.079584    -0.010926        651
+      G_P395F    G    H       +0.101955    -0.013934        452
+      G_R357M    G    full    +0.063109    -0.025820        651
+      G_R357M    G    H       +0.067952    -0.030482        453
+      G_R358V    G    full    +0.089159    +0.006934        651
+      G_R358V    G    H       +0.111901    +0.015385        453
+      G_S23A     G    full    +0.109307    -0.008504        651
+      G_S23A     G    H       +0.085738    +0.006020        453
+      G_S430P    G    full    +0.025679    -0.020940        651
+      G_S430P    G    H       +0.045933    -0.025567        452
+      G_S494H    G    full    +0.063779    -0.002860        651
+      G_S494H    G    H       +0.100086    -0.007138        452
+      G_T115G    G    full    -0.041277    -0.008805        651
+      G_T115G    G    H       -0.031254    -0.021704        452
+      G_T521D    G    full    +0.009942    -0.017999        651
+      G_T521D    G    H       -0.028664    -0.018978        453
+      G_T549H    G    full    +0.018221    +0.005108        651
+      G_T549H    G    H       +0.043691    +0.012152        452
+      G_V574C    G    full    +0.080621    +0.007954        651
+      G_V574C    G    H       +0.106174    +0.003698        453
+      G_W595H    G    full    +0.144028    -0.004587        651
+      G_W595H    G    H       +0.172159    -0.013215        452
+      G_W59C     G    full    -0.125710    -0.003211        651
+      G_W59C     G    H       -0.120501    -0.007104        452
+      G_Y197V    G    full    -0.170592    +0.002657        651
+      G_Y197V    G    H       -0.150985    +0.001884        452
+
+  p_spec(neg) per component (N = 78):
+      between  full: rho = -0.177458, p = (1+3)/(1+78) = 0.050633, at-or-below nulls = ['AV_155', 'AV_220', 'G_P254F']
+      within   full: rho = -0.028237, p = (1+1)/(1+78) = 0.025316, at-or-below nulls = ['AV_242']
+      between  H   : rho = -0.169522, p = (1+5)/(1+78) = 0.075949, at-or-below nulls = ['AV_155', 'AV_195', 'AV_220', 'G_L178T', 'G_P254F']
+      within   H   : rho = -0.035545, p = (1+2)/(1+78) = 0.037975, at-or-below nulls = ['AV_113', 'G_H354F']
+
+  FROZEN M-5 WORD (full frame, A222V): within CI [-0.048321, -0.007490] p_within = 0.025316; between CI [-0.228255, -0.125131] p_between = 0.050633  ->  WITHIN-CARRIED  [PROVISIONAL: smoke run]
+
+  M-5 surrogate nulls (frozen: 1,000 draws each, SEED 0): S1 permutes own_e.b within positions; S2 permutes within the 11 d3-distance groups (M-DEC7).  Both preserve the frame's row count.  These are RE-LABELLING nulls, not bootstraps.
+      resolved frame positions = 595 of 654; unresolved = 59 (eleventh bin); rows per bin = [961, 1019, 1003, 946, 885, 969, 1027, 1017, 970, 943, 1017]
+      S1 (within position): mean = -0.068195, SD = 0.004572, 95% range [-0.077859, -0.060934], fraction of -0.088118 = +0.7739  (100 draws)
+          centres on zero? |mean| / (sd/sqrt(n)) = 149.15 -> the null is offset from zero: the excess over it is the real result (AGENTS 4)
+      S2 (within d3-distance group): mean = -0.039811, SD = 0.009232, 95% range [-0.057012, -0.023719], fraction of -0.088118 = +0.4518  (100 draws)
+          centres on zero? |mean| / (sd/sqrt(n)) = 43.12 -> the null is offset from zero: the excess over it is the real result (AGENTS 4)
+      observed anchor = -0.088118064 (recomputed; frozen literal -0.088118)
+      the S1/S2 retained fractions above are the frozen 'fraction of -0.088118' (M-DEC8)
+
+------------------------------------------------------------------------------
+M-6 -- STABILITY OF THE FROZEN PLACEBO TEST (frozen)
+------------------------------------------------------------------------------
+  [PASS] G-M7 every-position-once rho_A222V (full): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M7 every-position-once k and p_spec (full) == observed: k = 1 target 1; p = (1+1)/79 = 0.02531645569620253 target 0.02531645569620253 (2/79); beaters ['G_P254F'] target ['G_P254F']
+  [PASS] G-M7 every-position-once rho_A222V (H): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M7 every-position-once k and p_spec (H) == observed: k = 3 target 3; p = (1+3)/79 = 0.05063291139240506 target 0.05063291139240506 (4/79); beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] G-M3(ii) whole-placebo draw-by-draw vs slow reference (full, 50 draws, capped at min(N_REF, 50)): max|fast - reference|: rho_A 1.388e-17, rho_N 2.776e-17, k 0.0, p_spec 0.000e+00 (gate < 1e-12 / exact) in 10.9s
+  [PASS] G-M3(ii) whole-placebo draw-by-draw vs slow reference (H, 50 draws, capped at min(N_REF, 50)): max|fast - reference|: rho_A 1.388e-17, rho_N 2.776e-17, k 0.0, p_spec 0.000e+00 (gate < 1e-12 / exact) in 7.2s
+
+      full view (100 draws, seed 0, 10.5s; every background's rho_b re-derived each draw):
+        distribution of k = #{b in N: rho_b <= rho_A222V}: k=0: 27 draws, k=1: 18 draws, k=2: 17 draws, k=3: 7 draws, k=4: 7 draws, k=5: 10 draws, k=6: 4 draws, k=7: 3 draws, k=9: 3 draws, k=13: 1 draws, k=14: 1 draws, k=16: 1 draws, k=18: 1 draws
+        P(p_spec <= 0.05) = 0.6200   (p_spec observed = 0.025316; frozen threshold 0.05)
+        z = (rho_A222V - mean rho_N) / SD rho_N: observed -1.8788, bootstrap CI [-2.4659, -1.1143] (mean of draws -1.8152, 100 finite) -- ILLUSTRATIVE SCALE CONTEXT ONLY (AGENTS 3: the primary claim is the probability above and the frozen word)
+        FROZEN M-6 WORD (full): MODERATE  [PROVISIONAL: smoke run]
+
+      H view (100 draws, seed 0, 6.8s; every background's rho_b re-derived each draw):
+        distribution of k = #{b in N: rho_b <= rho_A222V}: k=0: 10 draws, k=1: 11 draws, k=2: 16 draws, k=3: 11 draws, k=4: 10 draws, k=5: 9 draws, k=6: 7 draws, k=7: 9 draws, k=8: 2 draws, k=9: 6 draws, k=10: 4 draws, k=11: 1 draws, k=12: 1 draws, k=14: 1 draws, k=17: 1 draws, k=20: 1 draws
+        P(p_spec <= 0.1) = 0.7400   (p_spec observed = 0.050633; frozen threshold 0.1)
+        z = (rho_A222V - mean rho_N) / SD rho_N: observed -1.7850, bootstrap CI [-2.1576, -1.0100] (mean of draws -1.6583, 100 finite) -- ILLUSTRATIVE SCALE CONTEXT ONLY (AGENTS 3: the primary claim is the probability above and the frozen word)
+        FROZEN M-6 WORD (H): MODERATE  [PROVISIONAL: smoke run]
+
+  FROZEN M-6 WORDS: full = MODERATE  [PROVISIONAL: smoke run] (P = 0.6200 vs 0.80 STABLE / 0.50 FRAGILE boundary); H = MODERATE  [PROVISIONAL: smoke run] (P = 0.7400).
+
+------------------------------------------------------------------------------
+ANALYSIS-SET ACCOUNTING (AGENTS 5: every row accounted for)
+------------------------------------------------------------------------------
+    raw fit frame                     : 13134 rows (655 positions)
+    task32 analysis table             : 11344 rows (recorded own_e_b finite: 10757)
+    anchor frame (delta & own_e_b)    : 10757 rows / 654 positions
+    H view                            : 7526 rows / 455 positions
+    off-frame raw rows (delta NaN)    : 2377 rows (target 2,377)
+    each simulation draw keeps        : 10757 rows (gated per run, G-M4)
+    rho_b rows per background         : script 125's own join, gated (G-ALIGN); own-position rows are absent from the score files (125's G-C)
+
+------------------------------------------------------------------------------
+GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] G-M0 prereg sha256: 8d27467542f4620572cf382b6f01d693d8734b7345bddd039fdbb083be1cf39b (target 8d27467542f4620572cf382b6f01d693d8734b7345bddd039fdbb083be1cf39b)
+  [PASS] G-M0 prereg line count: got 56 target 56
+  [PASS] G-M0 rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796 (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [PASS] G-M0 3D table sha256: 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de (target 69914df9c60ba5a98e05d798acc14f22f4effd3dc0b4e24ed0ceb18c333312de)
+  [PASS] G-M0 6FCX.pdb sha256: 95133130645cead0252d05b6ce9ddd578164cbc856ac1c82d1a6bb15e4148fbf (target 95133130645cead0252d05b6ce9ddd578164cbc856ac1c82d1a6bb15e4148fbf)
+  [PASS] G-M0 script 153 sha256: e9fd90aff973be1c03dcfa15c80298f5cd54df4dbf5775a41de1839adf0b5133 (target e9fd90aff973be1c03dcfa15c80298f5cd54df4dbf5775a41de1839adf0b5133)
+  [PASS] G-M0 m1_own_e_b_ge.csv sha256: 0dd63b4acfabee2e299b5c184ff649d4b27c2c914978acd1f15b0e0550e44523 (target 0dd63b4acfabee2e299b5c184ff649d4b27c2c914978acd1f15b0e0550e44523)
+  [PASS] G-M0 m1_fitted_expectations.csv sha256: e353330dd4541d672517238ac148160431e6aa7d4a2b20ddd44f15f6252d9915 (target e353330dd4541d672517238ac148160431e6aa7d4a2b20ddd44f15f6252d9915)
+  [PASS] G-M0 structure: 96 backgrounds, |N| = 78, arms G40/V38/S18: got 96 bgs, |N| = 78, arms {'G': 40, 'V': 38, 'S': 18} target {'G': 40, 'V': 38, 'S': 18}
+  [PASS] G-M0 structure: frame 10,757 rows / 654 positions, H = 455 positions / 7,526 rows: got (10757, 654), H = 455 positions / 7526 rows; target (10757, 654) / 455 / 7526
+  [PASS] G-M0 structure: 67 resolved nulls: got 67 target 67
+  [PASS] G-M0 D3 loader reproduces the stored d3_CA for all 67 resolved nulls: max|d3_of - stored d3_CA| = 4.965e-07 (gate < 1e-6)
+  [PASS] alignment: every frame row maps to exactly one raw row: 0 frame hgvs absent from raw (must be 0)
+  [PASS] G-XFOLD fold vector equals script 153's saved fold column: 13134 rows: fold identical True, position identical True, hgvs identical True
+  [PASS] G-XFOLD aggregate(E_iso) == script 153's saved own_e_b_ge_iso: max|diff| = 2.220e-16 over 11865 finite rows, NaN-pattern disagreements = 0 (gates < 1e-12 / 0)
+  [PASS] G-XFOLD all 20 isotonic transition lists equal script 153's saved m1_fitted_expectations.csv: 20 fits compared, max|diff| = 2.220e-16 (gate < 1e-12)
+  [PASS] G-ALIGN 96 backgrounds reproduce 125's rows and cached rhos exactly: position mismatches = 0, max|own_e_b diff| = 0.000e+00, max|delta diff| = 0.000e+00, max|rho_full diff| = 1.388e-17, max|rho_H diff| = 1.388e-17 (gates 0 / 0 / <1e-12 / <1e-12 / <1e-12) in 0.5s
+  [PASS] G-ALIGN delta matrix row 0 equals the frame's delta: exact = True over 10757 rows
+  [PASS] G-ALIGN delta matrix reproduces every cached rho_b (full and H): max|diff| rho_full = 1.388e-17, rho_H = 1.388e-17 over 96 backgrounds (gate < 1e-12)
+  [PASS] G-M1 A222V rho full (frame columns): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M1 A222V rho full (script 125's a222v_rows): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M1 the two sources agree with each other: |diff| = 0.000e+00 (AGENTS 5 column identity)
+  [PASS] G-M1 A222V rho H (frame columns): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M1 A222V rho H (pdg.rho_table cross-check): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M1 p_spec(neg) full = 2/79 with the named beaters: p = (1+1)/(1+78) = 0.02531645569620253 target 0.02531645569620253 (2/79); beaters ['G_P254F'] target ['G_P254F']
+  [PASS] G-M1 p_spec(neg) H = 4/79 with the named beaters: p = (1+3)/(1+78) = 0.05063291139240506 target 0.05063291139240506 (4/79); beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] G-M2 linear rank partial controlling S_W: got -0.06414804421216103 target -0.06414804421216103 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] G-M2 two-covariate linear rank partial (4 dp): got -0.0829 target -0.0829 |diff| = 0.000e+00 (gate < 1e-15)
+  [PASS] G-M6 stratified: two perfectly monotone strata -> 1.0: got 1.0 target 1.0
+  [PASS] G-M6 stratified: weighted mean of (1.0, 0.0) at weights 4/4, and the scipy reference agrees: library 0.5 target 0.5, reference 0.5, |diff| 0.000e+00
+  [PASS] G-M6 stratified: undefined stratum dropped and weights renormalised (decision I1), reference agrees: library 0.5 reference 0.5 target 0.5
+  [PASS] G-M6 decomposition PLANTED PURE-BETWEEN (and scipy reference): rho_between 1.0 target 1.0, rho_within 0.0 target 0.0, reference [np.float64(1.0), np.float64(0.0)]
+  [PASS] G-M6 decomposition PLANTED PURE-WITHIN (and scipy reference): rho_within 1.0 target 1.0, rho_between 0.0 target 0.0, reference [np.float64(0.0), np.float64(1.0)]
+  [PASS] G-M6 decomposition excludes a position below min_rows (I2): n_qualifying 6 target 6; n_positions 7 target 7
+  [PASS] G-M3(i) identity: anchor rho, every position once: every-once -0.08811806424891734 point -0.08811806424891734 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] G-M3(i) identity: A222V partial (primary), every position once: every-once -0.06414804421216108 point -0.06414804421216103 (gate < 1e-12)
+  [PASS] G-M3(i) identity: stratified rho, every position once: every-once -0.05995619167856015 point -0.05995619167856015 (gate < 1e-12)
+  [PASS] G-M3(i) identity: both decomposition components, every position once: every-once [-0.17745812566623154, -0.028237315834513804] point [-0.17745812566623154, -0.028237315834513804] (gate < 1e-12 each)
+  [PASS] G-M3(ii) partial draw-by-draw vs closed-form reference (100 draws): max|fast - reference| = 1.249e-16 (gate < 1e-12) in 0.9s
+  [PASS] G-M3(ii) two-covariate partial draw-by-draw vs reference (100 draws): max|fast - reference| = 1.943e-16 (gate < 1e-12) in 1.4s
+  [PASS] G-M3(ii) stratified draw-by-draw vs scipy reference (100 draws): max|fast - reference| = 2.776e-17 (gate < 1e-12) in 0.7s
+  [PASS] G-M3(ii) decomposition draw-by-draw vs scipy reference (100 draws): max|fast - reference| = 1.388e-17 (gate < 1e-12) in 7.2s
+  [PASS] G-M3(ii) imported corrected routine vs reference_boot (100 draws): max|corrected - reference| = 0.000e+00 (gate < 1e-12) in 0.3s
+  [FAIL] G-M3(iii) Phase 1 CI reproduction: SKIPPED (smoke): N_BOOT=300 != 10000 -- G-M3 cannot be called PASS on this run; decided on the N_BOOT=10000 run
+  [PASS] G-M4 zero-noise pipeline returns the recorded own_e.b: compared 10757 recorded rows (target 10,757), max|diff| = 2.220e-16, rows > 1e-12 = 0, recorded but not rebuildable = 0 (gates < 1e-12 / 0 / 0)
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- PRIMARY  (E = GE-ISO cross-f: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- SENSITIVITY A (E = E_c^lin =: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+  [PASS] G-M4 every M-3 draw kept exactly 10757 rows -- SENSITIVITY B (E = GE-ISO, s: kept rows: min 10757, max 10757 over 100 draws (both must be 10757)
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.30: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.20: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.10: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = -0.05: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.00: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.05: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.10: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.20: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M4 every M-4 draw kept exactly 10757 rows -- r0 = +0.30: kept rows: min 10757, max 10757 over 100 draws
+  [PASS] G-M5 planting response: all 8 adjacent pairs non-decreasing within Monte-Carlo error (M-DEC6): 8/8 pairs pass; a failing pair is not tolerated, N is not raised and the tolerance is not widened
+  [PASS] G-M7 every-position-once rho_A222V (full): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] G-M7 every-position-once k and p_spec (full) == observed: k = 1 target 1; p = (1+1)/79 = 0.02531645569620253 target 0.02531645569620253 (2/79); beaters ['G_P254F'] target ['G_P254F']
+  [PASS] G-M7 every-position-once rho_A222V (H): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] G-M7 every-position-once k and p_spec (H) == observed: k = 3 target 3; p = (1+3)/79 = 0.05063291139240506 target 0.05063291139240506 (4/79); beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] G-M3(ii) whole-placebo draw-by-draw vs slow reference (full, 50 draws, capped at min(N_REF, 50)): max|fast - reference|: rho_A 1.388e-17, rho_N 2.776e-17, k 0.0, p_spec 0.000e+00 (gate < 1e-12 / exact) in 10.9s
+  [PASS] G-M3(ii) whole-placebo draw-by-draw vs slow reference (H, 50 draws, capped at min(N_REF, 50)): max|fast - reference|: rho_A 1.388e-17, rho_N 2.776e-17, k 0.0, p_spec 0.000e+00 (gate < 1e-12 / exact) in 7.2s
+
+  63/64 checks PASS, 1 FAIL (1 of the FAILs are smoke SKIPS).
+
+------------------------------------------------------------------------------
+LIMITATIONS (AGENTS 6; printed, not only written down)
+------------------------------------------------------------------------------
+  1. Reproduction is not replication: G-M0..G-M4, G-XFOLD and G-ALIGN re-derive cached project numbers to validate this code -- a unit test, not independent evidence for any claim.
+  2. Frozen block section 0: these constructions use quantities seen in earlier exploratory work; they are NOT independent of what was already seen.  Out-of-sample evidence in this programme comes only from the neighbour-arm and model-ladder pre-registrations.
+  3. p_spec / p_spec_adj are one-sided signed rank counts over 78 nulls, not tail areas of an exchangeable distribution.
+  4. M-3/M-4 re-run the project's own estimator on simulated inputs (a re-derivation null, AGENTS 4) and inherit every assumption of that estimator, including the multiplicative no-interaction expectation.  M-3's PRIMARY sw_i = 0 by M-DEC1, so the WT side is not perturbed in the primary at all.
+  5. M-5's S1/S2 re-label own_e.b within groups; they preserve position structure (S1) or the regional distance profile (S2) and nothing else.
+  6. Every CI here resamples 654 (455 on H) positions, never rows; effective n is the number of positions.
+  7. Nothing here changes a frozen Phase 1/2 result, and no result here may be described as confirming or undermining a GB1, RBD, neighbour-arm or model-ladder result (frozen section 5).
+
+  Elapsed 101.0s
+
+SMOKE RESULT: all executed checks PASS; the only FAIL is the intentional G-M3(iii) SKIPPED sub-gate.  G-M3 is decided on the N_BOOT=10000 run, and every frozen word printed above is PROVISIONAL until the full run.

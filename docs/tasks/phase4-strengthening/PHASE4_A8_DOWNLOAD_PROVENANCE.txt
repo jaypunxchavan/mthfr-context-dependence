@@ -1,0 +1,61 @@
+A8a download provenance (only the two authorised checkpoints; nothing else was fetched)
+cache dir: /Users/arnavchavan/.cache/torch/hub/checkpoints
+free BEFORE: 20.66 GiB
+--- esm2_t12_35M_UR50D.pt
+  disk check: 20.65768814086914 GiB free >= 5 GiB -> downloading
+  curl http_status=200 bytes_downloaded=134095705
+  URL: https://dl.fbaipublicfiles.com/fair-esm/models/esm2_t12_35M_UR50D.pt
+  file: /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t12_35M_UR50D.pt
+  bytes: 134095705
+  sha256: 7f21e80e61d16a71735163ef555d3009afb0c98da74c48e29df08606973cc55e
+--- esm2_t12_35M_UR50D-contact-regression.pt
+  disk check: 20.531925201416016 GiB free >= 5 GiB -> downloading
+  curl http_status=200 bytes_downloaded=1959
+  URL: https://dl.fbaipublicfiles.com/fair-esm/regression/esm2_t12_35M_UR50D-contact-regression.pt
+  file: /Users/arnavchavan/.cache/torch/hub/checkpoints/esm2_t12_35M_UR50D-contact-regression.pt
+  bytes: 1959
+  sha256: 16641e05d830d0ce863dd152dbb8c2f3ddfa3c3ec2a66080152c8abad01d8585
+free AFTER: 20.53 GiB (requirement >= 5 GiB)
+cache now:
+  esm2_t12_35M_UR50D-contact-regression.pt 1959
+  esm2_t12_35M_UR50D.pt 134095705
+  esm2_t30_150M_UR50D-contact-regression.pt 3431
+  esm2_t30_150M_UR50D.pt 592774773
+  esm2_t33_650M_UR50D-contact-regression.pt 3687
+  esm2_t33_650M_UR50D.pt 2604537549
+  esm2_t36_3B_UR50D-contact-regression.pt 6759
+  esm2_t36_3B_UR50D.pt 5678116398
+
+--- cache state after the authorised downloads (nothing else was fetched) ---
+  esm2_t12_35M_UR50D.pt                     134,095,705 B   (downloaded above)
+  esm2_t12_35M_UR50D-contact-regression.pt        1,959 B   (downloaded above)
+  esm2_t30_150M_UR50D.pt                     592,774,773 B   (ALREADY CACHED - no download)
+  esm2_t30_150M_UR50D-contact-regression.pt        3,431 B   (ALREADY CACHED - no download)
+  esm2_t33_650M_UR50D.pt                   2,604,537,549 B   (ALREADY CACHED - no download)
+  esm2_t33_650M_UR50D-contact-regression.pt       3,687 B   (ALREADY CACHED - no download)
+  esm2_t36_3B_UR50D.pt (untouched, not used by module L)
+
+--- DISCLOSURE: an unintended RE-download of the same two authorised files ---
+  My first attempt to prove "no download happens" set torch.hub's dir to an empty
+  scratch directory. That removes the cache HIT, so the loader treated the checkpoints as
+  absent and downloaded esm2_t12_35M_UR50D.pt (134,095,705 B) and
+  esm2_t30_150M_UR50D.pt (592,774,773 B) plus their two regression files into that scratch
+  directory (706 MB total). No other model, URL or destination was touched; the intended
+  cache copies were not overwritten and their sha256s were re-verified unchanged after the
+  incident. The scratch directory was deleted immediately (free disk back to 20.54 GiB).
+  The verification was then redone correctly: the hub loader with every socket blocked
+  raises on any network use, and all three checkpoints load from the cache that way.
+
+--- load verification (network physically unreachable) and G-L1 parameter counts ---
+  esm2_650M: OK, parameters 651,043,254 (33 layers, embed_dim 1280)
+  esm2_150M: OK, parameters 148,140,154 (30 layers, embed_dim  640)
+  esm2_35M : OK, parameters  33,501,394 (12 layers, embed_dim  480)
+
+--- operational finding for script 173 (no library edit made) ---
+  esm.pretrained.load_model_and_alphabet_local(path) FAILS on these checkpoints under the
+  installed torch (2.6+ defaults torch.load(weights_only=True), and the checkpoints contain
+  an argparse.Namespace). The hub loader path (esm.pretrained.esm2_*_UR50D) works because
+  torch.hub.load_state_dict_from_url still passes weights_only=False, and it hits the local
+  cache first. scripts/lib/esm_scoring.py is NOT edited; script 173 must load through the
+  package's own pretrained.* entry points (or via torch.serialization.safe_globals) and must
+  never call load_model_and_alphabet_local.

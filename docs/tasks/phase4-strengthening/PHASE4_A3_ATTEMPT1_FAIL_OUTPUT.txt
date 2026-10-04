@@ -1,0 +1,124 @@
+
+==========================================================================
+SCRIPT 166 -- Phase 4 task A3, Module S: the sign convention
+read-only with respect to the planning document and PHASE2_PREREG.md
+==========================================================================
+
+--------------------------------------------------------------------------
+S-1  quote, with file and line numbers (code beside expectation)
+--------------------------------------------------------------------------
+    scripts/lib/stats_ext.py:63
+      code | def rebuild_interaction_fit(raw):
+      doc  | own_e.b is built by rebuild_interaction_fit in scripts/lib/stats_ext.py
+  PASS  S-1a rebuild_interaction_fit defines own_e.b's construction
+        all quoted tokens present on the cited line
+    scripts/lib/stats_ext.py:84
+      code | e2 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+      doc  | fit_interaction is called a second time with the fitness-dependent correction
+  PASS  S-1b the corrected (second) pass is the one own_e.b comes from
+        all quoted tokens present on the cited line
+    scripts/lib/stats_ext.py:87
+      code | return {"w": w, "e2": e2, "M_se": Mse, "resid": e2["resid"],
+      doc  | the returned residual matrix is e2's, i.e. m_score - expected after the correction
+  PASS  S-1c the residual handed downstream is that second pass's
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:48
+      code | def wls_line(y, se, x, valid):
+      doc  | wls_line in scripts/lib/own_context.py is the weighted fit own_e.b's intercept comes from
+  PASS  S-1d wls_line fits intercept + slope by weighted least squares
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:49
+      code | """Vectorized weighted least squares of y ~ 1 + x, weights 1/se^2.
+      doc  | own_e.b's intercept is weighted by 1/se^2 (per-condition standard errors)
+  PASS  S-1e its weights are 1/se^2
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:64
+      code | base = np.where(det != 0, (S2 * T0 - S1 * T1) / det, np.nan)
+      doc  | the intercept is the closed-form weighted intercept (S2*T0 - S1*T1)/det
+  PASS  S-1f the weighted-intercept closed form
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:148
+      code | expected(c) = single_mutant_term(c) * (b_A222V + c*r_A222V) [+ correction]
+      doc  | the no-interaction expectation is the product of the two single-mutant terms
+  PASS  S-1g fit_interaction's expectation is multiplicative (docstring)
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:157
+      code | expected = sm * a222v_line
+      doc  | expected(c) = single-mutant term * the A222V background line
+  PASS  S-1h ...and in code
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:163
+      code | resid = np.where(valid, m_score - expected, np.nan)
+      doc  | the residual subtracts the expectation from the observed A222V-arm score
+  PASS  S-1i the residual is m_score - expected
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:165
+      code | e_b, e_r, df = wls_line(resid, m_se, concs, valid)
+      doc  | own_e.b = wls_line(resid, m_se, concs, valid)'s intercept
+  PASS  S-1j own_e.b is that residual's weighted intercept
+        all quoted tokens present on the cited line
+    scripts/45_c1_reconciliation.py:97
+      code | df["delta_esm"] = df["esm2_score_a222v_bg"] - df["esm2_score"]
+      doc  | delta is the model's A222V-background score minus its WT-background score
+  PASS  S-1k delta = esm2_score_a222v_bg - esm2_score (scripts/45)
+        all quoted tokens present on the cited line
+    scripts/12_validate_a222v_scores.py:29
+      code | merged["delta_esm"] = merged["esm2_score_a222v_bg"] - merged["esm2_score"]
+      doc  | the second, independent definition of delta agrees
+  PASS  S-1l the same definition written independently (scripts/12)
+        all quoted tokens present on the cited line
+    scripts/12_validate_a222v_scores.py:30
+      code | print(f"\ndelta_ESM = S(v|A222V) - S(v|WT), summary:")
+      doc  | delta is a background SHIFT of the model's score for one substitution
+  PASS  S-1m delta's printed meaning, S(v|A222V) - S(v|WT)
+        all quoted tokens present on the cited line
+    docs/tasks/phase2-full-frame-placebo/PHASE2_PREREG.md:36
+      code | One-sided empirical p (direction pre-stated negative, as for the anchor):
+      doc  | PHASE2_PREREG.md pre-stated the negative tail for the anchor
+  PASS  S-1n the tail registered in PHASE2_PREREG.md is negative (read only)
+        all quoted tokens present on the cited line
+  S-1: 14 quote checks passed (each printed code beside expectation)
+
+--------------------------------------------------------------------------
+S-2  worked example (computed, not typed)
+--------------------------------------------------------------------------
+  task32 rows read: 11,344; after the finite-on-every-analysis-column filter: 10,757
+  PASS  S-2a analysis set = 10,757 rows at 654 positions (planning 143)
+        got 10,757 rows / 654 positions; target 10,757 / 654
+  PASS  S-2b se_e_b joins completely (no row lost, none duplicated)
+        10,757 of 10,757 rows carry se_e_b; task35 duplicated hgvs_pro: False
+  median se_e_b = 0.062873954434773; strictly below: 5,378; exactly at the median: 1 (excluded by 'below the median')
+  PASS  S-2c the se_e_b-below-median subset is non-trivial and accounted for
+        5,378 of 10,757 rows in the worked-example subset; every excluded row is above or at the median se_e_b
+  PASS  S-2d no zero-valued sign is silently grouped (delta, own_e.b)
+        delta == 0: 0; own_e.b == 0: 0 (so the 2x2 has no zero cell)
+  PASS  S-2e rebuilt own_e.b == recorded own_e_b (identity)
+        max|diff| = 2.220e-16 over 10,757 rows (tolerance 1e-12)
+  PASS  S-2f independent numpy closed-form intercept == recorded own_e_b
+        max|diff| = 7.094e-14 over 10,757 rows (w*x*x here vs w*(x**2) in wls_line: summation-order only)
+  PASS  S-2g independent SE == recorded se_e_b (library path too)
+        closed-form max|diff| = 1.275e-13, library max|diff| = 2.220e-16 over 10,757 rows
+  PASS  S-2h stored delta == S_A - S_W recomputed (identity)
+        max|diff| = 2.220e-16
+
+  3 MOST POSITIVE own_e.b  (within se_e_b < median = 0.062873954434773)
+    p.Arg134Gly  position 134  R -> G
+      S_W (esm2_score)          = 1.8771114349365232
+      S_A (esm2_score_a222v_bg) = 1.8603763580322263
+      delta (stored)            = -0.0167350769042968   [independent S_A - S_W = -0.016735076904296875]
+      base functionality        = 0.314242066683397
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.78528346465349  0.961417313972493 1.03500113564465  0.826609745727349]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.11612876364995679 0.13681909261785938 0.27851245064804603
+ 0.5266348555448838 ]
+        residual = [0.6691547010035331  0.8245982213546336  0.7564886849966039
+ 0.29997489018246526]
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/166_sign_convention.py", line 461, in <module>
+    f"[independent closed-form = {float(r.eb_cf)!r}]")
+                                        ^^^^^^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/venv/lib/python3.14/site-packages/pandas/core/generic.py", line 6194, in __getattr__
+    return object.__getattribute__(self, name)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+AttributeError: 'Series' object has no attribute 'eb_cf'

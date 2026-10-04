@@ -1,0 +1,60 @@
+isolated temp dir: /var/folders/tv/c79722px07l2bv90zk3slkmc0000gn/T/phase4_driver_tests_fnnfhotr
+PRE-REGISTERED: every test uses stub stages in this directory; no real output, checkpoint or scorer is touched.
+
+DRIVER TESTS (scripts/175_phase4_driver_tests.py)
+
+-- T1 --
+  [PASS] T1a driver A reached its running stage (lock held): ready marker /var/folders/tv/c79722px07l2bv90zk3slkmc0000gn/T/phase4_driver_tests_fnnfhotr/t1/ready
+  [PASS] T1 double-start refusal 50 of 50: 50/50 refused with exit 2
+  [PASS] T1c lock is free after A terminated: LOCK FREE: /private/var/folders/tv/c79722px07l2bv90zk3slkmc0000gn/T/phase4_driver_tests_fnnfhotr/t1/.driver.lockfile (no Phase 4 driver is running)
+   (2.3s)
+
+-- T2 --
+  [PASS] T2 simultaneous starts: never two drivers on one home: 50 rounds; exactly one ran and exactly one refused in 50/50 (A won 25, B won 25); the winner's stage was reached in 50/50 rounds; rounds where NEITHER refused (i.e. two drivers on one home): 0; unclassifiable: 0
+   (11.5s)
+
+-- T3 --
+  [PASS] T3 stale marker + dead PID cleared, run proceeds: exit 0; 'STALE LOCK MARKER CLEARED' printed
+   (0.2s)
+
+-- T4 --
+  [PASS] T4a SIGTERM -> driver exits 143: exit 143
+  [PASS] T4b state records the interruption: state status 'terminated'
+  [PASS] T4c lock released after SIGTERM: LOCK FREE: /private/var/folders/tv/c79722px07l2bv90zk3slkmc0000gn/T/phase4_driver_tests_fnnfhotr/t4/.driver.lockfile (no Phase 4 driver is running)
+  [PASS] T4d TERM was forwarded to the child group: child group TERM/SIGKILL path exercised
+   (32.1s)
+
+-- T5 --
+  [PASS] T5 timeout kills the stage, driver continues: stage status 'timeout'; driver exit 0; True
+   (3.1s)
+
+-- T6 --
+  [PASS] T6a exit 1 retried to exactly 3 attempts: 3 attempts (driver exit 0)
+  [PASS] T6b exit 3 attempted exactly once (never retried): 1 attempts; stage status 'gate_failed'
+   (0.8s)
+
+-- T7 --
+  [PASS] T7a each failing guard skips its stage: AC off->skipped_guard; battery 12%->skipped_guard; swap 4.5 GB->skipped_guard; free memory 10%->skipped_guard; disk 1 GiB->skipped_guard
+  [PASS] T7b all-good readings run the stage: exit 0
+   (0.5s)
+
+-- T8 --
+  [PASS] T8 --dry-run for A, B and C prints the plan and creates nothing: plan A: exit 0, created 0, ids present True; plan B: exit 0, created 0, ids present True; plan C: exit 0, created 0, ids present True
+   (0.1s)
+
+-- T9 --
+  [PASS] T9a the first run executes the step: 1 run(s)
+  [PASS] T9b relaunch skips the completed stage: 1 run(s) after relaunch; resume lines in the log: 1
+   (0.2s)
+
+-- T10 --
+  [PASS] T10a with no scores the neighbour step is skipped (6 complete < 30): step status 'skipped_dependency'
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] T10b with 24 complete new members (6 + 24 = 30) the step runs: step status 'completed'
+   (2.1s)
+
+TEST SUMMARY: 19 PASS, 0 FAIL of 19 checks.
+temp dir kept for inspection: /var/folders/tv/c79722px07l2bv90zk3slkmc0000gn/T/phase4_driver_tests_fnnfhotr
+LIMITATIONS: these tests exercise the driver's own machinery with stub stages; they do not exercise the real scorers, and the T2 simultaneous-start count is a race sample, not a proof of impossibility.

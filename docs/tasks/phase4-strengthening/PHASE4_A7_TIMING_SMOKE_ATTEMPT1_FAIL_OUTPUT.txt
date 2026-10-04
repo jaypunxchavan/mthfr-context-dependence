@@ -1,0 +1,42 @@
+
+==========================================================================
+171 -- Module N neighbour-arm scorer  N_BOOT=300 SEED=0 (both UNUSED: no bootstrap/randomness here)  frame=H  out_dir=data/processed/phase4/neigh_scratch/timing
+==========================================================================
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  NS-DEC1: torch.hub cache pre-check for 650M + contact-regression; missing -> exit 3, NEVER a download.
+  NS-DEC2: frame H; expected = frame minus own (script 124 semantics, imported).
+  NS-DEC3: bg_<id>.csv = bg_id, position, mut_aa, score, delta; delta vs the Phase 2 WT cache; 124's skip logic imported, atomic-write pattern quoted from 124.
+  NS-DEC4: G-N2 before any scoring when something is to score: AV_220 on H vs cache to 1e-6 (both score and delta), same-bg-twice identical to 0.0, WT log-odds 0.0; scratch dir only; FAIL -> exit 3.
+  NS-DEC5: device from esm_scoring.get_device(), printed and manifested (Phase 2 used mps).
+  NS-DEC6: roster_v1.csv must hash to its sidecar before the model loads; --limit-roster = balanced prefix.
+  NS-DEC7: median s/pass over this run x 22,719 roster H passes x 1.25 vs the 330-min budget; G-N2's ~908 passes excluded from the formula, disclosed; never shrink the roster.
+
+--------------------------------------------------------------------------
+ROSTER INTEGRITY (G-N1 handoff)
+--------------------------------------------------------------------------
+  roster sha256 OK: 675a24f196387856... (frozen before scoring)
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  frame H: 455 positions (455 held-out)
+Length check passed: 656
+Position 222 check passed: Ala
+  WT cache: 12445 (position, mut_aa) rows
+  pre-scan: 0 complete, 3 to score
+  NS-DEC1 local cache OK: esm2_t33_650M_UR50D.pt (2,604,537,549 B) + contact-regression
+Using device: mps
+Loading ESM-2 650M from the local cache (loader never reached because the cache pre-check passed)...
+
+--------------------------------------------------------------------------
+G-N2 (HARD) -- AV_220 on H, twice, vs cache; WT zero
+--------------------------------------------------------------------------
+  (a) AV_220 vs cache: 8626 rows, max|d score| 1.776e-15, max|d delta| 1.776e-15 (gate 1e-6) -> PASS
+  (b) same bg twice: 8626 rows, max|d score| 0.000e+00, max|d delta| 0.000e+00 (gate exactly 0.0) -> PASS
+Traceback (most recent call last):
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/171_neigh_score.py", line 465, in <module>
+    main()
+    ~~~~^^
+  File "/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/171_neigh_score.py", line 355, in main
+    tok_ok = alphabet.all_tokens[gidx] == av_seq[idx0]
+             ^^^^^^^^^^^^^^^^^^^
+AttributeError: 'Alphabet' object has no attribute 'all_tokens'. Did you mean: 'all_toks'?

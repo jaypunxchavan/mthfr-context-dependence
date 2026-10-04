@@ -1,0 +1,139 @@
+
+==========================================================================
+172 -- Module N neighbour-arm analysis (frozen sections 5+6)
+==========================================================================
+  mode=full N_BOOT=10000 (env N_BOOT=set) SEED=0
+  Frozen section 6 pins production CIs at 10,000 draws. Section 6 uses N_BOOT=10000 here; G-N4/G-N5/Phase-1 are fixed at 10,000 in BOTH modes.  -> production values
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  N-AN1: inputs sha-pinned (roster, cells, D1, stored d3, both preregs); mismatch -> exit 3.
+  N-AN2: existing nulls' rho_H READ from D1, checked against recomputation from cached rows (<1e-8 over 96).
+  N-AN3: A222V rho_H canonical + independent, frozen -0.090021683 (<1e-9); same-site rank gated 2/19.
+  N-AN4: new rho_b from neigh/bg_<id>.csv with the same validated function; scratch never read.
+  N-AN5: G-N3: coverage >= 95% of eligible H; missing file = PENDING, short file = FAIL.
+  N-AN6: section 5 runs iff complete NB >= 30 (amendment 5), else SKIPPED; position-collapse sensitivity beside the primary, no word (amendment 4).
+  N-AN7: section 6 runs iff all 50 new complete; cells by frozen section 2 + C5; C5 mean is a disclosed extra.
+  N-AN8: partials: joint-P ids default_rng(SEED) (10,000 fixed for gates); cell means: per-cell seeds SEED+ord == background_boot; contrasts: difference of cell draws; section 6 CIs at N_BOOT.
+  N-AN9: G-N5 identity / draw-by-draw (slow references) / Phase 1 CI, all fixed 10,000 both modes.
+  N-AN10: G-N4 plants on real geometry: z-feature + 0.4*eps (eps seed 3 shared), noise seed 1000 x100 draws, fire <= 0.15; fixed seed, never re-seeked.
+  N-AN11: smoke N_BOOT=300 -> PROVISIONAL; full -> final; smoke gate failure stops the run.
+  N-AN12: full-frame secondary needs neigh_nonH/ files; else PENDING (no word).
+  N-AN13: torch never imported; checked before exit.
+  N-AN15: AMENDMENT 3: section 6's partial is now the FLEXIBLE-CONTROL partial (rank(rho) and rank(feature) on a natural cubic spline basis of the RAW other distance, knots = pool 25/50/75 percentiles, refit per resample); the linear partial is a labelled secondary; G-N4 re-run on the flexible statistic with Amendment 2's criteria unchanged; fast basis gated against patsy at 1e-10; item 5's fallback applied literally (word or NO WORD + secondary), A7e then COMPLETE either way.
+  N-AN14: AMENDMENT 2: G-N4 as RATES over pre-listed seeds 0..99 (seed 3 included) x 3 plants, confusion matrix printed; correct word >= 80% per single-arm plant, wrong-arm fire <= 15%, none-plant NEITHER-RESOLVED >= 85%; section 6 word printed with the matrix and becomes NO WORD if either correct-word rate < 80%; G-N5 mechanics vector unchanged (seed-3 plant).
+
+--------------------------------------------------------------------------
+N-CHK0 -- INPUT HASHES (N-AN1)
+--------------------------------------------------------------------------
+  [PASS] N-CHK0 prereg v1 sha256: 167847a97aca32b9...
+  [PASS] N-CHK0 Amendment 1 sha256: f56134f764232169...
+  [PASS] N-CHK0 Amendment 2 sha256: b636a4d193efa16e...
+  [PASS] N-CHK0 roster_v1 sha256: 675a24f196387856...
+  [PASS] N-CHK0 eligible_cells_v1 sha256: db86399b8858e890...
+  [PASS] N-CHK0 D1 rho table sha256: e397a4429c226f99...
+  [PASS] N-CHK0 stored 3d distance sha256: 69914df9c60ba5a9...
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] N-CHK1 frame 654 / H 455 / H rows 7526: 654 / 455 / 7526
+
+--------------------------------------------------------------------------
+N-CHK2 -- D1 CROSS-CHECK, A222V ANCHORS, SAME-SITE RANK
+--------------------------------------------------------------------------
+  [PASS] N-CHK2 A222V canonical rho_H vs frozen -0.090021683: got -0.09002168303339808 |diff|=3.340e-11
+  [PASS] N-CHK2 A222V independent rho_H vs canonical: got -0.09002168303339808 |diff|=0.000e+00 over 7526 rows
+  [PASS] N-CHK2 D1 has 96 unique backgrounds: 96
+  [PASS] N-CHK2 all 96 D1 rho_H == recomputation from cached rows (<1e-8): max|diff| = 4.956e-10 over 96
+  (informational) max|D1 - canonical builder| = 4.956e-10
+  [PASS] N-CHK2 same-site rank of A222V among the 18 Arm S == 2/19: signed 2/19, |rho| 2/19, n(arm S)=18, all-negative=True
+
+--------------------------------------------------------------------------
+N-CHK3 -- POOL P, CELLS, COVERAGE (G-N3)
+--------------------------------------------------------------------------
+  [PASS] N-CHK3 roster = 50 unique, 40 in C1/C2/C5: 50 rows, 40 in C1/C2/C5
+  [PASS] N-CHK3 67 resolved existing nulls (non-222): 67
+  [PASS] N-CHK3 existing-null cells {C1:1, C2:3, C3:3, C4:51, C5:2, gap:7}: {'C4': 51, '': 7, 'C2': 3, 'C3': 3, 'C5': 2, 'C1': 1}
+  [PASS] N-CHK3 C5 existing members are exactly AV_195 + G_I192T: ['AV_195', 'G_I192T']
+  [PASS] N-CHK3 roster cell == geometry cell for all 50: all 50 match frozen section 2 + C5 definitions
+  [PASS] N-CHK3 Pool P = 117 = 50 new + 67 existing: 117 rows
+  Pool P cells: C1 13, C2 16, C5 17, C3 13, C4 51
+  [PENDING] G-N3 every scored new background >= 95% of eligible H: PENDING: 0/50 new backgrounds scored (the night has not run); 0 short files
+    C1: complete 0/12
+    C2: complete 0/13
+    C5: complete 0/15
+    C3: complete 0/10
+  complete NB members (amendment item 5): 6/46 (six existing + 0/40 new C1/C2/C5)
+  Pool P complete: 67/117 (new complete 0/50)
+  [PASS] N-CHK4 fast spline basis == patsy cr(x, knots=...) non-intercept columns (<1e-10): max|diff| = 0.000e+00 over 3 probes (pool dseq, pool d3, random lognormal)
+  spline basis for the RAW d3 control: knots [3.805, 10.161, 20.112, 36.759, 76.194], basis 5 columns, rank 5, cond 4.614 (Amendment 3's three named knots are operative; '4 df' and three knots cannot both hold in the standard parametrisation -- disclosed N-AN15)
+  spline basis for the RAW dseq control: knots [1.0, 26.0, 67.0, 163.0, 428.0], basis 5 columns, rank 5, cond 4.220 (Amendment 3's three named knots are operative; '4 df' and three knots cannot both hold in the standard parametrisation -- disclosed N-AN15)
+
+--------------------------------------------------------------------------
+G-N4 (HARD, AMENDMENTS 2+3) -- PLANTED SIGNAL/NULL RATES OVER PRE-LISTED SEEDS 0..99 ON THE REAL POOL-P GEOMETRY, FLEXIBLE-CONTROL STATISTIC (fixed 10000 draws, eps shared across plants within a seed)
+--------------------------------------------------------------------------
+  confusion matrix: rows = plant (ground truth), columns = word returned by word_distance; cells = seeds out of 100
+    plant                        3D-LOCAL    SEQUENCE-LOCAL        BOTH-LOCAL  NEITHER-RESOLVED
+    3D-only                           97                 0                 3                 0
+    sequence-only                      0                99                 1                 0
+    none                               3                 4                 0                93
+  rates:
+    3D-only       correct word (3D-LOCAL)      0.970 (gate >= 0.8)
+    sequence-only correct word (SEQUENCE-LOCAL) 0.990 (gate >= 0.8)
+    3D-only       wrong arm (dseq CI excl 0)   0.030 (gate <= 0.15)
+    sequence-only wrong arm (d3 CI excl 0)    0.010 (gate <= 0.15)
+    none          NEITHER-RESOLVED            0.930 (gate >= 0.85); any word fired 7/100
+    false-attribution rate when truth is 3D-only (BOTH-LOCAL or SEQUENCE-LOCAL returned): 0.030
+    seeds not returning the planted word: 11 -> ['3D-only@seed3=BOTH-LOCAL', 'none@seed3=SEQUENCE-LOCAL', '3D-only@seed44=BOTH-LOCAL', 'none@seed44=SEQUENCE-LOCAL', '3D-only@seed58=BOTH-LOCAL', 'none@seed58=SEQUENCE-LOCAL', 'sequence-only@seed69=BOTH-LOCAL', 'none@seed69=3D-LOCAL', 'none@seed72=3D-LOCAL', 'none@seed81=SEQUENCE-LOCAL', 'none@seed94=3D-LOCAL']
+  seed 3 (the seed that failed the single-seed form): word BOTH-LOCAL, wrong-arm CI excludes zero = True
+  (the linear rank-control statistic's confusion matrix for the same 100 seeds is recorded in PHASE4_A7_ANALYSIS_SMOKE_OUTPUT.txt from the Amendment-2 run; it is NOT recomputed here -- Amendment 3 item 4 re-runs G-N4 on the new statistic only)
+  G-N4 wall 893s
+  [PASS] G-N4 3D-only plant: correct word in >= 80% of 100 seeds: 0.970 (97/100)
+  [PASS] G-N4 sequence-only plant: correct word in >= 80% of 100 seeds: 0.990 (99/100)
+  [PASS] G-N4 3D-only plant: wrong-arm CI excludes zero in <= 15% of seeds: 0.030 (3/100)
+  [PASS] G-N4 sequence-only plant: wrong-arm CI excludes zero in <= 15% of seeds: 0.010 (1/100)
+  [PASS] G-N4 none plant: NEITHER-RESOLVED in >= 85% of 100 seeds: 0.930 (93/100)
+
+--------------------------------------------------------------------------
+G-N5 (HARD) -- identity, draw-by-draw reference, Phase 1 CI (fixed 10000)
+--------------------------------------------------------------------------
+  [PASS] G-N5(i) identity: stat(arange) == point estimate (<1e-12): max|diff| = 0.000e+00
+  [PASS] G-N5(ii-a) cell-mean draws == background_boot draw by draw (<1e-12): max|diff| = 0.000e+00
+  [PASS] G-N5(ii-b) partial draws == slow closed-form reference (<1e-12, both arms, all draws): max|diff| = 1.860e-15, nan mismatches = 0
+  [PASS] G-N5(ii-c) contrast draws == plain-Python rebuild (<1e-12): max|diff| = 0.000e+00
+  Phase 1 CI: lo -0.1173334458953319 vs -0.1173334458953319 (|diff| 0.000e+00), hi -0.05951138449511738 vs -0.05951138449511738 (|diff| 0.000e+00), 10000 finite
+  [PASS] G-N5(iii) Phase 1 CI reproduces (each endpoint < 1e-9): lo 0.000e+00, hi 0.000e+00
+  [PASS] G-N5(iv) FLEX identity: stat(arange) == point estimate (<1e-12): max|diff| = 0.000e+00
+  [PASS] G-N5(v) FLEX draws == slow QR-based OLS rebuild (<1e-12, both arms, all draws): max|diff| = 5.829e-16, nan mismatches = 0
+
+--------------------------------------------------------------------------
+SECTION 5 -- PRIMARY TEST (frozen) + AMENDMENT 4 SENSITIVITY
+--------------------------------------------------------------------------
+  SKIPPED per amendment item 5: complete NB = 6/46 (< 30).  No p_NB, no word.
+  (coverage: 0/50 new backgrounds scored; six existing always complete)
+
+--------------------------------------------------------------------------
+SECTION 6 -- DISTANCES (frozen) ON POOL P
+--------------------------------------------------------------------------
+  PENDING: Pool P incomplete (67/117; new 0/50 scored).  The partials/cells/contrasts are defined on the COMPLETE pool only (N-AN7) -- no numbers printed.
+
+--------------------------------------------------------------------------
+FULL-FRAME SECONDARY (frozen section 5: secondary, no word)
+--------------------------------------------------------------------------
+  PENDING: 0/40 NB new backgrounds have nonH files in data/processed/phase4/neigh_nonH/ (night B, SB4)
+
+==========================================================================
+SUMMARY
+==========================================================================
+  32 PASS, 0 FAIL, 1 PENDING of 33 checks.
+  N-AN13: torch in sys.modules after this run: False (must be False)
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * words describe A222V vs this protein's sampled neighbourhood only (frozen section 8).
+    * NB members are not independent (second_at_position) -> amendment 4 sensitivity reported without a word.
+    * D1 cross-checks are same-pipeline regression tests, not independent evidence.
+    * cell CIs are marginal, not multiplicity-adjusted.
+    * d3 is a CA-CA distance in a crystal structure; cell thresholds are discrete definitions.
+    * Amendment 3's parenthetical pins both '4 degrees of freedom' and three interior knots, which cannot both hold in the standard natural-spline parametrisation (m interior knots give m+1 basis functions); the three named knots were treated as operative and the basis is patsy's canonical cr with those knots (five columns, gated against patsy above) -- disclosed.
+
+A7e RESULT: GATE PASS -- exit 0
+  elapsed 923.6s

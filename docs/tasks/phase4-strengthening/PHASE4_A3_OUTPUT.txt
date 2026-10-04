@@ -1,0 +1,454 @@
+
+==========================================================================
+SCRIPT 166 -- Phase 4 task A3, Module S: the sign convention
+read-only with respect to the planning document and PHASE2_PREREG.md
+==========================================================================
+
+--------------------------------------------------------------------------
+S-1  quote, with file and line numbers (code beside expectation)
+--------------------------------------------------------------------------
+    scripts/lib/stats_ext.py:63
+      code | def rebuild_interaction_fit(raw):
+      doc  | own_e.b is built by rebuild_interaction_fit in scripts/lib/stats_ext.py
+  PASS  S-1a rebuild_interaction_fit defines own_e.b's construction
+        all quoted tokens present on the cited line
+    scripts/lib/stats_ext.py:84
+      code | e2 = fit_interaction(M, Mse, w["fitness"], w["remediation"], w["post"],
+      doc  | fit_interaction is called a second time with the fitness-dependent correction
+  PASS  S-1b the corrected (second) pass is the one own_e.b comes from
+        all quoted tokens present on the cited line
+    scripts/lib/stats_ext.py:87
+      code | return {"w": w, "e2": e2, "M_se": Mse, "resid": e2["resid"],
+      doc  | the returned residual matrix is e2's, i.e. m_score - expected after the correction
+  PASS  S-1c the residual handed downstream is that second pass's
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:48
+      code | def wls_line(y, se, x, valid):
+      doc  | wls_line in scripts/lib/own_context.py is the weighted fit own_e.b's intercept comes from
+  PASS  S-1d wls_line fits intercept + slope by weighted least squares
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:49
+      code | """Vectorized weighted least squares of y ~ 1 + x, weights 1/se^2.
+      doc  | own_e.b's intercept is weighted by 1/se^2 (per-condition standard errors)
+  PASS  S-1e its weights are 1/se^2
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:64
+      code | base = np.where(det != 0, (S2 * T0 - S1 * T1) / det, np.nan)
+      doc  | the intercept is the closed-form weighted intercept (S2*T0 - S1*T1)/det
+  PASS  S-1f the weighted-intercept closed form
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:148
+      code | expected(c) = single_mutant_term(c) * (b_A222V + c*r_A222V) [+ correction]
+      doc  | the no-interaction expectation is the product of the two single-mutant terms
+  PASS  S-1g fit_interaction's expectation is multiplicative (docstring)
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:157
+      code | expected = sm * a222v_line
+      doc  | expected(c) = single-mutant term * the A222V background line
+  PASS  S-1h ...and in code
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:163
+      code | resid = np.where(valid, m_score - expected, np.nan)
+      doc  | the residual subtracts the expectation from the observed A222V-arm score
+  PASS  S-1i the residual is m_score - expected
+        all quoted tokens present on the cited line
+    scripts/lib/own_context.py:165
+      code | e_b, e_r, df = wls_line(resid, m_se, concs, valid)
+      doc  | own_e.b = wls_line(resid, m_se, concs, valid)'s intercept
+  PASS  S-1j own_e.b is that residual's weighted intercept
+        all quoted tokens present on the cited line
+    scripts/45_c1_reconciliation.py:97
+      code | df["delta_esm"] = df["esm2_score_a222v_bg"] - df["esm2_score"]
+      doc  | delta is the model's A222V-background score minus its WT-background score
+  PASS  S-1k delta = esm2_score_a222v_bg - esm2_score (scripts/45)
+        all quoted tokens present on the cited line
+    scripts/12_validate_a222v_scores.py:29
+      code | merged["delta_esm"] = merged["esm2_score_a222v_bg"] - merged["esm2_score"]
+      doc  | the second, independent definition of delta agrees
+  PASS  S-1l the same definition written independently (scripts/12)
+        all quoted tokens present on the cited line
+    scripts/12_validate_a222v_scores.py:30
+      code | print(f"\ndelta_ESM = S(v|A222V) - S(v|WT), summary:")
+      doc  | delta is a background SHIFT of the model's score for one substitution
+  PASS  S-1m delta's printed meaning, S(v|A222V) - S(v|WT)
+        all quoted tokens present on the cited line
+    docs/tasks/phase2-full-frame-placebo/PHASE2_PREREG.md:36
+      code | One-sided empirical p (direction pre-stated negative, as for the anchor):
+      doc  | PHASE2_PREREG.md pre-stated the negative tail for the anchor
+  PASS  S-1n the tail registered in PHASE2_PREREG.md is negative (read only)
+        all quoted tokens present on the cited line
+  S-1: 14 quote checks passed (each printed code beside expectation)
+
+--------------------------------------------------------------------------
+S-2  worked example (computed, not typed)
+--------------------------------------------------------------------------
+  task32 rows read: 11,344; after the finite-on-every-analysis-column filter: 10,757
+  PASS  S-2a analysis set = 10,757 rows at 654 positions (planning 143)
+        got 10,757 rows / 654 positions; target 10,757 / 654
+  PASS  S-2b se_e_b joins completely (no row lost, none duplicated)
+        10,757 of 10,757 rows carry se_e_b; task35 duplicated hgvs_pro: False
+  median se_e_b = 0.062873954434773; strictly below: 5,378; exactly at the median: 1 (excluded by 'below the median')
+  PASS  S-2c the se_e_b-below-median subset is non-trivial and accounted for
+        5,378 of 10,757 rows in the worked-example subset; every excluded row is above or at the median se_e_b
+  PASS  S-2d no zero-valued sign is silently grouped (delta, own_e.b)
+        delta == 0: 0; own_e.b == 0: 0 (so the 2x2 has no zero cell)
+  PASS  S-2e rebuilt own_e.b == recorded own_e_b (identity)
+        max|diff| = 2.220e-16 over 10,757 rows (tolerance 1e-12)
+  PASS  S-2f independent numpy closed-form intercept == recorded own_e_b
+        max|diff| = 7.094e-14 over 10,757 rows (w*x*x here vs w*(x**2) in wls_line: summation-order only)
+  PASS  S-2g independent SE == recorded se_e_b (library path too)
+        closed-form max|diff| = 1.275e-13, library max|diff| = 2.220e-16 over 10,757 rows
+  PASS  S-2h stored delta == S_A - S_W recomputed (identity)
+        max|diff| = 2.220e-16
+
+  3 MOST POSITIVE own_e.b  (within se_e_b < median = 0.062873954434773)
+    p.Arg134Gly  position 134  R -> G
+      S_W (esm2_score)          = 1.8771114349365232
+      S_A (esm2_score_a222v_bg) = 1.8603763580322263
+      delta (stored)            = -0.0167350769042968   [independent S_A - S_W = -0.016735076904296875]
+      base functionality        = 0.314242066683397
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.785283 0.961417 1.035001 0.826610]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.116129 0.136819 0.278512 0.526635]
+        residual = [0.669155 0.824598 0.756489 0.299975]
+      own_e.b (recorded)        = 0.8636330028276065   [independent closed-form = 0.8636330028276065]
+      se_e.b (recorded)         = 0.0387464462219277   [independent closed-form = 0.0387464462219277]
+    p.Asp100Met  position 100  D -> M
+      S_W (esm2_score)          = -10.822271240875123
+      S_A (esm2_score_a222v_bg) = -10.676905751926824
+      delta (stored)            = 0.1453654889482987   [independent S_A - S_W = 0.1453654889482987]
+      base functionality        = -0.0613605672051226
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.705819 1.038932 1.216768 0.989967]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.111895 0.116142 0.140648 0.173321]
+        residual = [0.593925 0.922790 1.076120 0.816645]
+      own_e.b (recorded)        = 0.840923163611355   [independent closed-form = 0.840923163611355]
+      se_e.b (recorded)         = 0.062828666636335   [independent closed-form = 0.06282866663633502]
+    p.Thr129Ser  position 129  T -> S
+      S_W (esm2_score)          = -7.847715104813688
+      S_A (esm2_score_a222v_bg) = -7.792108689551242
+      delta (stored)            = 0.0556064152624466   [independent S_A - S_W = 0.055606415262446696]
+      base functionality        = 0.210504052931541
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.685897 0.966835 1.135260 1.008114]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.082961 0.109681 0.300295 0.651123]
+        residual = [0.602935 0.857154 0.834965 0.356991]
+      own_e.b (recorded)        = 0.8114199904645375   [independent closed-form = 0.8114199904645376]
+      se_e.b (recorded)         = 0.0420324505885907   [independent closed-form = 0.04203245058859071]
+
+  3 MOST NEGATIVE own_e.b  (within se_e_b < median = 0.062873954434773)
+    p.Asn118Pro  position 118  N -> P
+      S_W (esm2_score)          = -14.296979989856482
+      S_A (esm2_score_a222v_bg) = -14.25630108639598
+      delta (stored)            = 0.0406789034605008   [independent S_A - S_W = 0.04067890346050085]
+      base functionality        = 2.25156365390912
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.140176 0.131277 0.092668 0.132413]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.756251 0.731368 0.510857 0.012788]
+        residual = [-0.616075 -0.600091 -0.418189  0.119625]
+      own_e.b (recorded)        = -0.7243006804322979   [independent closed-form = -0.7243006804322979]
+      se_e.b (recorded)         = 0.0493686762635291   [independent closed-form = 0.0493686762635291]
+    p.Phe60Ala  position 60  F -> A
+      S_W (esm2_score)          = -11.878395475447178
+      S_A (esm2_score_a222v_bg) = -11.86994176916778
+      delta (stored)            = 0.008453706279397   [independent S_A - S_W = 0.00845370627939701]
+      base functionality        = 1.81465639684408
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.001417 0.014959 0.132148 0.239804]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.687932 0.695379 0.713123 0.669911]
+        residual = [-0.686515 -0.680421 -0.580974 -0.430108]
+      own_e.b (recorded)        = -0.7100191685367429   [independent closed-form = -0.7100191685367429]
+      se_e.b (recorded)         = 0.0443483912273545   [independent closed-form = 0.04434839122735451]
+    p.Lys27Ile  position 27  K -> I
+      S_W (esm2_score)          = -1.0966901779174805
+      S_A (esm2_score_a222v_bg) = -1.105104923248291
+      delta (stored)            = -0.0084147453308105   [independent S_A - S_W = -0.008414745330810547]
+      base functionality        = 2.70308130538157
+      observed A222V fitness per condition (12, 25, 100, 200):
+        m.score  = [0.234103 0.358758 0.422465 0.647198]
+      expectation (multiplicative x correction) and residual per condition:
+        expected = [0.861050 0.842629 0.667365 0.250758]
+        residual = [-0.626946 -0.483870 -0.244901  0.396440]
+      own_e.b (recorded)        = -0.6998409599000717   [independent closed-form = -0.6998409599000717]
+      se_e.b (recorded)         = 0.0486859594907699   [independent closed-form = 0.04868595949076993]
+
+  plain sentences built from the computed signs:
+    - p.Arg134Gly: delta is negative: the model scores the substitution as LESS favourable in the A222V background; own_e.b is positive: observed BETTER than the multiplicative no-interaction expectation (se_e.b 0.038746); the model's shift and the measured interaction point in OPPOSITE directions.
+    - p.Asp100Met: delta is positive: the model scores the substitution as MORE favourable in the A222V background; own_e.b is positive: observed BETTER than the multiplicative no-interaction expectation (se_e.b 0.062829); the model's shift and the measured interaction point in the same direction.
+    - p.Thr129Ser: delta is positive: the model scores the substitution as MORE favourable in the A222V background; own_e.b is positive: observed BETTER than the multiplicative no-interaction expectation (se_e.b 0.042032); the model's shift and the measured interaction point in the same direction.
+    - p.Asn118Pro: delta is positive: the model scores the substitution as MORE favourable in the A222V background; own_e.b is negative: observed WORSE than the multiplicative no-interaction expectation (se_e.b 0.049369); the model's shift and the measured interaction point in OPPOSITE directions.
+    - p.Phe60Ala: delta is positive: the model scores the substitution as MORE favourable in the A222V background; own_e.b is negative: observed WORSE than the multiplicative no-interaction expectation (se_e.b 0.044348); the model's shift and the measured interaction point in OPPOSITE directions.
+    - p.Lys27Ile: delta is negative: the model scores the substitution as LESS favourable in the A222V background; own_e.b is negative: observed WORSE than the multiplicative no-interaction expectation (se_e.b 0.048686); the model's shift and the measured interaction point in the same direction.
+  PASS  S-2i six variants shown, each with one sign-built sentence
+        rows printed 6, sentences 6, all six variants distinct
+
+--------------------------------------------------------------------------
+S-3  descriptive 2x2 and the two Phase 1 C1 Spearmans
+--------------------------------------------------------------------------
+  PANEL overall (analysis set)   n = 10,757
+    rows = own_e.b < 0   n =  5,524   mean(delta) = +0.040691443
+    rows = own_e.b > 0   n =  5,233   mean(delta) = +0.024508573
+    row accounting (delta by sign of own_e.b): 10,757 == 10,757 -> True
+    rows = delta < 0     n =  3,787   mean(own_e.b) = +0.033116770
+    rows = delta > 0     n =  6,970   mean(own_e.b) = +0.003779363
+    row accounting (own_e.b by sign of delta): 10,757 == 10,757 -> True
+  PASS  S-3a the overall 2x2 accounts for every row
+        both partitions sum to 10,757 / 10,757 against 10,757
+  PASS  S-3b tertiles of S_W cut the analysis set into three non-empty bins
+        bin sizes: T1 lowest S_W = 3,586, T2 middle S_W = 3,585, T3 highest S_W = 3,586
+  PANEL tertile T1 lowest S_W   n = 3,586
+    rows = own_e.b < 0   n =  2,043   mean(delta) = +0.069856083
+    rows = own_e.b > 0   n =  1,543   mean(delta) = +0.060545678
+    row accounting (delta by sign of own_e.b): 3,586 == 3,586 -> True
+    rows = delta < 0     n =    693   mean(own_e.b) = +0.004918708
+    rows = delta > 0     n =  2,893   mean(own_e.b) = -0.005786931
+    row accounting (own_e.b by sign of delta): 3,586 == 3,586 -> True
+  PASS  S-3c tertile T1 lowest S_W accounts for every row
+        3,586 / 3,586 against 3,586
+  PANEL tertile T2 middle S_W   n = 3,585
+    rows = own_e.b < 0   n =  1,875   mean(delta) = +0.042277475
+    rows = own_e.b > 0   n =  1,710   mean(delta) = +0.028561900
+    row accounting (delta by sign of own_e.b): 3,585 == 3,585 -> True
+    rows = delta < 0     n =  1,194   mean(own_e.b) = +0.027466495
+    rows = delta > 0     n =  2,391   mean(own_e.b) = +0.002608561
+    row accounting (own_e.b by sign of delta): 3,585 == 3,585 -> True
+  PASS  S-3c tertile T2 middle S_W accounts for every row
+        3,585 / 3,585 against 3,585
+  PANEL tertile T3 highest S_W   n = 3,586
+    rows = own_e.b < 0   n =  1,606   mean(delta) = +0.001739282
+    rows = own_e.b > 0   n =  1,980   mean(delta) = -0.007075489
+    row accounting (delta by sign of own_e.b): 3,586 == 3,586 -> True
+    rows = delta < 0     n =  1,900   mean(own_e.b) = +0.046952394
+    rows = delta > 0     n =  1,686   mean(own_e.b) = +0.021854495
+    row accounting (own_e.b by sign of delta): 3,586 == 3,586 -> True
+  PASS  S-3c tertile T3 highest S_W accounts for every row
+        3,586 / 3,586 against 3,586
+
+  the two Phase 1 C1 Spearmans, four independent routes each
+    project spearman (phase3_common)     = -0.32376573717755663
+    scipy.stats.spearmanr                = -0.32376573717755663
+    pandas corr(method='spearman')       = -0.32376573717755663
+    numpy average-rank Pearson           = -0.32376573717755663
+    TARGET (planning doc)                = -0.32376573717755663   [4 dp in the A3 task: -0.3238]
+  PASS  S-3d rho(delta, S_W) reproduces the planning target
+        four routes agree to 0.000e+00; worst deviation from the target = 0.000e+00 (tolerance 1e-12)
+    project spearman (phase3_common)     = 0.085391652432165
+    scipy.stats.spearmanr                = 0.085391652432165
+    pandas corr(method='spearman')       = 0.085391652432165
+    numpy average-rank Pearson           = 0.08539165243216501
+    TARGET (planning doc)                = 0.085391652432165   [4 dp in the A3 task: 0.0854]
+  PASS  S-3e rho(own_e.b, S_W) reproduces the planning target
+        four routes agree to 1.388e-17; worst deviation from the target = 1.388e-17 (tolerance 1e-12)
+    project spearman (phase3_common)     = -0.08811806424891734
+    scipy.stats.spearmanr                = -0.08811806424891734
+    pandas corr(method='spearman')       = -0.08811806424891734
+    numpy average-rank Pearson           = -0.08811806424891734
+    TARGET (planning doc)                = -0.088118064
+  PASS  S-3f rho(delta, own_e.b) reproduces the anchor rho (planning 144/314, 9 dp)
+        four routes agree to 0.000e+00; worst deviation from the target = 2.489e-10 (tolerance 1e-09)
+
+--------------------------------------------------------------------------
+S-4  cross-system sign statements -- QUOTED, never inferred
+--------------------------------------------------------------------------
+    scripts/155_gb1_regime_analysis.py:21
+      code | e_b = f_vb - f_v * f_bg / f_wt
+      doc  | GB1's e_b is measured double minus the multiplicative expectation of the two singles
+  PASS  S-4a GB1: e_b = f_vb - f_v * f_bg / f_wt
+        all quoted tokens present on the cited line
+    scripts/155_gb1_regime_analysis.py:394
+      code | long["e_b"] = long["W_double"] - long["W_v"] * long["W_bg"]  # f_wt = 1
+      doc  | positive e_b = the measured double sits ABOVE the expectation
+  PASS  S-4b GB1: the same in code, on the W scale with f_wt = 1
+        all quoted tokens present on the cited line
+    scripts/155_gb1_regime_analysis.py:24
+      code | W_x     = (sel_count / input_count) / F_B,wt
+      doc  | the assay's scale is selection enrichment -- the fitness scale the residual is taken on
+  PASS  S-4c GB1: what the W scale is
+        all quoted tokens present on the cited line
+    scripts/73_gb1_estimator_transplant.py:58
+      code | form-fidelity. e_b(v) = f(v + bg) - E[.] (additive-scale residual
+      doc  | GB1's e_b is an additive-scale residual of the measured double arm
+  PASS  S-4d GB1: 'mirroring measured - expected'
+        all quoted tokens present on the cited line
+    scripts/128_gb1_olson_verify_and_transplant_repro.py:135
+      code | e_b      = f_vb - expct
+      doc  | positive e_b = measured above expectation
+  PASS  S-4e GB1: the formula restated
+        all quoted tokens present on the cited line
+    data/external/rbd_starr2022/README.md:22
+      code | 1. You can use a set of interactive heatmaps to explore the change in ACE2-binding affinity or the change in RBD expression caused by mutations in each RBD variant. To use this tool, click [here](https://jbloomlab.github.io/SARS-CoV-2-RBD_DMS_variants/RBD-heatmaps/).
+      doc  | delta_bind / delta_expr are described by the repository as the CHANGE in affinity / expression caused by a mutation
+  PASS  S-4f RBD: the data's own README names the quantities
+        all quoted tokens present on the cited line
+    scripts/158_multidms_rbd.py:29
+      code | D4  Phenotypes: bind = bc_binding.csv / log10Ka; expr = bc_expression.csv /
+      doc  | `bind` is the bc_binding.csv measurement column log10Ka
+  PASS  S-4g RBD: which column `bind` comes from
+        all quoted tokens present on the cited line
+    scripts/163_rbd_targets.py:30
+      code | G-163-2  `delta_bind` is the authors' own per-library construction:
+      doc  | delta_bind is defined by the authors per library
+  PASS  S-4h RBD: delta_bind's arithmetic (authors' own construction)
+        all quoted tokens present on the cited line
+    scripts/163_rbd_targets.py:31
+      code | mean over libraries of (rep - that target's wild-type row's
+      doc  | positive delta_bind = this mutation's value ABOVE the wild-type row's value, per library
+  PASS  S-4i RBD: delta_bind = rep - that target's wild-type row's rep
+        all quoted tokens present on the cited line
+    scripts/163_rbd_targets.py:35
+      code | G-163-3  every wild-type row has delta_bind = delta_expr = 0 exactly.
+      doc  | the zero of the scale is the wild-type row
+  PASS  S-4j RBD: wild-type rows are exactly zero
+        all quoted tokens present on the cited line
+    scripts/163_rbd_targets.py:47
+      code | e_T(v) = delta_T(v) - delta_Wuhan(v).  This is what "the
+      doc  | e_T is the per-mutation effect in T minus that mutation's effect in Wuhan-Hu-1
+  PASS  S-4k RBD: e_T = delta_T(v) - delta_Wuhan(v)
+        all quoted tokens present on the cited line
+    scripts/163_rbd_targets.py:11
+      code | (2) "Phenotype PRIMARY: ACE2 binding (the per-mutation effect on log10 KD
+      doc  | the project's own frozen block says log10 KD where the data column is log10Ka -- flagged, not resolved
+  PASS  S-4l RBD: the frozen prereg words `log10 KD` (inconsistent with the column header -- printed as an open question)
+        all quoted tokens present on the cited line
+  PASS  S-4m the barcode table's own header carries `log10Ka`
+        header: "library","barcode","target","variant_class","aa_substitutions","n_aa_substitutions","TiteSeq_avgcount","log10Ka"
+
+  DIRECTION STATEMENTS (one per system)
+    MTHFR atlas own_e.b: POSITIVE = observed ABOVE the multiplicative expectation
+      -> better than expected.  Quoted above: own_context.py lines 148/157/163/165.
+    GB1 e_b: POSITIVE = measured double-arm fitness ABOVE the multiplicative
+      expectation of the two singles (quotes S-4a..S-4e) on the selection-enrichment
+      scale (S-4c) -> fitter than expected.
+      files under scripts/ and docs/ containing the literal phrase 'fitter than expected': 2 -> ['scripts/166_sign_convention.py', 'docs/tasks/phase4-strengthening/PHASE4_STRENGTHENING.md']
+      (that search is not a quotation: of the hits, one is this task's own instruction line in
+      PHASE4_STRENGTHENING.md and one is this script's search code -- neither states a
+      sign convention.  The GB1 direction above therefore rests on the quoted formulas.)
+
+  files actually on disk under data/external/rbd_starr2022/:
+    PacBio_amplicon_B1351.gb
+    PacBio_amplicon_E484K.gb
+    PacBio_amplicon_N501Y.gb
+    PacBio_amplicon_Wuhan_Hu_1.gb
+    RBD_sites.csv
+    README.md
+    acquisition_log.json
+    bc_binding.csv
+    bc_expression.csv
+    final_variant_scores.csv
+    wildtype_sequence.fasta
+    RBD e_T / delta_bind: ARITHMETIC (quoted) = positive means the mutation's value
+      ABOVE the wild-type row's / Wuhan's value (S-4h, S-4i, S-4j, S-4k).
+      DIRECTION WORD ('stronger' / 'tighter' / 'weaker'): UNAVAILABLE locally.
+      reason: the repository's own column descriptions live in these two paths, which were
+      never fetched (and are not fetched now -- the only authorised download in Phase 4
+      is esm2_t12_35M_UR50D):
+        data/external/rbd_starr2022/data/README.md
+        data/external/rbd_starr2022/results/summary/summary.md
+      open question for review: the local wording disagrees -- bc_binding.csv and script 158 say
+      `log10Ka` while the frozen block quoted at S-4l says `log10 KD`; the two run in
+      opposite directions, so no direction word is asserted until the repository's own
+      description is obtained and quoted.  Its absence is not evidence in either direction.
+  PASS  S-4n RBD direction word is UNAVAILABLE because the repository's column descriptions are genuinely absent from disk
+        absent: data/external/rbd_starr2022/data/README.md, data/external/rbd_starr2022/results/summary/summary.md  (if this FAILS, the description exists locally: read it and quote it instead of stopping)
+
+--------------------------------------------------------------------------
+S-5  write SIGN_CONVENTION.md (every number re-derived)
+--------------------------------------------------------------------------
+    n_rows                 written = 10757.0   independent pandas/numpy = 10757.0   match = True
+    n_positions            written = 654.0   independent pandas/numpy = 654.0   match = True
+    rho(delta, own_e_b)    written = -0.08811806424891734   independent pandas/numpy = -0.08811806424891734   match = True
+    rho(delta, S_W)        written = -0.32376573717755663   independent pandas/numpy = -0.32376573717755663   match = True
+    rho(own_e_b, S_W)      written = 0.085391652432165   independent pandas/numpy = 0.085391652432165   match = True
+    S_W                    written = -14.296979989856482   independent pandas/numpy = -14.296979989856482   match = True
+    S_A                    written = -14.25630108639598   independent pandas/numpy = -14.25630108639598   match = True
+    delta                  written = 0.0406789034605008   independent pandas/numpy = 0.04067890346050085   match = True
+    own_e_b                written = -0.7243006804322979   independent pandas/numpy = -0.7243006804322979   match = True
+    se_e_b                 written = 0.0493686762635291   independent pandas/numpy = 0.0493686762635291   match = True
+    position               written = 118.0   independent pandas/numpy = 118.0   match = True
+  PASS  S-5a every number staged for the note has an independent recomputation that agrees
+        11 numbers
+  PASS  S-5b the example was chosen by the pre-registered rule, not by how well it reads
+        p.Asn118Pro has the minimum own_e.b (-0.7243006804322979) of the 5,378-row worked-example subset
+
+  wrote docs/tasks/phase4-strengthening/SIGN_CONVENTION.md  (32 lines)
+    n_rows                 in the note = 10757.0   independent pandas/numpy = 10757.0
+    n_positions            in the note = 654.0   independent pandas/numpy = 654.0
+    rho(delta, own_e_b)    in the note = -0.08811806424891734   independent pandas/numpy = -0.08811806424891734
+    rho(delta, S_W)        in the note = -0.32376573717755663   independent pandas/numpy = -0.32376573717755663
+    rho(own_e_b, S_W)      in the note = 0.085391652432165   independent pandas/numpy = 0.085391652432165
+    S_W                    in the note = -14.296979989856482   independent pandas/numpy = -14.296979989856482
+    S_A                    in the note = -14.25630108639598   independent pandas/numpy = -14.25630108639598
+    delta                  in the note = 0.0406789034605008   independent pandas/numpy = 0.04067890346050085
+    own_e_b                in the note = -0.7243006804322979   independent pandas/numpy = -0.7243006804322979
+    se_e_b                 in the note = 0.0493686762635291   independent pandas/numpy = 0.0493686762635291
+    position               in the note = 118.0   independent pandas/numpy = 118.0
+    parsed back n_rows                 -> ['10757']  vs independent 10757.0  OK
+    parsed back n_positions            -> ['654']  vs independent 654.0  OK
+    parsed back rho(delta, own_e_b)    -> ['-0.08811806424891734']  vs independent -0.08811806424891734  OK
+    parsed back rho(delta, S_W)        -> ['-0.32376573717755663']  vs independent -0.32376573717755663  OK
+    parsed back rho(own_e_b, S_W)      -> ['0.085391652432165']  vs independent 0.085391652432165  OK
+    parsed back S_W                    -> ['-14.296979989856482']  vs independent -14.296979989856482  OK
+    parsed back S_A                    -> ['-14.25630108639598']  vs independent -14.25630108639598  OK
+    parsed back delta                  -> ['0.0406789034605008']  vs independent 0.04067890346050085  OK
+    parsed back own_e_b                -> ['-0.7243006804322979']  vs independent -0.7243006804322979  OK
+    parsed back se_e_b                 -> ['0.0493686762635291']  vs independent 0.0493686762635291  OK
+    parsed back position               -> ['118']  vs independent 118.0  OK
+  PASS  S-5c every number parsed back out of the note equals its independent recomputation
+        11 labels, each matched exactly once
+  PASS  S-5d SIGN_CONVENTION.md is at most forty lines
+        32 lines written
+
+--------------------------------------------------------------------------
+READ-BACK OF THE NOTE (what later modules will quote)
+--------------------------------------------------------------------------
+# SIGN_CONVENTION.md -- Phase 4 Module S, generated by scripts/166_sign_convention.py.
+# Regenerate with that script; never hand-edit. Every derived number below (task ids, file
+# names and line numbers excepted) is written from one source and re-derived from a
+# different one using pandas/numpy only; the generator prints each pair and re-reads
+# this file to assert the numbers here equal the independent recomputation.
+SIGN SENTENCE (quote verbatim wherever a rho is discussed):
+  delta = S(v|A222V) - S(v|WT): positive delta means the model scores the substitution
+  as MORE favourable in the A222V background than in the wild-type background.
+  own_e_b = observed A222V-arm score minus the multiplicative no-interaction expectation,
+  taken as its concentration-weighted intercept: positive own_e_b means observed BETTER
+  than the expectation, negative own_e_b means observed WORSE than the expectation.
+  A NEGATIVE rho means the model's background shift runs OPPOSITE to the measured shift:
+  substitutions the model makes look better under A222V are, on average, the ones whose
+  measured interaction residual is lower -- direction only; no magnitude, mechanism or
+  causal claim follows from the sign.
+WORKED EXAMPLE (pre-registered selection: the most negative own_e.b in the se-below-median set):
+  example p.Asn118Pro: position = 118, wild_type = N, mutant = P,
+    S_W = -14.296979989856482, S_A = -14.25630108639598, delta = 0.0406789034605008, own_e_b = -0.7243006804322979, se_e_b = 0.0493686762635291
+  p.Asn118Pro: delta is positive: the model scores the substitution as MORE favourable in the A222V background; own_e.b is negative: observed WORSE than the multiplicative no-interaction expectation; the model's shift and the measured interaction point in OPPOSITE directions.
+ANCHOR NUMBERS (analysis set: variants with finite delta, own_e_b, S_W and base functionality):
+  n_rows = 10757
+  n_positions = 654
+  rho(delta, own_e_b) = -0.08811806424891734
+  rho(delta, S_W) = -0.32376573717755663
+  rho(own_e_b, S_W) = 0.085391652432165
+WHAT A NEGATIVE RHO MEANS IN WORDS: where the model says a substitution becomes more
+favourable in the A222V background, the measured interaction residual tends to sit lower,
+and where the model says it becomes less favourable the residual tends to sit higher: the
+model's direction of change and the data's direction of change disagree. This is a
+statement about direction alone, on one dataset, with no interval attached; it says
+nothing about how large either quantity is, and nothing about mechanism. Cross-system
+sign statements (MTHFR, GB1, RBD) are recorded in the task A3 run output, not here.
+
+
+  LIMITATIONS carried in this run's output (AGENTS 6):
+    - orientation audit only; corroborates no estimate
+    - 2x2 panels are descriptive: no interval, no p-value, one dataset
+    - sign-of-own_e.b grouping attenuated by estimated-SE error; below-median se_e.b
+      restricts the magnitude of that error but does not remove it
+    - RBD direction word UNAVAILABLE locally; Ka/KD wording inconsistent; open question
+    - GB1 direction rests on the quoted formula; the literal phrase count is printed above
+
+==========================================================================
+A3 SUMMARY: 49 checks PASS, 0 FAIL  (ALL CHECKS PASSED)
+elapsed 0.3s
+==========================================================================

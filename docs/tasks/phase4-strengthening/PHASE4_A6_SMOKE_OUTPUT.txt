@@ -1,0 +1,324 @@
+==============================================================================
+A6 -- MODULE G: GB1 LOCALITY (GB1_LOCALITY_PREREG_v1.md, implemented exactly)
+==============================================================================
+N_BOOT = 300   SEED = 0   N_REF = 500   D2_N = 100 (constant, frozen rule)
+RESAMPLING UNIT: backgrounds (the 400 units), one ids set per sample size shared by all statistics of that size (paired).  Never positions, never rows.
+DECISION RULE (pre-registered in the docstring): every hard gate (G-D0..G-D3 + disclosed extras) decides in BOTH modes; any FAIL -> exit 3.  Thresholds are never loosened; N is never raised to pass a gate.
+*** SMOKE RUN: N_BOOT=300 != 10000 -- every CI and every word is PROVISIONAL (Monte-Carlo only; G-D3(iii) still decides at its fixed 10000). ***
+DISCLOSURES (pre-registered in the docstring): (1) cached-data analysis -- Phase 3 results for these 400 backgrounds have been seen (prereg line 3); these are NEW quantities from the same scores; (2) EXTRA gates beyond the frozen list: 155's F_B,wt pin and coverage G-4 re-run from the executed transcript, the 410,271-row count, the n reconciliation, and a final no-torch/no-esm check; (3) G-D2 decay arm = one fixed-seed construction, null arm = the frozen 100 draws (mechanics checks, not estimates); (4) the optional 1PGA download records url/status/bytes/sha256 and skips G-3 alone on failure.
+
+------------------------------------------------------------------------------
+G-D0 -- INFRASTRUCTURE (prereg hash, inputs, partner table, rho_b reproduction)
+------------------------------------------------------------------------------
+  [PASS] G-D0 prereg sha256: 10c547c9e0c158cca6a9f158deefc31fe5b728539aba2909b897d199c85795a8  (target 10c547c9e0c158cca6a9f158deefc31fe5b728539aba2909b897d199c85795a8 (26 lines; got 26))
+  [PASS] G-D0 input sha256: 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769  (data/external/gb1_olson2014/gb1_olson2014_doubles.csv target 89f8e394125d743b5db4bc455a64c59dc6d85f3f1d994f6de51af90f47cc4769)
+  [PASS] G-D0 input sha256: 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3  (data/external/gb1_olson2014/gb1_olson2014_singles.csv target 0b2e865e007d606d885d1e8df9f4548a85e4ceeedbff8ab860db7469d65dbfc3)
+  [PASS] G-D0 input sha256: ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4  (data/processed/gb1_background_roster.csv target ee2e7872c19530978f5e64fd3344c6a7597be025dcddb84bd50ac9230e79aae4)
+  [PASS] G-D0 input sha256: edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e  (data/processed/phase3/gb1/roster_v2.csv target edc259d460691c244ba293bc9e3e8675e11e2ce27638cf5cd88796524b7dbe4e)
+  [PASS] G-D0 input sha256: f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f  (data/processed/phase3/gb1/sequences.csv target f0d1d2d5b1376113568b17a04f5c9dfd9661517415c630e1d63a89b7032ca25f)
+  QUOTED SOURCE: frozen quantities + gates (prereg sections 2-4) (/Users/arnavchavan/Desktop/mthfr-context-dependence/docs/tasks/phase4-strengthening/prereg/GB1_LOCALITY_PREREG_v1.md, lines 9-22):
+       9| ## 2. Quantities (primary threshold: Input Count >= 25; all rows as in script 155; separation s = |pos(b) - pos(v)| in residues)
+      10| 
+      11| G-1 Per background: lambda_model,b = Spearman(|delta_b(v)|, s); lambda_data,b = Spearman(|e_b(v)|, s); d_b = lambda_model,b - lambda_data,b. Across the 400 backgrounds: the mean, SD and fraction negative of each, and a background-level bootstrap CI (10,000 draws, SEED 0) for the mean of each.
+      12| G-2 Separation strata: near s in 1-5, mid 6-15, far 16-54. Per background and stratum with at least 50 partners: rho_b,stratum = Spearman(delta_b, e_b). Across backgrounds per stratum: the mean with a background-level bootstrap CI; and the paired difference near - far with its CI.
+      13| G-3 (secondary) If a GB1 structure (RCSB PDB 1PGA, chain A, Calpha atoms) can be obtained and its numbering verified against the assayed sequence, repeat G-1 and G-2 with the Calpha distance in place of s, using strata < 8, 8-14 and > 14 Angstrom; otherwise skip and say why.
+      14| 
+      15| ## 3. Outcome words (numeric)
+      16| 
+      17| MODEL-DECAYS iff the CI of the mean lambda_model lies entirely below zero. DATA-DECAYS iff the CI of the mean lambda_data lies entirely below zero. LOCALITY-DIFFERS iff the CI of the mean d_b excludes zero. SEPARATION-MATTERS iff the CI of the mean paired difference (near - far) excludes zero; SEPARATION-NOT-RESOLVED otherwise, reported as "n cannot resolve this", never as "no relationship".
+      18| 
+      19| ## 4. Gates
+      20| 
+      21| G-D0 the prereg hash; the partner table reproduces script 155's 410,271 rows and its 400 rho_b values (max |diff| < 1e-12 on 10 sampled backgrounds) and the primary mean -0.009125. G-D1 no partner at a background's own position enters. G-D2 planted decay on synthetic scores: with |delta| built to decay with s plus noise the mean lambda_model is negative with its CI below zero; with |delta| independent of s it is not
+      22| (fire rate <= 0.15 over 100 draws). G-D3 bootstrap identity, draw-by-draw reference and Phase 1 CI reproduction.
+
+------------------------------------------------------------------------------
+QUOTED+EXECUTED SOURCE A -- script 155 lines 346-417 (data, F_B,wt pin, partner table)
+------------------------------------------------------------------------------
+  QUOTED SOURCE: partner-table construction (executed verbatim, G-DEC1) (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/155_gb1_regime_analysis.py, lines 346-417):
+     346|     dbl = pd.read_csv(DOUBLES)
+     347|     sgl = pd.read_csv(SINGLES)
+     348|     ros_full = pd.read_csv(ROSTER_FULL)
+     349|     ros400 = pd.read_csv(ROSTER2).sort_values("draw_order").reset_index(
+     350|         drop=True)
+     351|     seqs = pd.read_csv(SEQS_CSV).set_index("name")["sequence"].to_dict()
+     352|     print(f"\n  doubles {len(dbl):,} rows, singles {len(sgl):,} rows, "
+     353|           f"roster {len(ros_full):,}, roster_v2 {len(ros400)}")
+     354| 
+     355|     F_WT = WT_SEL / WT_IN
+     356|     sgl = sgl.copy()
+     357|     sgl["W"] = (sgl["sel_count"] / sgl["input_count"]) / F_WT
+     358|     chk = sgl[["pos", "mut", "W"]].merge(
+     359|         ros_full[["pos", "mut", "background_single_fitness_W"]],
+     360|         on=["pos", "mut"], how="inner")
+     361|     d_w = float(np.abs(chk["W"] - chk["background_single_fitness_W"]).max())
+     362|     gate("G-155-2 F_B,wt pin (recomputed singles W == roster column)",
+     363|          "PASS" if d_w < TOL_12 else "FAIL", f"max|diff| = {d_w:.3e} over "
+     364|          f"{len(chk):,} singles", f"tolerance {TOL_12}; F_B,wt = "
+     365|          f"{WT_SEL}/{WT_IN} = {F_WT:.9f}")
+     366|     print(f"  single W: min {sgl['W'].min():.4f}  median "
+     367|           f"{sgl['W'].median():.4f}  max {sgl['W'].max():.4f}; "
+     368|           f"singles with W <= 0: {int((sgl['W'] <= 0).sum())}")
+     369| 
+     370|     # ---------------- long partner table with e_b ------------------------
+     371|     rule("PARTNER TABLE -- every double row as (background, partner), "
+     372|          "e_b by script 73's construction")
+     373|     a = dbl.rename(columns={"pos1": "pos", "mut1": "mut"}).rename(
+     374|         columns={"pos2": "v_pos", "mut2": "v_mut"})
+     375|     b = dbl.rename(columns={"pos2": "pos", "mut2": "mut"}).rename(
+     376|         columns={"pos1": "v_pos", "mut1": "v_mut"})
+     377|     keep = ["pos", "mut", "v_pos", "v_mut", "input_count", "sel_count"]
+     378|     long = pd.concat([a[keep], b[keep]], ignore_index=True)
+     379|     same_pos = int((long["pos"] == long["v_pos"]).sum())
+     380|     print(f"  partner occurrences: {len(long):,} = 2 x {len(dbl):,} | "
+     381|           f"rows with v_pos == pos: {same_pos} (frozen G-2 structural: "
+     382|           f"must be 0)")
+     383|     long["W_double"] = (long["sel_count"] / long["input_count"]) / F_WT
+     384|     n_nonpos_W = int((long["W_double"] <= 0).sum())
+     385|     long = long.merge(sgl[["pos", "mut", "W"]].rename(
+     386|         columns={"pos": "v_pos", "mut": "v_mut", "W": "W_v"}),
+     387|         on=["v_pos", "v_mut"], how="left")
+     388|     long = long.merge(ros_full[["pos", "mut",
+     389|                                 "background_single_fitness_W"]].rename(
+     390|         columns={"pos": "pos", "mut": "mut", "background_single_fitness_W":
+     391|                  "W_bg"}), on=["pos", "mut"], how="left")
+     392|     miss_v = int(long["W_v"].isna().sum())
+     393|     miss_bg = int(long["W_bg"].isna().sum())
+     394|     long["e_b"] = long["W_double"] - long["W_v"] * long["W_bg"]  # f_wt = 1
+     395|     # partners at their own position are impossible (checked above); the
+     396|     # data-derived WT residue check (partner must be a real substitution)
+     397|     bad_mut = int((long["v_mut"].to_numpy()
+     398|                    == np.array([ASSAYED[int(p) - 1]
+     399|                                 for p in long["v_pos"]])).sum())
+     400|     print(f"  e_b = W_double - W_v * W_bg (f_wt = 1 by W construction)")
+     401|     print(f"  partner singles missing W_v: {miss_v} | backgrounds missing "
+     402|           f"W_bg: {miss_bg} | double rows with W <= 0: {n_nonpos_W:,} "
+     403|           f"(kept, never filtered)")
+     404|     print(f"  partner rows whose v_mut equals the WT residue at v_pos: "
+     405|           f"{bad_mut} (expected 0; such rows would drop from rho_b with a "
+     406|           f"printed count)")
+     407|     gate("partner-table structure", "PASS" if (same_pos == 0 and miss_v == 0
+     408|                                                and miss_bg == 0) else "FAIL",
+     409|          f"same-position {same_pos}, missing W_v {miss_v}, missing W_bg "
+     410|          f"{miss_bg}", "all must be 0")
+     411| 
+     412|     # restrict to the 400 roster backgrounds (merge keys stay pos/mut;
+     413|     # b_pos is an alias of the background's own position, added after)
+     414|     r4 = ros400[["background_id", "pos", "mut", "wt_aa"]]
+     415|     long = long.merge(r4, on=["pos", "mut"], how="inner")
+     416|     long["b_pos"] = long["pos"]
+     417|     print(f"  partner rows for the 400 roster backgrounds: {len(long):,}")
+
+  doubles 535,917 rows, singles 1,045 rows, roster 1,045, roster_v2 400
+  [PASS] G-155-2 F_B,wt pin (recomputed singles W == roster column) [155 transcript]: max|diff| = 4.441e-16 over 1,045 singles  (tolerance 1e-12; F_B,wt = 3041819/1759616 = 1.728683417)
+  single W: min 0.0021  median 0.6551  max 5.0219; singles with W <= 0: 0
+
+------------------------------------------------------------------------------
+PARTNER TABLE -- every double row as (background, partner), e_b by script 73's construction
+------------------------------------------------------------------------------
+  partner occurrences: 1,071,834 = 2 x 535,917 | rows with v_pos == pos: 0 (frozen G-2 structural: must be 0)
+  e_b = W_double - W_v * W_bg (f_wt = 1 by W construction)
+  partner singles missing W_v: 0 | backgrounds missing W_bg: 0 | double rows with W <= 0: 82,860 (kept, never filtered)
+  partner rows whose v_mut equals the WT residue at v_pos: 0 (expected 0; such rows would drop from rho_b with a printed count)
+  [PASS] partner-table structure [155 transcript]: same-position 0, missing W_v 0, missing W_bg 0  (all must be 0)
+  partner rows for the 400 roster backgrounds: 410,271
+  [PASS] G-D0 partner table rows (script 155 printed 410,271): 410,271  (target 410,271)
+
+------------------------------------------------------------------------------
+SCORES + DELTAS -- script 155's loader and delta build
+------------------------------------------------------------------------------
+  note: stray bg files ignored: 0
+  completed backgrounds (roster order): 400 of 400  | wt_arm present: True
+  QUOTED SOURCE: delta build + coverage gate (executed verbatim, G-DEC1) (/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/155_gb1_regime_analysis.py, lines 431-455):
+     431|     # coverage G-4 + delta table
+     432|     cov_fail, deltas_all = [], {}
+     433|     if wt_map is not None:
+     434|         for bid, df in completed:
+     435|             npos = int(df["position"].nunique())
+     436|             frac = npos / ELIGIBLE_PER_BG
+     437|             if frac < 0.95:
+     438|                 cov_fail.append((bid, npos, frac))
+     439|             m = df.merge(pd.DataFrame(
+     440|                 [(p, v, s) for (p, v), s in wt_map.items()],
+     441|                 columns=["position", "mut_aa", "score_wt"]),
+     442|                 on=["position", "mut_aa"], how="left")
+     443|             if m["score_wt"].isna().any():
+     444|                 cov_fail.append((bid, "wt join missing",
+     445|                                  float(m["score_wt"].isna().mean())))
+     446|             m["delta"] = m["score"] - m["score_wt"]
+     447|             if not np.isfinite(m["delta"]).all():
+     448|                 cov_fail.append((bid, "non-finite delta", None))
+     449|             deltas_all[bid] = {(int(r.position), r.mut_aa): float(r.delta)
+     450|                                 for r in m.itertuples()}
+     451|     gate("G-4 every completed background >= 95% of its 54 eligible "
+     452|          "positions", "PASS" if (wt_map is not None and not cov_fail)
+     453|          else ("FAIL" if wt_map is not None else "FAIL"),
+     454|          f"completed {len(completed)}, coverage failures {len(cov_fail)}",
+     455|          str(cov_fail[:3]) if cov_fail else "all complete")
+  [PASS] G-4 every completed background >= 95% of its 54 eligible positions [155 transcript]: completed 400, coverage failures 0  (all complete)
+  [POST-HOC FIX, DISCLOSED] ASSAYED bound from transcript env after smoke NameError at G-3 (same object, no gate/threshold change)
+
+------------------------------------------------------------------------------
+rho_b RECOMPUTE -- script 155's loop (threshold 25, floor 100, delta lookup), compared with the stored table
+------------------------------------------------------------------------------
+  backgrounds with rho_b: 400 | excluded by 100-floor: 0 | partner rows dropped for missing delta: 0
+  [PASS] G-D0 rho_b reproduces stored table on 10 sampled backgrounds: max|diff| = 8.327e-17 (roster positions [6, 16, 29, 69, 106, 121, 200, 249, 325, 332])  (tolerance 1e-12)
+  [context] all 400 backgrounds: max|diff| = 9.975e-17 (informational; the gate is the frozen 10)
+  [PASS] G-D0 primary mean rho_b == -0.009125: stored -0.009125049245666152, recomputed -0.009125049245666152  (target -0.009125 (+/- 1e-06 at 6 dp))
+  [reconcile] n vs stored n_partners_t25: max|diff| = 0 over 400 backgrounds (0 expected; reconcile before interpreting if not)
+
+------------------------------------------------------------------------------
+G-D1 -- NO PARTNER AT A BACKGROUND'S OWN POSITION
+------------------------------------------------------------------------------
+  [PASS] G-D1 own-position partners in the analysis rows: 0 rows  (structural in the doubles table (pos1 != pos2) + re-checked here; transcript same_pos = 0)
+
+------------------------------------------------------------------------------
+G-D2 -- PLANTED DECAY / PLANTED NULL ON SYNTHETIC |delta| (real geometry; G-DEC6)
+------------------------------------------------------------------------------
+  DECAY arm: |delta_syn| = exp(-s/10)*(1+0.25|Z|), default_rng(3), roster order; 400/400 finite lambdas
+    mean lambda_model_syn = -0.992846  CI95 = [-0.993133, -0.992542] (300 draws)  frac<0 = 1.0000
+  [PASS] G-D2 decay arm: mean lambda_model negative, CI below zero: CI = [-0.993133, -0.992542]  (MODEL-DECAYS machinery fires on a decaying construction)
+  NULL arm: 100 datasets, iid |Z| (half-normal, independent of s), one default_rng(1000) stream; fire = MODEL-DECAYS decision fires
+    fires (CI below 0) = 4/100 = 0.040 | CI above 0 = 1 | CI includes 0 = 95 | mean of null means = -0.000104 (must centre on 0 -- printed as its own check)
+  [PASS] G-D2 null arm fire rate <= 0.15 over 100 draws: 0.040  (type-I calibration of the MODEL-DECAYS machinery)
+
+------------------------------------------------------------------------------
+G-D3 -- BOOTSTRAP IDENTITY, DRAW-BY-DRAW REFERENCE, PHASE 1 CI (hard)
+------------------------------------------------------------------------------
+  finite lambdas: lambda_model 400/400, lambda_data 400/400 (NaN = constant vector or n < 3; NaN lambdas across both: 0)
+  [PASS] G-D3(i) identity mean lambda_model: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean lambda_model: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity mean lambda_data: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean lambda_data: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity mean d_b: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean d_b: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity mean rho_b,stratum [near]: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [near]: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity mean rho_b,stratum [mid]: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [mid]: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity mean rho_b,stratum [far]: |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [far]: vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+  [PASS] G-D3(i) identity paired mean (near - far): |diff| = 0.000e+00  (every unit once == point estimate)
+  [PASS] G-D3(ii) draw-by-draw paired mean (near - far): vs background_boot max|diff| 0.000e+00 over 300 draws; vs slow reference 0.000e+00 over 300 draws  (tolerance 1e-12)
+
+------------------------------------------------------------------------------
+G-D3(iii) -- PHASE 1 CI REPRODUCTION ON THE MTHFR ANCHOR ROWS (fixed N=10000)
+------------------------------------------------------------------------------
+  anchor rows 10,757 / 654 positions; 10000 draws in 15.7s (10000 finite)
+  lo got -0.1173334458953319 target -0.1173334458953319 |diff| = 0.000e+00
+  hi got -0.05951138449511738 target -0.05951138449511738 |diff| = 0.000e+00
+  [PASS] G-D3(iii) Phase 1 CI reproduces (each endpoint < 1e-9): |diff| lo = 0.000e+00, hi = 0.000e+00  (tolerance 1e-09; Phase 1 published interval)
+
+------------------------------------------------------------------------------
+G-1 -- DECAY OF |delta| AND |e_b| WITH SEPARATION s (frozen section 2)
+------------------------------------------------------------------------------
+  Per background: lambda_model = Spearman(|delta_b(v)|, s), lambda_data = Spearman(|e_b(v)|, s), d_b = difference; across-background stats + background-level CI (N_BOOT = 300, SEED 0).
+
+    [lambda_model (MODEL shifts)] n = 400 backgrounds
+      mean = -0.271233756   SD(ddof=0) = 0.132617417   fraction negative = 0.9650
+      CI95 of the mean = [-0.284976953, -0.257823768] (300/300 finite draws) PROVISIONAL (smoke)
+
+    [lambda_data (measured epistasis)] n = 400 backgrounds
+      mean = +0.036680324   SD(ddof=0) = 0.108869710   fraction negative = 0.3775
+      CI95 of the mean = [+0.026236575, +0.047019870] (300/300 finite draws) PROVISIONAL (smoke)
+
+    [d_b = model - data] n = 400 backgrounds
+      mean = -0.307914080   SD(ddof=0) = 0.155916580   fraction negative = 0.9650
+      CI95 of the mean = [-0.324568978, -0.292243338] (300/300 finite draws) PROVISIONAL (smoke)
+
+  OUTCOME WORD (frozen section 3): MODEL-DECAYS FIRES -- CI of mean lambda_model [-0.284976953, -0.257823768] lies entirely below zero PROVISIONAL (smoke)
+  OUTCOME WORD (frozen section 3): DATA-DECAYS does not fire -- CI of mean lambda_data [+0.026236575, +0.047019870] does not lie entirely below zero PROVISIONAL (smoke)
+  OUTCOME WORD (frozen section 3): LOCALITY-DIFFERS FIRES -- CI of mean d_b [-0.324568978, -0.292243338] excludes zero PROVISIONAL (smoke)
+
+------------------------------------------------------------------------------
+G-2 -- rho_b WITHIN SEPARATION STRATA (frozen section 2)
+------------------------------------------------------------------------------
+  Per background x stratum with >= 50 partners: rho_b,stratum = Spearman(delta_b, e_b) (SIGNED, as frozen); across-background mean + background-level CI; paired near - far with CI.
+
+    [near: s 1-5] entering backgrounds = 400/400 | partner rows = 70,747
+      mean rho_b,stratum = -0.022121012  SD(ddof=0) = 0.184125002  fraction negative = 0.5600
+      CI95 of the mean = [-0.040178051, -0.005627691] (300/300 finite draws) PROVISIONAL (smoke)
+
+    [mid: s 6-15] entering backgrounds = 400/400 | partner rows = 120,303
+      mean rho_b,stratum = -0.010881286  SD(ddof=0) = 0.138424156  fraction negative = 0.5025
+      CI95 of the mean = [-0.023717207, +0.002425975] (300/300 finite draws) PROVISIONAL (smoke)
+
+    [far: s 16-54] entering backgrounds = 399/400 | partner rows = 202,018
+      mean rho_b,stratum = +0.000268630  SD(ddof=0) = 0.126589131  fraction negative = 0.4787
+      CI95 of the mean = [-0.012575263, +0.012224748] (300/300 finite draws) PROVISIONAL (smoke)
+
+    [paired near - far] backgrounds with BOTH strata = 399
+      mean paired difference = -0.022238860  SD(ddof=0) = 0.214089446
+      CI95 of the mean = [-0.044642333, -0.003170690] (300/300 finite draws) PROVISIONAL (smoke)
+  OUTCOME WORD (frozen section 3): SEPARATION-MATTERS -- CI of the mean paired difference (near - far) [-0.044642333, -0.003170690] excludes zero PROVISIONAL (smoke)
+
+------------------------------------------------------------------------------
+G-3 (SECONDARY, OPTIONAL) -- CALPHA DISTANCE REPEAT (attempted only after G-1/G-2 are printed)
+------------------------------------------------------------------------------
+  download: https://files.rcsb.org/download/1PGA.pdb  status=200  bytes=59,049  sha256=908f8dbf3bb7567f36eec4683eb8cfab5ac0c011dfee1b9c940cab7f482bc841  saved data/external/rcsb/1PGA.pdb
+  numbering diagnostic (informational): chain A CA sequence len 56 vs ASSAYED len 56; 1 differing position(s): pos 2: PDB T / assayed Q
+  G-3 SKIPPED: numbering not verifiable: no unique contiguous 56-mer or 55-mer match of the assayed sequence in chain A (G-DEC8) -- skip
+
+------------------------------------------------------------------------------
+EXTRA CHECK AND FINAL GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] [extra] no torch/esm/thermompnn imported: True  (planning rule 1 (Module G))
+==============================================================================
+A6 GATE TABLE
+==============================================================================
+  [PASS] G-D0 prereg sha256
+  [PASS] G-D0 input sha256
+  [PASS] G-D0 input sha256
+  [PASS] G-D0 input sha256
+  [PASS] G-D0 input sha256
+  [PASS] G-D0 input sha256
+  [PASS] G-155-2 F_B,wt pin (recomputed singles W == roster column) [155 transcript]
+  [PASS] partner-table structure [155 transcript]
+  [PASS] G-D0 partner table rows (script 155 printed 410,271)
+  [PASS] G-4 every completed background >= 95% of its 54 eligible positions [155 transcript]
+  [PASS] G-D0 rho_b reproduces stored table on 10 sampled backgrounds
+  [PASS] G-D0 primary mean rho_b == -0.009125
+  [PASS] G-D1 own-position partners in the analysis rows
+  [PASS] G-D2 decay arm: mean lambda_model negative, CI below zero
+  [PASS] G-D2 null arm fire rate <= 0.15 over 100 draws
+  [PASS] G-D3(i) identity mean lambda_model
+  [PASS] G-D3(ii) draw-by-draw mean lambda_model
+  [PASS] G-D3(i) identity mean lambda_data
+  [PASS] G-D3(ii) draw-by-draw mean lambda_data
+  [PASS] G-D3(i) identity mean d_b
+  [PASS] G-D3(ii) draw-by-draw mean d_b
+  [PASS] G-D3(i) identity mean rho_b,stratum [near]
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [near]
+  [PASS] G-D3(i) identity mean rho_b,stratum [mid]
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [mid]
+  [PASS] G-D3(i) identity mean rho_b,stratum [far]
+  [PASS] G-D3(ii) draw-by-draw mean rho_b,stratum [far]
+  [PASS] G-D3(i) identity paired mean (near - far)
+  [PASS] G-D3(ii) draw-by-draw paired mean (near - far)
+  [PASS] G-D3(iii) Phase 1 CI reproduces (each endpoint < 1e-9)
+  [PASS] [extra] no torch/esm/thermompnn imported
+
+  31/31 checks PASS, 0 FAIL.
+
+OUTCOME WORDS (frozen section 3; these are the result of this block):
+  G-1  MODEL-DECAYS      : FIRES   (CI [-0.284976953, -0.257823768]) PROVISIONAL (smoke)
+  G-1  DATA-DECAYS       : does not fire   (CI [+0.026236575, +0.047019870]) PROVISIONAL (smoke)
+  G-1  LOCALITY-DIFFERS  : FIRES   (CI [-0.324568978, -0.292243338]) PROVISIONAL (smoke)
+  G-2  paired near-far   : SEPARATION-MATTERS   (CI [-0.044642333, -0.003170690]) PROVISIONAL (smoke)
+  G-3  : SKIPPED -- numbering not verifiable: no unique contiguous 56-mer or 55-mer match of the assayed sequence in chain A (G-DEC8) -- skip
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * GB1 only (frozen section 5): no sentence here reads for or against any MTHFR or RBD
+      result -- systems, backgrounds and platforms differ.
+    * cached scores; the Phase 3 results for these 400 backgrounds were already seen
+      (prereg line 3); reproduction of script 155's rho_b is a unit test, not new evidence.
+    * background-level bootstrap treats 400 backgrounds as independent; all deltas
+      share one WT arm (disclosed, not modelled).
+    * G-1 uses |delta|, |e_b| vs s; G-2 uses SIGNED delta, e_b within strata (frozen
+      wording) -- not interchangeable.
+    * G-D2 is a mechanics check (one fixed-seed decay construction + 100 null draws),
+      not an estimate; G-3 drops rows without a Calpha atom (count printed).
+
+  elapsed 26.7s
+
+A6 RESULT: GATE PASS -- exit 0

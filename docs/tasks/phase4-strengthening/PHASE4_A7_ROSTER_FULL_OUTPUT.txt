@@ -1,0 +1,107 @@
+
+==========================================================================
+170 -- Module N: neighbour-arm geometry + roster (A7a/A7b)
+==========================================================================
+  N_BOOT=10000 SEED=0 -- BOTH UNUSED here: no bootstrap, no randomness beyond the roster draw, whose seed is FIXED at 0 by the amendment (N-DEC5).
+
+PRE-REGISTERED DECISIONS (printed before any geometry metric; full text in this script's docstring):
+  N-DEC1: v1 + Amendment 1 both sha-pinned; amendment applied verbatim; v1 never edited.
+  N-DEC2: script 139 loader imported torch-free; eligible = frame n resolved in 6FCX chain A minus 222; cells via p4c.cell_labels + C5 = gap with d3<=12; listing written before any draw.
+  N-DEC3: G-N0: prereg/amendment/stored-d3 hashes; d3 for the 67 resolved nulls max|diff| < 1e-6; print-before-draw flagged; no torch.
+  N-DEC4: alanine-first only where (position,V) is NOT among the 96; verified and printed for every eligible alanine in C1/C2/C5; skipped where it exists.
+  N-DEC5: one default_rng(0) stream (SEED env not used); C1 -> C2 -> C5 ascending, one allowed-set mutant draw per position; C3 = cap 10, position draws without replacement then mutant; stream order C1->C2->C5->C3 is this script's disclosed interpretation.
+  N-DEC6: second_at_position flagged; such positions stay eligible with a non-banned residue.
+  N-DEC7: roster schema + bg_id N_<pos><wt><mut>; round-robin score order C1,C2,C5,C3 ascending, balance gated; written and hashed before scoring; re-runs must reproduce byte-identical or FAIL.
+  N-DEC8: NB = new C1+C2+C5 + the six existing d3<=12 nulls; |NB| printed before scoring; UNDERPOWERED iff < 30.
+  N-DEC9: expected passes = 455 - 1[own in H]; N_BOOT/SEED printed, unused.
+
+--------------------------------------------------------------------------
+G-N0 -- INPUTS, HASHES AND THE LOADER (hard)
+--------------------------------------------------------------------------
+  [PASS] G-N0 prereg v1 sha256: 167847a97aca32b9...
+  [PASS] G-N0 Amendment 1 sha256: f56134f764232169... (saved verbatim)
+  [PASS] G-N0 stored d3 file sha256: 69914df9c60ba5a9...
+  [PASS] G-N0 torch not in sys.modules after this script's imports: checked again at the end after the s139/s125 imports
+  [PASS] G-N0 script 139 loader importable torch-free: importlib import of s139 OK
+  [PASS] G-N0 frame = 654 positions: 654
+Length check passed: 656
+Position 222 check passed: Ala
+
+ELIGIBLE-POSITION COUNTS PER CELL (printed BEFORE any draw; full listing written to eligible_cells_v1.csv):
+  C1    :   12
+  C2    :   13
+  C5    :   15
+  C3    :   24
+  C4    :  450
+  (gap) :   81
+  total eligible: 595 | positions with d3 <= 12: 40 (planning figure: roughly 40-60) | C3 eligible: 24 (planning: may be small/empty)
+  new backgrounds per cell BEFORE the draw (= min(eligible, cap)): C1 12 C2 13 C5 15 C3 10 | roster total 50
+  |NB| BEFORE the draw = new C1+C2+C5 (40) + six existing nulls (6) = 46 -> >= 30, not underpowered by construction
+  wrote data/processed/phase4/neigh/eligible_cells_v1.csv sha256=db86399b8858e890...
+  [PASS] G-N1 existing roster = 96 unique backgrounds: 96 rows
+
+AMENDMENT 1 -- ALANINE-FIRST VERIFICATION (every eligible alanine in C1/C2/C5; (position, V) looked up in data/processed/phase2_arm_roster.csv):
+  C1 position 220: (position, V) EXISTS among the 96 -> alanine-first SKIPPED (Arm V already covers it)
+  C2 position 155: (position, V) EXISTS among the 96 -> alanine-first SKIPPED (Arm V already covers it)
+  C2 position 175: (position, V) EXISTS among the 96 -> alanine-first SKIPPED (Arm V already covers it)
+  C5 position 195: (position, V) EXISTS among the 96 -> alanine-first SKIPPED (Arm V already covers it)
+
+--------------------------------------------------------------------------
+ROSTER DRAW (amendment items 2-3; fitness-blind)
+--------------------------------------------------------------------------
+  C3: 24 eligible > cap 10 -- 10 positions drawn without replacement (frozen section 3)
+  [PASS] G-N1 re-run reproduces the frozen roster byte-identically: 675a24f196387856... vs previous 675a24f196387856...
+
+--------------------------------------------------------------------------
+G-N1 -- ROSTER WRITTEN, HASHED, RE-READ (hard)
+--------------------------------------------------------------------------
+  [PASS] G-N1 roster sha256 matches sidecar after re-read: 675a24f196387856...
+  [PASS] G-N1 re-read equals the drawn roster: 50 rows
+  [PASS] G-N1 unique bg_ids: 50/50
+  [PASS] G-N1 no duplicate (position, mutant) pairs: 50 unique pairs
+  [PASS] G-N1 no pair among the 97 banned (96 existing + A222V): 0 violations
+  [PASS] G-N1 per-cell counts = printed pre-draw counts: C1 12/12 (eligible 12) | C2 13/13 (eligible 13) | C5 15/15 (eligible 15) | C3 10/10
+  [PASS] G-N1 second_at_position flags correct: 7 flagged
+  [PASS] G-N1 round-robin score order balanced at every prefix: max cell-count difference <= 1 over every prefix of active cells
+
+--------------------------------------------------------------------------
+NB, CELLS AND EXPECTED PASSES (printed BEFORE scoring)
+--------------------------------------------------------------------------
+  existing null G_I192T    pos  192 d3   5.058 <= 12: True
+  existing null AV_220     pos  220 d3   6.480 <= 12: True
+  existing null AV_155     pos  155 d3   8.639 <= 12: True
+  existing null AV_195     pos  195 d3  10.150 <= 12: True
+  existing null G_L178T    pos  178 d3  10.313 <= 12: True
+  existing null AV_175     pos  175 d3  10.537 <= 12: True
+  [PASS] G-N1 the six NB nulls all have d3 <= 12 and are resolved: frozen section 5 list verified against the geometry
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] G-N1 H = 455 positions: 455
+
+  new backgrounds per cell:
+    C1: 12
+    C2: 13
+    C5: 15
+    C3: 10
+  NB = new C1+C2+C5 (40) + six existing nulls (6) = 46
+  |NB| = 46 >= 30 -> not underpowered by construction (the amendment item 5 coverage rule still applies after scoring: NB members must each reach >= 95% of eligible H).
+  expected passes: roster 22719 (= 50 backgrounds x ~455 minus own-in-H); NB 20900; per background [454, 455]
+  [PASS] G-N0 torch NOT loaded anywhere in this process: post-import check: 139/125/lib all import torch-free
+
+==========================================================================
+SUMMARY
+==========================================================================
+  19/19 checks PASS, 0 FAIL.
+
+  roster -> data/processed/phase4/neigh/roster_v1.csv (50 rows, sha256 675a24f1963878568e65b6d630e25e9ce649627c3f02ab0d5e65ec438f2d85d6)
+  cells  -> data/processed/phase4/neigh/eligible_cells_v1.csv (595 rows, sha256 db86399b8858e890fd11cb2c3e7debd2857f66f33eea7d87c769862b8408ba22)
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * fitness-blind roster: geometry + sequence + the 96-roster only; no rho/epistasis quantity entered any decision.
+    * d3 is a CA-CA distance in a 2.50 A crystal structure; 'resolved' = chain-A Calpha exists; no side-chain geometry.
+    * the roster freezes WHICH backgrounds are scored, not their scores; analysis runs only after scoring (amendment item 5).
+    * stream order C1->C2->C5->C3 and rng.integers indexing are this script's disclosed interpretations of the amendment.
+
+A7a/A7b RESULT: GATE PASS -- exit 0
+  elapsed 0.1s
