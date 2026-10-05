@@ -1,0 +1,226 @@
+==============================================================================
+176 -- Task C2 INDEPENDENT recomputation (session 4b)
+==============================================================================
+N_BOOT=300 SEED=0 N_SIM=100 N_STAB=200 (N_SIM/N_STAB are the re-draw sizes this session uses)
+
+PRE-REGISTERED DECISIONS (full text in the docstring, written before this script's first run):
+  C2-DEC1: a disagreement is REPORTED, never repaired; the module is stopped and both numbers printed; no tolerance loosened, no statistic swapped for one that agrees
+  C2-DEC2: tolerances: 1e-9 on rho/partial/AUROC/cell means, 1e-8 across algebraically equal routes, exact on counts and p-values; bootstrap CIs are REPORTED SIDE BY SIDE, never gated, because my draw ids differ from the staged ones by construction
+  C2-DEC3: resampling units: POSITION clusters inside a background, BACKGROUNDS for GB1; backgrounds are never resampled to make a p-value
+  C2-DEC4: this script computes numbers and interprets nothing; signs are read only through SIGN_CONVENTION.md, in C3
+  C2-DEC5: the M-3/M-4 simulation generator uses the project's own unmodified pipeline because the frozen block REQUIRES it; the statistics, percentiles and words are mine
+  C2-DEC6: anything not recomputable because the data does not exist is printed NOT-COMPUTABLE with the reason; never estimated
+  C2-DEC7: read-only with respect to every real output; writes only this script and its stdout redirect
+  independence: no Phase-4 staged script is imported or executed and scripts/lib/phase4_common.py is NEVER imported; every CSV is read with float_precision='round_trip'
+
+==============================================================================
+MODULE S -- sign convention note (script 166); targets: rho(delta,S_W) -0.3238, rho(own_e.b,S_W) +0.0854
+==============================================================================
+  [frame] task32 rows with finite own_e_b: 10757 rows / 654 positions
+  [frame] H by script 122's rule (not in the F1 AE or W frames): 455 positions / 7526 rows   (frozen: 455 / 7,526)
+  [frame] max|delta_esm - (S_A - S_W)| = 2.220e-16  (C2-DEC8; delta_esm is the primary)
+  [OK  ] S-3 Spearman(delta, S_W): mine = -0.3238 | staged = -0.3238 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] S-3 Spearman(own_e.b, S_W): mine = 0.0854 | staged = 0.0854 | diff = 0.000e+00 (tol 1e-09) 
+  context: Spearman(own_e.b, base functionality) = -0.1471; Spearman(delta, base) = -0.1877
+  S-2: se_e_b not a column of task32; the worked example is script 166's, which draws it from the fit table. Not recomputed here (reported, not guessed).
+  S-3 2x2 (counts / mean delta) by sign of own_e.b:
+    overall          own_e.b>0: n= 5233 mean delta +0.02451 | own_e.b<0: n= 5524 mean delta +0.04069
+    low S_W tertile  own_e.b>0: n= 1543 mean delta +0.06055 | own_e.b<0: n= 2043 mean delta +0.06986
+    mid S_W tertile  own_e.b>0: n= 1710 mean delta +0.02856 | own_e.b<0: n= 1875 mean delta +0.04228
+    high S_W tertile own_e.b>0: n= 1980 mean delta -0.00708 | own_e.b<0: n= 1606 mean delta +0.00174
+  LIMITATION: 2x2 panels are descriptive (script 166's own printed limitation): no interval, no p-value, one dataset, and the sign-of-own_e.b grouping is attenuated by estimated-SE error.
+
+==============================================================================
+MODULE N -- neighbour arm: p_NB, the Amendment 3 spline partials and their CIs, cell means
+==============================================================================
+  frame 10757 rows / 654 positions; H 7526 rows / 455 positions
+  [OK  ] rho_A222V on H: mine = -0.09002168303339808 | staged = -0.090021683 | diff = 3.340e-11 (tol 1e-09) (A222V arm, H, own pos excluded)
+  [C2-DEC8] the same value with round_trip float parsing: -0.09002167426572136 | diff 8.768e-09 (4 rank flips, as in module L)
+  [OK  ] rho_A222V on H: mine = -0.09002168303339808 | staged = -0.090021683 | diff = 3.340e-11 (tol 1e-09) (A222V arm, H, own pos excluded)
+
+  |NB| = 46 (new C1+C2+C5 = 40, existing = 6)
+
+  all 46 rho_b (sorted ascending), the five at or below rho_A222V = -0.090021683 marked:
+    N_252_IL     cell C5             own pos  252  rho_b -0.096704385  <= rho_A222V
+    N_191_DR     cell C5             own pos  191  rho_b -0.095939533  <= rho_A222V
+    AV_220       cell existing-d3<=12 own pos  220  rho_b -0.094480281  <= rho_A222V
+    N_195_AT     cell C5             own pos  195  rho_b -0.093922300  <= rho_A222V
+    AV_195       cell existing-d3<=12 own pos  195  rho_b -0.093420822  <= rho_A222V
+    AV_155       cell existing-d3<=12 own pos  155  rho_b -0.088806375
+    N_220_AD     cell C1             own pos  220  rho_b -0.077530923
+    N_251_PL     cell C5             own pos  251  rho_b -0.076434631
+    G_L178T      cell existing-d3<=12 own pos  178  rho_b -0.074355887
+    N_250_CH     cell C5             own pos  250  rho_b -0.070927388
+    N_181_HK     cell C2             own pos  181  rho_b -0.064414491
+    N_224_FT     cell C1             own pos  224  rho_b -0.063481488
+    N_193_CF     cell C5             own pos  193  rho_b -0.063343209
+    N_183_RM     cell C5             own pos  183  rho_b -0.063309227
+    N_190_FS     cell C5             own pos  190  rho_b -0.062731863
+    AV_175       cell existing-d3<=12 own pos  175  rho_b -0.061862861
+    N_218_VG     cell C1             own pos  218  rho_b -0.058826044
+    N_156_LN     cell C2             own pos  156  rho_b -0.057644215
+    N_196_GA     cell C5             own pos  196  rho_b -0.056675512
+    N_155_AP     cell C2             own pos  155  rho_b -0.055858402
+    N_178_LS     cell C2             own pos  178  rho_b -0.055205570
+    N_177_DH     cell C2             own pos  177  rho_b -0.049724708
+    N_176_VW     cell C2             own pos  176  rho_b -0.041899261
+    N_175_AN     cell C2             own pos  175  rho_b -0.040027248
+    N_182_IV     cell C5             own pos  182  rho_b -0.038694338
+    N_249_TC     cell C5             own pos  249  rho_b -0.032163588
+    N_217_KG     cell C1             own pos  217  rho_b -0.031509340
+    N_248_IN     cell C5             own pos  248  rho_b -0.031379732
+    N_223_DF     cell C1             own pos  223  rho_b -0.030679906
+    G_I192T      cell existing-d3<=12 own pos  192  rho_b -0.029689252
+    N_194_VC     cell C5             own pos  194  rho_b -0.029337846
+    N_192_IV     cell C5             own pos  192  rho_b -0.028319133
+    N_225_IQ     cell C1             own pos  225  rho_b -0.028305430
+    N_188_DA     cell C5             own pos  188  rho_b -0.026063248
+    N_216_EM     cell C1             own pos  216  rho_b -0.024685949
+    N_180_KA     cell C2             own pos  180  rho_b -0.022827618
+    N_221_GA     cell C1             own pos  221  rho_b -0.002881340
+    N_46_RL      cell C2             own pos   46  rho_b -0.001560781
+    N_226_IW     cell C1             own pos  226  rho_b -0.001279012
+    N_154_MR     cell C2             own pos  154  rho_b +0.003031436
+    N_214_LV     cell C1             own pos  214  rho_b +0.004362199
+    N_153_IY     cell C2             own pos  153  rho_b +0.004378965
+    N_215_KQ     cell C1             own pos  215  rho_b +0.013138970
+    N_179_VP     cell C2             own pos  179  rho_b +0.013948772
+    N_152_NP     cell C2             own pos  152  rho_b +0.019118616
+    N_219_SA     cell C1             own pos  219  rho_b +0.032196579
+  [OK  ] p_NB(neg): mine = 0.1276595744680851 | staged = 0.1276595744680851 | diff = 0.000e+00 (tol 1e-09) = (1 + 5) / (1 + 46)
+  [OK  ] p_NB(abs): mine = 0.8936170212765957 | staged = 0.8936170212765957 | diff = 0.000e+00 (tol 1e-09) = (1 + 41) / (1 + 46), tail |rho_b| <= |rho_A222V|
+  *** TAIL FINDING (reported, not reconciled): the two staged Phase-4 modules use OPPOSITE tails for the identically named 'abs' p-value.
+      the neighbour arm (script 172, line 475: `abs(v) > abs(rho_a_H)`) gives 0.893617 = 42/47;
+      scripts/lib/phase3_common.p_spec (used by 167 and 174) counts >= instead and would give 0.127660.
+      The NEIGHBOUR prereg line reads 'p_NB(abs) uses |rho|', i.e. the same formula with |rho| substituted, which IS the <= tail -- so 172 follows its prereg literally and phase3_common does not. No frozen word uses either value (the section-5 word uses p_NB(neg)). Flagged for C4; NOT silently reconciled here.
+  [OK  ] count of NB members at or below rho_A222V: mine = 5 | staged = 5 | diff = 0.000e+00 (tol 0e+00) 
+  frozen section-5 word from MY numbers: REGION-LIKE (staged: REGION-LIKE)
+  [SAME] section-5 word: mine = REGION-LIKE | staged = REGION-LIKE
+  position-collapsed sensitivity: 40 distinct positions, k = 3, p = 0.097561 (staged 0.097561 = 40/410 -- see log)
+    NOTE the staged sensitivity pools the 40 POSITIVES of the 40 new backgrounds plus 6 existing = 40 positions with k = 0; mine pools all 40 own positions of all 46 members. Different sets, reported not reconciled (the staged run's own number is quoted above).
+
+  cell means of rho_b (pool P = the 50 new + the 67 resolved existing nulls with d3):
+    resolved NULLS recomputed: 67 (frozen: 67)
+    their cells: {'': 7, 'C1': 1, 'C2': 3, 'C3': 3, 'C4': 51, 'C5': 2}   (staged: {'C1': 1, 'C2': 3, 'C3': 3, 'C4': 51, 'C5': 2, 'gap': 7})
+    the 10 new backgrounds outside NB (cells C3) also given a rho_b, because pool P contains them: ['C3']
+    pool P = 117 = 50 new + 67 existing; its cells {'': 7, 'C1': 13, 'C2': 16, 'C3': 13, 'C4': 51, 'C5': 17}   (staged: C1 13, C2 16, C5 17, C3 13, C4 51)
+  [OK  ] cell mean C1: mine = -0.027997074207488377 | staged = -0.027997 | diff = 7.421e-08 (tol 5e-07) (n = 13 over pool P; staged prints 6 dp, so the gate is half a unit of the last printed digit -- C2-DEC9)
+  [OK  ] cell mean C2: mine = -0.03585685173717085 | staged = -0.035857 | diff = 1.483e-07 (tol 5e-07) (n = 16 over pool P; staged prints 6 dp, so the gate is half a unit of the last printed digit -- C2-DEC9)
+  [OK  ] cell mean C5: mine = -0.0581797650868735 | staged = -0.05818 | diff = 2.349e-07 (tol 5e-07) (n = 17 over pool P; staged prints 6 dp, so the gate is half a unit of the last printed digit -- C2-DEC9)
+  [OK  ] contrast C2 - C4: mine = -0.036890448722655386 | staged = -0.03689 | diff = 4.487e-07 (tol 5e-07) (C2 n=16, C4 n=51; staged CI [-0.056108, -0.017307])
+
+  Amendment 3 flexible-control partial Spearman on pool P (my own spline basis + my own bootstrap):
+    pool used: 117 backgrounds (all with finite d3 and dseq)
+    knots (pool 25/50/75 of the raw control): dseq [26.0, 67.0, 163.0]  d3 [10.161, 20.112, 36.759]  (staged dseq basis knots [1.0, 26.0, 67.0, 163.0, 428.0], d3 [3.805, 10.161, 20.112, 36.759, 76.194] = boundary knots added by cr())
+  [OK  ] partial rho_b ~ d3 | spline(dseq)  [PRIMARY]: mine = 0.19229402959639755 | staged = 0.192294 | diff = 2.960e-08 (tol 5e-07) (staged prints 6 dp; C2-DEC9)
+  [OK  ] partial rho_b ~ dseq | spline(d3) [PRIMARY]: mine = -0.05375752886048806 | staged = -0.053758 | diff = 4.711e-07 (tol 5e-07) (staged prints 6 dp; C2-DEC9)
+    my background-level bootstrap CI (300 finite of 300 draws, refit per resample as Amendment 3 requires):
+      d3  partial +0.192294 CI [-0.019131, +0.354860]   | staged +0.192294 CI [-0.018716, +0.379290]
+      dseq partial -0.053758 CI [-0.237036, +0.175007]   | staged -0.053758 CI [-0.276061, +0.167518]
+    CIs are REPORTED SIDE BY SIDE, not gated (C2-DEC2: my draw ids differ from the staged ones, so only the point estimate is gated).
+    frozen section-6 word from MY numbers: NEITHER-RESOLVED (staged: NEITHER-RESOLVED)
+  [SAME] section-6 word: mine = NEITHER-RESOLVED | staged = NEITHER-RESOLVED
+
+==============================================================================
+MODULE L -- model ladder, the 650M column (150M/35M: NOT-COMPUTABLE, C2-DEC6 -- night B never ran)
+==============================================================================
+  cached rho table: 96 backgrounds (the 96 Phase 2 ones; A222V's rho is recomputed here from the raw score file, not read from it)
+  [frame] task32 rows with finite own_e_b: 10757 rows / 654 positions
+  [frame] H by script 122's rule (not in the F1 AE or W frames): 455 positions / 7526 rows   (frozen: 455 / 7,526)
+  [frame] max|delta_esm - (S_A - S_W)| = 2.220e-16  (C2-DEC8; delta_esm is the primary)
+  [OK  ] rho_A222V on H (650M): mine = -0.09002168303339808 | staged = -0.090021683 | diff = 3.340e-11 (tol 1e-09) 
+  [C2-DEC8 float-parser sensitivity] the same statistic from the same files parsed with round_trip instead of the default parser: -0.09002167426572136 | diff 8.768e-09
+    cause measured, not assumed: the two parses differ by up to 3.55e-15 per value, which flips 4 of 7,526 ranks on this view. The DEFAULT parse is bit-identical to the task32 columns (the canonical cached construction the frozen block names), so it is the primary.
+  null set N = 78 backgrounds (V u G)
+  [OK  ] p_spec_H(neg): mine = 0.050633 | staged = 0.050633 | diff = 0.000e+00 (tol 1e-09) = (1 + 3) / (1 + 78)
+  [OK  ] p_spec_H(abs): mine = 0.050633 | staged = 0.050633 | diff = 0.000e+00 (tol 1e-09) = (1 + 3) / (1 + 78), tail |rho_b| >= |rho_A222V|
+  beaters: ['AV_195', 'AV_220', 'G_P254F'] (staged: ['AV_195', 'AV_220', 'G_P254F'])
+  [C2-DEC8] across all 78 null rho_b the parser changes rho by at most 1.418e-07, and p_spec_H(neg) k by 0 (3 -> 3): no count, p-value, CI or word is affected.
+  [OK  ] partial rho_H | S_W (650M): mine = -0.06720891007058159 | staged = -0.06720891 | diff = 7.058e-11 (tol 1e-09) (target is A4's 9-dp value; script 174 PRINTS this at 6 dp as -0.067209, which is why the two differ in the 7th decimal)
+  my partial CI (300/300 finite, position clusters on H): [-0.096882, -0.035105]  | staged [-0.099734, -0.033553]
+  [OK  ] gradient Spearman(rho_b, d3) over resolved nulls: mine = 0.713319 | staged = 0.713319 | diff = 0.000e+00 (tol 1e-09) (n = 67)
+  [OK  ] shift confound Spearman(rho_b, mean|delta_b|): mine = -0.612697 | staged = -0.612697 | diff = 0.000e+00 (tol 1e-09) (n = 96)
+  frozen section-3 word from MY numbers: MODEL-REPLICATES (staged: MODEL-REPLICATES)
+  [SAME] ladder word (650M): mine = MODEL-REPLICATES | staged = MODEL-REPLICATES
+  NOT-COMPUTABLE: 150M and 35M columns (no wt_H.csv, no bg files: night B never ran), and therefore both cross-model agreements.
+
+==============================================================================
+MODULE M -- mechanism-matched analyses (M-1, M-2, M-3 re-draw, M-4 grid, M-5, M-6)
+==============================================================================
+  [OK  ] M-1 rho_A222V (full frame): mine = -0.08811806424891734 | staged = -0.088118064 | diff = 2.489e-10 (tol 1e-09) 
+  [OK  ] M-1 rho_A222V (H): mine = -0.09002168303339808 | staged = -0.090021683 | diff = 3.340e-11 (tol 1e-09) 
+  [OK  ] M-1 p_spec(neg) full: mine = 0.025316456 | staged = 0.02531645569620253 | diff = 3.038e-10 (tol 1e-09) (k = 1)
+  [OK  ] M-1 p_spec(neg) H: mine = 0.050632911 | staged = 0.05063291139240506 | diff = 3.924e-10 (tol 1e-09) (k = 3)
+  full-frame beaters: ['G_P254F'] (staged ['G_P254F']); H beaters: ['AV_195', 'AV_220', 'G_P254F']
+  [OK  ] M-1 partial | S_W (full frame): mine = -0.06414804421216103 | staged = -0.064148044 | diff = 2.122e-10 (tol 1e-09) 
+  my partial CI (300/300 finite, position clusters): [-0.094583, -0.035760]  | staged [-0.093576, -0.035309]
+  [OK  ] M-1 retained fraction (partial / raw): mine = 0.727978 | staged = 0.727978 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] M-1 partial | S_W (H view): mine = -0.06720891007058159 | staged = -0.06720891 | diff = 7.058e-11 (tol 1e-09) 
+  my H partial CI (300/300 finite): [-0.096882, -0.035105]  | staged [-0.099734, -0.033553]
+  [OK  ] M-1 secondary two-covariate partial: mine = -0.0829 | staged = -0.0829 | diff = 0.000e+00 (tol 1e-08) (frozen target is 4 dp)
+  M-2 decile row counts: [1076, 1076, 1076, 1075, 1076, 1076, 1075, 1076, 1076, 1075] (staged [1076 x7, 1075 x3])
+  [STOP] M-2 stratified rho (full frame): mine = -0.059988177 | staged = -0.059956192 | diff = 3.198e-05 (tol 1e-09) 
+  M-2 stratified rho (H view): -0.064660110 (staged -0.064594698; no word)
+
+  [C2-DEC8 frame-table parser] the three statistics above, recomputed with the frame table read by the DEFAULT parser (the staged pipeline's):
+  [OK  ] M-1 rho_A222V (full frame), default parse: mine = -0.08811808948323244 | staged = -0.088118064 | diff = 2.548e-08 (tol 5e-07) (staged prints 9 dp; C2-DEC9)
+  [OK  ] M-1 partial | S_W (full frame), default parse: mine = -0.06414807195431849 | staged = -0.064148044 | diff = 2.795e-08 (tol 5e-07) (staged prints 9 dp; C2-DEC9)
+    M-2 stratified (default parse) = -0.059988177  (staged -0.059956192; the round_trip value above differs by 5.2e-5 -- the decile cut moves by one row, which re-weights the within-decile Spearmans)
+
+  M-5 between/within decomposition (positions with >= 5 rows):
+  [OK  ] M-5 rho_between (full frame): mine = -0.177458126 | staged = -0.177458126 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] M-5 rho_within (full frame): mine = np.float64(-0.028237316) | staged = -0.028237316 | diff = 0.000e+00 (tol 1e-09) 
+  qualifying positions 652/654 (staged 652); H view: between -0.169522069 within -0.035545269 (staged -0.169522069 / -0.035545269)
+  my rho_within CI (200 finite of 200 draws -- CAPPED and disclosed: the per-draw refit loops over 652 positions in Python, and a bootstrap CI is reported side by side, never gated (C2-DEC2); both components are recomputed per draw as the frozen block requires): [-0.047279, -0.005697] | staged [-0.049826, -0.006662]
+
+  M-6 stability: 200 position-cluster draws per view, all 78 null rho_b re-derived per draw
+    full: P(p_spec <= 0.05) = 0.5750  k distribution {0: 44, 1: 38, 2: 33, 3: 16, 4: 15, 5: 17, 6: 11, 7: 8, 8: 4, 9: 3, 10: 5, 13: 2, 14: 1, 16: 1, 18: 1, 20: 1}
+      staged: 0.5760 (k=0:377, k=1:467, k=2:308, ...)  -> frozen word boundary 0.80 / 0.50
+    H: P(p_spec <= 0.1) = 0.7950  k distribution {0: 16, 1: 26, 2: 28, 3: 27, 4: 26, 5: 20, 6: 16, 7: 9, 8: 4, 9: 8, 10: 6, 11: 1, 12: 5, 13: 2, 14: 3, 16: 2, 18: 1}
+      staged: 0.7720  -> frozen word boundary 0.80 / 0.50
+
+  M-3 / M-4: zero-epistasis simulation, 100 draws (staged: 1,000 draws / 9 x 200)
+    raw table 13134 rows; valid mask keeps 11317 rows x 4 conditions
+    IDENTITY GATE: my E_c^iso + the project's wls_line vs the recorded own_e_b_ge_iso over 11865 rows: max|diff| = 4.544e-02 (gate < 1e-12)
+    *** GATE FAILED -- this is NOT the project's pipeline. M-3 and M-4 are NOT-COMPUTABLE in this session and no number is reported.
+
+==============================================================================
+MODULE U -- predictive utility (U-1 cached statistic, U-2 metrics)
+==============================================================================
+  [OK  ] U-1 Spearman(S_A, y): mine = 0.3650234295486086 | staged = 0.36502342954860856 | diff = 5.551e-17 (tol 1e-09) 
+  [OK  ] U-1 Spearman(S_W, y): mine = 0.3684212256227523 | staged = 0.3684212256227523 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] U-1 Delta = rho(S_A,y) - rho(S_W,y): mine = -0.0033977960741436997 | staged = -0.003397796074143755 | diff = 5.551e-17 (tol 1e-09) 
+  context Spearman(S_W, base functionality) = 0.328033 (staged 0.32803277256740376)
+  my paired position-cluster CI (300/300 finite): [-0.004601861, -0.002416334]  | staged [-0.004488253530713755, -0.0023350383831684295]
+    CIs reported side by side, not gated (C2-DEC2).
+  frozen U-1 word from MY numbers: CONDITIONING-HURTS (staged: CONDITIONING-HURTS)
+  [SAME] U-1 word: mine = CONDITIONING-HURTS | staged = CONDITIONING-HURTS
+  NOTE the CI must be compared with the +/-0.02 equivalence margin as well: my CI [-0.004602, -0.002416] lies ENTIRELY INSIDE (-0.02, +0.02), so the frozen word CONDITIONING-HURTS and the equivalence margin disagree; both are reported (C3 states this too).
+  U-2: the FALLBACK label file is present (task102_clinvar_atlas_overlap.csv, (299, 15)); the staged run used the Weile et al. supplement labels instead, so U-2's AUROCs are NOT recomputable from this file -> NOT-COMPUTABLE (C2-DEC6), and G-U2 FAILED in the staged run anyway, leaving U-2 wordless.
+
+==============================================================================
+MODULE G -- GB1 locality (G-1, G-2)
+==============================================================================
+  stored GB1 rho_b table: 400 backgrounds; mean rho_b = -0.009125049246 (frozen gate target -0.009125)
+  [OK  ] G-D0 primary mean rho_b: mine = np.float64(-0.009125049245666152) | staged = -0.009125049245666152 | diff = 0.000e+00 (tol 1e-09) 
+  G-1 (lambda_model, lambda_data, d_b) needs the per-(background, partner) table of |delta_b(v)|, |e_b(v)| and s, which script 155 builds from the Olson doubles and which is NOT cached on disk.
+  Attempting an independent rebuild of that partner table now.
+  *** rebuild not possible here: RuntimeError: see the module G section: an independent rebuild of the GB1 partner table is out of reach for this session and is reported as NOT-COMPUTABLE rather than approximated
+
+  *** MODULE G STOPPED: the partner table could not be rebuilt independently
+  *** No value from this module is used anywhere else in this script.
+
+==============================================================================
+C2 SUMMARY
+==============================================================================
+  comparisons gated: 40; identical: 39; DISAGREEMENTS: 1; ungated context values: 0
+    [DIFF] M-2 stratified rho (full frame): mine = -0.059988177 | staged = -0.059956192 | diff = DIFF
+
+  elapsed 58.8s
+
+LIMITATIONS (printed per AGENTS 6):
+    - This is a re-implementation of estimators on cached data: it validates code against code (AGENTS 6, reproduction is not replication) and is not independent evidence for any biological claim.
+    - Bootstrap CIs are two independent estimates and are not expected to match digit for digit; only the point estimates are gated.
+    - The M-3/M-4 generator is a re-implementation, not the staged run's own wiring, so its null distribution is a check of the same construction and not a confirmation of the staged draw sequence.
+    - Module G's partner table could not be rebuilt independently in this session; its statistics are reported NOT-COMPUTABLE rather than approximated.
+    - U-2's metrics are NOT-COMPUTABLE here because the staged run used the Weile et al. supplement labels and G-U2 failed, leaving U-2 wordless.

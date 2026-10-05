@@ -1,0 +1,162 @@
+########## rescore N_215_KQ into data/processed/phase4/c1_rescore_scratch/neigh ##########
+
+==========================================================================
+171 -- Module N neighbour-arm scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)  frame=H  out_dir=data/processed/phase4/c1_rescore_scratch/neigh
+==========================================================================
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  NS-DEC1: torch.hub cache pre-check for 650M + contact-regression; missing -> exit 3, NEVER a download.
+  NS-DEC2: frame H; expected = frame minus own (script 124 semantics, imported).
+  NS-DEC3: bg_<id>.csv = bg_id, position, mut_aa, score, delta; delta vs the Phase 2 WT cache; 124's skip logic imported, atomic-write pattern quoted from 124.
+  NS-DEC4: G-N2 before any scoring when something is to score: AV_220 on H vs cache to 1e-6 (both score and delta), same-bg-twice identical to 0.0, WT log-odds 0.0; scratch dir only; FAIL -> exit 3.
+  NS-DEC5: device from esm_scoring.get_device(), printed and manifested (Phase 2 used mps).
+  NS-DEC6: roster_v1.csv must hash to its sidecar before the model loads; --limit-roster = balanced prefix.
+  NS-DEC7: median s/pass over this run x 22,719 roster H passes x 1.25 vs the 330-min budget; G-N2's ~908 passes excluded from the formula, disclosed; never shrink the roster.
+
+--------------------------------------------------------------------------
+ROSTER INTEGRITY (G-N1 handoff)
+--------------------------------------------------------------------------
+  roster sha256 OK: 675a24f196387856... (frozen before scoring)
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  frame H: 455 positions (455 held-out)
+Length check passed: 656
+Position 222 check passed: Ala
+  WT cache: 12445 (position, mut_aa) rows
+  pre-scan: 0 complete, 1 to score
+  NS-DEC1 local cache OK: esm2_t33_650M_UR50D.pt (2,604,537,549 B) + contact-regression
+Using device: mps
+Loading ESM-2 650M from the local cache (loader never reached because the cache pre-check passed)...
+
+--------------------------------------------------------------------------
+G-N2 (HARD) -- AV_220 on H, twice, vs cache; WT zero
+--------------------------------------------------------------------------
+  (a) AV_220 vs cache: 8626 rows, max|d score| 1.776e-15, max|d delta| 1.776e-15 (gate 1e-6) -> PASS
+  (b) same bg twice: 8626 rows, max|d score| 0.000e+00, max|d delta| 0.000e+00 (gate exactly 0.0) -> PASS
+  (c) WT log-odds at pos 2 (V): 0.0 (gate == 0.0), alphabet token round-trip True, get_position_logprobs returns 19 entries excluding wt True -> PASS
+  G-N2 PASS (gate cost 514.5s = 908 passes, run twice, scratch only; NOT in the A7d projection formula -- disclosed NS-DEC7)
+  scored N_215_KQ (C1): 454 positions, 8626 rows in 328.2s (723 ms/pass) | 1/1, elapsed 5.5m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A7d TIMING + PROJECTION (roster is never shrunk)
+--------------------------------------------------------------------------
+  this run: 1 backgrounds, 454 passes, median 0.723 s/pass (per-bg ['0.723'])
+  projection for the H stage: (22719 roster passes x 0.723 s/pass) x 1.25 = 342 min vs the 330-minute budget -> EXCEEDS BUDGET -- recorded; the A9 stage rule applies (roster NOT shrunk)
+  G-N2's own gate passes (908) are outside the fixed projection formula (NS-DEC7); at this rate they add ~14 min, inside the 1.25 slack.
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * delta uses the Phase 2 WT cache (consistency, but it inherits that cache's errors).
+    * G-N2 is a regression test of this pipeline against its own cached rows, not independent evidence.
+    * s/pass from a 3-background sample; Phase 2 varied ~0.5-1.4 s/pass under load.
+
+A7c RESULT: G-N2 PASS -- exit 0
+  script wall time 849.2s
+   exit=0
+########## rescore N_152_NP into data/processed/phase4/c1_rescore_scratch/neigh ##########
+
+==========================================================================
+171 -- Module N neighbour-arm scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)  frame=H  out_dir=data/processed/phase4/c1_rescore_scratch/neigh
+==========================================================================
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  NS-DEC1: torch.hub cache pre-check for 650M + contact-regression; missing -> exit 3, NEVER a download.
+  NS-DEC2: frame H; expected = frame minus own (script 124 semantics, imported).
+  NS-DEC3: bg_<id>.csv = bg_id, position, mut_aa, score, delta; delta vs the Phase 2 WT cache; 124's skip logic imported, atomic-write pattern quoted from 124.
+  NS-DEC4: G-N2 before any scoring when something is to score: AV_220 on H vs cache to 1e-6 (both score and delta), same-bg-twice identical to 0.0, WT log-odds 0.0; scratch dir only; FAIL -> exit 3.
+  NS-DEC5: device from esm_scoring.get_device(), printed and manifested (Phase 2 used mps).
+  NS-DEC6: roster_v1.csv must hash to its sidecar before the model loads; --limit-roster = balanced prefix.
+  NS-DEC7: median s/pass over this run x 22,719 roster H passes x 1.25 vs the 330-min budget; G-N2's ~908 passes excluded from the formula, disclosed; never shrink the roster.
+
+--------------------------------------------------------------------------
+ROSTER INTEGRITY (G-N1 handoff)
+--------------------------------------------------------------------------
+  roster sha256 OK: 675a24f196387856... (frozen before scoring)
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  frame H: 455 positions (455 held-out)
+Length check passed: 656
+Position 222 check passed: Ala
+  WT cache: 12445 (position, mut_aa) rows
+  pre-scan: 0 complete, 1 to score
+  NS-DEC1 local cache OK: esm2_t33_650M_UR50D.pt (2,604,537,549 B) + contact-regression
+Using device: mps
+Loading ESM-2 650M from the local cache (loader never reached because the cache pre-check passed)...
+
+--------------------------------------------------------------------------
+G-N2 (HARD) -- AV_220 on H, twice, vs cache; WT zero
+--------------------------------------------------------------------------
+  (a) AV_220 vs cache: 8626 rows, max|d score| 1.776e-15, max|d delta| 1.776e-15 (gate 1e-6) -> PASS
+  (b) same bg twice: 8626 rows, max|d score| 0.000e+00, max|d delta| 0.000e+00 (gate exactly 0.0) -> PASS
+  (c) WT log-odds at pos 2 (V): 0.0 (gate == 0.0), alphabet token round-trip True, get_position_logprobs returns 19 entries excluding wt True -> PASS
+  G-N2 PASS (gate cost 593.4s = 908 passes, run twice, scratch only; NOT in the A7d projection formula -- disclosed NS-DEC7)
+  scored N_152_NP (C2): 455 positions, 8645 rows in 296.2s (651 ms/pass) | 1/1, elapsed 4.9m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A7d TIMING + PROJECTION (roster is never shrunk)
+--------------------------------------------------------------------------
+  this run: 1 backgrounds, 455 passes, median 0.651 s/pass (per-bg ['0.651'])
+  projection for the H stage: (22719 roster passes x 0.651 s/pass) x 1.25 = 308 min vs the 330-minute budget -> WITHIN budget
+  G-N2's own gate passes (908) are outside the fixed projection formula (NS-DEC7); at this rate they add ~12 min, inside the 1.25 slack.
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * delta uses the Phase 2 WT cache (consistency, but it inherits that cache's errors).
+    * G-N2 is a regression test of this pipeline against its own cached rows, not independent evidence.
+    * s/pass from a 3-background sample; Phase 2 varied ~0.5-1.4 s/pass under load.
+
+A7c RESULT: G-N2 PASS -- exit 0
+  script wall time 895.8s
+   exit=0
+########## rescore N_183_RM into data/processed/phase4/c1_rescore_scratch/neigh ##########
+
+==========================================================================
+171 -- Module N neighbour-arm scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap/randomness here)  frame=H  out_dir=data/processed/phase4/c1_rescore_scratch/neigh
+==========================================================================
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  NS-DEC1: torch.hub cache pre-check for 650M + contact-regression; missing -> exit 3, NEVER a download.
+  NS-DEC2: frame H; expected = frame minus own (script 124 semantics, imported).
+  NS-DEC3: bg_<id>.csv = bg_id, position, mut_aa, score, delta; delta vs the Phase 2 WT cache; 124's skip logic imported, atomic-write pattern quoted from 124.
+  NS-DEC4: G-N2 before any scoring when something is to score: AV_220 on H vs cache to 1e-6 (both score and delta), same-bg-twice identical to 0.0, WT log-odds 0.0; scratch dir only; FAIL -> exit 3.
+  NS-DEC5: device from esm_scoring.get_device(), printed and manifested (Phase 2 used mps).
+  NS-DEC6: roster_v1.csv must hash to its sidecar before the model loads; --limit-roster = balanced prefix.
+  NS-DEC7: median s/pass over this run x 22,719 roster H passes x 1.25 vs the 330-min budget; G-N2's ~908 passes excluded from the formula, disclosed; never shrink the roster.
+
+--------------------------------------------------------------------------
+ROSTER INTEGRITY (G-N1 handoff)
+--------------------------------------------------------------------------
+  roster sha256 OK: 675a24f196387856... (frozen before scoring)
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  frame H: 455 positions (455 held-out)
+Length check passed: 656
+Position 222 check passed: Ala
+  WT cache: 12445 (position, mut_aa) rows
+  pre-scan: 0 complete, 1 to score
+  NS-DEC1 local cache OK: esm2_t33_650M_UR50D.pt (2,604,537,549 B) + contact-regression
+Using device: mps
+Loading ESM-2 650M from the local cache (loader never reached because the cache pre-check passed)...
+
+--------------------------------------------------------------------------
+G-N2 (HARD) -- AV_220 on H, twice, vs cache; WT zero
+--------------------------------------------------------------------------
+  (a) AV_220 vs cache: 8626 rows, max|d score| 1.776e-15, max|d delta| 1.776e-15 (gate 1e-6) -> PASS
+  (b) same bg twice: 8626 rows, max|d score| 0.000e+00, max|d delta| 0.000e+00 (gate exactly 0.0) -> PASS
+  (c) WT log-odds at pos 2 (V): 0.0 (gate == 0.0), alphabet token round-trip True, get_position_logprobs returns 19 entries excluding wt True -> PASS
+  G-N2 PASS (gate cost 606.8s = 908 passes, run twice, scratch only; NOT in the A7d projection formula -- disclosed NS-DEC7)
+  scored N_183_RM (C5): 454 positions, 8626 rows in 311.9s (687 ms/pass) | 1/1, elapsed 5.2m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A7d TIMING + PROJECTION (roster is never shrunk)
+--------------------------------------------------------------------------
+  this run: 1 backgrounds, 454 passes, median 0.687 s/pass (per-bg ['0.687'])
+  projection for the H stage: (22719 roster passes x 0.687 s/pass) x 1.25 = 325 min vs the 330-minute budget -> WITHIN budget
+  G-N2's own gate passes (908) are outside the fixed projection formula (NS-DEC7); at this rate they add ~13 min, inside the 1.25 slack.
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * delta uses the Phase 2 WT cache (consistency, but it inherits that cache's errors).
+    * G-N2 is a regression test of this pipeline against its own cached rows, not independent evidence.
+    * s/pass from a 3-background sample; Phase 2 varied ~0.5-1.4 s/pass under load.
+
+A7c RESULT: G-N2 PASS -- exit 0
+  script wall time 927.6s
+   exit=0

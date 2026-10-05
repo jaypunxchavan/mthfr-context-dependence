@@ -1,0 +1,20 @@
+# path | what the headline numbers need it for.  One path per line; '#' comments.
+data/processed/task32_analysis_table.csv|the frozen frame: own_e.b, S_W, S_A, base functionality, per-condition m (modules S, M, U, N, L)
+data/processed/esm2_wt_scores.csv|the cached WT-background 650M scores; every delta and the WT arm
+data/processed/esm2_a222v_bg_scores.csv|the cached A222V-background 650M scores, i.e. the anchor arm
+data/processed/task82_ae_raw.csv|F1 AE frame -- together with the next file it defines H
+data/processed/task69_w2_bg_raw.csv|F1 W frame -- together with the previous file it defines H
+data/raw/mthfrModel/results/folate_response_model5.csv|raw measurements: module M's simulation generator (M-3, M-4)
+data/raw/6FCX.pdb|3D geometry loader: module N's cells and M's d3 table
+data/processed/phase2_diagnostics/background_3d_distance.csv|d3 per background (module N's geometry, M's S2 surrogate)
+data/processed/phase2_diagnostics/background_rho_table.csv|the 96 cached rho_b (L's 650M column members)
+data/processed/phase2/|the 96 Phase-2 background score files (the null set behind p_spec)
+data/processed/phase4/neigh/roster_v1.csv|the frozen 50-background neighbour roster
+data/processed/phase4/neigh/|the 50 night-A neighbour score files (module N)
+data/processed/phase4/neigh/manifest.csv|the night's own manifest, with a sha256 per scored file
+data/processed/phase3/m1_own_e_b_ge.csv|recorded own_e.b: module M's identity gate
+data/processed/phase3/m1_fitted_expectations.csv|the saved isotonic expectations (module M)
+data/processed/phase3/gb1/|the 400 GB1 background score files (module G)
+data/external/mavedb/|U-2's eight experimental maps
+data/external/weile2021_supp/|U-2's label sets from the supplement
+data/external/rcsb/1PGA.pdb|G-3's optional structure (module G)

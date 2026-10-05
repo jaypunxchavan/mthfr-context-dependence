@@ -1,0 +1,31 @@
+=== C1 real-directory snapshot AFTER all rescoring (session 4b, Sun Oct  4 17:28:19 EDT 2026) ===
+
+DIR data/processed/phase4/neigh
+  bg_*.csv count: 50
+  ALL file count: 55
+  newest mtime among all files: 2026-10-04T13:25:01  manifest_deduped_4b.csv
+  newest mtime among bg_*.csv:   2026-10-04T08:07:10  data/processed/phase4/neigh/bg_N_252_IL.csv
+  sha256 of the (name,mtime_ns,size) listing: 5d74f3fa7d90420206efee49e5f534d5f97268136ab8e8439aeaf080b2269575
+
+DIR data/processed/phase4/ladder/650M
+  bg_*.csv count: 0
+  ALL file count: 0
+  newest mtime among all files: 
+  newest mtime among bg_*.csv:   
+  sha256 of the (name,mtime_ns,size) listing: e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+
+DIR data/processed/phase4/ladder/150M
+  ABSENT
+
+DIR data/processed/phase4/ladder/35M
+  ABSENT
+
+DIR data/processed/phase4/neigh_nonH
+  ABSENT
+
+DIR data/processed/phase2
+  bg_*.csv count: 96
+  ALL file count: 101
+  newest mtime among all files: 2026-09-29T19:08:14  analysis_run.log
+  newest mtime among bg_*.csv:   2026-09-29T12:38:44  data/processed/phase2/bg_G_K401S.csv
+  sha256 of the (name,mtime_ns,size) listing: 82ed844ad444ba37c5cdad3800c2108c775c227263b53402f8958336f16109aa

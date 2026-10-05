@@ -1,0 +1,103 @@
+
+==========================================================================
+174 -- Module L model-ladder analysis (frozen section 2 + words)
+==========================================================================
+  mode=full N_BOOT=10000 (env N_BOOT=set) SEED=0
+  RESAMPLING UNITS: position clusters INSIDE one background; backgrounds ACROSS backgrounds (gradient, shift confound, across-model rho agreement).  Never rows.
+  Frozen section 2 pins production CIs at 10,000 draws -> production
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  LD-AN1: inputs sha-pinned; mismatch -> exit 3.
+  LD-AN2: frame H (455) minus each background's own position; 7,526 H rows; per-background subsets printed.
+  LD-AN3: delta_b = score_b - THAT model's own wild-type arm; the WT arm is never a 98th background.
+  LD-AN4: ADDED: 650M rho_b == D1 (96, <1e-8), A222V == frozen -0.090021683 (<1e-9), own position absent.
+  LD-AN5: a model column needs every background at >=95% coverage, else PENDING with no numbers.
+  LD-AN6: the five frozen quantities with their own resampling units; word = p4c.word_ladder(anchor CI, p_spec_H(neg)).
+  LD-AN7: cross-model agreement: per-background delta-vector Spearman on common H rows (median + range) and the across-background rho_b Spearman.
+  LD-AN8: G-L4 arms A1-A5 through the SAME core; seeds 101/102/103/1000/105+106 pinned; null arm fire rate <= 0.15 with a pinned 1,000-draw CI.
+  LD-AN9: G-L5 identity, draw-by-draw vs slow references (500 draws) incl. this script's own cluster bootstrap, Phase 1 CI at fixed 10,000 from the canonical construction.
+  LD-AN10: smoke -> PROVISIONAL; full -> final; a smoke gate failure stops the run.
+  LD-AN11: no score file written; ladder dirs read-only; .tmp ignored.
+
+--------------------------------------------------------------------------
+G-L0 / INPUT PINS
+--------------------------------------------------------------------------
+  [PASS] G-L0 ladder prereg sha256: eafe37a85c902c2b
+  [PASS] G-L0 D1 rho table sha256: e397a4429c226f99
+  [PASS] G-L0 stored 3D distance sha256: 69914df9c60ba5a9
+  [PASS] G-L0 96-background roster sha256: 9b31721a0ad98422
+  [PASS] G-L0 cached WT scores sha256: e4d3af3d444a0d0a
+  [PASS] G-L0 cached AV_220 rows sha256: 2dc13f8073aec0f0
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] LD-AN2 frame H = 455 positions / 7,526 rows: 455 / 7526
+  [PASS] N = 78 null backgrounds (arms V u G): 78 of 96; arms {'G': 40, 'V': 38, 'S': 18}
+  [PASS] 67 resolved existing nulls carry a d3: 67
+  [PASS] every H row has a cached 650M wild-type score: 0 missing of 7526
+
+--------------------------------------------------------------------------
+LD-AN4 -- the 650M column against D1 and the frozen anchor
+--------------------------------------------------------------------------
+  [PASS] LD-AN4 650M rho_H recomputed == D1 for all 96 backgrounds (<1e-8): max|diff| = 4.956e-10 over 96
+  [PASS] LD-AN4 A222V rho_H == the frozen -0.090021683 (<1e-9): got -0.09002168303339808 |diff| = 3.340e-11
+  [PASS] LD-AN4 A222V's own position 222 is absent from its own rows: finite A222V rows at 222: 0
+
+--------------------------------------------------------------------------
+MODEL COLUMNS (frozen section 2)
+--------------------------------------------------------------------------
+  [PASS] LD-AN5 650M column available: 97 backgrounds from the Phase 2 caches + the cached WT arm; 7526 H rows, own position excluded per background
+  [PENDING] LD-AN5 150M column available: PENDING: no 150M wild-type arm (wt_H.csv absent) (night B scoring stage)
+  [PENDING] LD-AN5 35M column available: PENDING: no 35M wild-type arm (wt_H.csv absent) (night B scoring stage)
+
+--- model 650M, N_BOOT=10000 ---
+  analysis set: 7526 H rows for A222V (of 7526; own position 222 excluded); per background 7507-7526 rows
+  (i)   rho_A222V on H = -0.090021683  CI [-0.122385, -0.056046] (10000 finite draws, position clusters)
+  (ii)  p_spec_H(neg) = 0.050633 (3/78);  p_spec_H(abs) = 0.050633 (3/78)
+  (iii) partial rho_H | this model's S_W = -0.067209  CI [-0.099734, -0.033553]  (frozen text names no CI; position-cluster, supplied)
+  (iv)  gradient Spearman(rho_b, d3) over 67 resolved nulls = +0.713319  CI [+0.566655, +0.808932] (background-level)
+  (v)   shift confound Spearman(rho_b, mean|delta_b|) over 96 backgrounds = -0.612697  CI [-0.732776, -0.456234] (background-level)
+  WORD (650M): MODEL-REPLICATES   [frozen section 3: MODEL-REPLICATES iff the CI lies below zero AND p_spec_H(neg) <= 0.10]
+
+--------------------------------------------------------------------------
+CROSS-MODEL AGREEMENT (frozen section 2, last clause)
+--------------------------------------------------------------------------
+  [PENDING] LD-AN7 cross-model agreement 650M vs 150M: PENDING: no 150M column yet
+  [PENDING] LD-AN7 cross-model agreement 650M vs 35M: PENDING: no 35M column yet
+
+--------------------------------------------------------------------------
+G-L4 (HARD) -- PLANTED SIGNAL AND NULL ON SYNTHETIC SCORES
+--------------------------------------------------------------------------
+  [PASS] G-L4 A1 planted signal returns MODEL-REPLICATES: rho_A -0.5666 CI [-0.5880, -0.5446], p_spec_H(neg) 0.0127 (0/78) -> MODEL-REPLICATES
+  [PASS] G-L4 A2 planted gradient: its CI excludes zero in the NEGATIVE direction: gradient -0.9997 CI [-1.0000, -0.9982] over 67 nulls
+  [PASS] G-L4 A3 planted shift confound: its CI excludes zero (negative): confound -0.9991 CI [-0.9994, -0.9971] over 96 backgrounds
+  [PASS] G-L4 A4 planted null: fire rate <= 0.15 over 100 draws (per-plant CI pinned at 1000): 2/100 = 0.020; words seen {'MODEL-DOES-NOT-REPLICATE': 98, 'MODEL-REPLICATES': 2}
+  [PASS] G-L4 A5 identical-model plant: per-background and across-background agreement are 1.0 (<1e-9 from 1): median 1.0, across 0.9999999999999999, n = 97
+  [PASS] G-L4 A5 independent-model plant: both agreement statistics below 0.15 in absolute value: median +0.0004, across +0.0865
+  G-L4 wall 379s
+
+--------------------------------------------------------------------------
+G-L5 (HARD) -- identity, draw-by-draw reference, Phase 1 CI (fixed 10000)
+--------------------------------------------------------------------------
+  [PASS] G-L5(i) identity: every position once == the anchor point estimate (<1e-12): |diff| = 0.000e+00
+  [PASS] G-L5(ii-a) anchor draws == the slow reference draw by draw over 500 draws (<1e-12): max|diff| = 2.776e-17
+  [PASS] G-L5(ii-a2) this script's own cluster bootstrap == the imported corrected routine, draw by draw over 500 draws (<1e-12): max|diff| = 2.776e-17 (same ids, two independent implementations of the cluster expansion)
+  [PASS] G-L5(i) identity: every background once == the gradient point estimate (<1e-12): |diff| = 0.000e+00
+  [PASS] G-L5(ii-b) gradient draws == a slow pandas-rank rebuild over 500 draws (<1e-12): max|diff| = 0.000e+00
+  [PASS] G-L5(iii) Phase 1 CI reproduces (each endpoint < 1e-9): lo -0.1173334458953319 (|diff| 0.000e+00), hi -0.05951138449511738 (|diff| 0.000e+00), 10000 finite draws at 10000, from pdg's a222v_rows (the canonical construction)
+
+==========================================================================
+SUMMARY
+==========================================================================
+  26 PASS, 0 FAIL, 4 PENDING of 30 checks.
+  torch in sys.modules: False (must be False; rule 1)
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * a ladder word is about the SAME data scored at other model sizes; it is not an independent replication of the anchor's existence (module N tests that).
+    * the 650M column is NOT out-of-sample (Phase 2 rows, already analysed); only 150M/35M are new data.
+    * deltas are per-model WT-referenced: comparable in rank, never in scale.
+    * G-L4's planted arms are mechanics checks on synthetic scores, not evidence about biology.
+    * a CI excluding zero is not a finding on its own; every quantity is printed with its planted counterpart.
+
+A8d RESULT: GATE PASS -- exit 0
+  elapsed 430.7s

@@ -1,0 +1,190 @@
+
+==============================================================================
+A2 -- GATES FOR scripts/lib/phase4_common.py (script 165)
+==============================================================================
+N_BOOT = 10000   SEED = 0   N_REF = 500   N_REF_PRE = 20
+RESAMPLING UNIT in this script: POSITION CLUSTERS (the anchor statistic is inside one background).  No background-level resampling here.
+DECISION RULE (pre-registered): any A2-G1/A2-G2/A2-G3 sub-gate FAIL -> phase4_common is not trusted for M, U, G, N, L; exit 3.  Thresholds are never loosened; N is never raised.
+NO torch / esm / thermompnn is imported here (rule 1).
+
+------------------------------------------------------------------------------
+GATE A2-G1 -- script 159 rerun UNCHANGED (HARD)
+------------------------------------------------------------------------------
+  running: N_BOOT=10000 SEED=0 /Users/arnavchavan/Desktop/mthfr-context-dependence/venv/bin/python3 159_phase3_common_gate.py
+  ---- subprocess tail (verbatim) ----
+    [PASS] A2-G2(i) identity, (ii) ANCHOR ROWS: every-cluster-once corrected -0.08811806424891734, reference -0.08811806424891734, point -0.08811806424891734; max|diff| = 0.000e+00 (gate < 1e-12)
+    [PASS] A2-G2(ii/iii) draw-by-draw, (ii) ANCHOR ROWS: 500 draws, max|corrected - reference| = 0.000e+00 (gate < 1e-12)
+    [PASS] A2-G2(i) identity, (iii) RESTRICTED (positions removed): every-cluster-once corrected -0.0810084432806544, reference -0.0810084432806544, point -0.0810084432806544; max|diff| = 0.000e+00 (gate < 1e-12)
+    [PASS] A2-G2(ii/iii) draw-by-draw, (iii) RESTRICTED (positions removed): 500 draws, max|corrected - reference| = 0.000e+00 (gate < 1e-12)
+    40/40 checks PASS, 0 FAIL (0 of the FAILs are smoke SKIPS).
+  LIMITATIONS (printed, per AGENTS 6): this gate REPRODUCES cached Phase 1/2 numbers through the new generic API -- it validates the library code (reproduction is not replication, AGENTS 6), it is not independent evidence for any claim, and it produces no new inference.  The bootstrap it exercises resamples POSITION CLUSTERS only.  The corrected routine is imported from scripts/lib/phase2_diag4.py (unmodified); script 144's routine is never used.  A smoke run (N_BOOT != 10000) cannot PASS A2-G1 because sub-gate (k) is skipped.
+  GATE PASS -- A2-G1 and A2-G2 both pass; the generic library is trusted for the M1/GB1/RBD analyses per the planning doc's Task A2 decision rule.
+  Elapsed 32.0s
+  ---- end subprocess ----
+  [PASS] A2-G1 script 159 prints 40/40 PASS: returncode 0; found '40 checks PASS, 0 FAIL' = True (target: the line '40/40 checks PASS, 0 FAIL', exit 0)
+
+------------------------------------------------------------------------------
+GATE A2-G2 -- cached MTHFR numbers through phase4_common (HARD)
+------------------------------------------------------------------------------
+  [PASS] A2-G2(a) rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796  (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [pdg.build] 0.7s -- script 125's cached construction, imported (AGENTS 2), not reimplemented
+  [PASS] A2-G2 rows / positions (target 10,757 / 654): got 10757 rows / 654 positions; target 10757 / 654
+  [PASS] A2-G2(b) A222V rho full (task32 via p4c.spearman): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] A2-G2(b) A222V rho full (script 125 rows via p4c.spearman): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] A2-G2(b) the two sources agree with each other: |diff| 0.000e+00 (AGENTS 5 column identity)
+  [PASS] A2-G2(c) H positions (target 455): got 455 target 455 (7526 anchor rows on H)
+  [PASS] A2-G2(c) A222V rho H: got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] A2-G2(c) A222V rho H (pdg.point_rhos_H cross-check): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] A2-G2(d) p_spec(neg) full: p = (1+1)/(1+78) = 0.02531645569620253 target 0.02531645569620253 (2/79); k = 1 target 1; beaters ['G_P254F'] target ['G_P254F']
+  [PASS] A2-G2(e) p_spec(neg) H: p = (1+3)/(1+78) = 0.05063291139240506 target 0.05063291139240506 (4/79); k = 3 target 3; beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] A2-G2(f) rho(delta, S_W): got -0.32376573717755663 target -0.32376573717755663 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(g) rho(own_e.b, S_W): got 0.085391652432165 target 0.085391652432165 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(h) partial rho controlling S_W (p4c.partial_spearman): got -0.06414804421216103 target -0.06414804421216103 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(h) retention |partial|/|raw| (3 dp): got 0.728 target 0.728 |diff| = 0.000e+00 (gate < 1e-15)
+       retention full precision = 0.7279783635618071
+  [PASS] A2-G2(i) two-covariate partial (4 dp): got -0.0829 target -0.0829 |diff| = 0.000e+00 (gate < 1e-15)
+       full precision = -0.08289332817238883 (Phase 1 L2 printed -0.0829)
+
+------------------------------------------------------------------------------
+A2-G2 REFERENCE BOOTSTRAP on the real anchor rows (PHASE4 rule 6)
+------------------------------------------------------------------------------
+  [PASS] rule 6 identity: every position once == point estimate: every-once -0.08811806424891734 point -0.08811806424891734 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] rule 6 draw-by-draw reference (500 draws): max|corrected - reference| = 0.000e+00 (gate < 1e-12)
+  [PASS] rule 6 Phase 1 CI lo: got -0.1173334458953319 target -0.1173334458953319 |diff| = 0.000e+00 (gate < 1e-09)
+  [PASS] rule 6 Phase 1 CI hi: got -0.05951138449511738 target -0.0595113844951173 |diff| = 7.633e-17 (gate < 1e-09)
+       (10000 finite draws, N_BOOT=10000, SEED=0; the routine is phase2_diag4's, imported)
+
+------------------------------------------------------------------------------
+GATE A2-G3 -- toy-data gates for every phase4_common function (HARD)
+------------------------------------------------------------------------------
+  [PASS] A2-G3 re-exports are the imported objects: p4c.spearman/p_spec/pos_cluster_boot/reference_boot are phase3_common's objects; p4c.pos_cluster_boot_corrected is phase2_diag4's object (script 144's routine is never importable from this path)
+  [PASS] A2-G3 equal_count_bins 10 -> 2: sizes [5, 5] target [5, 5]; lower bin [0.0, 1.0, 2.0, 3.0, 4.0] target [0.0, 1.0, 2.0, 3.0, 4.0]
+  [PASS] A2-G3 equal_count_bins 11 -> 4: sizes [3, 3, 3, 2] target [3, 3, 3, 2]
+  [PASS] A2-G3 equal_count_bins rejects n_bins > n: ValueError: n_bins must be in 1..n
+  [PASS] A2-G3 stratified_spearman both strata monotone: got 1.0 target 1.0
+  [PASS] A2-G3 stratified_spearman weighted mean (1.0, 0.0) at 4/4: got 0.5 target 0.5 = (4*1.0 + 4*0.0)/8
+  [PASS] A2-G3 stratified_spearman drops the undefined stratum (I1): got 0.5 target 0.5 (stratum c constant y dropped, weights renormalised over a and b)
+  [PASS] A2-G3 decomposition PLANTED PURE-BETWEEN: rho_between 1.0 target 1.0; rho_within 0.0 target 0.0 (each position's y is the fixed permutation 3,1,4,2 of its x -> within-rho 0; position means strictly ordered -> between-rho 1)
+  [PASS] A2-G3 decomposition PLANTED PURE-WITHIN: rho_within 1.0 target 1.0; rho_between 0.0 target 0.0 (position means ordered 1,2,3,4 against 3,1,4,2 -> 0; within-position y = x + const -> 1)
+  [PASS] A2-G3 decomposition excludes a position below min_rows (I2): n_qualifying 6 target 6; n_positions 7 target 7 (the 3-row position is excluded)
+  [PASS] A2-G3 partial == closed form (1 control): library 0.6897973159953645 closed form np.float64(0.6897973159953646) |diff| 1.110e-16 (gate < 1e-12)
+  [PASS] A2-G3 partial == closed form (2 controls, matrix inversion): library 0.6934320177009149 closed form 0.6934320177009148 |diff| 1.110e-16 (gate < 1e-12)
+  [PASS] A2-G3 permute_within_groups preserves each group's multiset and mean: per-group multiset True, per-group means True (position-level structure kept), global multiset True
+  [PASS] A2-G3 permute_within_groups is seeded and actually shuffles: same seed reproduces True; different seed differs True; not the identity True
+  [PASS] A2-G3 harness == the project's rebuild_interaction_fit: max|diff| 0.000e+00 (gate < 1e-12); own_eb_from_arrays must be the unmodified pipeline, not a re-derivation
+  [PASS] A2-G3 G-M4 simulation identity (zero noise, E = observed m): simulate_rho -0.07692307692307693 direct -0.07692307692307693 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 rank_normal_z: mean 0, sd 1, 0 at the median, antisymmetric: mean -8.882e-17, sd np.float64(1.0), z[2] 5.071e-17, z[0]+z[4] 0.000e+00, z[1]+z[3] -2.220e-16 (v = 1..5, q = (r-0.5)/5 = 0.1/0.3/0.5/0.7/0.9)
+  [PASS] A2-G3 plant_term at r0 = +1 / -1 / 0: r0=+1 == s_e*z 0.000e+00; r0=-1 == -s_e*z 0.000e+00; r0=0 == s_e*u 0.000e+00
+  [PASS] A2-G3 power_curve hand-built bands: q_lo 0.0 q_hi 0.0 (both 0.0); power r0=-0.1 0.9 (target 0.90), -0.05 0.1 (0.10), +0.05 0.1 (0.10), +0.1 0.9 (0.90), 0 1.0 (1.00, all zero-band draws <= 0)
+  [PASS] A2-G3 power_curve mean_rho is each band's mean: r0=-0.1 mean -0.44 vs np.float64(-0.44); r0=+0.1 mean 0.44 vs np.float64(0.44)
+  [PASS] A2-G3 min_detectable_effect interpolation (I5): neg 0.09375 pos 0.09375 headline 0.09375 target 0.09375 (= 0.05 + (0.8-0.1)/(0.9-0.1)*0.05 = 0.09375)
+  [PASS] A2-G3 min_detectable_effect 'above the grid': neg 'above the grid' pos 'above the grid' headline 'above the grid'; target the string 'above the grid' on all three
+  [PASS] A2-G3 min_detectable_effect one side only -> headline = that side: neg 0.09285714285714287 pos 'above the grid' headline 0.09285714285714287 (headline must be the numeric side)
+  [PASS] A2-G3 attenuation_slope: slope 1.9999999999999993 intercept 1.6716222905400291e-16 target 2.0 / 0.0
+  [PASS] A2-G3 whole_placebo IDENTITY (every position once == observed, frozen G-M7): p_spec 1.0 target 1.0; k 4 target 4; rho_A 0.21930937279774487 target 0.21930937279774487
+  [PASS] A2-G3 whole_placebo DRAW-BY-DRAW reference (20 draws): max|new - reference|: rho_A 0.000e+00, rho_N 0.000e+00, k 0.0, p_spec 0.000e+00 (gate < 1e-12; the reference rebuilds position -> rows with flatnonzero and calls scipy per background)
+  [PASS] A2-G3 whole_placebo DETERMINISM (same seed): rho_A identical True, k identical True
+  [PASS] A2-G3 cell_labels frozen boundaries and gaps: got ['C1', '', '', 'C3', '', 'C4', '', 'C2', ''] target ['C1', '', '', 'C3', '', 'C4', '', 'C2', ''] (d3=12 in C1, 12.000001 out; d3=18 is NOT > 18 so out of C3 until 18.000001; d3=20 is NOT > 20 so out of C4 until 20.000001; dseq 21..40 in no cell; NaN -> '')
+  [PASS] A2-G3 cell_labels C1/C2 dseq boundary (frozen NEIGH section 2: C1 is dseq <= 20, C2 is dseq > 40): got ['C1', '', '', 'C2', ''] target ['C1', '', '', 'C2', ''] (dseq 20 -> C1, 20.000001 -> gap, 40 -> gap because C2 needs > 40, 40.000001 -> C2, 21 -> gap; the frozen text is C1: d3 <= 12 AND dseq <= 20; C2: d3 <= 12 AND dseq > 40)
+  [PASS] A2-G3 interval_labels GB1 separation strata 1-5 / 6-15 / 16-54: got ['near', 'near', 'mid', 'mid', 'far', 'far', ''] target ['near', 'near', 'mid', 'mid', 'far', 'far', '']
+  [PASS] A2-G3 interval_labels GB1 Angstrom strata <8 / 8-14 / >14: got ['d3_lt8', 'd3_8_14', 'd3_8_14', 'd3_gt14'] target ['d3_lt8', 'd3_8_14', 'd3_8_14', 'd3_gt14']
+  [PASS] A2-G3 seq_separation: |100-222| = 122.0 target 122.0
+  [PASS] A2-G3 auroc == sklearn (with ties): library 0.75 sklearn 0.75 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 auroc == sklearn (perfect): library 1.0 sklearn 1.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 auroc == sklearn (inverted): library 0.0 sklearn 0.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 balanced_pr_curve coordinates == sklearn's weighted precision_recall_curve (recall 1..end): max|diff| recall 0.000e+00, balanced precision 1.110e-16 (gate < 1e-12).  sklearn's precision with sample weights N=15 on positives and P=15 on negatives is N*TP/(N*TP+P*FP) = TPR/(TPR+FPR) exactly
+  [PASS] A2-G3 balanced_pr anchor equals the top threshold's own value (decision I6): bp[0] np.float64(1.0) bp[1] np.float64(1.0) (recall 0 is anchored at the top threshold, not at sklearn's artificial precision=1.0 point np.float64(1.0); that one conventional difference is 0.000e+00 and is documented by decision I6)
+  [PASS] A2-G3 balanced_pr_auc == sklearn.metrics.auc on the same coordinates: library 0.8722222222222222 sklearn-path 0.8722222222222222 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 balanced_pr coordinates == sklearn's roc_curve path (second independent sklearn path): max|diff| 0.000e+00 (gate < 1e-12); chance level 0.5 = 0.5
+  [PASS] A2-G3 balanced_pr_auc of a chance-level toy is finite and near 0.5: got 0.45406558360717164, target finite and within 0.1 of 0.5 (balanced precision = TPR/(TPR+FPR) = 0.5 at chance)
+  [PASS] A2-G3 word_m1_partial (MECH M-1): targets: (<=0.05, <=0.10) -> PARTIAL-SURVIVES including exactly 0.05/0.10; a failing p -> PARTIAL-WEAKENS; CI touching 0 or a positive CI -> PARTIAL-DOES-NOT-SURVIVE
+  [PASS] A2-G3 word_m3_artifact (MECH M-3): targets: obs <= p2.5 (including equal) -> EXCESS-OVER-ARTIFACT, else CONSISTENT-WITH-ARTIFACT
+  [PASS] A2-G3 word_m5_carry (MECH M-5): targets: both meet -> BOTH-CARRY; only within -> WITHIN-CARRIED; only between -> BETWEEN-CARRIED; neither -> NEITHER-CARRIES; p = 0.05 exactly meets, 0.0501 does not
+  [PASS] A2-G3 word_m6_stable (MECH M-6): targets: >= 0.80 STABLE; [0.50, 0.80) MODERATE (0.50 is MODERATE); < 0.50 FRAGILE
+  [PASS] A2-G3 word_conditioning (UTIL U-1 / U-2): targets: entirely above 0 -> HELPS; entirely below 0 -> HURTS; strictly inside (-0.02, +0.02) -> EQUIVALENT; touching -0.02/+0.02 -> INCONCLUSIVE; a positive CI inside the margin -> HELPS (precedence rule I7, the frozen order)
+  [PASS] A2-G3 word_underpowered (UTIL): targets: 14 vs 100 (either side) -> UNDERPOWERED; 15 and 15 -> no word (None)
+  [PASS] A2-G3 GB1D outcome words: targets: iff-conditions returned as BOOL for the three blocks with no else-word (I8), CI touching 0 -> False; SEPARATION-MATTERS iff the CI excludes 0, else SEPARATION-NOT-RESOLVED
+  [PASS] A2-G3 word_neighbour (NEIGH section 5): targets: |NB| 30 & p <= 0.05 -> POSITION-SPECIFIC (0.05 exactly meets); |NB| 29 -> UNDERPOWERED whatever p; 0.05 < p <= 0.10 -> UNRESOLVED; p > 0.10 -> REGION-LIKE
+  [PASS] A2-G3 word_distance (NEIGH section 6): targets: only d3 excludes 0 -> 3D-LOCAL; only dseq -> SEQUENCE-LOCAL; both -> BOTH-LOCAL; neither -> NEITHER-RESOLVED; a strictly positive CI excludes 0 as well; and a CI TOUCHING zero (0.0, 0.05) does NOT exclude it, same convention as M-1 -- _excludes_zero is lo > 0 or hi < 0
+  [PASS] A2-G3 word_ladder (LADDER section 3): targets: CI below 0 and p <= 0.10 -> MODEL-REPLICATES (0.10 exactly meets); CI below 0 but p > 0.10 -> MODEL-PARTIAL; CI including 0 or above 0 -> MODEL-DOES-NOT-REPLICATE
+
+------------------------------------------------------------------------------
+A2 GATE TABLE
+------------------------------------------------------------------------------
+  [PASS] A2-G1 script 159 prints 40/40 PASS: returncode 0; found '40 checks PASS, 0 FAIL' = True (target: the line '40/40 checks PASS, 0 FAIL', exit 0)
+  [PASS] A2-G2(a) rho table sha256: e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796  (target e397a4429c226f99b8b24ec90ef26ef004a28746b3ab6226a5878de935863796)
+  [PASS] A2-G2 rows / positions (target 10,757 / 654): got 10757 rows / 654 positions; target 10757 / 654
+  [PASS] A2-G2(b) A222V rho full (task32 via p4c.spearman): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] A2-G2(b) A222V rho full (script 125 rows via p4c.spearman): got -0.08811806424891734 target -0.088118064 |diff| = 2.489e-10 (gate < 1e-09)
+  [PASS] A2-G2(b) the two sources agree with each other: |diff| 0.000e+00 (AGENTS 5 column identity)
+  [PASS] A2-G2(c) H positions (target 455): got 455 target 455 (7526 anchor rows on H)
+  [PASS] A2-G2(c) A222V rho H: got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] A2-G2(c) A222V rho H (pdg.point_rhos_H cross-check): got -0.09002168303339808 target -0.090021683 |diff| = 3.340e-11 (gate < 1e-09)
+  [PASS] A2-G2(d) p_spec(neg) full: p = (1+1)/(1+78) = 0.02531645569620253 target 0.02531645569620253 (2/79); k = 1 target 1; beaters ['G_P254F'] target ['G_P254F']
+  [PASS] A2-G2(e) p_spec(neg) H: p = (1+3)/(1+78) = 0.05063291139240506 target 0.05063291139240506 (4/79); k = 3 target 3; beaters ['AV_195', 'AV_220', 'G_P254F'] target ['AV_195', 'AV_220', 'G_P254F']
+  [PASS] A2-G2(f) rho(delta, S_W): got -0.32376573717755663 target -0.32376573717755663 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(g) rho(own_e.b, S_W): got 0.085391652432165 target 0.085391652432165 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(h) partial rho controlling S_W (p4c.partial_spearman): got -0.06414804421216103 target -0.06414804421216103 |diff| = 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G2(h) retention |partial|/|raw| (3 dp): got 0.728 target 0.728 |diff| = 0.000e+00 (gate < 1e-15)
+  [PASS] A2-G2(i) two-covariate partial (4 dp): got -0.0829 target -0.0829 |diff| = 0.000e+00 (gate < 1e-15)
+  [PASS] rule 6 identity: every position once == point estimate: every-once -0.08811806424891734 point -0.08811806424891734 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] rule 6 draw-by-draw reference (500 draws): max|corrected - reference| = 0.000e+00 (gate < 1e-12)
+  [PASS] rule 6 Phase 1 CI lo: got -0.1173334458953319 target -0.1173334458953319 |diff| = 0.000e+00 (gate < 1e-09)
+  [PASS] rule 6 Phase 1 CI hi: got -0.05951138449511738 target -0.0595113844951173 |diff| = 7.633e-17 (gate < 1e-09)
+  [PASS] A2-G3 re-exports are the imported objects: p4c.spearman/p_spec/pos_cluster_boot/reference_boot are phase3_common's objects; p4c.pos_cluster_boot_corrected is phase2_diag4's object (script 144's routine is never importable from this path)
+  [PASS] A2-G3 equal_count_bins 10 -> 2: sizes [5, 5] target [5, 5]; lower bin [0.0, 1.0, 2.0, 3.0, 4.0] target [0.0, 1.0, 2.0, 3.0, 4.0]
+  [PASS] A2-G3 equal_count_bins 11 -> 4: sizes [3, 3, 3, 2] target [3, 3, 3, 2]
+  [PASS] A2-G3 equal_count_bins rejects n_bins > n: ValueError: n_bins must be in 1..n
+  [PASS] A2-G3 stratified_spearman both strata monotone: got 1.0 target 1.0
+  [PASS] A2-G3 stratified_spearman weighted mean (1.0, 0.0) at 4/4: got 0.5 target 0.5 = (4*1.0 + 4*0.0)/8
+  [PASS] A2-G3 stratified_spearman drops the undefined stratum (I1): got 0.5 target 0.5 (stratum c constant y dropped, weights renormalised over a and b)
+  [PASS] A2-G3 decomposition PLANTED PURE-BETWEEN: rho_between 1.0 target 1.0; rho_within 0.0 target 0.0 (each position's y is the fixed permutation 3,1,4,2 of its x -> within-rho 0; position means strictly ordered -> between-rho 1)
+  [PASS] A2-G3 decomposition PLANTED PURE-WITHIN: rho_within 1.0 target 1.0; rho_between 0.0 target 0.0 (position means ordered 1,2,3,4 against 3,1,4,2 -> 0; within-position y = x + const -> 1)
+  [PASS] A2-G3 decomposition excludes a position below min_rows (I2): n_qualifying 6 target 6; n_positions 7 target 7 (the 3-row position is excluded)
+  [PASS] A2-G3 partial == closed form (1 control): library 0.6897973159953645 closed form np.float64(0.6897973159953646) |diff| 1.110e-16 (gate < 1e-12)
+  [PASS] A2-G3 partial == closed form (2 controls, matrix inversion): library 0.6934320177009149 closed form 0.6934320177009148 |diff| 1.110e-16 (gate < 1e-12)
+  [PASS] A2-G3 permute_within_groups preserves each group's multiset and mean: per-group multiset True, per-group means True (position-level structure kept), global multiset True
+  [PASS] A2-G3 permute_within_groups is seeded and actually shuffles: same seed reproduces True; different seed differs True; not the identity True
+  [PASS] A2-G3 harness == the project's rebuild_interaction_fit: max|diff| 0.000e+00 (gate < 1e-12); own_eb_from_arrays must be the unmodified pipeline, not a re-derivation
+  [PASS] A2-G3 G-M4 simulation identity (zero noise, E = observed m): simulate_rho -0.07692307692307693 direct -0.07692307692307693 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 rank_normal_z: mean 0, sd 1, 0 at the median, antisymmetric: mean -8.882e-17, sd np.float64(1.0), z[2] 5.071e-17, z[0]+z[4] 0.000e+00, z[1]+z[3] -2.220e-16 (v = 1..5, q = (r-0.5)/5 = 0.1/0.3/0.5/0.7/0.9)
+  [PASS] A2-G3 plant_term at r0 = +1 / -1 / 0: r0=+1 == s_e*z 0.000e+00; r0=-1 == -s_e*z 0.000e+00; r0=0 == s_e*u 0.000e+00
+  [PASS] A2-G3 power_curve hand-built bands: q_lo 0.0 q_hi 0.0 (both 0.0); power r0=-0.1 0.9 (target 0.90), -0.05 0.1 (0.10), +0.05 0.1 (0.10), +0.1 0.9 (0.90), 0 1.0 (1.00, all zero-band draws <= 0)
+  [PASS] A2-G3 power_curve mean_rho is each band's mean: r0=-0.1 mean -0.44 vs np.float64(-0.44); r0=+0.1 mean 0.44 vs np.float64(0.44)
+  [PASS] A2-G3 min_detectable_effect interpolation (I5): neg 0.09375 pos 0.09375 headline 0.09375 target 0.09375 (= 0.05 + (0.8-0.1)/(0.9-0.1)*0.05 = 0.09375)
+  [PASS] A2-G3 min_detectable_effect 'above the grid': neg 'above the grid' pos 'above the grid' headline 'above the grid'; target the string 'above the grid' on all three
+  [PASS] A2-G3 min_detectable_effect one side only -> headline = that side: neg 0.09285714285714287 pos 'above the grid' headline 0.09285714285714287 (headline must be the numeric side)
+  [PASS] A2-G3 attenuation_slope: slope 1.9999999999999993 intercept 1.6716222905400291e-16 target 2.0 / 0.0
+  [PASS] A2-G3 whole_placebo IDENTITY (every position once == observed, frozen G-M7): p_spec 1.0 target 1.0; k 4 target 4; rho_A 0.21930937279774487 target 0.21930937279774487
+  [PASS] A2-G3 whole_placebo DRAW-BY-DRAW reference (20 draws): max|new - reference|: rho_A 0.000e+00, rho_N 0.000e+00, k 0.0, p_spec 0.000e+00 (gate < 1e-12; the reference rebuilds position -> rows with flatnonzero and calls scipy per background)
+  [PASS] A2-G3 whole_placebo DETERMINISM (same seed): rho_A identical True, k identical True
+  [PASS] A2-G3 cell_labels frozen boundaries and gaps: got ['C1', '', '', 'C3', '', 'C4', '', 'C2', ''] target ['C1', '', '', 'C3', '', 'C4', '', 'C2', ''] (d3=12 in C1, 12.000001 out; d3=18 is NOT > 18 so out of C3 until 18.000001; d3=20 is NOT > 20 so out of C4 until 20.000001; dseq 21..40 in no cell; NaN -> '')
+  [PASS] A2-G3 cell_labels C1/C2 dseq boundary (frozen NEIGH section 2: C1 is dseq <= 20, C2 is dseq > 40): got ['C1', '', '', 'C2', ''] target ['C1', '', '', 'C2', ''] (dseq 20 -> C1, 20.000001 -> gap, 40 -> gap because C2 needs > 40, 40.000001 -> C2, 21 -> gap; the frozen text is C1: d3 <= 12 AND dseq <= 20; C2: d3 <= 12 AND dseq > 40)
+  [PASS] A2-G3 interval_labels GB1 separation strata 1-5 / 6-15 / 16-54: got ['near', 'near', 'mid', 'mid', 'far', 'far', ''] target ['near', 'near', 'mid', 'mid', 'far', 'far', '']
+  [PASS] A2-G3 interval_labels GB1 Angstrom strata <8 / 8-14 / >14: got ['d3_lt8', 'd3_8_14', 'd3_8_14', 'd3_gt14'] target ['d3_lt8', 'd3_8_14', 'd3_8_14', 'd3_gt14']
+  [PASS] A2-G3 seq_separation: |100-222| = 122.0 target 122.0
+  [PASS] A2-G3 auroc == sklearn (with ties): library 0.75 sklearn 0.75 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 auroc == sklearn (perfect): library 1.0 sklearn 1.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 auroc == sklearn (inverted): library 0.0 sklearn 0.0 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 balanced_pr_curve coordinates == sklearn's weighted precision_recall_curve (recall 1..end): max|diff| recall 0.000e+00, balanced precision 1.110e-16 (gate < 1e-12).  sklearn's precision with sample weights N=15 on positives and P=15 on negatives is N*TP/(N*TP+P*FP) = TPR/(TPR+FPR) exactly
+  [PASS] A2-G3 balanced_pr anchor equals the top threshold's own value (decision I6): bp[0] np.float64(1.0) bp[1] np.float64(1.0) (recall 0 is anchored at the top threshold, not at sklearn's artificial precision=1.0 point np.float64(1.0); that one conventional difference is 0.000e+00 and is documented by decision I6)
+  [PASS] A2-G3 balanced_pr_auc == sklearn.metrics.auc on the same coordinates: library 0.8722222222222222 sklearn-path 0.8722222222222222 |diff| 0.000e+00 (gate < 1e-12)
+  [PASS] A2-G3 balanced_pr coordinates == sklearn's roc_curve path (second independent sklearn path): max|diff| 0.000e+00 (gate < 1e-12); chance level 0.5 = 0.5
+  [PASS] A2-G3 balanced_pr_auc of a chance-level toy is finite and near 0.5: got 0.45406558360717164, target finite and within 0.1 of 0.5 (balanced precision = TPR/(TPR+FPR) = 0.5 at chance)
+  [PASS] A2-G3 word_m1_partial (MECH M-1): targets: (<=0.05, <=0.10) -> PARTIAL-SURVIVES including exactly 0.05/0.10; a failing p -> PARTIAL-WEAKENS; CI touching 0 or a positive CI -> PARTIAL-DOES-NOT-SURVIVE
+  [PASS] A2-G3 word_m3_artifact (MECH M-3): targets: obs <= p2.5 (including equal) -> EXCESS-OVER-ARTIFACT, else CONSISTENT-WITH-ARTIFACT
+  [PASS] A2-G3 word_m5_carry (MECH M-5): targets: both meet -> BOTH-CARRY; only within -> WITHIN-CARRIED; only between -> BETWEEN-CARRIED; neither -> NEITHER-CARRIES; p = 0.05 exactly meets, 0.0501 does not
+  [PASS] A2-G3 word_m6_stable (MECH M-6): targets: >= 0.80 STABLE; [0.50, 0.80) MODERATE (0.50 is MODERATE); < 0.50 FRAGILE
+  [PASS] A2-G3 word_conditioning (UTIL U-1 / U-2): targets: entirely above 0 -> HELPS; entirely below 0 -> HURTS; strictly inside (-0.02, +0.02) -> EQUIVALENT; touching -0.02/+0.02 -> INCONCLUSIVE; a positive CI inside the margin -> HELPS (precedence rule I7, the frozen order)
+  [PASS] A2-G3 word_underpowered (UTIL): targets: 14 vs 100 (either side) -> UNDERPOWERED; 15 and 15 -> no word (None)
+  [PASS] A2-G3 GB1D outcome words: targets: iff-conditions returned as BOOL for the three blocks with no else-word (I8), CI touching 0 -> False; SEPARATION-MATTERS iff the CI excludes 0, else SEPARATION-NOT-RESOLVED
+  [PASS] A2-G3 word_neighbour (NEIGH section 5): targets: |NB| 30 & p <= 0.05 -> POSITION-SPECIFIC (0.05 exactly meets); |NB| 29 -> UNDERPOWERED whatever p; 0.05 < p <= 0.10 -> UNRESOLVED; p > 0.10 -> REGION-LIKE
+  [PASS] A2-G3 word_distance (NEIGH section 6): targets: only d3 excludes 0 -> 3D-LOCAL; only dseq -> SEQUENCE-LOCAL; both -> BOTH-LOCAL; neither -> NEITHER-RESOLVED; a strictly positive CI excludes 0 as well; and a CI TOUCHING zero (0.0, 0.05) does NOT exclude it, same convention as M-1 -- _excludes_zero is lo > 0 or hi < 0
+  [PASS] A2-G3 word_ladder (LADDER section 3): targets: CI below 0 and p <= 0.10 -> MODEL-REPLICATES (0.10 exactly meets); CI below 0 but p > 0.10 -> MODEL-PARTIAL; CI including 0 or above 0 -> MODEL-DOES-NOT-REPLICATE
+
+  70/70 checks PASS, 0 FAIL (0 of the FAILs are smoke SKIPS).
+
+LIMITATIONS (printed, per AGENTS 6): A2-G2 REPRODUCES cached Phase 1/2 numbers through the new library -- it validates the library code (reproduction is not replication), it is not independent evidence for any claim, and it produces no new inference.  A2-G3's toys fix the arithmetic, not the biology.  Every bootstrap exercised here resamples POSITION CLUSTERS; the corrected routine is phase2_diag4's, imported unmodified; script 144's routine is never used.  A smoke run (N_BOOT != 10000) cannot PASS A2.
+
+GATE PASS -- A2-G1, A2-G2 and A2-G3 all pass; phase4_common is trusted for the Phase 4 analyses per Task A2's decision rule.
+Elapsed 50.7s

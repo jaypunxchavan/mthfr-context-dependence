@@ -1,0 +1,31 @@
+# Where each expected headline value is recorded.  rebuild_headlines.sh compares the
+# freshly computed value against these, and NEVER edits them to make a run pass.
+#
+# value | module | label | where it is recorded
+-0.090021683	anchor	rho(delta_A222V, own_e.b) on the held-out frame H, 650M	G-M1; PHASE4A_BUILD_LOG.md [A8d]
+0.127660	neighbour	p_NB(neg) = (1+5)/47 over |NB| = 46	PHASE4A_BUILD_LOG.md [A7e] / driver_phase4A_stage_SA2.log
+REGION-LIKE	neighbour	section-5 word (frozen)	driver_phase4A_stage_SA2.log
++0.192294	neighbour	Amendment 3 flexible partial, d3 | spline(dseq)	driver_phase4A_stage_SA2.log
+-0.053758	neighbour	Amendment 3 flexible partial, dseq | spline(d3)	driver_phase4A_stage_SA2.log
+NEITHER-RESOLVED	neighbour	section-6 word (frozen)	driver_phase4A_stage_SA2.log
+0.050633	ladder	p_spec_H(neg) = (1+3)/79 over the 78 nulls	PHASE4A_BUILD_LOG.md [A8d]
++0.713319	ladder	gradient Spearman(rho_b, d3), 67 resolved nulls	PHASE4A_BUILD_LOG.md [A8d]
+-0.612697	ladder	shift confound Spearman(rho_b, mean|delta_b|), 96 backgrounds	PHASE4A_BUILD_LOG.md [A8d]
+MODEL-REPLICATES	ladder	650M word (frozen)	PHASE4A_BUILD_LOG.md [A8d]
+-0.088118064	mechanism	rho_A222V on the full frame (G-M1)	PHASE4A_BUILD_LOG.md [A4]
+-0.064148044	mechanism	M-1 partial controlling S_W, full frame (G-M2)	PHASE4A_BUILD_LOG.md [A4]
+-0.028237316	mechanism	M-5 rho_within, full frame	PHASE4A_BUILD_LOG.md [A4]
+-0.177458126	mechanism	M-5 rho_between, full frame	PHASE4A_BUILD_LOG.md [A4]
+PARTIAL-SURVIVES	mechanism	M-1 word (frozen)	PHASE4A_BUILD_LOG.md [A4]
+EXCESS-OVER-ARTIFACT	mechanism	M-3 word (frozen)	PHASE4A_BUILD_LOG.md [A4]
+WITHIN-CARRIED	mechanism	M-5 word (frozen)	PHASE4A_BUILD_LOG.md [A4]
+MODERATE	mechanism	M-6 word (frozen); P = 0.5760 full / 0.7720 H	PHASE4A_BUILD_LOG.md [A4]
+-0.003397796	prediction	U-1 Delta = rho(S_A,y) - rho(S_W,y)	PHASE4A_BUILD_LOG.md [A5]
+CONDITIONING-HURTS	prediction	U-1 word (frozen)	PHASE4A_BUILD_LOG.md [A5]
+UNVERIFIED-LABELS	prediction	U-2 (G-U2 failed; no word)	PHASE4A_BUILD_LOG.md [A5]
+-0.271233756	GB1	G-1 mean lambda_model	PHASE4A_BUILD_LOG.md [A6]
++0.036680324	GB1	G-1 mean lambda_data (DATA-DECAYS does not fire)	PHASE4A_BUILD_LOG.md [A6]
+-0.307914080	GB1	G-1 mean d_b (LOCALITY-DIFFERS fires)	PHASE4A_BUILD_LOG.md [A6]
+-0.022238860	GB1	G-2 paired near - far (SEPARATION-MATTERS)	PHASE4A_BUILD_LOG.md [A6]
+-0.3238	sign	rho(delta, S_W)	SIGN_CONVENTION.md
++0.0854	sign	rho(own_e.b, S_W)	SIGN_CONVENTION.md
