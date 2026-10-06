@@ -737,6 +737,239 @@ def module_N():
 
 
 # =============================================================== MODULE L
+# --------------------------------------------------------------------------
+# SESSION 4b-B: the full three-model ladder, and the two cross-model
+# agreements.  Written while Night B was running, so it is code-only until the
+# night finishes; nothing here ran before the 150M/35M files existed.
+# --------------------------------------------------------------------------
+LADDER = ROOT / "data/processed/phase4/ladder"
+
+
+def _h_rows(t, own_pos, keys):
+    """Boolean mask over the frame for the H rows of one background."""
+    inH = t["in_H"].to_numpy()
+    pos = t["position"].to_numpy()
+    return inH & (pos != own_pos)
+
+
+def ladder_column(model, t, arm_roster, own_pos_of):
+    """Build {bg_id: (frame_row_indices, delta)} for one model on H rows, with the
+    background's own position excluded.
+
+    650M is the CACHED column: A222V from esm2_a222v_bg_scores.csv, the other 96 from
+    data/processed/phase2/bg_*.csv, the wild-type side from esm2_wt_scores.csv.
+    150M / 35M are the night's own outputs: ladder/<model>/bg_*.csv with that model's
+    OWN wt_H.csv as the wild-type side (the frozen design scores delta against the
+    model's own wild-type arm, LD-DEC5).
+    Returns None when the model has no scores yet.
+    """
+    tpos = t["position"].to_numpy(int)
+    tam = t["mut_aa"].astype(str).to_numpy()
+    inH = t["in_H"].to_numpy()
+    tkey = [(int(a), b) for a, b in zip(tpos, tam)]
+
+    if model == "650M":
+        wt = pd.read_csv(WT_SCORES)
+        wmap = {(int(r.position), str(r.mut_aa)): float(r.esm2_score) for r in wt.itertuples()}
+        av = pd.read_csv(A222V_SCORES)
+        src = {"A222V": {(int(r.position), str(r.mut_aa)): float(r.esm2_score_a222v_bg)
+                         for r in av.itertuples()}}
+        for bg in arm_roster:
+            f = PHASE2 / f"bg_{bg}.csv"
+            if f.exists():
+                d = pd.read_csv(f)
+                src[bg] = {(int(r.position), str(r.mut_aa)): float(r.score)
+                           for r in d.itertuples()}
+    else:
+        mdir = LADDER / model
+        wt_path = mdir / "wt_H.csv"
+        if not wt_path.exists():
+            return None
+        w = pd.read_csv(wt_path)
+        wmap = {(int(r.position), str(r.mut_aa)): float(r.score) for r in w.itertuples()}
+        src = {}
+        for f in sorted(mdir.glob("bg_*.csv")):
+            d = pd.read_csv(f)
+            src[f.stem[3:]] = {(int(r.position), str(r.mut_aa)): float(r.score)
+                               for r in d.itertuples()}
+
+    out = {}
+    for bg, smap in src.items():
+        ownp = own_pos_of.get(bg, -1)
+        idx, dd = [], []
+        for i, k in enumerate(tkey):
+            if not inH[i] or tpos[i] == ownp:
+                continue
+            if k in smap and k in wmap:
+                idx.append(i)
+                dd.append(smap[k] - wmap[k])
+        if len(idx) > 10:
+            out[bg] = (np.asarray(idx, dtype=int), np.asarray(dd, dtype=float))
+    return out or None
+
+
+def module_LALL():
+    """Per-model words for every ladder model that has scores, plus both
+    cross-model agreements, recomputed from the raw score files.
+
+    WORD (frozen MODEL_LADDER section 3, quoted): MODEL-REPLICATES iff the CI of
+    rho_A222V on H lies below zero AND p_spec_H(neg) <= 0.10.
+    MODEL-DOES-NOT-REPLICATE iff the CI includes zero or the sign reverses.
+    MODEL-PARTIAL otherwise.
+
+    C2-DEC12 (DISCLOSED BUG IN MY OWN EARLIER CODE): session 4b's module_L derived
+    the word from the PARTIAL's CI rather than the ANCHOR rho's CI. Both intervals
+    exclude zero, so the word came out the same, but the statistic was the wrong one
+    and is corrected here.
+    """
+    hdr("MODULE L, ALL MODELS -- per-model words and both cross-model agreements")
+    t = frame()
+    own = t["own_e_b"].to_numpy(float)
+    tpos_all = t["position"].to_numpy(int)
+    tam_all = t["mut_aa"].astype(str).to_numpy()
+    d3 = pd.read_csv(D3_TBL)
+    ar = pd.read_csv(ARM_ROSTER)
+    own_pos_of = {r.bg_id: int(r.position) for r in ar.itertuples()}
+    nulls78 = [r.bg_id for r in ar.itertuples() if r.arm in ("V", "G")]
+    d3_of = dict(zip(d3.bg_id, d3.d3_CA))
+    resolved_nulls = [b for b in nulls78
+                      if b in set(d3[d3.resolved == True].bg_id)]  # noqa: E712
+
+    cols, rhos, wtcol = {}, {}, {}
+    for model in ("650M", "150M", "35M"):
+        c = ladder_column(model, t, [r.bg_id for r in ar.itertuples()], own_pos_of)
+        if c is None:
+            print(f"\n-- model {model}: NO SCORES ON DISK -> every number for this "
+                  f"model is NOT-COMPUTABLE (C2-DEC6); no word is issued")
+            continue
+        cols[model] = c
+        rho_b, mean_abs = {}, {}
+        for bg, (idx, delta) in c.items():
+            rho_b[bg] = sp(delta, own[idx])
+            mean_abs[bg] = float(np.mean(np.abs(delta)))
+        rhos[model] = rho_b
+        wtcol[model] = mean_abs
+        print(f"\n-- model {model}: {len(c)} backgrounds with scores on H "
+              f"(rows per background {min(len(v[0]) for v in c.values())}"
+              f"-{max(len(v[0]) for v in c.values())})")
+
+        rhoA = rho_b["A222V"]
+        TGT = {"650M": -0.090021683, "150M": 0.026745078, "35M": -0.020193686}
+        cmp(f"[{model}] rho_A222V on H", rhoA, TGT[model], TOL_PRINTED,
+            "(174 prints 9 dp; C2-DEC9)")
+        # (i) the ANCHOR CI -- this is the CI the frozen word uses
+        ia = list(cols[model]["A222V"][0])
+        pos_a = t["position"].to_numpy()[ia]
+        dlt_a = cols[model]["A222V"][1]
+        own_a = own[ia]
+        point, lo, hi, nf = pos_cluster_boot(
+            pos_a, lambda ix: sp(dlt_a[ix], own_a[ix]), n_boot=N_BOOT, seed=SEED)
+        print(f"    (i)   anchor rho_A222V on H {rhoA:+.9f} CI [{lo:+.6f}, {hi:+.6f}] "
+              f"({nf}/{N_BOOT} finite, position clusters)  <- the CI the WORD uses")
+        # (ii) p_spec over the 78 nulls
+        vn = np.array([rho_b[b] for b in nulls78 if b in rho_b])
+        kn, _ = p_spec_count(rhoA, vn, "neg")
+        ka, _ = p_spec_count(rhoA, vn, "abs")
+        TGTP = {"650M": 0.050633, "150M": 0.810127, "35M": 0.341772}
+        cmp(f"[{model}] p_spec_H(neg)", round((1 + kn) / (1 + len(vn)), 6), TGTP[model],
+            TOL_PRINTED, f"= (1+{kn})/(1+{len(vn)}) vs the frozen 0.10 threshold")
+        print(f"          beaters: {sorted([b for b in nulls78 if b in rho_b and rho_b[b] <= rhoA])}")
+        # (iii) partial controlling THIS model's own wild-type score
+        print(f"    (iii) partial rho_H | this model's S_W: ", end="")
+        if model == "650M":
+            sw = t["esm2_score"].to_numpy(float)[ia]
+            cmp(f"[{model}] partial rho_H | S_W", partial_spearman(dlt_a, own_a, sw),
+                -0.067208910, TOL_STAT, "(650M: the WT-background ESM-2 score)")
+        else:
+            w = pd.read_csv(LADDER / model / "wt_H.csv")
+            wm = {(int(r.position), str(r.mut_aa)): float(r.score) for r in w.itertuples()}
+            sw = np.array([wm[(int(tpos_all[i]), str(tam_all[i]))] for i in ia])
+            TGT3 = {"150M": 0.015719, "35M": -0.009812}
+            cmp(f"[{model}] partial rho_H | its own WT arm",
+                round(partial_spearman(dlt_a, own_a, sw), 6), TGT3[model], TOL_PRINTED,
+                "(174 prints 6 dp; no word attaches to this number)")
+        # (iv) gradient over the resolved nulls
+        gv = np.array([rho_b[b] for b in resolved_nulls])
+        gx = np.array([float(d3_of[b]) for b in resolved_nulls])
+        TGT4 = {"650M": 0.713319, "150M": 0.294124, "35M": 0.204969}
+        cmp(f"[{model}] gradient Spearman(rho_b, d3) over 67 resolved nulls",
+            round(sp(gx, gv), 6), TGT4[model], TOL_PRINTED,
+            f"(n = {len(resolved_nulls)}; 174 prints 6 dp)")
+        # (v) shift confound over the 96 backgrounds
+        c96 = [b for b in ar.bg_id if b != "A222V" and b in rho_b]
+        TGT5 = {"650M": -0.612697, "150M": 0.094615, "35M": -0.333315}
+        cmp(f"[{model}] shift confound Spearman(rho_b, mean|delta_b|)",
+            round(sp(np.array([wtcol[model][b] for b in c96]),
+                     np.array([rho_b[b] for b in c96])), 6),
+            TGT5[model], TOL_PRINTED, f"(n = {len(c96)}; 174 prints 6 dp)")
+        # word, from the ANCHOR CI.  Frozen section 3, all three clauses:
+        #   REPLICATES         iff the CI lies below zero AND p_spec_H(neg) <= 0.10
+        #   DOES-NOT-REPLICATE iff the CI INCLUDES ZERO or the sign reverses
+        #   PARTIAL            otherwise
+        # C2-DEC14 (DISCLOSED, session 4b-C): my first version tested `lo > 0` for the
+        # DOES-NOT clause, which means "the CI lies entirely ABOVE zero" and therefore
+        # missed the common case of an interval that SPANS zero.  It wrongly returned
+        # MODEL-PARTIAL for both 150M and 35M, whose intervals both span zero.  The
+        # staged words are correct; this was my bug, disclosed here and in the log
+        # rather than quietly corrected.
+        p_here = (1 + kn) / (1 + len(vn))
+        ci_includes_zero = (lo <= 0.0 <= hi)
+        sign_reversed = (rhoA > 0.0)     # the anchor's sign is negative by construction
+        if (hi < 0.0) and (p_here <= 0.10):
+            word = "MODEL-REPLICATES"
+        elif ci_includes_zero or sign_reversed:
+            word = "MODEL-DOES-NOT-REPLICATE"
+        else:
+            word = "MODEL-PARTIAL"
+        print(f"    word derivation: CI [{lo:+.6f}, {hi:+.6f}] includes zero = "
+              f"{ci_includes_zero}; sign reversed (rho_A222V > 0) = {sign_reversed}; "
+              f"p_spec_H(neg) = {p_here:.6f} <= 0.10 = {p_here <= 0.10}")
+        TGTW = {"650M": "MODEL-REPLICATES", "150M": "MODEL-DOES-NOT-REPLICATE",
+                "35M": "MODEL-DOES-NOT-REPLICATE"}
+        cmp(f"[{model}] WORD (frozen section 3)", word, TGTW[model], 0,
+            "(CI of rho_A222V on H below zero AND p_spec_H(neg) <= 0.10)")
+
+    # ------------------------------------------------ cross-model agreement
+    print("\n-- CROSS-MODEL AGREEMENT (frozen section 2, last clause)")
+    for other in ("150M", "35M"):
+        if "650M" not in cols or other not in cols:
+            print(f"  650M vs {other}: NOT-COMPUTABLE (a column is missing; C2-DEC6)")
+            continue
+        per_bg, miss = [], 0
+        common_rho = []
+        for bg in cols["650M"]:
+            if bg not in cols[other]:
+                miss += 1
+                continue
+            i1, d1 = cols["650M"][bg]
+            i2, d2 = cols[other][bg]
+            pos2 = {int(v): j for j, v in enumerate(i2)}
+            pick = [pos2[int(v)] for v in i1 if int(v) in pos2]
+            if len(pick) < 10:
+                miss += 1
+                continue
+            per_bg.append(sp(d1, d2[pick]))
+            if bg in rhos["650M"] and bg in rhos[other]:
+                common_rho.append((rhos["650M"][bg], rhos[other][bg]))
+        a = np.array(per_bg)
+        cr = np.array(common_rho)
+        print(f"  650M vs {other}: per-background Spearman(delta_650M, delta_{other}) "
+              f"on common H rows, over {len(a)} backgrounds ({miss} unusable)")
+        print(f"     MEDIAN {np.median(a):+.6f}   RANGE [{a.min():+.6f}, {a.max():+.6f}]")
+        TGTC = {"150M": (-0.145645, 0.086725), "35M": (0.381036, 0.071303)}
+        cmp(f"650M vs {other}: across-background Spearman(rho_b) over 97 backgrounds",
+            round(sp(cr[:, 0], cr[:, 1]), 6), TGTC[other][0], TOL_PRINTED,
+            f"(n = {len(cr)})")
+        cmp(f"650M vs {other}: per-background delta Spearman, MEDIAN over 97",
+            round(float(np.median(a)), 6), TGTC[other][1], TOL_PRINTED)
+        cmp(f"650M vs {other}: per-background delta Spearman, RANGE low",
+            round(float(a.min()), 6), {"150M": -0.072518, "35M": -0.084198}[other],
+            TOL_PRINTED)
+        cmp(f"650M vs {other}: per-background delta Spearman, RANGE high",
+            round(float(a.max()), 6), {"150M": 0.380496, "35M": 0.348244}[other],
+            TOL_PRINTED)
+
+
 def module_L():
     hdr("MODULE L -- model ladder, the 650M column (150M/35M: NOT-COMPUTABLE, "
         "C2-DEC6 -- night B never ran)")
@@ -1052,8 +1285,15 @@ def module_M():
               f"{N_SIM}-draw grid:")
         for r0, mo, pw in m3["grid"]:
             print(f"      r0 {r0:+.2f}  mean observed rho {mo:+.6f}  power {pw:.3f}")
-        print(f"      staged: MDE |r0| at 80% power 0.03994845, slope +0.832651, "
-              f"intercept +0.012097")
+        print(f"    MDE |r0| at 80% power (nine-point grid, linear interpolation): "
+              f"{m3['mde']}   | staged 0.03994845")
+        print(f"    attenuation slope {m3['slope']:+.6f} (staged +0.832651), "
+              f"intercept {m3['intercept']:+.6f} (staged +0.012097)")
+        cmp("M-4 attenuation slope", round(m3["slope"], 6), 0.832651, 0.05,
+            "(nine x 200 draws is a Monte-Carlo quantity; tolerance 0.05)")
+        cmp("M-4 attenuation intercept", round(m3["intercept"], 6), 0.012097, 0.02, "")
+        cmp("M-4 MDE |r0| at 80% power", round(m3["mde"], 6) if isinstance(m3["mde"], float)
+            else m3["mde"], 0.03994845, 0.01, "(interpolated off the same grid)")
 
 
 def decomp_positions(P, O, D, qual):
@@ -1093,21 +1333,31 @@ def simulation_M3_M4(t, n_sim):
     If it does not, this generator is not the project's pipeline, every number
     below is suppressed, and M-3/M-4 are reported NOT-COMPUTABLE (C2-DEC1/DEC6).
     """
-    sys.path.insert(0, str(ROOT / "scripts"))
-    from lib.own_context import wls_line          # the project's own fit, unmodified
-    from sklearn.isotonic import IsotonicRegression
+    sys.path.insert(0, str(ROOT))
+    from scripts.lib.own_context import (CONCS, MT_SCORE_COLS, MT_SE_COLS,  # noqa
+                                         WT_SCORE_COLS, WT_SE_COLS, wls_line)
+    from scripts.lib import phase4_common as p4c        # the frozen GENERATOR entry points
+    from scripts.lib.stats_ext import rebuild_interaction_fit   # the project's own
+    from sklearn.isotonic import IsotonicRegression             # two-pass fit
 
-    raw = pd.read_csv(ROOT / "data/raw/mthfrModel/results/folate_response_model5.csv",
-                      float_precision="round_trip")
-    conds = ["12", "25", "100", "200"]
-    M = np.column_stack([raw[f"m{c}.score"].to_numpy(float) for c in conds])
-    M_SE = np.column_stack([raw[f"m{c}.se"].to_numpy(float) for c in conds])
-    wf = raw["w.fitness"].to_numpy(float)
+    raw = pd.read_csv(ROOT / "data/raw/mthfrModel/results/folate_response_model5.csv")
+    # C2-DEC13 (session 4b-B): FOUR of this generator's inputs come from the
+    # PROJECT'S OWN two-pass pipeline, not from the raw columns.  Getting this wrong
+    # is exactly why the first attempt failed its identity gate at 4.544e-02:
+    #   wf     must be fit["w"]["fitness"] -- the FITTED WT-arm fitness from
+    #          fit_single_arm, which differs from raw["w.fitness"] by up to 8.906e-03;
+    #   valid  must be fit["valid"] -- the SECOND-PASS mask from the corrected fit
+    #          (46,938 true cells), not the first-pass finite mask (48,187);
+    #   M_SE   is fit["M_se"];   M is raw[MT_SCORE_COLS].
+    # With all four taken from the pipeline the identity gate returns 0.000e+00.
+    fit = rebuild_interaction_fit(raw)
+    M = raw[MT_SCORE_COLS].to_numpy(float)
+    M_SE = np.asarray(fit["M_se"], float)
+    valid = np.asarray(fit["valid"], bool)
+    wf = np.asarray(fit["w"]["fitness"], float)
     raw_pos = raw["start"].to_numpy(int)
-    valid = (np.isfinite(M) & np.isfinite(M_SE) & (M_SE > 0)
-             & np.isfinite(wf)[:, None])
-    print(f"    raw table {raw.shape[0]} rows; valid mask keeps "
-          f"{int(valid.all(axis=1).sum())} rows x 4 conditions")
+    print(f"    raw table {raw.shape[0]} rows; pipeline valid mask keeps "
+          f"{int(valid.sum())} of {valid.size} (row, condition) cells")
 
     pos_sorted = np.unique(raw_pos)
     rng0 = np.random.default_rng(0)
@@ -1126,34 +1376,51 @@ def simulation_M3_M4(t, n_sim):
             iso.fit(wf[tr], M[tr, c], sample_weight=1.0 / M_SE[tr, c] ** 2)
             E_iso[te, c] = iso.predict(wf[te])
 
-    CONCS = np.array([12.0, 25.0, 100.0, 200.0])   # numeric: broadcast to (n, 4)
+    # The frozen G-M4 IDENTITY GATE, in the frozen block's own words: "with every
+    # noise term zero and E_c replaced by the observed m, the pipeline returns the
+    # recorded own_e.b".  The pipeline itself is the project's UNMODIFIED
+    # two-pass fit, reached through phase4_common.own_eb_from_arrays -- importing
+    # phase4_common for the GENERATOR is what the frozen block requires (C2-DEC5);
+    # every statistic, percentile and word below is still computed here.
+    HGVS = raw["hgvs"].to_numpy()
+    W = raw[WT_SCORE_COLS].to_numpy(float)      # the proxy truth w* (n x 4)
+    W_SE = raw[WT_SE_COLS].to_numpy(float)
+    rec_all = pd.read_csv(ROOT / "data/processed/phase3/m1_own_e_b_ge.csv",
+                          float_precision="round_trip")
 
-    def aggregate(E, Mmat):
-        # wls_line returns (intercept, slope, df); own_e.b IS the weighted
-        # intercept of the residual on concentration (SIGN_CONVENTION.md), so the
-        # FIRST return is the one the pipeline calls own_e.b.
-        resid = np.where(valid, Mmat - E, np.nan)
-        eb, _slope, _df = wls_line(resid, M_SE, CONCS, valid)
-        bad = (~valid).sum(axis=1) > 2
-        return np.where(bad, np.nan, eb)
+    def pipeline_eb(w_sim, m_sim):
+        return p4c.own_eb_from_arrays(w_sim, W_SE, m_sim, M_SE, HGVS)
 
-    # ---- IDENTITY GATE: zero noise must reproduce the recorded GE-ISO own_e.b
-    eb_iso = aggregate(E_iso, M)
-    rec = pd.read_csv(ROOT / "data/processed/phase3/m1_own_e_b_ge.csv",
-                      float_precision="round_trip")
-    rec_map = dict(zip(rec["hgvs"], rec["own_e_b_ge_iso"]))
-    got = np.array([rec_map.get(h, np.nan) for h in raw["hgvs"]])
-    m2 = np.isfinite(got) & np.isfinite(eb_iso)
-    gmax = float(np.max(np.abs(got[m2] - eb_iso[m2])))
-    print(f"    IDENTITY GATE: my E_c^iso + the project's wls_line vs the recorded "
-          f"own_e_b_ge_iso over {int(m2.sum())} rows: max|diff| = {gmax:.3e} "
+    # identity: zero noise, E replaced by the observed m
+    _w0, _m0 = p4c.zero_epistasis_draw(W, M.copy(), M_SE, None,
+                                       np.random.default_rng(0),
+                                       m_noise=np.zeros(M.shape))
+    eb_id = pipeline_eb(_w0, _m0)
+    idx_of_all = pd.Series(np.arange(len(raw)), index=HGVS)
+    got = rec_all["own_e_b_recorded"].to_numpy()
+    ii = idx_of_all.reindex(rec_all["hgvs"]).to_numpy()
+    a_, b_ = got, eb_id[ii]
+    okm = np.isfinite(a_) & np.isfinite(b_)
+    gmax = float(np.max(np.abs(a_[okm] - b_[okm])))
+    print(f"    IDENTITY GATE (frozen G-M4: zero noise, E = observed m): my pipeline "
+          f"vs the recorded own_e.b over {int(okm.sum())} rows: max|diff| = {gmax:.3e} "
           f"(gate < 1e-12)")
-    if not (gmax < 1e-12):
-        print("    *** GATE FAILED -- this is NOT the project's pipeline. M-3 and "
-              "M-4 are NOT-COMPUTABLE in this session and no number is reported.")
+    # and the GE-ISO zero-noise path, which must reproduce the recorded GE-ISO column
+    resid0 = np.where(valid, M - E_iso, np.nan)
+    eb_iso0, _sl0, _df0 = wls_line(resid0, M_SE, CONCS, valid)
+    eb_iso0 = np.where((~valid).sum(axis=1) > 2, np.nan, eb_iso0)
+    got2 = rec_all["own_e_b_ge_iso"].to_numpy()
+    a2, b2 = got2, eb_iso0[ii]
+    ok2 = np.isfinite(a2) & np.isfinite(b2)
+    g2 = float(np.max(np.abs(a2[ok2] - b2[ok2])))
+    print(f"    IDENTITY GATE (GE-ISO zero noise vs the recorded own_e_b_ge_iso): "
+          f"{int(ok2.sum())} rows, max|diff| = {g2:.3e} (gate < 1e-12)")
+    if not (gmax < 1e-12 and g2 < 1e-12):
+        print("    *** GATE FAILED -- this is NOT the project's pipeline. M-3 and M-4 "
+              "are NOT-COMPUTABLE in this session and no number is reported.")
         return None
 
-    # ---- frame alignment and delta_real
+    # ---- frame alignment and delta_real (C2's own construction)
     idx_of = pd.Series(np.arange(len(raw)), index=raw["hgvs"])
     fidx = idx_of.reindex(t["hgvs_pro"].to_numpy()).to_numpy()
     if np.isnan(fidx).any():
@@ -1163,14 +1430,15 @@ def simulation_M3_M4(t, n_sim):
     fidx = fidx.astype(int)
     delta_real = np.full(len(raw), np.nan)
     delta_real[fidx] = t["delta"].to_numpy(float)
+    print(f"    frame alignment: {len(fidx)} frame rows -> raw rows; "
+          f"{int(np.isfinite(delta_real).sum())} raw rows carry a finite delta_real")
 
-    # ---- n_sim draws (PRIMARY: E_c^iso, sw_i = 0)
+    # ---- n_sim draws (PRIMARY: E_c^iso, sw_i = 0, m noise = m_se)
     rng = np.random.default_rng(SEED)
     rhos = np.empty(n_sim, float)
     for r in range(n_sim):
-        noise = rng.normal(0.0, 1.0, M.shape) * M_SE
-        M_sim = E_iso + noise
-        eb_sim = aggregate(E_iso, M_sim)
+        w_sim, m_sim = p4c.zero_epistasis_draw(W, E_iso, M_SE, None, rng)
+        eb_sim = pipeline_eb(w_sim, m_sim)
         sel = fidx
         m3 = np.isfinite(delta_real[sel]) & np.isfinite(eb_sim[sel])
         rhos[r] = sp(delta_real[sel][m3], eb_sim[sel][m3])
@@ -1180,6 +1448,7 @@ def simulation_M3_M4(t, n_sim):
            "frac": float(np.mean(fin <= -0.088118064)), "n": len(fin)}
 
     # ---- M-4 planting curve on three grid points (the doc's "three grid points")
+    rec_map = dict(zip(rec_all["hgvs"], rec_all["own_e_b_recorded"]))
     s_e = float(np.nanstd(np.array([rec_map.get(h, np.nan)
                                    for h in t["hgvs_pro"]], dtype=float)))
     # z_i: the standardised rank-normal score of delta_real(i), defined on the RAW
@@ -1190,14 +1459,20 @@ def simulation_M3_M4(t, n_sim):
     z[fin_d] = (rr - 1.0) / (int(fin_d.sum()) - 1)
     z[fin_d] = (z[fin_d] - z[fin_d].mean()) / z[fin_d].std()
     q_lo, q_hi = pct(fin, 2.5), pct(fin, 97.5)
+    # The NINE-point grid the staged run uses (frozen M-4), so that the MDE at 80%
+    # power is comparable with the staged 0.03994845.  Session 4b-B used three points
+    # because the task named three; that cannot reproduce a nine-point MDE.
+    GRID9 = (-0.30, -0.20, -0.10, -0.05, 0.0, 0.05, 0.10, 0.20, 0.30)
     grid = []
-    for r0 in (-0.30, 0.0, 0.30):
+    for r0 in GRID9:
         rg = np.random.default_rng(SEED + 1000)
         vals = []
         for _ in range(n_sim):
-            u = rg.normal(0.0, 1.0, M.shape) * M_SE
-            plant = s_e * (r0 * z[:, None] + np.sqrt(max(1 - r0 * r0, 0.0)) * rg.normal(0, 1, len(z)))
-            eb_sim = aggregate(E_iso, E_iso + u + plant)
+            pl = s_e * (r0 * z
+                        + np.sqrt(max(1 - r0 * r0, 0.0)) * rg.normal(0, 1, len(z)))
+            w_sim, m_sim = p4c.zero_epistasis_draw(W, E_iso, M_SE, None, rg,
+                                                   plant=pl)
+            eb_sim = pipeline_eb(w_sim, m_sim)
             sel = fidx
             m3 = np.isfinite(delta_real[sel]) & np.isfinite(eb_sim[sel])
             vals.append(sp(delta_real[sel][m3], eb_sim[sel][m3]))
@@ -1206,7 +1481,20 @@ def simulation_M3_M4(t, n_sim):
         thr = q_lo if r0 < 0 else q_hi
         power = float(np.mean(vals <= thr)) if r0 < 0 else float(np.mean(vals >= thr))
         grid.append((r0, float(np.mean(vals)), power))
+    # minimum detectable |r0| at 80% power, by linear interpolation in |r0|
+    mde = "above the grid"
+    pos = sorted([(abs(r), pw) for r, _, pw in grid])
+    for (a0, p0), (a1, p1) in zip(pos, pos[1:]):
+        if p0 < 0.80 <= p1 and p1 > p0:
+            mde = a0 + (0.80 - p0) * (a1 - a0) / (p1 - p0)
+            break
+    # attenuation slope: least squares of mean observed rho on r0 over the grid
+    xs = np.array([g[0] for g in grid]); ys = np.array([g[1] for g in grid])
+    slope, intercept = np.polyfit(xs, ys, 1)
     out["grid"] = grid
+    out["mde"] = mde
+    out["slope"] = float(slope)
+    out["intercept"] = float(intercept)
     return out
 
 
@@ -1371,7 +1659,9 @@ def build_gb1_partner_table():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--modules", default="S,N,L",
-                    help="comma-separated subset of S,M,U,G,N,L")
+                    help="comma-separated subset of S,M,U,G,N,L,LALL "
+                         "(LALL = every ladder model that has scores + the two "
+                         "cross-model agreements)")
     args = ap.parse_args()
     t0 = time.time()
 
@@ -1412,7 +1702,8 @@ def main():
     for m in mods:
         try:
             {"S": module_S, "M": module_M, "U": module_U,
-             "G": module_G, "N": module_N, "L": module_L}[m]()
+             "G": module_G, "N": module_N, "L": module_L,
+             "LALL": module_LALL}[m]()
         except Exception as e:                                # noqa: BLE001
             import traceback
             traceback.print_exc()

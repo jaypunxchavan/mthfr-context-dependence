@@ -1,0 +1,286 @@
+########## rescore AV_511, model 150M, into data/processed/phase4/c1_rescore_scratch/ladder_150M_nightB ##########
+
+==========================================================================
+173 -- Module L ladder scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap here)  model=150M
+==========================================================================
+  out_dir = data/processed/phase4/c1_rescore_scratch/ladder_150M_nightB
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  LD-DEC1: load through esm.pretrained.esm2_t30_150M_UR50D (the hub entry point); load_model_and_alphabet_local is BROKEN under torch>=2.6 and is never called; the library esm_scoring.get_position_logprobs is used unmodified.
+  LD-DEC2: cache pre-check before the loader; missing -> exit 3, NEVER a download.
+  LD-DEC3: roster = A222V + the 96 of phase2_arm_roster.csv, in that order.
+  LD-DEC4: frame = H (455) minus own position when own in H; exact total 44,533 passes printed beside the doc's 44590.
+  LD-DEC5: one unbatched masked-marginal pass per (background, position), 19 substitutions per pass; delta vs THIS model's own WT arm.
+  LD-DEC6: outputs ladder/<model>/bg_<id>.csv (bg_id, position, mut_aa, score, delta) + wt_H.csv (bg_id=WT, no delta) + manifest.csv; 124's skip logic imported, its atomic write quoted (124 lines 235-264).
+  LD-DEC7: G-L1 cache pre-check + parameter count printed beside the A8a-measured target.
+  LD-DEC8: G-L2 (650M only): AV_220 on H vs cached rows, score AND delta, to 1e-6; ADDED sub-check G-L2(b) WT arm vs the cached WT scores; G-L3(a) reuses those two runs.
+  LD-DEC9: G-L3 per model: determinism to 1e-06, WT log-odds 0, coverage >= 95%.
+  LD-DEC10: gates run when something is to be scored; --gate-only runs them and writes nothing.
+  LD-DEC11: median s/pass + projection x1.25 beside the doc's pass count; no budget applied here (A9 sets it).
+  LD-DEC12: N_BOOT/SEED printed, unused.
+
+--------------------------------------------------------------------------
+G-L0 / INPUT PINS
+--------------------------------------------------------------------------
+  [PASS] G-L0 MODEL_LADDER_PREREG_v1 sha256: eafe37a85c902c2b
+  [PASS] G-L0 the 96-background roster sha256: 9b31721a0ad98422
+  [PASS] G-L0 cached AV_220 rows sha256: 2dc13f8073aec0f0
+  [PASS] G-L0 cached WT-score file sha256: e4d3af3d444a0d0a
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] frame H = 455 positions (script 125 prints 455 / 7,526): 455
+Length check passed: 656
+Position 222 check passed: Ala
+  [PASS] roster = 97 unique backgrounds, no duplicate (position, mutant): 97 backgrounds; arms {'G': 40, 'V': 38, 'S': 18}; A222V among the 96 = False
+  [PASS] expected passes 909 = backgrounds 454 + WT arm 455; the planning doc's formula 97 x 455 + 455 = 44590 overstates by 43681 (backgrounds whose own position is in H get 454, not 455): per background [454]; 57 of 97 have own in H
+  pre-scan: 0 background(s) complete, 1 to score; wild-type arm TO SCORE
+  [PASS] LD-DEC2 cache pre-check: both checkpoint files present: esm2_t30_150M_UR50D.pt (592,774,773 B) + esm2_t30_150M_UR50D-contact-regression.pt (3,431 B)
+Using device: mps
+Loading esm2_t30_150M_UR50D through the hub entry point (the cache hit was verified above, so no fetch can occur)...
+  loaded in 0.8s
+  [PASS] G-L1 150M parameter count == the A8a-measured 148,140,154: got 148,140,154 (target 148,140,154, |diff| 0)
+  [PASS] G-L1 150M layers / embed_dim match the A8a measurement: 30 layers (target 30), embed_dim 640 (target 640)
+
+--------------------------------------------------------------------------
+G-L2 / G-L3 (HARD) for 150M
+--------------------------------------------------------------------------
+  [PASS] G-L3(a) AV_511 scored twice is identical to 1e-06: max|d score| 0.000e+00 over 8626 rows (908 passes, 179.0s)
+  [PASS] G-L3(b) the wild-type residue's log-odds is exactly 0 at H position 2 (V): log-odds 0.0; alphabet round-trip True; get_position_logprobs returns 19 entries excluding wt True
+  [PENDING] G-L3(c) every background present covers >= 95% of its eligible H positions: PENDING: 0/97 backgrounds scored for 150M yet
+  scored the wild-type arm: 455 positions, 8645 rows in 94.6s (208 ms/pass)
+  scored AV_511: 454 positions, 8626 rows in 99.4s (219 ms/pass) | 1/1, elapsed 1.7m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A8c TIMING (no budget applied here; A9 sets the budgets)
+--------------------------------------------------------------------------
+  this run: 1 background(s), 454 background passes, median 0.2190 s/pass (per-bg ['0.2190'])
+  (this run covered only a 1-background prefix; the projections below are for the FULL roster, which is what A9 budgets)
+  the wild-type arm this run: 455 passes in 94.6s (0.2080 s/pass)
+  projection for the full 150M ladder on the EXACT full-roster pass count: (44533 x 0.2190) x 1.25 = 203 min
+  the same projection on the planning doc's pass count (44590): (44590 x 0.2190) x 1.25 = 203 min
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * deltas are per-model WT-referenced: comparable across models in rank, never in scale.
+    * the wild-type arm is scored once per model and reused for every delta of that model (its completeness is gated).
+    * G-L2 is a same-pipeline regression test against Phase 2's own rows, not independent evidence; it cannot run for 150M/35M.
+    * one forward pass per position; runtime is linear in backgrounds x positions.
+
+A8b RESULT: GATE PASS -- exit 0 (12 PASS, 0 FAIL, 1 PENDING)
+  script wall time 375.9s
+   exit=0
+   150M AV_511 done at 21:00:11
+########## rescore AV_522, model 150M, into data/processed/phase4/c1_rescore_scratch/ladder_150M_nightB ##########
+
+==========================================================================
+173 -- Module L ladder scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap here)  model=150M
+==========================================================================
+  out_dir = data/processed/phase4/c1_rescore_scratch/ladder_150M_nightB
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  LD-DEC1: load through esm.pretrained.esm2_t30_150M_UR50D (the hub entry point); load_model_and_alphabet_local is BROKEN under torch>=2.6 and is never called; the library esm_scoring.get_position_logprobs is used unmodified.
+  LD-DEC2: cache pre-check before the loader; missing -> exit 3, NEVER a download.
+  LD-DEC3: roster = A222V + the 96 of phase2_arm_roster.csv, in that order.
+  LD-DEC4: frame = H (455) minus own position when own in H; exact total 44,533 passes printed beside the doc's 44590.
+  LD-DEC5: one unbatched masked-marginal pass per (background, position), 19 substitutions per pass; delta vs THIS model's own WT arm.
+  LD-DEC6: outputs ladder/<model>/bg_<id>.csv (bg_id, position, mut_aa, score, delta) + wt_H.csv (bg_id=WT, no delta) + manifest.csv; 124's skip logic imported, its atomic write quoted (124 lines 235-264).
+  LD-DEC7: G-L1 cache pre-check + parameter count printed beside the A8a-measured target.
+  LD-DEC8: G-L2 (650M only): AV_220 on H vs cached rows, score AND delta, to 1e-6; ADDED sub-check G-L2(b) WT arm vs the cached WT scores; G-L3(a) reuses those two runs.
+  LD-DEC9: G-L3 per model: determinism to 1e-06, WT log-odds 0, coverage >= 95%.
+  LD-DEC10: gates run when something is to be scored; --gate-only runs them and writes nothing.
+  LD-DEC11: median s/pass + projection x1.25 beside the doc's pass count; no budget applied here (A9 sets it).
+  LD-DEC12: N_BOOT/SEED printed, unused.
+
+--------------------------------------------------------------------------
+G-L0 / INPUT PINS
+--------------------------------------------------------------------------
+  [PASS] G-L0 MODEL_LADDER_PREREG_v1 sha256: eafe37a85c902c2b
+  [PASS] G-L0 the 96-background roster sha256: 9b31721a0ad98422
+  [PASS] G-L0 cached AV_220 rows sha256: 2dc13f8073aec0f0
+  [PASS] G-L0 cached WT-score file sha256: e4d3af3d444a0d0a
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] frame H = 455 positions (script 125 prints 455 / 7,526): 455
+Length check passed: 656
+Position 222 check passed: Ala
+  [PASS] roster = 97 unique backgrounds, no duplicate (position, mutant): 97 backgrounds; arms {'G': 40, 'V': 38, 'S': 18}; A222V among the 96 = False
+  [PASS] expected passes 909 = backgrounds 454 + WT arm 455; the planning doc's formula 97 x 455 + 455 = 44590 overstates by 43681 (backgrounds whose own position is in H get 454, not 455): per background [454]; 57 of 97 have own in H
+  pre-scan: 0 background(s) complete, 1 to score; wild-type arm complete
+  [PASS] LD-DEC2 cache pre-check: both checkpoint files present: esm2_t30_150M_UR50D.pt (592,774,773 B) + esm2_t30_150M_UR50D-contact-regression.pt (3,431 B)
+Using device: mps
+Loading esm2_t30_150M_UR50D through the hub entry point (the cache hit was verified above, so no fetch can occur)...
+  loaded in 0.8s
+  [PASS] G-L1 150M parameter count == the A8a-measured 148,140,154: got 148,140,154 (target 148,140,154, |diff| 0)
+  [PASS] G-L1 150M layers / embed_dim match the A8a measurement: 30 layers (target 30), embed_dim 640 (target 640)
+
+--------------------------------------------------------------------------
+G-L2 / G-L3 (HARD) for 150M
+--------------------------------------------------------------------------
+  [PASS] G-L3(a) AV_522 scored twice is identical to 1e-06: max|d score| 0.000e+00 over 8626 rows (908 passes, 220.2s)
+  [PASS] G-L3(b) the wild-type residue's log-odds is exactly 0 at H position 2 (V): log-odds 0.0; alphabet round-trip True; get_position_logprobs returns 19 entries excluding wt True
+  [PASS] G-L3(c) every background present covers >= 95% of its eligible H positions: 1 complete, 96 not yet scored, 0 short
+  the wild-type arm is already complete and is reused for every delta in this run
+  scored AV_522: 454 positions, 8626 rows in 109.9s (242 ms/pass) | 1/1, elapsed 1.8m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A8c TIMING (no budget applied here; A9 sets the budgets)
+--------------------------------------------------------------------------
+  this run: 1 background(s), 454 background passes, median 0.2422 s/pass (per-bg ['0.2422'])
+  (this run covered only a 1-background prefix; the projections below are for the FULL roster, which is what A9 budgets)
+  projection for the full 150M ladder on the EXACT full-roster pass count: (44533 x 0.2422) x 1.25 = 225 min
+  the same projection on the planning doc's pass count (44590): (44590 x 0.2422) x 1.25 = 225 min
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * deltas are per-model WT-referenced: comparable across models in rank, never in scale.
+    * the wild-type arm is scored once per model and reused for every delta of that model (its completeness is gated).
+    * G-L2 is a same-pipeline regression test against Phase 2's own rows, not independent evidence; it cannot run for 150M/35M.
+    * one forward pass per position; runtime is linear in backgrounds x positions.
+
+A8b RESULT: GATE PASS -- exit 0 (13 PASS, 0 FAIL, 0 PENDING)
+  script wall time 332.8s
+   exit=0
+   150M AV_522 done at 21:05:45
+########## rescore AV_511, model 35M, into data/processed/phase4/c1_rescore_scratch/ladder_35M_nightB ##########
+
+==========================================================================
+173 -- Module L ladder scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap here)  model=35M
+==========================================================================
+  out_dir = data/processed/phase4/c1_rescore_scratch/ladder_35M_nightB
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  LD-DEC1: load through esm.pretrained.esm2_t12_35M_UR50D (the hub entry point); load_model_and_alphabet_local is BROKEN under torch>=2.6 and is never called; the library esm_scoring.get_position_logprobs is used unmodified.
+  LD-DEC2: cache pre-check before the loader; missing -> exit 3, NEVER a download.
+  LD-DEC3: roster = A222V + the 96 of phase2_arm_roster.csv, in that order.
+  LD-DEC4: frame = H (455) minus own position when own in H; exact total 44,533 passes printed beside the doc's 44590.
+  LD-DEC5: one unbatched masked-marginal pass per (background, position), 19 substitutions per pass; delta vs THIS model's own WT arm.
+  LD-DEC6: outputs ladder/<model>/bg_<id>.csv (bg_id, position, mut_aa, score, delta) + wt_H.csv (bg_id=WT, no delta) + manifest.csv; 124's skip logic imported, its atomic write quoted (124 lines 235-264).
+  LD-DEC7: G-L1 cache pre-check + parameter count printed beside the A8a-measured target.
+  LD-DEC8: G-L2 (650M only): AV_220 on H vs cached rows, score AND delta, to 1e-6; ADDED sub-check G-L2(b) WT arm vs the cached WT scores; G-L3(a) reuses those two runs.
+  LD-DEC9: G-L3 per model: determinism to 1e-06, WT log-odds 0, coverage >= 95%.
+  LD-DEC10: gates run when something is to be scored; --gate-only runs them and writes nothing.
+  LD-DEC11: median s/pass + projection x1.25 beside the doc's pass count; no budget applied here (A9 sets it).
+  LD-DEC12: N_BOOT/SEED printed, unused.
+
+--------------------------------------------------------------------------
+G-L0 / INPUT PINS
+--------------------------------------------------------------------------
+  [PASS] G-L0 MODEL_LADDER_PREREG_v1 sha256: eafe37a85c902c2b
+  [PASS] G-L0 the 96-background roster sha256: 9b31721a0ad98422
+  [PASS] G-L0 cached AV_220 rows sha256: 2dc13f8073aec0f0
+  [PASS] G-L0 cached WT-score file sha256: e4d3af3d444a0d0a
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] frame H = 455 positions (script 125 prints 455 / 7,526): 455
+Length check passed: 656
+Position 222 check passed: Ala
+  [PASS] roster = 97 unique backgrounds, no duplicate (position, mutant): 97 backgrounds; arms {'G': 40, 'V': 38, 'S': 18}; A222V among the 96 = False
+  [PASS] expected passes 909 = backgrounds 454 + WT arm 455; the planning doc's formula 97 x 455 + 455 = 44590 overstates by 43681 (backgrounds whose own position is in H get 454, not 455): per background [454]; 57 of 97 have own in H
+  pre-scan: 0 background(s) complete, 1 to score; wild-type arm TO SCORE
+  [PASS] LD-DEC2 cache pre-check: both checkpoint files present: esm2_t12_35M_UR50D.pt (134,095,705 B) + esm2_t12_35M_UR50D-contact-regression.pt (1,959 B)
+Using device: mps
+Loading esm2_t12_35M_UR50D through the hub entry point (the cache hit was verified above, so no fetch can occur)...
+  loaded in 0.2s
+  [PASS] G-L1 35M parameter count == the A8a-measured 33,501,394: got 33,501,394 (target 33,501,394, |diff| 0)
+  [PASS] G-L1 35M layers / embed_dim match the A8a measurement: 12 layers (target 12), embed_dim 480 (target 480)
+
+--------------------------------------------------------------------------
+G-L2 / G-L3 (HARD) for 35M
+--------------------------------------------------------------------------
+  [PASS] G-L3(a) AV_511 scored twice is identical to 1e-06: max|d score| 0.000e+00 over 8626 rows (908 passes, 73.8s)
+  [PASS] G-L3(b) the wild-type residue's log-odds is exactly 0 at H position 2 (V): log-odds 0.0; alphabet round-trip True; get_position_logprobs returns 19 entries excluding wt True
+  [PENDING] G-L3(c) every background present covers >= 95% of its eligible H positions: PENDING: 0/97 backgrounds scored for 35M yet
+  scored the wild-type arm: 455 positions, 8645 rows in 37.5s (83 ms/pass)
+  scored AV_511: 454 positions, 8626 rows in 37.7s (83 ms/pass) | 1/1, elapsed 0.6m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A8c TIMING (no budget applied here; A9 sets the budgets)
+--------------------------------------------------------------------------
+  this run: 1 background(s), 454 background passes, median 0.0830 s/pass (per-bg ['0.0830'])
+  (this run covered only a 1-background prefix; the projections below are for the FULL roster, which is what A9 budgets)
+  the wild-type arm this run: 455 passes in 37.5s (0.0825 s/pass)
+  projection for the full 35M ladder on the EXACT full-roster pass count: (44533 x 0.0830) x 1.25 = 77 min
+  the same projection on the planning doc's pass count (44590): (44590 x 0.0830) x 1.25 = 77 min
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * deltas are per-model WT-referenced: comparable across models in rank, never in scale.
+    * the wild-type arm is scored once per model and reused for every delta of that model (its completeness is gated).
+    * G-L2 is a same-pipeline regression test against Phase 2's own rows, not independent evidence; it cannot run for 150M/35M.
+    * one forward pass per position; runtime is linear in backgrounds x positions.
+
+A8b RESULT: GATE PASS -- exit 0 (12 PASS, 0 FAIL, 1 PENDING)
+  script wall time 150.8s
+   exit=0
+   35M AV_511 done at 21:08:17
+########## rescore AV_522, model 35M, into data/processed/phase4/c1_rescore_scratch/ladder_35M_nightB ##########
+
+==========================================================================
+173 -- Module L ladder scorer  N_BOOT=10000 SEED=0 (both UNUSED: no bootstrap here)  model=35M
+==========================================================================
+  out_dir = data/processed/phase4/c1_rescore_scratch/ladder_35M_nightB
+
+PRE-REGISTERED DECISIONS (full text in the docstring):
+  LD-DEC1: load through esm.pretrained.esm2_t12_35M_UR50D (the hub entry point); load_model_and_alphabet_local is BROKEN under torch>=2.6 and is never called; the library esm_scoring.get_position_logprobs is used unmodified.
+  LD-DEC2: cache pre-check before the loader; missing -> exit 3, NEVER a download.
+  LD-DEC3: roster = A222V + the 96 of phase2_arm_roster.csv, in that order.
+  LD-DEC4: frame = H (455) minus own position when own in H; exact total 44,533 passes printed beside the doc's 44590.
+  LD-DEC5: one unbatched masked-marginal pass per (background, position), 19 substitutions per pass; delta vs THIS model's own WT arm.
+  LD-DEC6: outputs ladder/<model>/bg_<id>.csv (bg_id, position, mut_aa, score, delta) + wt_H.csv (bg_id=WT, no delta) + manifest.csv; 124's skip logic imported, its atomic write quoted (124 lines 235-264).
+  LD-DEC7: G-L1 cache pre-check + parameter count printed beside the A8a-measured target.
+  LD-DEC8: G-L2 (650M only): AV_220 on H vs cached rows, score AND delta, to 1e-6; ADDED sub-check G-L2(b) WT arm vs the cached WT scores; G-L3(a) reuses those two runs.
+  LD-DEC9: G-L3 per model: determinism to 1e-06, WT log-odds 0, coverage >= 95%.
+  LD-DEC10: gates run when something is to be scored; --gate-only runs them and writes nothing.
+  LD-DEC11: median s/pass + projection x1.25 beside the doc's pass count; no budget applied here (A9 sets it).
+  LD-DEC12: N_BOOT/SEED printed, unused.
+
+--------------------------------------------------------------------------
+G-L0 / INPUT PINS
+--------------------------------------------------------------------------
+  [PASS] G-L0 MODEL_LADDER_PREREG_v1 sha256: eafe37a85c902c2b
+  [PASS] G-L0 the 96-background roster sha256: 9b31721a0ad98422
+  [PASS] G-L0 cached AV_220 rows sha256: 2dc13f8073aec0f0
+  [PASS] G-L0 cached WT-score file sha256: e4d3af3d444a0d0a
+  own_e_b cross-check: task32 vs own_context_metrics over 10757 frame rows: mismatches = 0 (expect 0)
+  PIN-8 regions vs task32 region column: mismatches = 0/10757 (expect 0)
+  H: 455 positions, 7526 frame rows (script 122 recorded 455 / 7526)
+  [PASS] frame H = 455 positions (script 125 prints 455 / 7,526): 455
+Length check passed: 656
+Position 222 check passed: Ala
+  [PASS] roster = 97 unique backgrounds, no duplicate (position, mutant): 97 backgrounds; arms {'G': 40, 'V': 38, 'S': 18}; A222V among the 96 = False
+  [PASS] expected passes 909 = backgrounds 454 + WT arm 455; the planning doc's formula 97 x 455 + 455 = 44590 overstates by 43681 (backgrounds whose own position is in H get 454, not 455): per background [454]; 57 of 97 have own in H
+  pre-scan: 0 background(s) complete, 1 to score; wild-type arm complete
+  [PASS] LD-DEC2 cache pre-check: both checkpoint files present: esm2_t12_35M_UR50D.pt (134,095,705 B) + esm2_t12_35M_UR50D-contact-regression.pt (1,959 B)
+Using device: mps
+Loading esm2_t12_35M_UR50D through the hub entry point (the cache hit was verified above, so no fetch can occur)...
+  loaded in 0.2s
+  [PASS] G-L1 35M parameter count == the A8a-measured 33,501,394: got 33,501,394 (target 33,501,394, |diff| 0)
+  [PASS] G-L1 35M layers / embed_dim match the A8a measurement: 12 layers (target 12), embed_dim 480 (target 480)
+
+--------------------------------------------------------------------------
+G-L2 / G-L3 (HARD) for 35M
+--------------------------------------------------------------------------
+  [PASS] G-L3(a) AV_522 scored twice is identical to 1e-06: max|d score| 0.000e+00 over 8626 rows (908 passes, 75.5s)
+  [PASS] G-L3(b) the wild-type residue's log-odds is exactly 0 at H position 2 (V): log-odds 0.0; alphabet round-trip True; get_position_logprobs returns 19 entries excluding wt True
+  [PASS] G-L3(c) every background present covers >= 95% of its eligible H positions: 1 complete, 96 not yet scored, 0 short
+  the wild-type arm is already complete and is reused for every delta in this run
+  scored AV_522: 454 positions, 8626 rows in 36.3s (80 ms/pass) | 1/1, elapsed 0.6m, ETA 0.0m
+
+--------------------------------------------------------------------------
+A8c TIMING (no budget applied here; A9 sets the budgets)
+--------------------------------------------------------------------------
+  this run: 1 background(s), 454 background passes, median 0.0800 s/pass (per-bg ['0.0800'])
+  (this run covered only a 1-background prefix; the projections below are for the FULL roster, which is what A9 budgets)
+  projection for the full 35M ladder on the EXACT full-roster pass count: (44533 x 0.0800) x 1.25 = 74 min
+  the same projection on the planning doc's pass count (44590): (44590 x 0.0800) x 1.25 = 74 min
+
+LIMITATIONS (printed per AGENTS 6; full list in the docstring):
+    * deltas are per-model WT-referenced: comparable across models in rank, never in scale.
+    * the wild-type arm is scored once per model and reused for every delta of that model (its completeness is gated).
+    * G-L2 is a same-pipeline regression test against Phase 2's own rows, not independent evidence; it cannot run for 150M/35M.
+    * one forward pass per position; runtime is linear in backgrounds x positions.
+
+A8b RESULT: GATE PASS -- exit 0 (13 PASS, 0 FAIL, 0 PENDING)
+  script wall time 113.6s
+   exit=0
+   35M AV_522 done at 21:10:11

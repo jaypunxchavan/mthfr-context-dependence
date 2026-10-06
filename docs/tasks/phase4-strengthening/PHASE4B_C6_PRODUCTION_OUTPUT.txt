@@ -1,0 +1,105 @@
+/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/lib/own_context.py:84: RuntimeWarning: Mean of empty slice
+  null_base = np.nanmean(mean_score, axis=1)
+/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/lib/stats_ext.py:76: RuntimeWarning: Mean of empty slice
+  w_mean = np.nanmean(W, axis=1)
+/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/lib/own_context.py:84: RuntimeWarning: Mean of empty slice
+  null_base = np.nanmean(mean_score, axis=1)
+/Users/arnavchavan/Desktop/mthfr-context-dependence/scripts/lib/stats_ext.py:76: RuntimeWarning: Mean of empty slice
+  w_mean = np.nanmean(W, axis=1)
+==============================================================================
+176 -- Task C2 INDEPENDENT recomputation (session 4b)
+==============================================================================
+N_BOOT=10000 SEED=0 N_SIM=200 N_STAB=200 (N_SIM/N_STAB are the re-draw sizes this session uses)
+
+PRE-REGISTERED DECISIONS (full text in the docstring, written before this script's first run):
+  C2-DEC1: a disagreement is REPORTED, never repaired; the module is stopped and both numbers printed; no tolerance loosened, no statistic swapped for one that agrees
+  C2-DEC2: tolerances: 1e-9 on rho/partial/AUROC/cell means, 1e-8 across algebraically equal routes, exact on counts and p-values; bootstrap CIs are REPORTED SIDE BY SIDE, never gated, because my draw ids differ from the staged ones by construction
+  C2-DEC3: resampling units: POSITION clusters inside a background, BACKGROUNDS for GB1; backgrounds are never resampled to make a p-value
+  C2-DEC4: this script computes numbers and interprets nothing; signs are read only through SIGN_CONVENTION.md, in C3
+  C2-DEC5: the M-3/M-4 simulation generator uses the project's own unmodified pipeline because the frozen block REQUIRES it; the statistics, percentiles and words are mine
+  C2-DEC6: anything not recomputable because the data does not exist is printed NOT-COMPUTABLE with the reason; never estimated
+  C2-DEC7: read-only with respect to every real output; writes only this script and its stdout redirect
+  independence: no Phase-4 staged script is imported or executed and scripts/lib/phase4_common.py is NEVER imported; every CSV is read with float_precision='round_trip'
+
+==============================================================================
+MODULE M -- mechanism-matched analyses (M-1, M-2, M-3 re-draw, M-4 grid, M-5, M-6)
+==============================================================================
+  [frame] task32 rows with finite own_e_b: 10757 rows / 654 positions
+  [frame] H by script 122's rule (not in the F1 AE or W frames): 455 positions / 7526 rows   (frozen: 455 / 7,526)
+  [frame] max|delta_esm - (S_A - S_W)| = 2.220e-16  (C2-DEC8; delta_esm is the primary)
+  [frame] task32 rows with finite own_e_b: 10757 rows / 654 positions
+  [frame] H by script 122's rule (not in the F1 AE or W frames): 455 positions / 7526 rows   (frozen: 455 / 7,526)
+  [frame] max|delta_esm - (S_A - S_W)| = 2.220e-16  (C2-DEC8; delta_esm is the primary)
+  [OK  ] M-1 rho_A222V (full frame): mine = -0.08811806424891734 | staged = -0.088118064 | diff = 2.489e-10 (tol 1e-09) 
+  [OK  ] M-1 rho_A222V (H): mine = -0.09002168303339808 | staged = -0.090021683 | diff = 3.340e-11 (tol 1e-09) 
+  [OK  ] M-1 p_spec(neg) full: mine = 0.025316456 | staged = 0.02531645569620253 | diff = 3.038e-10 (tol 1e-09) (k = 1)
+  [OK  ] M-1 p_spec(neg) H: mine = 0.050632911 | staged = 0.05063291139240506 | diff = 3.924e-10 (tol 1e-09) (k = 3)
+  full-frame beaters: ['G_P254F'] (staged ['G_P254F']); H beaters: ['AV_195', 'AV_220', 'G_P254F']
+  [OK  ] M-1 partial | S_W (full frame): mine = -0.06414804421216103 | staged = -0.064148044 | diff = 2.122e-10 (tol 1e-09) 
+  my partial CI (10000/10000 finite, position clusters): [-0.094070, -0.034486]  | staged [-0.093576, -0.035309]
+  [OK  ] M-1 retained fraction (partial / raw): mine = 0.727978 | staged = 0.727978 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] M-1 partial | S_W (H view): mine = -0.06720891007058159 | staged = -0.06720891 | diff = 7.058e-11 (tol 1e-09) 
+  my H partial CI (10000/10000 finite): [-0.099581, -0.034227]  | staged [-0.099734, -0.033553]
+  [OK  ] M-1 secondary two-covariate partial: mine = -0.0829 | staged = -0.0829 | diff = 0.000e+00 (tol 1e-08) (frozen target is 4 dp)
+  M-2 decile row counts: [1076, 1076, 1076, 1075, 1076, 1076, 1075, 1076, 1076, 1075] (staged [1076 x7, 1075 x3])
+  [STOP] M-2 stratified rho (full frame): mine = -0.059988177 | staged = -0.059956192 | diff = 3.198e-05 (tol 1e-09) 
+  M-2 stratified rho (H view): -0.064660110 (staged -0.064594698; no word)
+
+  [C2-DEC8 frame-table parser] the three statistics above, recomputed with the frame table read by the DEFAULT parser (the staged pipeline's):
+  [OK  ] M-1 rho_A222V (full frame), default parse: mine = -0.08811808948323244 | staged = -0.088118064 | diff = 2.548e-08 (tol 5e-07) (staged prints 9 dp; C2-DEC9)
+  [OK  ] M-1 partial | S_W (full frame), default parse: mine = -0.06414807195431849 | staged = -0.064148044 | diff = 2.795e-08 (tol 5e-07) (staged prints 9 dp; C2-DEC9)
+    M-2 stratified (default parse) = -0.059988177  (staged -0.059956192; the round_trip value above differs by 5.2e-5 -- the decile cut moves by one row, which re-weights the within-decile Spearmans)
+
+  M-5 between/within decomposition (positions with >= 5 rows):
+  [OK  ] M-5 rho_between (full frame): mine = -0.177458126 | staged = -0.177458126 | diff = 0.000e+00 (tol 1e-09) 
+  [OK  ] M-5 rho_within (full frame): mine = np.float64(-0.028237316) | staged = -0.028237316 | diff = 0.000e+00 (tol 1e-09) 
+  qualifying positions 652/654 (staged 652); H view: between -0.169522069 within -0.035545269 (staged -0.169522069 / -0.035545269)
+  my rho_within CI (200 finite of 200 draws -- CAPPED and disclosed: the per-draw refit loops over 652 positions in Python, and a bootstrap CI is reported side by side, never gated (C2-DEC2); both components are recomputed per draw as the frozen block requires): [-0.047279, -0.005697] | staged [-0.049826, -0.006662]
+
+  M-6 stability: 200 position-cluster draws per view, all 78 null rho_b re-derived per draw
+    full: P(p_spec <= 0.05) = 0.5750  k distribution {0: 44, 1: 38, 2: 33, 3: 16, 4: 15, 5: 17, 6: 11, 7: 8, 8: 4, 9: 3, 10: 5, 13: 2, 14: 1, 16: 1, 18: 1, 20: 1}
+      staged: 0.5760 (k=0:377, k=1:467, k=2:308, ...)  -> frozen word boundary 0.80 / 0.50
+    H: P(p_spec <= 0.1) = 0.7950  k distribution {0: 16, 1: 26, 2: 28, 3: 27, 4: 26, 5: 20, 6: 16, 7: 9, 8: 4, 9: 8, 10: 6, 11: 1, 12: 5, 13: 2, 14: 3, 16: 2, 18: 1}
+      staged: 0.7720  -> frozen word boundary 0.80 / 0.50
+
+  M-3 / M-4: zero-epistasis simulation, 200 draws (staged: 1,000 draws / 9 x 200)
+    raw table 13134 rows; pipeline valid mask keeps 46938 of 52536 (row, condition) cells
+    IDENTITY GATE (frozen G-M4: zero noise, E = observed m): my pipeline vs the recorded own_e.b over 10757 rows: max|diff| = 2.220e-16 (gate < 1e-12)
+    IDENTITY GATE (GE-ISO zero noise vs the recorded own_e_b_ge_iso): 11865 rows, max|diff| = 0.000e+00 (gate < 1e-12)
+    frame alignment: 10757 frame rows -> raw rows; 10757 raw rows carry a finite delta_real
+  [OK  ] M-3 mean of the simulation null: mine = 0.027412 | staged = 0.027069 | diff = 3.430e-04 (tol 2e-02) (my 200 draws vs the staged 1,000: a Monte-Carlo mean, so the tolerance is 0.02 = 2.5 SD of the staged null)
+  [OK  ] M-3 SD of the simulation null: mine = 0.00784 | staged = 0.007896 | diff = 5.600e-05 (tol 4e-03) 
+  [OK  ] M-3 2.5th percentile: mine = 0.011414 | staged = 0.012014 | diff = 6.000e-04 (tol 6e-03) 
+  [OK  ] M-3 97.5th percentile: mine = 0.042006 | staged = 0.042006 | diff = 0.000e+00 (tol 6e-03) 
+  [OK  ] M-3 fraction of draws at or below -0.088118: mine = 0.0 | staged = 0.0 | diff = 0.000e+00 (tol 1e-09) 
+    EXCESS-OVER-ARTIFACT from my numbers: True  (staged word: EXCESS-OVER-ARTIFACT)
+    M-4 planting curve (r0, mean observed rho, power) from my 200-draw grid:
+      r0 -0.30  mean observed rho -0.244102  power 1.000
+      r0 -0.20  mean observed rho -0.158081  power 1.000
+      r0 -0.10  mean observed rho -0.073034  power 1.000
+      r0 -0.05  mean observed rho -0.030721  power 1.000
+      r0 +0.00  mean observed rho +0.011573  power 0.000
+      r0 +0.05  mean observed rho +0.053797  power 0.920
+      r0 +0.10  mean observed rho +0.096106  power 1.000
+      r0 +0.20  mean observed rho +0.181027  power 1.000
+      r0 +0.30  mean observed rho +0.266659  power 1.000
+    MDE |r0| at 80% power (nine-point grid, linear interpolation): 0.04347826086956522   | staged 0.03994845
+    attenuation slope +0.849789 (staged +0.832651), intercept +0.011469 (staged +0.012097)
+  [OK  ] M-4 attenuation slope: mine = 0.849789 | staged = 0.832651 | diff = 1.714e-02 (tol 5e-02) (nine x 200 draws is a Monte-Carlo quantity; tolerance 0.05)
+  [OK  ] M-4 attenuation intercept: mine = 0.011469 | staged = 0.012097 | diff = 6.280e-04 (tol 2e-02) 
+  [OK  ] M-4 MDE |r0| at 80% power: mine = 0.043478 | staged = 0.03994845 | diff = 3.530e-03 (tol 1e-02) (interpolated off the same grid)
+
+==============================================================================
+C2 SUMMARY
+==============================================================================
+  comparisons gated: 21; identical: 20; DISAGREEMENTS: 1; ungated context values: 0
+    [DIFF] M-2 stratified rho (full frame): mine = -0.059988177 | staged = -0.059956192 | diff = DIFF
+
+  elapsed 243.3s
+
+LIMITATIONS (printed per AGENTS 6):
+    - This is a re-implementation of estimators on cached data: it validates code against code (AGENTS 6, reproduction is not replication) and is not independent evidence for any biological claim.
+    - Bootstrap CIs are two independent estimates and are not expected to match digit for digit; only the point estimates are gated.
+    - The M-3/M-4 generator is a re-implementation, not the staged run's own wiring, so its null distribution is a check of the same construction and not a confirmation of the staged draw sequence.
+    - Module G's partner table could not be rebuilt independently in this session; its statistics are reported NOT-COMPUTABLE rather than approximated.
+    - U-2's metrics are NOT-COMPUTABLE here because the staged run used the Weile et al. supplement labels and G-U2 failed, leaving U-2 wordless.
