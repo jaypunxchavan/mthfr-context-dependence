@@ -117,6 +117,9 @@ webencodings==0.6.1
 websocket-client==1.9.2
 widgetsnbextension==4.0.16
 wrapt==2.4.1
-# Added later, once you're ready for scoring (large download):
-# torch
-# fair-esm
+# Scoring dependencies (H2: uncommented and version-pinned to the venv —
+# versions read from `pip freeze`, not guessed):
+torch==2.14.0
+fair-esm==2.0.0
+transformers==5.17.0
+huggingface_hub==1.33.0

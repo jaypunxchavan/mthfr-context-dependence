@@ -12,6 +12,12 @@ NEITHER-RESOLVED	neighbour	section-6 word (frozen)	driver_phase4A_stage_SA2.log
 +0.713319	ladder	gradient Spearman(rho_b, d3), 67 resolved nulls	PHASE4A_BUILD_LOG.md [A8d]
 -0.612697	ladder	shift confound Spearman(rho_b, mean|delta_b|), 96 backgrounds	PHASE4A_BUILD_LOG.md [A8d]
 MODEL-REPLICATES	ladder	650M word (frozen)	PHASE4A_BUILD_LOG.md [A8d]
+MODEL-DOES-NOT-REPLICATE	ladder	150M word (frozen)	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L69; confirmed independently in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L43
+MODEL-DOES-NOT-REPLICATE	ladder	35M word (frozen)	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L78; confirmed independently in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L54
++0.086725	ladder	650M vs 150M per-background delta Spearman, median over 97 backgrounds	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L83; confirmed in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L60
+-0.145645	ladder	650M vs 150M across-background Spearman(rho_b) over 97 backgrounds	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L83; confirmed in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L59
++0.071303	ladder	650M vs 35M per-background delta Spearman, median over 97 backgrounds	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L85; confirmed in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L66
++0.381036	ladder	650M vs 35M across-background Spearman(rho_b) over 97 backgrounds	PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt L85; confirmed in PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt L65
 -0.088118064	mechanism	rho_A222V on the full frame (G-M1)	PHASE4A_BUILD_LOG.md [A4]
 -0.064148044	mechanism	M-1 partial controlling S_W, full frame (G-M2)	PHASE4A_BUILD_LOG.md [A4]
 -0.028237316	mechanism	M-5 rho_within, full frame	PHASE4A_BUILD_LOG.md [A4]

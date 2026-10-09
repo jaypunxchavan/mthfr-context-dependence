@@ -9,3 +9,22 @@ results/*
 !results/.gitkeep
 .DS_Store
 data/external/
+
+# H1 (manuscript-review-response): narrow, explicit exceptions — only the
+# derived tables that back the manuscript's headline claims. Everything
+# else under data/processed/ stays ignored (results are regenerable from
+# committed scripts). Negations must follow the data/processed/*.csv rule.
+#  - primary analysis frame (task32; dropna(delta_esm, own_e_b) = 10,757 rows / 654 positions)
+#  - five ESM-1v member score CSVs (lead figure, AC4)
+#  - ProteinGym comparison table (AB2)
+#  - ThermoMPNN output table (script 68)
+!data/processed/task32_analysis_table.csv
+!data/processed/task_AC4_esm1v_member1_scores.csv
+!data/processed/task_AC4_esm1v_member2_scores.csv
+!data/processed/task_AC4_esm1v_member3_scores.csv
+!data/processed/task_AC4_esm1v_member4_scores.csv
+!data/processed/task_AC4_esm1v_member5_scores.csv
+!data/processed/task_AB2_proteingym_model_comparison.csv
+!data/processed/task_V2_thermompnn_ddg.csv
+docs/tasks/dimer-interface-comparator-check/KUHLMAN_REPLY_DRAFT.txt
+docs/tasks/disattenuation-and-ledger/EMAIL_DRAFT_nambiar_severity_baseline.md

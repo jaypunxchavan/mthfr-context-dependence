@@ -12,6 +12,12 @@ data/processed/phase2/|the 96 Phase-2 background score files (the null set behin
 data/processed/phase4/neigh/roster_v1.csv|the frozen 50-background neighbour roster
 data/processed/phase4/neigh/|the 50 night-A neighbour score files (module N)
 data/processed/phase4/neigh/manifest.csv|the night's own manifest, with a sha256 per scored file
+data/processed/phase4/ladder/150M/|night-B 150M scores: 97 bg_*.csv + manifest.csv + wt_H.csv (the 150M ladder column and its MODEL word)|bg_files=97
+data/processed/phase4/ladder/150M/manifest.csv|night-B 150M manifest, 98 rows (97 backgrounds + the WT arm); sha256 60994ef2aa9bc0efba027feee992f7d8fa186fb348e1ace1b1e35cec4e3cdc5b
+data/processed/phase4/ladder/150M/wt_H.csv|night-B 150M wild-type arm, 8645 rows over 455 H positions; sha256 4b55cdf81529d89c49e2c6a60968959786a5cf05edc5d2798fcdc7ae06014625
+data/processed/phase4/ladder/35M/|night-B 35M scores: 97 bg_*.csv + manifest.csv + wt_H.csv (the 35M ladder column and its MODEL word)|bg_files=97
+data/processed/phase4/ladder/35M/manifest.csv|night-B 35M manifest, 98 rows (97 backgrounds + the WT arm); sha256 9fe1dac8746991ff1dc8788fe7e01c6b5b8f64186a4a0de096e442278848271f
+data/processed/phase4/ladder/35M/wt_H.csv|night-B 35M wild-type arm, 8645 rows over 455 H positions; sha256 6e58f2d43ca61faa2ac50dd9f6926daeea6615b7ff3a056dc253469b7ddcb3eb
 data/processed/phase3/m1_own_e_b_ge.csv|recorded own_e.b: module M's identity gate
 data/processed/phase3/m1_fitted_expectations.csv|the saved isotonic expectations (module M)
 data/processed/phase3/gb1/|the 400 GB1 background score files (module G)

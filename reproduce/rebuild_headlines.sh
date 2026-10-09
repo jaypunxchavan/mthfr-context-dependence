@@ -94,10 +94,25 @@ PYEOF
 step "2. INPUTS (every headline number depends on these)"
 if want inputs; then
   MISSING=0
-  while IFS='|' read -r path why; do
+  while IFS='|' read -r path why extra; do
     case "$path" in \#*|"") continue ;; esac
     if [ -e "$path" ]; then
       printf '  [ok]   %s\n' "$path"
+      # OPTIONAL third field "bg_files=N" (added for the night-B ladder columns): a
+      # COUNT check, because "[ -e dir ]" alone would still pass with 96 of 97
+      # background files present.  Two-field lines are unaffected -- extra is empty
+      # and this block is skipped for them.
+      case "$extra" in
+        bg_files=*)
+          want_n="${extra#bg_files=}"
+          got_n=$(ls "$path"/bg_*.csv 2>/dev/null | wc -l | tr -d ' ')
+          if [ "$got_n" -eq "$want_n" ]; then
+            printf '  [ok]   %s: %s bg_*.csv (expected %s)\n' "$path" "$got_n" "$want_n"
+          else
+            printf '  [MISS] %s: %s bg_*.csv, expected %s\n' "$path" "$got_n" "$want_n"
+            MISSING=$((MISSING+1))
+          fi ;;
+      esac
     else
       printf '  [MISS] %s   <- %s\n' "$path" "$why"; MISSING=$((MISSING+1))
     fi
@@ -178,6 +193,12 @@ run_and_check L scripts/174_ladder_analysis.py "$RUNS/174_ladder_analysis.txt" <
 650M gradient;gradient Spearman.* = ([+-][0-9.]+);+0.713319
 650M confound;shift confound.* = ([+-][0-9.]+);-0.612697
 650M word;WORD [(]650M[)]: ([A-Z-]+);MODEL-REPLICATES
+150M word;WORD [(]150M[)]: ([A-Z-]+);MODEL-DOES-NOT-REPLICATE
+35M word;WORD [(]35M[)]: ([A-Z-]+);MODEL-DOES-NOT-REPLICATE
+650-150M per-background median;650M vs 150M:.*median ([+-][0-9.]+);+0.086725
+650-150M across-background rho;650M vs 150M:.*between rho_b: ([+-][0-9.]+);-0.145645
+650-35M per-background median;650M vs 35M:.*median ([+-][0-9.]+);+0.071303
+650-35M across-background rho;650M vs 35M:.*between rho_b: ([+-][0-9.]+);+0.381036
 EOF
 
 step "5. MODULE S (scripts/166, sign convention)"
