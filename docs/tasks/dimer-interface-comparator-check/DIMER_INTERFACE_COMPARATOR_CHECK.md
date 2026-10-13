@@ -8,7 +8,7 @@
 
 ## 0. Why this session exists
 
-Dr. Kuhlman's reply (email, 2026-09-28) said the frozen-WT-structure assumption (not re-folding for
+A ThermoMPNN-D author (personal communication) wrote (email, 2026-09-28) that the frozen-WT-structure assumption (not re-folding for
 A222V, a monomer-dissociating variant) would only matter for ThermoMPNN scoring **if the residues in
 question are near the oligomer interface, or if there are larger conformational changes tied to the
 oligomerization-state change.** His second condition isn't testable here — it's a literature question
@@ -124,12 +124,12 @@ quote the file and line. Pre-register in the docstring before running:
 - **Decision rule (pre-registered, purely descriptive — nothing here changes any earlier result):**
   `CONSISTENT` if the full-frame point estimate falls inside both subset CIs; `DIFFERS` if it falls
   outside either. Either outcome is reported factually; `DIFFERS` does not retroactively invalidate L3
-  or the anchor, and `CONSISTENT` does not prove the frozen-structure assumption is safe for Kuhlman's
+  or the anchor, and `CONSISTENT` does not prove the frozen-structure assumption is safe for the author's
   second condition (the conformational-change question), which this session cannot test.
 - Also report, purely descriptively: whether A222V's own position (222) is itself interface-proximal at
   either cutoff (informational; 222 is excluded from the frame as a target position regardless).
 
-## Task I5 — Draft-only reply to Dr. Kuhlman (no send)
+## Task I5 — Draft-only reply to the author (no send)
 
 Write a plain-text draft to `docs/tasks/dimer-interface-comparator-check/KUHLMAN_REPLY_DRAFT.txt`:
 short, thanks him for the two conditions, reports the concrete numbers from I3/I4 (% interface-proximal
@@ -152,6 +152,8 @@ entry to read first, with its line number.
 ## What this session is NOT
 
 - Not a change to any Phase 1/1b/2 result, gate, or the frozen `PHASE2_PREREG.md`.
-- Not a resolution of Dr. Kuhlman's second condition (conformational-change magnitude) — that's a
+- Not a resolution of the author's second condition (conformational-change magnitude) — that's a
   literature question, not something this structure-only check can answer.
 - Not permission to send email on Arnav's behalf.
+
+[2026-10-08 CORRECTION] Named references to the author of a private email were replaced with 'a ThermoMPNN-D author (personal communication)'; no result or number changed.
