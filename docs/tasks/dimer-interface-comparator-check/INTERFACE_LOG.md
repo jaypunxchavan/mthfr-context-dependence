@@ -412,8 +412,8 @@ Anything unexpected or worth flagging:
    40-41, 51 and 489-490 — the catalytic/FAD-domain dimer interface. It is not diffuse.
 4. **Residue 222 sits 25.75 Å from the partner chain** — far outside both cutoffs, and farther from
    the interface than almost anything in the 8 Å proximal list. Structurally, 222 is nowhere near
-   the oligomer interface in this structure. This bears directly on Dr. Kuhlman's first condition
-   and is the reason I4 matters.
+   the oligomer interface in this structure. This bears directly on the first condition set out by
+   a ThermoMPNN-D author (personal communication) and is the reason I4 matters.
 5. **The 8 Å number here is NOT L3's 8 Å.** Same cutoff value, entirely different reference point
    (chain A/chain B interface vs residue 222). Stated in the script's own printed output. These two
    results must not be presented as a replication of each other.
@@ -541,8 +541,8 @@ interface-proximal positions are removed: rho = **+0.0154** (full) → **+0.0125
 → **+0.0208** (non-interface@8 Å), all with CIs comfortably spanning zero and all p_boot ≥ 0.21.
 
 Two things this verdict explicitly does **not** mean, both stated in the script before it ran:
-- **CONSISTENT does not resolve Dr. Kuhlman's second condition.** This session tests his *first*
-  condition only — whether the residues in question sit near the oligomer interface. His *second*
+- **CONSISTENT does not resolve the author's second condition.** This session tests the *first*
+  condition only — whether the residues in question sit near the oligomer interface. The *second*
   condition, whether there are larger conformational changes tied to the oligomerization-state
   change, is a literature question that a single frozen crystal structure cannot address.
   **It remains open and is not claimed to be addressed.** A CONSISTENT comparator on one static
@@ -581,7 +581,7 @@ Anything unexpected or worth flagging:
 
 ---
 
-## [I5] — Draft-only reply to Dr. Kuhlman (NO SEND)
+## [I5] — Draft-only reply to the author (NO SEND)
 Status: PASS (draft file written; **no email sent**)
 Time started / finished: 2026-09-28 15:56:11 / 2026-09-28 15:57:17 EDT
 What I did:
@@ -589,7 +589,7 @@ What I did:
 - **No email was sent, drafted-to-send, queued, or transmitted under any circumstance.** No mail
   capability was used or available in this session. The file's first line reads
   `DRAFT ONLY - NOT SENT. For Arnav to review and send by hand.`
-- The draft thanks him for the two conditions, reports I3's concrete interface counts at both
+- The draft thanks the author for the two conditions, reports I3's concrete interface counts at both
   cutoffs and I4's CONSISTENT verdict, and **names the conformational-change question as still
   open** — it states plainly that a single static crystal structure cannot address it and that the
   condition "stays open on our side."
@@ -656,7 +656,7 @@ Three qualifications that are part of the result, not caveats appended to it:
 - All three coefficients are ~0.01–0.02 and **all three CIs include zero with room to spare.** The
   finding is not that a small association survived the split — there was no association to survive.
   This is consistent with L3's and AD4's existing conclusion, which is unchanged.
-- **This tests Dr. Kuhlman's FIRST condition only.** His SECOND condition — whether larger
+- **This tests the author's FIRST condition only.** The SECOND condition — whether larger
   conformational changes are tied to the oligomerization-state change — is **STILL OPEN**. A single
   static 2.50 Å crystal structure cannot address it: no ensemble, no dynamics, no re-folding of
   A222V. CONSISTENT here is not evidence about conformational change, and is not claimed to be.
@@ -789,7 +789,7 @@ returns nothing.
 whose other two rows are lines 486 (non-interface@5 Å) and 487 (non-interface@8 Å), with the
 pre-registered verdicts on lines 495-496.
 
-That is the comparison Dr. Kuhlman's first condition turns on, and it is the number the whole session
+That is the comparison the author's first condition turns on, and it is the number the whole session
 was built to produce. Read it together with lines 495-496, and read it with the qualification in
 section 1 above: **the second condition remains open, and this session cannot address it.**
 
@@ -798,6 +798,8 @@ Runner-up, and the reason to trust the table at all: **lines 468-472**, where Ga
 `recorded (script 119 L459 / PHASE1_LOG L1709) = 0.015350499380143039` with
 `|difference| = 0.000e+00  (tolerance 1e-09)`. If that gate had failed, everything after it would
 have been void.
+
+[2026-10-13 CORRECTION] Named references to the author of a private email were replaced with 'a ThermoMPNN-D author (personal communication)'; no result or number changed.
 
 
 
