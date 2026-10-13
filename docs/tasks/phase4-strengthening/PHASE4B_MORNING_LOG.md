@@ -1890,3 +1890,720 @@ the M-3/M-4 generator), `PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt`,
 `PHASE4B_C4_LADDER_RECOMPUTE_OUTPUT.txt`, `PHASE4B_C6_PRODUCTION_OUTPUT.txt`,
 `PHASE4B_C2b_RESCORE_NIGHTB.txt`, `PHASE4B_C1b_SNAPSHOT_{BEFORE,AFTER}.txt`,
 `data/processed/phase4/c1_rescore_scratch/ladder_{150M,35M}_nightB/`, and this log.
+
+---
+
+## [S-4b-F A] - reproduction package extended for the Night B ladder (entry written late; see note)
+
+Status: **COMPLETE and COMMITTED by the PI as `4ffbfc0`.** This entry is appended in session
+4b-F B because the part-A turn was interrupted (a negative test aborted) **after** the edits were
+made and **before** its log entry was written, so the record had the changes but not the
+reasoning. Nothing below changed after the fact; the committed diff is additions-only.
+
+### T1 - what the package actually is, and how each file is parsed (no names assumed)
+
+```
+reproduce/
+  requirements.lock          92 packages, pip freeze of venv (NOT parsed by any script)
+  required_inputs.tsv        PIPE-separated, 2 fields: path|why.  '#' comment lines.
+                             Parsed at rebuild_headlines.sh:97  while IFS='|' read -r path why
+                             -> a pure EXISTENCE test  [ -e "$path" ].  Directories are allowed
+                             (existing entries: data/processed/phase2/, phase3/gb1/, phase4/neigh/).
+                             It has NO count column and NO sha256 column.
+  headline_expectations.tsv  TAB-separated, 4 fields: value|module|label|where recorded.
+                             *** THE SCRIPT NEVER READS IT. ***  Line 36 assigns
+                             EXPECT="$REPO/reproduce/headline_expectations.tsv" and no later line
+                             reads $EXPECT. It is a human-readable provenance record only.
+  rebuild_headlines.sh       the ENFORCING expectations live here, inline, as heredoc blocks of
+                             name;sed-regex;expected triples consumed by run_and_check()
+                             (line 149, IFS=';').  sed -nE "s#.*<regex>.*#\1#p" extracts ONE capture
+                             group per line, then ${got%% *} trims.  ';' is the separator because
+                             the regexes contain '|'.
+  REPRODUCE.md               prose: how to run, what each step checks, the test results.
+```
+
+**Consequence for T3, and the reason both files were touched:** an expectation added only to
+`headline_expectations.tsv` would be documentation and would never be checked. The enforced copy
+has to go in the script's heredoc; the `.tsv` copy carries the provenance the heredoc format has
+no room for. Both were updated, which is why 6 rows were added to each.
+
+### T2 - required inputs: 6 lines added, existing lines untouched
+
+Added to `reproduce/required_inputs.tsv`, in the existing pipe-separated format, in the file's own
+2-field style plus ONE new optional third field:
+
+```
+data/processed/phase4/ladder/150M/|night-B 150M scores: 97 bg_*.csv + manifest.csv + wt_H.csv (the 150M ladder column and its MODEL word)|bg_files=97
+data/processed/phase4/ladder/150M/manifest.csv|... 98 rows (97 backgrounds + the WT arm); sha256 60994ef2aa9bc0efba027feee992f7d8fa186fb348e1ace1b1e35cec4e3cdc5b
+data/processed/phase4/ladder/150M/wt_H.csv|... 8645 rows over 455 H positions; sha256 4b55cdf81529d89c49e2c6a60968959786a5cf05edc5d2798fcdc7ae06014625
+data/processed/phase4/ladder/35M/|... |bg_files=97
+data/processed/phase4/ladder/35M/manifest.csv|... sha256 9fe1dac8746991ff1dc8788fe7e01c6b5b8f64186a4a0de096e442278848271f
+data/processed/phase4/ladder/35M/wt_H.csv|... 8645 rows over 455 H positions; sha256 6e58f2d43ca61faa2ac50dd9f6926daeea6615b7ff3a056dc253469b7ddcb3eb
+```
+
+**What I did and why.** The format's parser is `[ -e "$path" ]`, so a directory entry alone would
+pass with 96 of 97 files present - which is exactly the failure mode the ladder words depend on.
+Three things were therefore done together:
+1. **a directory entry per model** (consistent with the existing `phase2/`, `gb1/`, `neigh/`
+   style) so the column's presence is declared where its sibling inputs are;
+2. **manifest.csv and wt_H.csv per model as single-file entries**, with their **sha256 recorded in
+   the description field**, because the format has no sha256 column and these are the two files
+   whose bytes the ladder words depend on (manifest shas are per-background);
+3. **an optional third field `bg_files=97`** plus a small additive block in the INPUTS step, so
+   the 97-file count is actually **checked** rather than asserted in prose. Two-field lines are
+   unaffected: `extra` is empty and the block is skipped.
+   *(This optional field is the one format extension in this session; it is backwards compatible
+   and no existing line was altered.)*
+
+Negative-tested so the count check cannot be vacuous: a synthetic directory holding 3 `bg_*.csv`
+against `bg_files=97` correctly reports `[MISS] ... 3 bg_*.csv, expected 97` and increments the
+missing counter. Positive run on the real tree: both models report
+`[ok] ... 97 bg_*.csv (expected 97)`; **0 required inputs missing**.
+
+### T3 - the two new words and the four agreement numbers, read from disk
+
+Both source files were read from disk, and **every number added agrees between them**:
+
+```
+quantity                         PHASE4B_C0b (staged 174)      PHASE4B_C4 (independent 176)
+650M word      MODEL-REPLICATES  L60                          L32   agree
+150M word      MODEL-DOES-NOT-REPLICATE  L69                   L43   agree
+35M  word      MODEL-DOES-NOT-REPLICATE  L78                   L54   agree
+650M vs 150M median  +0.086725   L83                          L60   agree (0.000e+00)
+650M vs 150M rho    -0.145645   L83                          L59   agree (0.000e+00)
+650M vs 35M  median  +0.071303   L85                          L66   agree (0.000e+00)
+650M vs 35M  rho    +0.381036   L85                          L65   agree (0.000e+00)
+```
+**No discrepancy in any number T3 asked for**, so the T3 stop condition was not triggered.
+
+**One difference does exist between the two files, outside the four numbers named, and it is
+already on the record:** the 650M-vs-150M per-background **RANGE low** is `-0.072518` in the
+staged file and `-0.072517` in the recompute. That is the six-decimal rounding-boundary artefact
+characterised in [T4] of session 4b-C (the true value is -0.072517183373, 3.17e-07 from the
+boundary). **The range endpoints were therefore deliberately NOT added as expectations** - a value
+whose last printed digit is not reproducible between two implementations would make the package
+fail for a reason that has nothing to do with the ladder result. The medians and the across-rho
+figures, which agree exactly, are added.
+
+**No existing expectation was changed.** `650M word` was already present, so the additions are
+**2 words + 4 agreement numbers = 6 rows** in the `.tsv` and **6 new checks** in the script's
+module-L heredoc (5 pre-existing L checks untouched). *(My own earlier status messages called
+these "7"; the correct count is 6, because the 650M word was already in both files.)*
+
+### Can rebuild_headlines.sh compute them, or are they only recorded?
+
+**They are RECOMPUTED, not merely recorded.** The module-L step already runs
+`scripts/174_ladder_analysis.py --mode full`, whose output contains all six values on their own
+lines, so the six new checks extract them from a fresh run - no new computation step was needed
+and none was added. 174 is CPU-only and took 468.9 s at `N_BOOT=10000` in the 4b-C run, well
+inside the 20-minute condition. All six sed patterns were dry-run against the real
+`PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt` before being written into the script, and all six
+extracted their expected value.
+
+**Limit of the existing mechanism, reported rather than worked around:** the per-model
+`rho_A222V on H` and `p_spec_H(neg)` lines have the same text in all three model blocks, and
+`sed` works one line at a time, so they **cannot** be attributed to a model without an
+awk-style block-aware extractor. They are therefore not checked. Adding that extractor would mean
+a mechanism change beyond this task's scope; the words are checked, and the words are the frozen
+outcomes.
+
+### What the package still cannot reproduce
+
+- **The per-model rho and p_spec of 150M and 35M** (see the mechanism limit above).
+- **The range endpoints** of the per-background agreement, deliberately not pinned.
+- **The independent cross-check** lives in `scripts/176` and is run by the package only as
+  `indep`, which reports its own 40-comparison table; it is not wired into the L expectations.
+
+### Additions-only verification
+
+`git show --numstat 4ffbfc0` for the three package files: `headline_expectations.tsv +6 -0`,
+`required_inputs.tsv +6 -0`, `rebuild_headlines.sh +22 -1`. The single deleted line is the old
+`while IFS='|' read -r path why;` replaced by `read -r path why extra` - the minimal edit needed to
+read the optional third field; **no existing expectation was removed or altered**.
+
+Files changed: `reproduce/required_inputs.tsv`, `reproduce/rebuild_headlines.sh`,
+`reproduce/headline_expectations.tsv`, and this log entry. Nothing else was touched.
+
+---
+
+## [S-4b-F B] - fresh-clone reproduction test: BLOCKED at the pre-check, T2 and T3 not run
+
+Status: **BLOCKED** - stopped on the rule-15 pre-check, as instructed. One item completed (T1).
+Nothing was launched, staged, committed or pushed; nothing in the repo was edited; the driver was
+not launched.
+
+### Pre-check #1 (before the restore) - the stop condition
+
+Run as its own command so a stop branch existed, at **Fri Oct 9 01:26:29 EDT 2026**:
+
+```
+vm.swapusage: total = 3072.00M  used = 2344.00M  free = 728.00M (encrypted)   -> 2.29 GB  OVER the 2.0 GB limit
+System-wide memory free percentage: 44%                                          -> OK (floor 35%)
+/dev/disk3s5  228Gi  189Gi  12Gi  95%  ...  /System/Volumes/Data               -> 12 GiB free (floor 10 GiB), OK
+```
+
+**Swap used is 2.29 GB, above the 2.0 GB threshold, so I stopped before the restore.** No stop
+branch was taken in the same command as a heavy step this time; the pre-check ran alone and the
+restore did not follow.
+
+### A second, independent blocker, found while stopping - disk arithmetic
+
+Even with swap cleared, this task cannot meet **its own** disk floor on this machine:
+
+```
+  free now                              12 GiB
+  archive v3 restore (v2 measured 3.86 GiB uncompressed)   -3.9 GiB
+  venv copy (measured, working venv)                      -1.3 GiB
+  ------------------------------------------------------------------------
+  free at the point of the rebuild run                    ~6.8 GiB
+  the task's floor for the rebuild pre-check is 10 GiB  -> BREACHED
+```
+Both floors in this task's rule are therefore in play: swap now, disk after the restore. Nothing
+was freed to fix it - `/tmp` is already clean (the test trees from sessions 4b-C and 4b-E are
+gone), and deleting anything else is not mine to decide.
+
+### T1 - archive hash: PASS
+
+```
+shasum -a 256 ~/Desktop/mthfr_data_backup_v3.tgz
+913b9a6f20d26501aaa323c66a0ac5f63d5ad7d60814266e71a34a3762826d92   MATCH
+```
+3,372,888,599 bytes. The hash is correct, so nothing here blocks the test; the blockers are
+machine state, not the data.
+
+### T2, T3, T5 - not performed
+
+- **T2** (clone, restore, venv copy): **not run.** HEAD is confirmed as
+  `4ffbfc0196df7bcf27e882ca8d3410c7d0563ca6` in the working tree, and `/tmp/phase4_repro_test3`
+  **does not exist** - no clone was made, nothing was restored, no venv was copied.
+- **T3** (the rebuild run, the inputs count, the PASS/FAIL table, whether the words reproduce):
+  **not run.** Therefore this session asserts **nothing** about whether the 150M and 35M words or
+  the four cross-model agreement numbers reproduce from a fresh clone. That question is still open.
+- **T5**: nothing to leave in place; `/tmp/phase4_repro_test3` is absent.
+
+For the record, what a clone **would** contain, established without cloning: HEAD `4ffbfc0` is the
+commit that carries part A's package changes, so `reproduce/required_inputs.tsv` at HEAD has 6
+ladder input lines (2 directories with `bg_files=97` plus 4 single-file entries) and
+`reproduce/rebuild_headlines.sh` at HEAD carries the 6 new module-L checks. That is a statement
+about the committed files, **not** a reproduction result.
+
+### To unblock
+
+Either of the following clears it; both are the PI's call and neither is mine to take:
+1. **Reboot the Mac** - swap is not released by closing apps (the remedy `STATE_FOR_LAUNCH.md`
+   already prescribes), which also tends to return some disk caches; then re-run pre-check #1.
+2. **Free roughly 4-5 GiB of disk** so the restore plus the venv copy still leaves the 10 GiB the
+   rebuild pre-check demands. The working tree's own `data/processed/` (gitignored, tens of GB) is
+   the obvious candidate, but deleting analysis outputs is a decision for the PI, not for me.
+I will not lower either threshold, and I will not shrink or substitute the venv copy to make the
+disk floor pass.
+
+---
+
+# [S-4b-F B] - fresh-clone reproduction test against committed HEAD: T1/T2 DONE, T3 NOT RUN (blocked by the pre-check)
+
+Date: Sun Oct 12 2026, 21:51 EDT. Session 4b-F part B, second attempt after the aborted
+first. The driver was never launched. Nothing was staged, committed or pushed. Nothing in
+the repo was edited except this log entry.
+
+## 0. The short version, read this first
+
+**T1 PASS. T2 PASS. T3 was NOT RUN and no PASS/FAIL table exists.** The rebuild was blocked
+by its own pre-check before a single headline number was computed, so **this session
+reproduced nothing**: the 150M word, the 35M word and the four cross-model agreement numbers
+were **neither recomputed nor even read off disk** in the clone. Any statement that they
+"reproduce from a fresh clone" is unsupported by this entry. The [S-4b-C] and 4b-B/C results
+stand on their own runs; this session adds no independent confirmation of them.
+
+What this session does establish is narrower and worth having: **the v3 archive plus HEAD is
+a materially better reproduction package than the v2 archive plus HEAD**, which was the
+defect that limited [T6]. All 25 required inputs are present in the clone, including the two
+ladder directories that v2 lacked, and all four ladder file hashes match the values recorded
+in HEAD. The package is now complete on inputs. It has simply not yet been executed.
+
+## 1. HEAD hashes - clone and working tree agree
+
+```
+working tree  git rev-parse HEAD : 4ffbfc0196df7bcf27e882ca8d3410c7d0563ca6
+clone         git rev-parse HEAD : 4ffbfc0196df7bcf27e882ca8d3410c7d0563ca6   IDENTICAL
+commit subject: Reproduction package: add Night B ladder inputs and 150M/35M expectations
+```
+
+`git clone` of the local repo into `/tmp/phase4_repro_test3`, 0.5 s, `.git` 12 MB. **Not** a
+working-tree copy, **no** rsync overlay. `git status --porcelain` in the clone was empty
+before the extract. Scripts 165-176: **12 of 12 present**. `reproduce/`: 6 files present.
+`reproduce/required_inputs.tsv`: **25** required-input lines.
+
+## 2. T1 archive hash - PASS
+
+```
+shasum -a 256 ~/Desktop/mthfr_data_backup_v3.tgz
+  913b9a6f20d26501aaa323c66a0ac5f63d5ad7d60814266e71a34a3762826d92   MATCH
+size 3,372,888,599 bytes (3.14 GiB); 2,437 archive entries
+```
+Verified **before** the restore, as required. Exact match, no tolerance needed.
+
+## 3. T2 restore and venv copy - PASS
+
+`tar -xzf` of the verified archive into the clone, 12.2 s, exit 0, **2,161 files** restored
+under `data/`, 4.0 GB. `cp -R` of the venv, 20.0 s.
+
+**venv disclosure, stated plainly: the clone's `venv/` is a 1.3 GB `cp -R` COPY of the
+working tree's venv, not a symlink and not a clean-room environment.** `venv/bin/python3` is
+itself a *relative* symlink to `python3.14` inside the copy, so it resolves correctly in the
+clone: `sys.executable` = `/private/tmp/phase4_repro_test3/venv/bin/python3`, Python 3.14.3,
+importing numpy 2.5.3, pandas 3.0.5, scipy 1.18.1, sklearn 1.9.1. **No network was used**
+(rule 2, no PyPI), so the package set is inherited from the working venv and is not
+independently validated here.
+
+## 4. Input inventory in the clone - 25 of 25 present, 0 missing
+
+This is the substantive improvement over [T6]. Run as the script's own step-2 loop, over
+`reproduce/required_inputs.tsv` inside the clone:
+
+```
+  [ok]   data/processed/task32_analysis_table.csv
+  [ok]   data/processed/esm2_wt_scores.csv
+  [ok]   data/processed/esm2_a222v_bg_scores.csv
+  [ok]   data/processed/task82_ae_raw.csv
+  [ok]   data/processed/task69_w2_bg_raw.csv
+  [ok]   data/raw/mthfrModel/results/folate_response_model5.csv
+  [ok]   data/raw/6FCX.pdb
+  [ok]   data/processed/phase2_diagnostics/background_3d_distance.csv
+  [ok]   data/processed/phase2_diagnostics/background_rho_table.csv
+  [ok]   data/processed/phase2/
+  [ok]   data/processed/phase4/neigh/roster_v1.csv
+  [ok]   data/processed/phase4/neigh/
+  [ok]   data/processed/phase4/neigh/manifest.csv
+  [ok]   data/processed/phase4/ladder/150M/  (bg_*.csv=97 OK)
+  [ok]   data/processed/phase4/ladder/150M/manifest.csv
+  [ok]   data/processed/phase4/ladder/150M/wt_H.csv
+  [ok]   data/processed/phase4/ladder/35M/  (bg_*.csv=97 OK)
+  [ok]   data/processed/phase4/ladder/35M/manifest.csv
+  [ok]   data/processed/phase4/ladder/35M/wt_H.csv
+  [ok]   data/processed/phase3/m1_own_e_b_ge.csv
+  [ok]   data/processed/phase3/m1_fitted_expectations.csv
+  [ok]   data/processed/phase3/gb1/
+  [ok]   data/external/mavedb/
+  [ok]   data/external/weile2021_supp/
+  [ok]   data/external/rcsb/1PGA.pdb
+TOTAL=25 MISSING=0
+```
+
+**All four Night-B ladder hashes match the values recorded in HEAD** (my own sha256 check,
+AGENTS 5 - verify before reporting agreement between two sources):
+
+```
+  60994ef2aa9bc0efba027feee992f7d8fa186fb348e1ace1b1e35cec4e3cdc5b  ladder/150M/manifest.csv   MATCH
+  4b55cdf81529d89c49e2c6a60968959786a5cf05edc5d2798fcdc7ae06014625  ladder/150M/wt_H.csv       MATCH
+  9fe1dac8746991ff1dc8788fe7e01c6b5b8f64186a4a0de096e442278848271f  ladder/35M/manifest.csv   MATCH
+  6e58f2d43ca61faa2ac50dd9f6926daeea6615b7ff3a056dc253469b7ddcb3eb  ladder/35M/wt_H.csv       MATCH
+```
+
+The [T6] limitation is therefore **closed on inputs**: the reason the 4b fresh-clone test
+could not build the 150M/35M columns was that `mthfr_data_backup_v2.tgz` (Oct 4 21:06) had
+**0 entries** under `ladder/150M/` and `ladder/35M/`. v3 has **97 + 97** background files and
+both wild-type arms. Whether that is *sufficient* is unproven until the rebuild runs.
+
+## 5. T3 NOT RUN - the pre-check stopped it, and I record that rather than working around it
+
+Readings, each from its own separate command so a stop branch existed:
+
+| moment | `sysctl vm.swapusage` | `memory_pressure` free | `df -h ~` avail | verdict |
+|---|---|---|---|---|
+| before restore | total 3072.00M, **used 2344.00M = 2.29 GB** | 41% | **12Gi** | swap FAIL, others pass |
+| before rebuild | total 3072.00M, **used 2652.25M = 2.59 GB** | 40% | **6.7Gi** | swap FAIL, **disk FAIL** |
+| after inventory | total 5120.00M, **used 4321.12M = 4.22 GB** | 55% | **5.3Gi** | both FAIL |
+
+**The PI explicitly authorized proceeding over the swap threshold once**, before T2, on the
+strength of the 2.29 GB reading. That authorization covered T2 only. It did **not** cover the
+second pre-check, where swap was worse (2.59 GB) and **free disk had fallen to 6.7 GiB,
+below the 10 GiB floor** - a failure that did not exist at the first reading. I raised the
+question of how to proceed and the session was interrupted before an answer arrived, so **the
+rebuild was not started**. I did not treat the earlier swap waiver as a blanket waiver.
+
+For the record, my assessment offered to the PI was that the disk gate was unlikely to bite
+the rebuild: `rebuild_headlines.sh` writes only under `reproduce/runs/`, which totalled 88 KB
+for the whole of session 4b-C, and 172/174/176 contain no `open(`, `to_csv`, `makedirs` or
+`savefig` calls. That is an argument, not a waiver, and it changes nothing: the gate as
+written was breached and the run did not happen.
+
+## 6. What was recomputed versus read from disk in this session
+
+**Recomputed from scratch in the clone: nothing statistical.** The only quantities derived
+here are non-statistical facts about the package itself: the two `git rev-parse HEAD` hashes,
+one sha256 of the archive, the four sha256 file hashes, and the file-count inventory. None of
+these is a headline number.
+
+**Read from disk and checked:** the four ladder manifest/WT-arm hashes (above) and the 25-line
+input inventory. Both are integrity statements about inputs, not about results.
+
+**Neither recomputed nor read:** the 650M / 150M / 35M `MODEL-REPLICATES` /
+`MODEL-DOES-NOT-REPLICATE` words, the two `p_spec_H(neg)` values, the 150M and 35M
+`rho_A222V on H` point estimates and CIs, the gradient and shift-confound values, and all
+four cross-model agreement numbers (+0.086725, -0.145645, +0.071303, +0.381036). These remain
+as recorded in [T4] of session 4b-C and in `reproduce/headline_expectations.tsv` at HEAD.
+**This session neither confirms nor contradicts them.**
+
+## 7. What still cannot be reproduced from a fresh clone plus the archive
+
+Answering T4's question honestly, as of this entry:
+
+1. **Everything in `reproduce/headline_expectations.tsv` is still unverified in a clean
+   clone**, because the rebuild never ran. The package being *complete* is not the same as it
+   being *verified*.
+2. **Modules M, U and G remain unrun in any fresh-clone context.** `rebuild_headlines.sh`
+   excludes them from its default module list, and 167/168/169 need inputs (`mavedb`,
+   `weile2021_supp`, `rcsb/1PGA.pdb`) that are present in the clone but were never exercised
+   here.
+3. **The venv is inherited, not validated.** A fresh clone copies the working venv because
+   rule 2 forbids PyPI. The lock check inside the rebuild (`pip freeze` vs
+   `reproduce/requirements.lock`) would catch a mismatch; it did not run either.
+4. **Nothing has yet been shown about runtime.** [T6] took about 24 minutes end to end with
+   the smaller v2 input set. The v3 set adds 194 Night-B score files, so a full
+   `rebuild_headlines.sh` at `N_BOOT=10000` should be re-timed rather than assumed - AGENTS 1
+   forbids inheriting a runtime estimate across a changed input set.
+
+The gap that [T6] actually diagnosed - a reproduction package whose inputs were incomplete -
+**is now closed**, and that much is verified in this entry.
+
+## 8. T5 the clone is left in place
+
+`/tmp/phase4_repro_test3` is **not** deleted: **5.3 GB** (4.0 GB `data/`, 1.3 GB `venv/`,
+120 KB `reproduce/`, 12 MB `.git`). The PI will delete it. It is immediately re-runnable: the
+clone, the restored data and the venv copy are all in place, so the outstanding action is
+simply `bash reproduce/rebuild_headlines.sh` inside it once the pre-check can pass.
+
+## 9. Process notes, disclosed
+
+- The pre-check and the heavy task were kept in **separate commands** throughout, as
+  required, so a real stop branch existed. It fired twice. That is the rule working, not
+  failing.
+- The one waiver I accepted was narrow, was granted by the PI explicitly, and applied only
+  to the swap gate at the moment it was granted. When a **new** gate failure appeared
+  (disk), I stopped rather than extending the waiver myself.
+- **No check was loosened and no expectation was edited** to make anything pass. There is no
+  PASS/FAIL table in this entry because no run produced one.
+
+Files touched this session: this log entry, and `/tmp/phase4_repro_test3/` (new, outside the
+repo). Nothing else.
+
+## [S-4b-F B] - heading disambiguation note
+
+There are now **two** entries titled S-4b-F B in this log, because the instructions for this
+session specified that title and I was restricted to appending rather than editing:
+
+- **line 2029, `## [S-4b-F B]`, dated Fri Oct 9 01:26 EDT 2026** - the first, aborted attempt.
+  It stopped at pre-check #1 with T1 done and T2/T3/T5 not run, and correctly predicted the
+  disk arithmetic that then blocked me: 12 GiB free, minus ~3.9 GiB restore, minus 1.3 GiB
+  venv copy, equals ~6.8 GiB, below the 10 GiB floor. **Its disk prediction proved correct to
+  0.1 GiB against what actually happened** (12 GiB -> 6.7 GiB). It is not superseded on any
+  point; it was right.
+- **line 2103, `# [S-4b-F B]`, dated Sun Oct 12 21:51 EDT 2026** - this entry, the second
+  attempt, in which the PI authorized one narrow swap waiver, so T2 ran to completion and T3
+  was blocked by the predicted disk failure.
+
+I did not merge, rewrite or delete the earlier entry. Where the two differ, the Oct 12 entry
+is the later reading of machine state; where they agree, both stand. No expectation, staged
+value or prior entry was altered.
+
+---
+
+## [S-4b-F C] - fresh-clone reproduction test, COMPLETE RUN: **PASS**, all headline values recomputed
+
+Date: Tue Oct 13 2026 (run started Mon Oct 12 23:54:18 EDT, finished 00:32:28 EDT). Session 4b-F
+part C, the clone in the home folder rather than `/tmp`, so the disk arithmetic that blocked both
+earlier attempts no longer applies. The driver was not launched. Nothing was staged, committed or
+pushed. Nothing in the repo was edited except this log entry; the two pre-existing uncommitted
+modifications (`DIMER_INTERFACE_COMPARATOR_CHECK.md`, and this log) were left alone.
+
+### 0. The short version
+
+**T1 PASS. T2 PASS. T3 PASS. T4 and T5 done.** For the first time the whole of
+`reproduce/rebuild_headlines.sh` has been executed end to end inside a clone made from nothing but
+the committed HEAD and the v3 archive, and the result is:
+
+```
+RESULT: PASS -- every requested check reproduced its logged value.
+  checks failed: 0        (exit code 0)
+  wall time 38m09s at N_BOOT=10000 N_SIM=1000 N_STAB=2000
+```
+
+The 650M, 150M and 35M `MODEL-REPLICATES` / `MODEL-DOES-NOT-REPLICATE` words and **all four
+cross-model agreement numbers were recomputed from the archived score files, not read from a
+record**, and the 150M and 35M words **do reproduce**: both are `MODEL-DOES-NOT-REPLICATE`.
+The strongest single piece of evidence: the clone's fresh `174_ladder_analysis.txt` is
+**byte-identical** to the recorded `PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt` (0 diff lines) once
+the one `elapsed` line is normalised.
+
+### 1. HEAD hashes - clone and working tree agree
+
+```
+working tree  git rev-parse HEAD : 4ffbfc0196df7bcf27e882ca8d3410c7d0563ca6
+clone         git rev-parse HEAD : 4ffbfc0196df7bcf27e882ca8d3410c7d0563ca6   IDENTICAL
+commit: Fri Oct 9 01:24:38 2026 -0400
+subject: Reproduction package: add Night B ladder inputs and 150M/35M expectations
+```
+
+`git clone /Users/arnavchavan/Desktop/mthfr-context-dependence /Users/arnavchavan/phase4_repro_clone`
+- a real local clone, 0.49 s, `.git` 12 MB, `git status --porcelain` in the clone empty before the
+extract. No rsync overlay. Scripts 165-176: **12 of 12 present**.
+
+### 2. T1 archive hash - PASS, verified before the restore
+
+```
+shasum -a 256 ~/Desktop/mthfr_data_backup_v3.tgz
+  913b9a6f20d26501aaa323c66a0ac5f63d5ad7d60814266e71a34a3762826d92   MATCH
+  3,372,888,599 bytes, mtime Oct  6 00:19:15 2026;  2,437 archive entries
+```
+
+### 3. Pre-checks, each its own command, so a stop branch existed
+
+Thresholds applied as given: swap used must be <= 2.0 GB, free memory >= 35%, free disk >= 10 GiB.
+
+| moment | `sysctl vm.swapusage` | `memory_pressure` free | `df -h ~` avail | verdict |
+|---|---|---|---|---|
+| before restore | total 0.00M, **used 0.00M = 0.00 GB** | **78%** | **26Gi** | all three PASS |
+| before rebuild | total 0.00M, **used 0.00M = 0.00 GB** | **70%** | **16Gi** | all three PASS |
+
+Swap is zero at both readings, against 2.29 GB and 2.59 GB in the two blocked attempts. Free disk
+fell 26 -> 16 GiB across the restore and the venv copy, and ended at 17 GiB after the run; it never
+approached the 10 GiB floor. **No threshold was waived, lowered or re-read favourably in this
+session.** Both stop branches existed and neither fired.
+
+### 4. T2 restore and venv copy
+
+```
+tar -xzf ~/Desktop/mthfr_data_backup_v3.tgz   ->  exit 0, 8.6 s, 2,161 files under data/, 4.0 GB
+cp -R <worktree>/venv ./venv                   ->  exit 0, 19.4 s, 1.3 GB
+```
+
+**venv disclosure, stated plainly: the clone's `venv/` is a 1.3 GB `cp -R` COPY of the working
+tree's venv, not a symlink and not a clean-room environment.** `venv/bin/python3` is itself a
+*relative* symlink to `python3.14` inside the copy, so it resolves correctly in the clone:
+`sys.executable` = `/Users/arnavchavan/phase4_repro_clone/venv/bin/python3`, Python 3.14.3, numpy
+2.5.3, pandas 3.0.5, scipy 1.18.1, sklearn 1.9.1. **No network was used** (rule 2, no PyPI), so the
+package set is inherited from the working venv. This time the package's own lock check inside the
+rebuild **did** run and **passed**: `pip freeze` output is byte-identical to
+`reproduce/requirements.lock`. That closes limitation 3 of the [S-4b-F B] entry.
+
+### 5. Input inventory in the clone - 25 of 25 present, 0 missing
+
+Run as the script's own step-2 loop, over `reproduce/required_inputs.tsv` inside the clone:
+
+```
+TOTAL=25 MISSING=0
+  [ok] data/processed/phase4/ladder/150M/: 97 bg_*.csv (expected 97)
+  [ok] data/processed/phase4/ladder/35M/ : 97 bg_*.csv (expected 97)
+  (the other 23 required inputs [ok], printed in full during the run)
+```
+
+All four Night-B ladder hashes match the values recorded at HEAD (my own sha256 check, AGENTS 5):
+
+```
+  60994ef2aa9bc0efba027feee992f7d8fa186fb348e1ace1b1e35cec4e3cdc5b  ladder/150M/manifest.csv   MATCH
+  4b55cdf81529d89c49e2c6a60968959786a5cf05edc5d2798fcdc7ae06014625  ladder/150M/wt_H.csv       MATCH
+  9fe1dac8746991ff1dc8788fe7e01c6b5b8f64186a4a0de096e442278848271f  ladder/35M/manifest.csv    MATCH
+  6e58f2d43ca61faa2ac50dd9f6926daeea6615b7ff3a056dc253469b7ddcb3eb  ladder/35M/wt_H.csv        MATCH
+```
+
+Process note: a first attempt at this inventory, run from a zsh prompt, printed two spurious
+`[MISS]` lines for the ladder directories because `wc` and `tr` were not resolvable inside the
+command substitution in that invocation. Re-running the identical loop under `bash` - which is what
+the script itself uses - gave 97 and 97. This was my shell's PATH, not the data; recorded here
+because the first output exists in this session's history.
+
+### 6. Runtime, timed rather than inherited (AGENTS 1)
+
+I did not carry a runtime estimate over from another script. I ran a reduced-N smoke pass first:
+
+```
+bash reproduce/rebuild_headlines.sh --quick      (N_BOOT=300 N_SIM=100 N_STAB=200)
+  23m14.87s wall, RESULT PASS, 0 checks failed  -- but self-labelled PROVISIONAL by 172/174
+  per-step: 172 945.1s | 174 366.4s | 176 78.7s | 166 0.3s
+```
+
+Two points per script, my own N_BOOT=300 measurement and the committed full-N output at HEAD, give
+the scaling directly: 174 is 366.4 s at 300 and 468.7 s at 10 000; 172 is 945.1 s at 300 and
+941.2 s at 10 000. Neither scales much with N_BOOT (172's own header pins G-N4/G-N5/Phase-1 at
+10 000 draws in *both* modes), which is what made a full-N run affordable here. Extrapolated
+full run ~25-40 min; actual **38m09s**.
+
+### 7. T3 - the PASS/FAIL table from the full run inside the clone
+
+`bash reproduce/rebuild_headlines.sh` with its default module list (`inputs, indep, S, N, L`),
+run with the clone's own paths, from inside the clone:
+
+```
+=== 1. ENVIRONMENT ===
+  [PASS] venv/bin/python3 present: 3.14.3
+  [PASS] pip freeze matches reproduce/requirements.lock exactly
+  [ok] numpy 2.5.3  pandas 3.0.5  scipy 1.18.1  sklearn 1.9.1  patsy  statsmodels  openpyxl
+=== 2. INPUTS ===   0 required input(s) missing   (25 of 25, both ladders 97 bg_*.csv)
+=== 3. INDEPENDENT RECOMPUTE (scripts/176) ===
+  comparisons gated: 48; identical: 47; DISAGREEMENTS: 1; ungated context values: 0
+  [PASS] independent recompute: 1 disagreement(s), all of them the ONE documented exception
+         (M-2 stratified rho, 3.198e-05, unresolved; see PHASE4B_MORNING_LOG.md [C2] Finding 3)
+=== 4. MODULE N (scripts/172) ===
+  scripts/172_neigh_analysis.py -> reproduce/runs/172_neigh_analysis.txt (exit 0)
+  [PASS] N / rho_A222V on H            = -0.090021683
+  [PASS] N / p_NB(neg)                 = 0.127660
+  [PASS] N / count at or below         = 5
+  [PASS] N / section-5 word            = REGION-LIKE
+  [PASS] N / d3 flexible partial       = +0.192294
+  [PASS] N / dseq flexible partial     = -0.053758
+  [PASS] N / section-6 word            = NEITHER-RESOLVED
+  [PASS] N / cell mean C2              = -0.035857
+  scripts/174_ladder_analysis.py -> reproduce/runs/174_ladder_analysis.txt (exit 0)
+  [PASS] L / 650M rho_A222V on H           = -0.090021683
+  [PASS] L / 650M p_spec_H(neg)            = 0.050633
+  [PASS] L / 650M gradient                 = +0.713319
+  [PASS] L / 650M confound                 = -0.612697
+  [PASS] L / 650M word                     = MODEL-REPLICATES
+  [PASS] L / 150M word                     = MODEL-DOES-NOT-REPLICATE
+  [PASS] L / 35M word                      = MODEL-DOES-NOT-REPLICATE
+  [PASS] L / 650-150M per-background median = +0.086725
+  [PASS] L / 650-150M across-background rho = -0.145645
+  [PASS] L / 650-35M per-background median  = +0.071303
+  [PASS] L / 650-35M across-background rho  = +0.381036
+=== 5. MODULE S (scripts/166) ===
+  scripts/166_sign_convention.py -> reproduce/runs/166_sign_convention.txt (exit 0)
+  [PASS] S / checks PASS = 49
+=== 6. MODULES M, U, G ===   all three skipped (not in --only); their frozen words printed, not run
+=== SUMMARY ===
+  checks failed: 0
+  finished Tue Oct 13 00:32:28 EDT 2026
+RESULT: PASS -- every requested check reproduced its logged value.        (exit 0)
+```
+
+Every check above is a **comparison against `reproduce/headline_expectations.tsv` at HEAD**, and in
+every case the left-hand side was produced by a script executing in the clone during this run. The
+per-script elapsed times were 172 941.2 s, 174 468.7 s, 176 874.9 s, 166 0.3 s.
+
+### 8. Recomputed versus only-compared, value by value
+
+**Recomputed in the clone, from the archived inputs (the headline claims):**
+
+- **All three ladder columns.** 650M rho -0.090021683, CI [-0.122385, -0.056046]; p_spec_H(neg)
+  0.050633 (3/78). 150M rho **+0.026745078**, CI [-0.007415, +0.060409]; p_spec_H(neg) 0.810127
+  (63/78). 35M rho **-0.020193686**, CI [-0.050661, +0.010498]; p_spec_H(neg) 0.341772 (26/78).
+  Every one of those at N_BOOT=10000, mode=full, 10 000 finite position-cluster draws.
+- **All three words.** `MODEL-REPLICATES` (650M), `MODEL-DOES-NOT-REPLICATE` (150M),
+  `MODEL-DOES-NOT-REPLICATE` (35M), each from the frozen rule "CI lies below zero AND
+  p_spec_H(neg) <= 0.10". **So yes: the 150M and 35M words reproduce.** Both fail on both
+  conjuncts - the CI spans zero and p_spec is far above 0.10 - which is a stronger showing than the
+  word alone.
+- **All four cross-model agreement numbers**, each computed over the **97** archived backgrounds
+  per arm (this is the v3-only part; v2 had none of these files):
+  `650M vs 150M` median **+0.086725**, range [-0.072518, +0.380496], across-rho **-0.145645**;
+  `650M vs 35M` median **+0.071303**, range [-0.084198, +0.348244], across-rho **+0.381036**.
+  The deliberately-unpinned range endpoints reproduced too.
+- Gradient +0.713319, shift confound -0.612697; module N's eight values; module S's 49 sign-convention
+  checks.
+- **Modules M and U-1 via the independent recomputer (176)**, not via the staged scripts: M-3's
+  identity gate passed here at `max|diff| = 2.220e-16` (gate < 1e-12) and its null mean 0.027069
+  matched the staged value exactly; M-4's attenuation slope and MDE matched within their
+  Monte-Carlo tolerances; U-1's three Spearman values matched to 5.551e-17 and the frozen word
+  `CONDITIONING-HURTS` came out of the recomputed numbers.
+
+**Only compared, not recomputed - stated so the PASS table is not read as more than it is:**
+
+- The per-model `rho_A222V on H` and `p_spec_H(neg)` lines for 150M and 35M are **not gated by the
+  script's own checks** - the mechanism limit recorded in part A stands, since `sed` matches one
+  line at a time and those lines are identical in all three model blocks. I checked them a
+  different way, by diffing the clone's whole fresh `174` output against the recorded
+  `PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt`: identical, so those values do reproduce, but that is my
+  verification and not an entry in the package's PASS/FAIL table.
+- **Modules M, U, G as staged scripts were never run.** `167_mech_anchor.py`, `168_utility.py` and
+  `169_gb1_locality.py` are skipped by the default module list and I did not add them to `--only`;
+  their frozen words are *printed* by step 6 and were not tested. They can be run with
+  `--only M,U,G`.
+- **U-2 is NOT-COMPUTABLE**, in the clone exactly as in the staged run: the staged run used the
+  Weile et al. supplement labels and 176 finds only the fallback label file
+  (`task102_clinvar_atlas_overlap.csv`), and G-U2 failed in the staged run anyway.
+- **Module G's G-1 and G-2 statistics are NOT-COMPUTABLE.** The per-(background, partner) table of
+  |delta_b(v)|, |e_b(v)| and s, which script 155 builds from the Olson doubles, **is not cached on
+  disk**, and 176 reports that an independent rebuild is out of reach rather than approximating it.
+  Only G-D0, the stored mean rho_b over the 400 GB1 backgrounds, was checked
+  (-0.009125049245666152, diff 0.000e+00).
+
+### 9. Whole-file reproduction against the committed outputs
+
+Stronger than the PASS/FAIL table, and computed over the full text rather than the gated lines:
+
+| fresh clone output | recorded at HEAD | diff lines |
+|---|---|---|
+| `174_ladder_analysis.txt` | `PHASE4B_C0b_LADDER_ANALYSIS_OUTPUT.txt` | **0** (byte-identical) |
+| `172_neigh_analysis.txt` | `PHASE4B_C1_SCRIPT172_OUTPUT.txt` | 1 |
+| `166_sign_convention.txt` | `PHASE4B_C1_SCRIPT166_OUTPUT.txt` | 1 |
+| `independent_recompute.txt` | `PHASE4B_C2_RECOMPUTE_OUTPUT.txt` | 49 |
+
+The `elapsed` line is normalised in every comparison. The two one-line diffs are benign and named
+here rather than waved away: 172's is `G-N4 wall 903s` vs `895s`, a wall-clock measurement; 166's is
+a self-referential count - the fresh run finds **5** files under `scripts/` and `docs/` containing
+the literal phrase 'fitter than expected' where the recorded run found **4**, because
+`PHASE4B_C1_SCRIPT166_OUTPUT.txt` is itself one of those files and now exists in the clone. The
+recorded run could not count itself; 5 is the correct count here.
+
+The 49-line diff in 176 is **not** a reproduction failure and I do not claim otherwise. HEAD's 176
+postdates the C2 output - `git log --follow` shows the file changed in `fe77e18`, after C2 was
+recorded - so the recorded C2 output corresponds to an older implementation in which the M-3
+identity gate FAILED (`max|diff| = 4.544e-02`) and M-3/M-4 were reported NOT-COMPUTABLE, gating 40
+comparisons. At HEAD the same gate passes at 2.220e-16 and 48 comparisons are gated. The other
+committed candidate, `PHASE4B_C6_PRODUCTION_OUTPUT.txt`, is a *partial* run (it begins at MODULE M)
+at `N_SIM=200 N_STAB=200` and is not a full-run reference either. **There is therefore no recorded
+full-N output of HEAD's 176 to diff against**, and the honest statement is that 176 ran clean at
+production N with one known, already-documented disagreement. Fresh 176 also emitted eight
+`RuntimeWarning: Mean of empty slice` lines from `scripts/lib/own_context.py:84` and
+`scripts/lib/stats_ext.py:76` that the older recorded output did not; they gated nothing and caused
+no check to fail, and I have not chased them down.
+
+### 10. What the package still cannot reproduce from a fresh clone plus the archive
+
+Answering T4's question directly, as of this entry:
+
+1. **Module G's locality statistics, G-1 and G-2.** The per-(background, partner) table is
+   produced by script 155 from the Olson doubles and is not in the archive. The G-1
+   (`MODEL-DECAYS` + `LOCALITY-DIFFERS`) and G-2 (`SEPARATION-MATTERS`) words are therefore
+   **not verified by any fresh-clone run**, only printed by step 6 as recorded text.
+2. **U-2's metrics**, for a different reason: the label file the staged run used is not the one the
+   recomputer finds, and G-U2 failed in the staged run anyway. U-2 is wordless in both.
+3. **The staged M, U and G scripts were not executed at all** in this run, so their own internal
+   gates (the frozen sections of 167/168/169) are unexercised from a fresh clone.
+4. **The venv is inherited, not independently validated.** Rule 2 forbids PyPI, so the clone's
+   `venv/` is a 1.3 GB copy. The package's own lock check ran and passed, which is stronger than the
+   [S-4b-F B] entry could say, but it confirms the copy matches the working tree's lock file - it
+   does not prove the lock file is the right set of packages.
+5. **Bootstrap CIs are not expected to match digit for digit** and are not gated by design
+   (C2-DEC2); the CIs that did appear in this run agree with the recorded ones to ~1e-5 but that is
+   incidental, not a claim.
+6. **Nothing here is replication.** As 176's own printed limitations say, this validates code
+   against code on cached data; it is not independent evidence for any biological claim.
+
+What this entry does establish is the thing both earlier S-4b-F attempts could not: **the v3
+archive plus HEAD is not merely a complete reproduction package, it is an executable one.** The
+defect that limited [T6] - a package whose inputs were incomplete - is closed, and the 150M/35M
+words and the four cross-model agreement numbers, which the earlier entries could only say were
+*neither recomputed nor read*, have now been computed from the archive in a fresh clone and agree
+with the recorded values.
+
+### 11. T5 - the clone is left in place
+
+`/Users/arnavchavan/phase4_repro_clone` is **not** deleted: **5.3 GB** total - 4.0 GB `data/`, 1.3 GB
+`venv/`, 12 MB `.git`, 6.1 MB `docs/`, 4.7 MB `scripts/`, 124 KB `reproduce/` (of which
+`reproduce/runs/` holds the five fresh logs, 88 KB). `df -h ~` after the run: **17 GiB free**. The
+PI will delete it.
+
+### 12. Process notes, disclosed
+
+- **No check was loosened, no expectation edited, and nothing was rerun to obtain a different
+  answer.** The full run was executed once. The `--quick` pass before it was a timing exercise at
+  reduced N, is self-labelled PROVISIONAL by 172 and 174, and is reported as such; it was not
+  presented as a result and its PASS was not leaned on.
+- My `tee` target directory for the console capture did not exist, so no separate console file was
+  written. The script's own logs under `reproduce/runs/` are intact and every number quoted above
+  is read from them or from a recorded file at HEAD, not from memory.
+- Nothing in the working tree was modified by this session. `git status --porcelain` before and
+  after shows the same two modified tracked files and the same untracked set; HEAD is still
+  `4ffbfc0`; nothing is staged. Files touched: this log entry, and
+  `/Users/arnavchavan/phase4_repro_clone/` (new, outside the repo).
